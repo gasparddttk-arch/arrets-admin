@@ -4,7 +4,6 @@ import { etat, sauver } from './state.js';
 import { jumeaux, melange, CASES } from './engine.js';
 
 const NOM_CASE = { 1: 'I', '1a': 'A', '1b': 'B', 2: 'II', '2a': 'A', '2b': 'B' };
-const nomArret = (a) => h('cite', {}, a.nom);
 
 // Bouton de confirmation placé dans la zone du pouce.
 export const continuer = (label, action, attrs = {}) => h('button', { class: 'cta', onClick: action, ...attrs }, label);
@@ -79,12 +78,12 @@ export function revelation(a, ix, { zoneId } = {}) {
   return h('article', { class: 'revelation' },
     h('div', { class: 'revelation-tete' },
       h('span', { class: 'annee' }, a.an),
-      h('div', {}, h('h3', {}, a.nom), h('p', { class: 'ref' }, a.ref))),
+      h('div', {}, h('h3', {}, a.court), h('p', { class: 'ref' }, a.ref))),
     h('p', { class: 'apport' }, a.ap[z] || Object.values(a.ap)[0]),
     h('p', { class: 'histoire' }, a.h),
     jum.length ? h('div', { class: 'jumeaux' },
       h('h4', {}, 'À ne pas confondre avec'),
-      h('ul', {}, jum.map((j) => h('li', {}, h('b', {}, `${ix.parId.get(j.id).nom} (${ix.parId.get(j.id).an})`), ' ', j.k)))) : null,
+      h('ul', {}, jum.map((j) => h('li', {}, h('b', {}, `${ix.parId.get(j.id).court} (${ix.parId.get(j.id).an})`), ' ', j.k)))) : null,
   );
 }
 
@@ -114,7 +113,7 @@ export function jouerPaires(zone, ctx, round, ix) {
       ctx.combo(true); son('ok'); ctx.noter(l.id, !l.rate);
       l.elN.classList.add('reussi'); l.elN.classList.remove('vise'); b.classList.add('reussi');
       l.elN.disabled = true; b.disabled = true;
-      b.prepend(h('span', { class: 'carte-nom' }, `${l.nom}, ${ix.parId.get(l.id).ref}`));
+      b.prepend(h('span', { class: 'carte-nom' }, `${ix.parId.get(l.id).court}, ${ix.parId.get(l.id).ref}`));
       actif = null;
       if (finis === lignes.length) terminer();
     } else {
@@ -134,7 +133,7 @@ export function jouerPaires(zone, ctx, round, ix) {
     if (arrete) return;
     arrete = true; clearInterval(minuteur);
     const manques = lignes.filter((l) => !l.fait);
-    for (const l of manques) { ctx.noter(l.id, false); l.elT.classList.add('manque'); l.elT.prepend(h('span', { class: 'carte-nom' }, `${l.nom}, ${ix.parId.get(l.id).ref}`)); l.elN.disabled = true; l.elT.disabled = true; }
+    for (const l of manques) { ctx.noter(l.id, false); l.elT.classList.add('manque'); l.elT.prepend(h('span', { class: 'carte-nom' }, `${ix.parId.get(l.id).court}, ${ix.parId.get(l.id).ref}`)); l.elN.disabled = true; l.elT.disabled = true; }
     const score = Math.max(0, (finis - erreurs * 0.5) / lignes.length);
     const parfait = finis === lignes.length && !erreurs;
     ctx.gain(finis * 5 + (parfait ? 10 : 0), finis + (parfait ? 3 : 0));
@@ -194,7 +193,7 @@ export async function jouerPuzzle(zone, ctx, round, ix) {
     if (origine) ctx.noter(a.id, false, origine.id);
     return h('div', { class: `verif ${ok ? 'juste' : 'faux'}` },
       h('h4', {}, s.l), h('p', {}, b.t),
-      !ok ? h('p', { class: 'option-w' }, origine ? `Cette pièce vient de ${origine.nom} (${origine.an}).` : 'Bonne affaire, mauvaise rubrique.') : null,
+      !ok ? h('p', { class: 'option-w' }, origine ? `Cette pièce vient de ${origine.court} (${origine.an}).` : 'Bonne affaire, mauvaise rubrique.') : null,
       !ok ? h('p', { class: 'option-bon' }, a[s.k]) : null);
   });
   son(bons === 4 ? 'ok' : 'ko');
@@ -345,7 +344,7 @@ export async function jouerArchitecte(zone, ctx, round, ix) {
     const z = a.zones.find((x) => s.zones.includes(x)) ?? a.zones[0];
     const r = await qcm(zone, ctx, {
       surtitre: `Arrêt ${i + 1} sur ${places.length}`,
-      question: `Où places-tu ${a.nom} (${a.an}) ?`,
+      question: `Où places-tu ${a.court} (${a.an}) ?`,
       options: ['1a', '1b', '2a', '2b'].map((c) => ({ t: `${c[0] === '1' ? 'I' : 'II'}.${NOM_CASE[c]} ${s.bon[c].t}`, ok: c === p.c, w: null })),
       pourquoiBon: a.ap[z],
     });
@@ -368,4 +367,3 @@ export const NOMS_MODES = {
   plan: ['Le bon plan', 'Choisir le meilleur plan et diagnostiquer les autres'],
   architecte: ['Architecte', 'Construire un plan et y placer les arrêts'],
 };
-export { nomArret };

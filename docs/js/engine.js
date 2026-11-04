@@ -9,6 +9,8 @@ export const melange = (a, rng = Math.random) => { const b = [...a]; for (let i 
 export const choix = (a, rng = Math.random) => a[Math.floor(rng() * a.length)];
 
 export function indexer(c) {
+  // « Meyet (1992) » : le nom court évite d'écrire l'année deux fois, ou de la souffler.
+  for (const a of c.arrets) a.court = a.nom.replace(/\s*\(\d{4}\)$/, '');
   const parId = new Map(c.arrets.map((a) => [a.id, a]));
   const famillesDe = new Map();
   for (const f of c.familles) for (const m of f.m) {
@@ -55,7 +57,7 @@ function voisins(ix, a) {
 export function optionsProbleme(ix, a, rng = Math.random) {
   const faits = a.x.map((x) => ({ t: x.t, w: x.w }));
   const { jum, zone } = voisins(ix, a);
-  const venu = (b) => ({ t: b.q, w: `C'est le problème de ${b.nom} (${b.an}).`.replace(/'/g, '’') });
+  const venu = (b) => ({ t: b.q, w: `C'est le problème de ${b.court} (${b.an}).`.replace(/'/g, '’') });
   const pool = [...jum.filter((b) => b.q).map(venu)];
   const reste = zone.filter((b) => b.q).map(venu);
   const n = 3 - Math.min(faits.length, 2);
@@ -111,9 +113,15 @@ export function grillePaires(ix, zones, rng = Math.random, taille = 4, variante 
     return { id, nom: a.nom, an: a.an, t: variante === 'annee' ? String(a.an) : a.ap[z] };
   });
   if (variante === 'annee') {
-    const vus = new Set(); const uniques = [];
-    for (const l of lignes) if (!vus.has(l.an)) { vus.add(l.an); uniques.push(l); }
-    for (const a of pool) { if (uniques.length >= taille) break; if (!vus.has(a.an)) { vus.add(a.an); uniques.push({ id: a.id, nom: a.nom, an: a.an, t: String(a.an) }); } }
+    // Ni deux fois la même année, ni deux fois le même nom (les GISTI, les Meyet).
+    const annees = new Set(); const noms = new Set(); const uniques = [];
+    const prendre = (a) => {
+      if (uniques.length >= taille || annees.has(a.an) || noms.has(a.court)) return;
+      annees.add(a.an); noms.add(a.court);
+      uniques.push({ id: a.id, nom: a.court, an: a.an, t: String(a.an) });
+    };
+    for (const l of lignes) prendre(ix.parId.get(l.id));
+    for (const a of pool) prendre(a);
     return { variante, lignes: uniques };
   }
   return { variante, lignes };
@@ -177,7 +185,7 @@ export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new S
   if (type === 'puzzle' && !d.puzzle.length) type = 'paires';
   switch (type) {
     case 'paires': return { type, grille: grillePaires(ix, zones, rng, 4, choix(['apport', 'apport', 'jumeaux', 'annee'], rng), dus.filter((id) => !deja.has(id))) };
-    case 'puzzle': { const a = prendre(d.puzzle); return { type, id: a.id, ...blocsPuzzle(ix, a, rng), problemes: optionsProbleme(ix, a, rng), noms: optionsArret(ix, a, rng).map((x) => ({ id: x.id, nom: x.nom, an: x.an })) }; }
+    case 'puzzle': { const a = prendre(d.puzzle); return { type, id: a.id, ...blocsPuzzle(ix, a, rng), problemes: optionsProbleme(ix, a, rng), noms: optionsArret(ix, a, rng).map((x) => ({ id: x.id, nom: x.court, an: x.an })) }; }
     case 'juge': { const j = prendre(d.juges); return { type, ...casJuge(ix, j.id, rng) }; }
     case 'plan': { const s = prendre(d.sujets); return { type, ...roundPlan(ix, s, rng) }; }
     case 'architecte': { const s = prendre(d.sujets); return { type, ...roundArchitecte(ix, s, rng) }; }

@@ -62,8 +62,8 @@ po: Le Préambule de 1946 entre dans la légalité. Le chef de service reçoit l
 ap2: Limite de la loi-écran : le juge interprète la loi pour « vider le venin »
 ap8: PGD : droit au recours pour excès de pouvoir contre toute décision, même sans texte
 h: Dame Lamotte voit ses terres de l'Ain concédées à un tiers par le préfet. Le Conseil d'État annule, le préfet recommence, le Conseil annule encore. Vichy vote alors une loi qui exclut « tout recours ». Le préfet recommence une dernière fois. Le Conseil répond que « tout recours » ne visait pas le sien.
-f: Le préfet de l'Ain concède à un tiers des terres appartenant à Dame Lamotte, malgré des annulations répétées. Une loi de 1943 exclut alors tout recours contre ces concessions.
-pr: Dame Lamotte saisit de nouveau le Conseil d'État, qui doit interpréter la loi de 1943.
+f: Le préfet de l'Ain concède à un tiers des terres d'une propriétaire, malgré des annulations répétées. Une loi de 1943 exclut alors tout recours contre ces concessions.
+pr: La propriétaire saisit de nouveau le Conseil d'État, qui doit interpréter la loi de 1943.
 q: Une loi qui exclut « tout recours » contre une décision administrative supprime-t-elle le recours pour excès de pouvoir ?
 s: Non. Le recours pour excès de pouvoir existe même sans texte contre tout acte administratif ; il faudrait une exclusion expresse. Annulation.
 po: Le juge vide la loi de son venin sans la contrôler. Le droit au recours devient un principe général du droit.

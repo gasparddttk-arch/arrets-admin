@@ -1,5 +1,5 @@
 // Service worker : tout le contenu est mis en cache à l'installation, pour jouer sans réseau.
-const VERSION = '78ba479c0737';
+const VERSION = '881537814d39';
 const FICHIERS = ["./","content.json","css/app.css","fonts/bodoni-700.woff2","fonts/garamond-400.woff2","fonts/garamond-400i.woff2","fonts/garamond-500.woff2","fonts/garamond-600.woff2","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable.png","js/config.js","js/engine.js","js/games.js","js/main.js","js/notif.js","js/state.js","js/ui.js","manifest.webmanifest"];
 const CACHE = `arrets-${VERSION}`;
 
@@ -29,10 +29,45 @@ self.addEventListener('fetch', (e) => {
   })());
 });
 
+// La série vit sur le téléphone : le service worker la lit dans la copie IndexedDB.
+async function lireSerie() {
+  const lecture = (async () => {
+    const db = await new Promise((ok, ko) => {
+      const r = indexedDB.open('arrets-admin', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('kv');
+      r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error);
+    });
+    const brut = await new Promise((ok) => {
+      const r = db.transaction('kv').objectStore('kv').get('arrets-admin.v1');
+      r.onsuccess = () => ok(r.result); r.onerror = () => ok(null);
+    });
+    db.close();
+    return brut ? JSON.parse(brut).serie : null;
+  })().catch(() => null);
+  // iOS exige une notification à chaque envoi : on n'attend jamais la lecture longtemps.
+  return Promise.race([lecture, new Promise((ok) => setTimeout(() => ok(null), 800))]);
+}
+
+function jourParis() {
+  const s = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  const [a, m, j] = s.split('-').map(Number);
+  return Math.floor(Date.UTC(a, m - 1, j) / 864e5);
+}
+
 self.addEventListener('push', (e) => {
-  let d = { title: 'Ta série t’attend', body: 'Une séance aujourd’hui, et ton sceau reste en place.' };
+  let d = { title: 'Ta série t’attend', body: 'Une séance aujourd’hui, et ton sceau reste en place.', question: '' };
   try { d = { ...d, ...e.data.json() }; } catch { /* message par défaut */ }
-  e.waitUntil(self.registration.showNotification(d.title, { body: d.body, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: 'rappel-du-jour' }));
+  e.waitUntil((async () => {
+    const s = await lireSerie();
+    let { title, body } = d;
+    if (s?.dernier === jourParis()) {
+      title = s.n > 1 ? `${s.n} jours de série, sceau posé` : 'Sceau posé pour aujourd’hui';
+      body = d.question || 'Ta séance du jour est déjà validée.';
+    } else if (s?.n > 1) {
+      title = s.dernier < jourParis() - 1 ? `Ta série de ${s.n} jours vacille` : `${s.n} jours de série à défendre`;
+    }
+    await self.registration.showNotification(title, { body, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: 'rappel-du-jour' });
+  })());
 });
 
 self.addEventListener('notificationclick', (e) => {

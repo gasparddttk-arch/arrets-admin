@@ -5,7 +5,7 @@ import {
   zonesOuvertes, ouvrirSuivante, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage,
 } from './state.js';
 import { indexer, composerDefi, composerBoss, tirerRound, jumeaux, melange } from './engine.js';
-import { JEUX, NOMS_MODES, continuer, revelation } from './games.js';
+import { JEUX, NOMS_MODES, continuer } from './games.js';
 import { activerRappel, etatRappel, testerNotification, estInstallee } from './notif.js';
 
 let ix = null;
@@ -73,8 +73,17 @@ function accueil() {
   const lignes = Object.entries(NOMS_MODES).map(([m, [nom, txt]]) => h('button', { class: 'role-ligne', onClick: () => { son('tap'); lancerMode(m); } },
     icone(m, 26), h('span', {}, h('b', {}, nom), h('small', {}, txt))));
 
+  // Sur iPhone, Safari et l'icône de l'écran d'accueil ont chacun leur stockage.
+  const aInstaller = /iPhone|iPad|iPod/.test(navigator.userAgent) && !estInstallee()
+    ? h('section', { class: 'installer' },
+      h('h2', {}, 'Installe l’appli avant de jouer'),
+      h('p', {}, 'Une séance faite dans Safari ne suivrait pas dans l’icône : ta série repartirait de zéro.'),
+      guideInstallation())
+    : null;
+
   montrer(
     barreHaut(),
+    aInstaller,
     h('section', { class: 'tribune', 'data-decor': etat.decor },
       sceau(s.n, { taille: 148, eteint: !fait && s.n === 0 }),
       h('p', { class: 'serie-txt' }, s.n === 0 ? 'Aucune série en cours' : `${pluriel(s.n, 'jour')} de série`),
@@ -238,7 +247,7 @@ function resultats(S, reussi) {
     apres.i > avant.i ? h('div', { class: 'decret' }, h('p', {}, 'Par décret, tu es nommé'), h('strong', {}, apres.nom)) : null,
     nouveaux.length ? h('ul', { class: 'res-trophees' }, nouveaux.map((t) => h('li', {}, h('b', {}, t.nom), ' ', t.txt))) : null,
     aRevoirListe.length ? h('section', { class: 'res-revoir' }, h('h2', {}, 'À revoir'),
-      h('ul', {}, aRevoirListe.slice(0, 6).map((a) => h('li', {}, h('button', { onClick: () => { afficherOnglets(true); ongletCourant = 'arrets'; fiche(a.id); } }, h('b', {}, a.nom), ` ${a.an}`))))) : null,
+      h('ul', {}, aRevoirListe.slice(0, 6).map((a) => h('li', {}, h('button', { onClick: () => { afficherOnglets(true); ongletCourant = 'arrets'; fiche(a.id); } }, h('b', {}, a.court), ` ${a.an}`))))) : null,
     h('div', { class: 'pied' },
       continuer('Retour au Palais', () => aller('palais')),
       S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null),
@@ -315,7 +324,7 @@ function chambre(zid) {
 
 const etoiles = (b) => h('span', { class: 'niveau', 'aria-label': TITRES_CARTE[b] }, TITRES_CARTE[b]);
 const ligneArret = (a) => h('li', {}, h('button', { class: `ligne-arret n${niveau(a.id)}`, onClick: () => fiche(a.id) },
-  h('span', { class: 'an' }, a.an), h('span', { class: 'nm' }, a.nom), etoiles(niveau(a.id))));
+  h('span', { class: 'an' }, a.an), h('span', { class: 'nm' }, a.court), etoiles(niveau(a.id))));
 
 // ARRÊTS ----------------------------------------------------------------------------
 let filtre = { texte: '', zone: 0 };
@@ -328,7 +337,7 @@ function collection() {
     const q = norm(filtre.texte);
     const res = ix.arrets.filter((a) => (!filtre.zone || a.zones.includes(filtre.zone)) && (!q || norm(`${a.nom} ${a.an} ${Object.values(a.ap).join(' ')}`).includes(q))).sort((a, b) => a.an - b.an);
     grille.replaceChildren(...(res.length ? res.map((a) => h('li', {}, h('button', { class: `carte-arret n${niveau(a.id)}`, onClick: () => fiche(a.id) },
-      h('span', { class: 'carte-an' }, a.an), h('b', {}, a.nom), etoiles(niveau(a.id))))) : [h('li', { class: 'vide' }, 'Aucun arrêt ne correspond à cette recherche.')]));
+      h('span', { class: 'carte-an' }, a.an), h('b', {}, a.court), etoiles(niveau(a.id))))) : [h('li', { class: 'vide' }, 'Aucun arrêt ne correspond à cette recherche.')]));
   }
   const acquis = Object.values(etat.arrets).filter((a) => a.b >= 5).length;
   montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, 'Les arrêts'),
@@ -345,14 +354,14 @@ function fiche(id) {
   montrer(
     h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller(ongletCourant) }, icone('retour', 22)), etoiles(niveau(id))),
     h('article', { class: 'fiche' },
-      h('div', { class: 'revelation-tete' }, h('span', { class: 'annee' }, a.an), h('div', {}, h('h1', {}, a.nom), h('p', { class: 'ref' }, a.ref))),
+      h('div', { class: 'revelation-tete' }, h('span', { class: 'annee' }, a.an), h('div', {}, h('h1', {}, a.court), h('p', { class: 'ref' }, a.ref))),
       Object.entries(a.ap).map(([, t]) => h('p', { class: 'apport' }, t)).filter((_, i, l) => l.findIndex((x) => x.textContent === _.textContent) === i),
       h('h2', {}, 'Son histoire'), h('p', { class: 'histoire' }, a.h),
       a.nf ? h('p', { class: 'note-nf' }, 'Faits de l’espèce non vérifiés : cette fiche s’en tient à la règle du cours.') : null,
       h('h2', {}, 'La fiche'),
       champs.map(([l, t]) => h('div', { class: 'rubrique' }, h('h3', {}, l), h('p', {}, t))),
       conf.length ? h('div', { class: 'confusions' }, h('h2', {}, 'Tu le confonds avec'), h('ul', {}, conf.map(([c, n]) => h('li', {}, h('button', { onClick: () => fiche(c) }, ix.parId.get(c).nom), ` ${n} fois`)))) : null,
-      jum.length ? h('div', { class: 'jumeaux' }, h('h2', {}, 'Ses faux jumeaux'), h('ul', {}, jum.map((j) => h('li', {}, h('button', { onClick: () => fiche(j.id) }, `${ix.parId.get(j.id).nom} (${ix.parId.get(j.id).an})`), ' ', j.k)))) : null,
+      jum.length ? h('div', { class: 'jumeaux' }, h('h2', {}, 'Ses faux jumeaux'), h('ul', {}, jum.map((j) => h('li', {}, h('button', { onClick: () => fiche(j.id) }, `${ix.parId.get(j.id).court} (${ix.parId.get(j.id).an})`), ' ', j.k)))) : null,
     ));
 }
 
@@ -437,8 +446,7 @@ function profil() {
 
 function guideInstallation() {
   return h('ol', { class: 'guide' },
-    h('li', {}, 'Ouvre cette page dans Safari.'),
-    h('li', {}, 'Touche le bouton Partager, en bas de l’écran.'),
+    h('li', {}, 'Dans Safari, touche le bouton Partager.'),
     h('li', {}, 'Choisis « Sur l’écran d’accueil », puis Ajouter.'),
     h('li', {}, 'Ouvre l’appli depuis sa nouvelle icône.'));
 }
@@ -479,4 +487,3 @@ demarrer().catch((e) => {
   console.error(e);
   racine.replaceChildren(h('main', { class: 'erreur' }, h('p', {}, 'L’appli n’a pas pu démarrer. Vérifie ta connexion pour la première ouverture, puis recharge.')));
 });
-void revelation;

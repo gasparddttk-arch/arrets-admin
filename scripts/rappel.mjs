@@ -23,16 +23,18 @@ const contenu = JSON.parse(readFileSync('docs/content.json', 'utf8'));
 const jourAn = Math.floor(Date.now() / 864e5);
 const grands = contenu.arrets.filter((a) => a.imp === 3);
 const a = grands[jourAn % grands.length];
+const nom = a.nom.replace(/\s*\(\d{4}\)$/, '');
+const question = `${nom}, ${a.an} : tu saurais en donner l’apport ?`;
 const accroches = [
-  ['Ta série t’attend', `Une séance aujourd’hui, et ton sceau reste en place. Tu te souviens de ${a.nom} (${a.an}) ?`],
-  ['Audience du jour', `${a.nom}, ${a.an} : tu saurais en donner l’apport ?`],
-  ['Le rôle est prêt', `Cinq minutes pour garder ta série. Au programme, peut-être ${a.nom}.`],
+  ['Ta série t’attend', `Une séance aujourd’hui, et ton sceau reste en place. Tu te souviens de ${nom} (${a.an}) ?`],
+  ['Audience du jour', question],
+  ['Le rôle est prêt', `Cinq minutes pour garder ta série. Au programme, peut-être ${nom}, ${a.an}.`],
 ];
 const [title, body] = accroches[jourAn % accroches.length];
 
 webpush.setVapidDetails('https://github.com/gasparddttk-arch/arrets-admin', readFileSync('rappel/cle-publique.txt', 'utf8').trim(), prive);
 try {
-  await webpush.sendNotification(JSON.parse(abonnement), JSON.stringify({ title, body }), { TTL: 6 * 3600, urgency: 'normal' });
+  await webpush.sendNotification(JSON.parse(abonnement), JSON.stringify({ title, body, question }), { TTL: 6 * 3600, urgency: 'normal' });
   console.log('Rappel envoyé.');
 } catch (e) {
   console.error(`Envoi refusé : ${e.statusCode || ''} ${e.body || e.message}`);

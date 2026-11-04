@@ -73,7 +73,7 @@ po: L'État défaillant ne profite pas de sa carence. L'invocabilité joue au b�
 ap: L'absence de transposition est elle-même illégale
 h: Lyon, années 1990. La communauté urbaine confie le périphérique nord à un concessionnaire, sans publicité européenne : aucune règle française n'oblige à la faire. M. Tête, élu local, invoque une directive sur les marchés de travaux. Le silence du droit français ne sauve pas la délibération.
 f: La communauté urbaine de Lyon concède la construction de son périphérique nord sans la publicité prévue par une directive, faute de texte français de transposition.
-pr: M. Tête et une association attaquent la délibération devant le juge administratif.
+pr: Un requérant et une association attaquent la délibération devant le juge administratif.
 q: Une directive peut-elle être invoquée contre un acte lorsque le droit interne ne comporte aucune règle de transposition ?
 s: Oui. L'absence de règle transposant la directive est elle-même illégale : la délibération est annulée.
 po: Même sans règlement à attaquer, le vide réglementaire donne prise à la directive. C'est encore une invocabilité d'exclusion.
@@ -216,7 +216,7 @@ po: Le contrôle de conventionnalité commande aussi l'action de l'exécutif, qu
 ap: Loi devenue incompatible avec un traité postérieur : écartée
 h: 1999, élections européennes. Une loi de 1977 interdit de publier des sondages la dernière semaine. M. Meyet soutient qu'avec Internet et la presse étrangère, cette interdiction ne tient plus au regard de la Convention européenne. Il perd, mais le juge accepte le raisonnement sur le temps qui passe.
 f: Le CSA et la commission des sondages rappellent l'interdiction de publier des sondages la semaine précédant un scrutin, posée par une loi de 1977.
-pr: M. Meyet saisit le Conseil d'État en soutenant que cette loi est devenue incompatible avec des engagements internationaux.
+pr: Un requérant saisit le Conseil d'État en soutenant que cette loi est devenue incompatible avec des engagements internationaux.
 q: Le juge peut-il écarter une loi qui, compatible à l'origine, serait devenue incompatible avec un engagement international ?
 s: Il examine le moyen, mais la restriction reste compatible avec l'article 10 vu sa brièveté. La requête est irrecevable.
 po: Le contrôle de conventionnalité se fait dans le temps : une loi peut devenir inconventionnelle à la date où le juge statue.

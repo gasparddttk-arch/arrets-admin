@@ -69,6 +69,10 @@ body:has(#onglets[hidden]) #app { padding-bottom: calc(24px + var(--bas-sur)); }
 .jour-sceau.tamponne { background: var(--cire); border-color: var(--cire); color: #fff; }
 .jour-sceau.sursis { background: var(--nuit-3); border-color: var(--soie); color: var(--soie-clair); }
 .jour-sceau.aujourdhui { border-color: var(--or); color: var(--or-clair); }
+.installer { margin: 6px 16px 0; background: var(--velin); color: var(--encre); padding: 14px 16px; border-top: 3px solid var(--cire); }
+.installer h2 { font-family: var(--display); font-size: 21px; line-height: 1.15; margin-bottom: 6px; }
+.installer p { font-size: 17px; margin-bottom: 8px; }
+.installer .guide { font-size: 17px; }
 .rupture { margin-top: 14px; background: var(--nuit-2); border-left: 3px solid var(--cire); padding: 12px 14px; text-align: left; display: grid; gap: 10px; }
 
 /* Boutons */

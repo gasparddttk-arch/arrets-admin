@@ -148,7 +148,7 @@ po: L'habilitation implicite de 1985 ne joue que dans le silence de la loi.
 ap: Décret délibéré en Conseil des ministres : compétence du PR
 h: Été 1992, référendum sur Maastricht. M. Meyet attaque les décrets d'organisation : ils relevaient du Premier ministre, pas du Président. Le Conseil d'État répond qu'ils ont été délibérés en Conseil des ministres. Peu importe qu'aucun texte ne l'exigeait : le Président devait signer.
 f: Le Président signe en 1992 des décrets organisant le référendum sur le traité de Maastricht, délibérés en Conseil des ministres sans qu'un texte l'impose.
-pr: M. Meyet saisit le Conseil d'État en invoquant la violation des articles 13 et 21.
+pr: Un requérant saisit le Conseil d'État en invoquant la violation des articles 13 et 21.
 q: Un décret délibéré en Conseil des ministres sans qu'un texte l'impose relève-t-il de la compétence du Président ?
 s: Oui. Ayant été délibérés en Conseil des ministres, ces décrets devaient être signés par le Président, même si aucun texte ne l'imposait.
 po: La pratique de délibération commande la compétence. Effet cliquet : seul un décret en Conseil des ministres pourra les modifier.
@@ -176,7 +176,7 @@ po: Le mot remplace « directives », pour éviter la confusion avec le droit de
 ap: Recours contre les documents de portée générale
 h: La police aux frontières diffuse une note : méfiez-vous des actes d'état civil guinéens. Ni circulaire ni règlement. Le GISTI l'attaque. Le Conseil d'État ouvre grand le recours : tout document de portée générale peut être contesté s'il a des effets notables.
 f: Une note de la police aux frontières recommande de se méfier des actes d'état civil guinéens présentés par les demandeurs.
-pr: Le GISTI demande l'annulation de cette note au Conseil d'État.
+pr: Une association de défense des étrangers demande l'annulation de cette note au Conseil d'État.
 q: Un document de portée générale émanant d'une autorité publique peut-il être attaqué devant le juge de l'excès de pouvoir ?
 s: Oui, s'il est susceptible d'avoir des effets notables sur les droits ou la situation d'autrui. Ici, la note n'est pas illégale. Rejet.
 po: Simplification du droit des circulaires et lignes directrices : un critère unique, celui des effets notables.

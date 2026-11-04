@@ -97,5 +97,15 @@ for (const v of ['apport', 'annee', 'jumeaux']) for (let i = 0; i < 300; i++) {
 }
 
 console.log(notes.join('\n'));
+// Paires, variante année : le nom ne doit ni souffler l'année ni se répéter.
+for (let i = 0; i < 600; i++) {
+  const zs = [...new Set(c.arrets.flatMap((a) => a.zones))];
+  const g = grillePaires(c, zs, Math.random, 4 + (i % 2), 'annee');
+  const noms = g.lignes.map((l) => l.nom);
+  if (noms.some((n) => /\(\d{4}\)/.test(n))) err(`année soufflée dans une grille : ${noms.join(', ')}`);
+  if (new Set(noms).size !== noms.length) err(`nom répété dans une grille : ${noms.join(', ')}`);
+  if (new Set(g.lignes.map((l) => l.an)).size !== noms.length) err('année répétée dans une grille');
+}
+
 if (erreurs.length) { console.error(`\n${erreurs.length} erreur(s) :\n- ` + [...new Set(erreurs)].slice(0, 60).join('\n- ')); process.exit(1); }
 console.log('\nContenu valide.');
