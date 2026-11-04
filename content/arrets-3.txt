@@ -2,11 +2,11 @@
 
 @seguey-tivoli | Quartier Croix-de-Seguey-Tivoli | CE, 21 déc. 1906 | CE | 1906 | 2 | 7
 ap: Clauses réglementaires d'un contrat invocables par les tiers
-h: Bordeaux, 1901. La compagnie de tramways supprime une ligne qui dessert le quartier Croix-de-Seguey-Tivoli. Les habitants se regroupent en syndicat et demandent au préfet de faire respecter le contrat. Ils n'y sont pourtant pas parties. Le Conseil d'État leur ouvre la porte.
+h: Bordeaux, début du XXe siècle. La compagnie de tramways supprime une ligne qui dessert le quartier Croix-de-Seguey-Tivoli. Les habitants se regroupent en syndicat et demandent au préfet de faire respecter le contrat. Ils n'y sont pourtant pas parties. Le Conseil d'État leur ouvre la porte.
 f: Une compagnie de tramways bordelaise cesse de desservir un quartier. Les riverains, tiers au contrat, demandent au préfet d'imposer le respect du service prévu.
 pr: Le préfet refuse. Le syndicat de propriétaires et contribuables saisit le Conseil d'État.
 q: Les usagers tiers à un contrat de concession peuvent-ils en demander l'application à l'autorité concédante ?
-s: Oui. Le syndicat constitué pour défendre les intérêts du quartier peut agir pour faire respecter ces stipulations.
+s: Oui. Le syndicat constitué pour défendre les intérêts du quartier peut agir pour faire respecter ces stipulations. Au fond, le recours est rejeté.
 po: Le contrat de service public contient des clauses réglementaires : elles sont des normes, pas de simples obligations entre parties.
 
 @labonne | Labonne | CE, 8 août 1919 | CE | 1919 | 3 | 7
@@ -17,12 +17,12 @@ pr: Il saisit le Conseil d'État et soutient que le chef de l'État était incom
 q: Le chef de l'État peut-il édicter, sans habilitation législative, des mesures de police applicables à tout le territoire ?
 s: Oui. Il tient de ses pouvoirs propres le droit de prendre les mesures de police que les autorités locales ne peuvent assurer seules. Rejet.
 po: Pouvoir de police générale au niveau national, sans texte. Il passera au Premier ministre sous la Ve République.
-x: Le maire peut-il aggraver, pour des motifs locaux, les mesures de police prises au niveau national ? || C'est une question de concours de polices, sans lien avec l'existence du pouvoir national.
+x: Le maire peut-il aggraver, pour des motifs locaux, les mesures de police prises au niveau national ? || L'arrêt la règle en passant (les autorités locales peuvent ajouter), mais son apport est le pouvoir national.
 x: Le ministre, chef de service, peut-il réglementer l'accès aux locaux de ses services sans habilitation ? || C'est Jamart (1936) : pouvoir d'organisation interne, pas police de tout le territoire.
 
 @clamart | Commune de Clamart | CE, 3 juill. 1931 | CE | 1931 | 1 | 7
 ap: L'acte individuel respecte le règlement, même d'une autorité inférieure
-h: Un maire a fixé par règlement les règles d'avancement de ses agents. Le préfet, son supérieur dans la hiérarchie, nomme un agent sans respecter ce règlement. La nomination tombe : la règle générale l'emporte sur la décision individuelle, quel qu'en soit l'auteur.
+h: Un maire a fixé par règlement les règles d'avancement de ses agents. Le préfet, autorité supérieure, nomme un agent sans respecter ce règlement. La nomination tombe : la règle générale l'emporte sur la décision individuelle, quel qu'en soit l'auteur.
 f: Un préfet procède à une nomination sans respecter le règlement du maire sur l'avancement des agents communaux.
 pr: Le Conseil d'État est saisi de cette nomination.
 q: Un acte individuel d'une autorité supérieure peut-il déroger à un règlement pris par une autorité inférieure ?
@@ -75,12 +75,12 @@ s: Non. Il n'a ni le pouvoir légal ni le pouvoir d'organisation nécessaire : l
 po: Sauf texte ou délégation, les ministres n'ont pas de pouvoir réglementaire général.
 
 @credit-foncier | Crédit foncier de France | CE, Sect., 11 déc. 1970 | CE | 1970 | 2 | 7
-ap: Les « directives » ministérielles, futures lignes directrices
+ap: Les « directives », futures lignes directrices, d'une autorité dotée d'une marge d'appréciation
 h: Pour attribuer des aides à l'amélioration de l'habitat, un organisme fixe des orientations à suivre. Une demande est refusée sur cette base. Le Conseil d'État admet ces « directives » : elles guident sans enfermer, à condition d'examiner chaque dossier et de pouvoir s'en écarter.
 f: Un organisme chargé d'aides à l'amélioration de l'habitat se dote d'orientations générales et refuse une demande sur cette base.
-pr: Le contentieux arrive devant le Conseil d'État.
+pr: Le tribunal administratif de Paris annule le refus, et l'établissement gestionnaire du fonds fait appel.
 q: Une autorité disposant d'un pouvoir d'appréciation peut-elle se donner des orientations générales sans renoncer à examiner chaque dossier ?
-s: Oui. Elle peut tracer des directives, sous réserve de l'examen particulier et d'un écart justifié par l'intérêt général ou la situation.
+s: Oui. Elle peut tracer des directives, sous réserve de l'examen particulier et d'un écart justifié par l'intérêt général ou la situation. Le jugement est annulé et la demande rejetée.
 po: Palliatif au refus d'un pouvoir réglementaire ministériel. Le mot deviendra « lignes directrices » pour éviter la confusion européenne.
 
 @montory | Commune de Montory | CE, Ass., 8 févr. 1974 | CE | 1974 | 1 | 7
@@ -107,7 +107,7 @@ f: Un décret de 1976 impose des distances minimales aux panneaux visibles des v
 pr: L'association demande son annulation au Conseil d'État, en invoquant l'article 34.
 q: L'article 34 a-t-il retiré au Premier ministre ses pouvoirs de police générale ?
 s: Non. Le Premier ministre conserve ces pouvoirs pour assurer la sécurité des usagers. Rejet.
-po: Labonne survit à 1958 : la police générale nationale revient au Premier ministre, sur le fondement des articles 21 et 37, selon l'arrêt.
+po: Labonne survit à 1958 : la police générale nationale revient au Premier ministre, sur le fondement des articles 21 et 37 selon le cours, l'arrêt ne citant que l'article 34.
 
 @cergy-pontoise | Syndicat communautaire de Cergy-Pontoise | CE, 13 févr. 1985 | CE | 1985 | 1 | 7
 nf: 1
@@ -120,7 +120,7 @@ po: Solution très limitée : si la loi renvoie à un décret, voir Préfet du C
 @cc-86-217 | Liberté de communication | CC, 86-217 DC, 18 sept. 1986 | CC | 1986 | 1 | 7
 ap: Le pouvoir réglementaire du PM reste supérieur à celui des AAI
 h: 1986 : une loi sur l'audiovisuel confie un pouvoir réglementaire à une autorité indépendante. Les articles 13 et 21 de la Constitution ne citent pourtant que le Président et le Premier ministre. Le Conseil constitutionnel laisse faire, à une condition : le Premier ministre reste au-dessus.
-f: Une loi de 1986 sur la liberté de communication confie un pouvoir réglementaire à une autorité administrative indépendante.
+f: Une loi sur la liberté de communication confie un pouvoir réglementaire à une autorité administrative indépendante.
 pr: Le Conseil constitutionnel est saisi de la loi avant sa promulgation.
 q: Le pouvoir réglementaire confié à une autorité indépendante peut-il s'exercer à égalité avec celui du Premier ministre ?
 s: Non. La compétence du Premier ministre doit demeurer supérieure.
@@ -130,30 +130,31 @@ po: Première limite au pouvoir réglementaire des AAI, complétée en 1989.
 ap7: Pouvoir réglementaire des AAI : portée limitée (champ et contenu)
 ap9: Administrateur juge : garanties pénales imposées aux sanctions administratives
 h: 1989 : le Conseil supérieur de l'audiovisuel remplace la CNCL. La loi lui donne deux armes : édicter des règles, notamment sur la publicité, et punir. Le Conseil constitutionnel accepte, en limitant la première et en entourant la seconde de garanties.
-f: Une loi de 1989 confie au CSA un pouvoir réglementaire, notamment sur la déontologie de la publicité, et un pouvoir de sanction.
+f: Une loi confie au CSA un pouvoir réglementaire, notamment sur la déontologie de la publicité, et un pouvoir de sanction.
 pr: Le Conseil constitutionnel est saisi de la loi avant sa promulgation.
 q: Le législateur peut-il confier à une autorité indépendante un pouvoir réglementaire et un pouvoir de sanction ?
 s: Oui, pour des mesures de portée limitée par leur champ et leur contenu, et avec les garanties du droit pénal pour la sanction. Censure partielle.
 po: Le pouvoir réglementaire non constitutionnel reste subordonné. Les sanctions administratives sont encadrées.
 
-@calvados | Préfet du Calvados | CE, avis, 20 mars 1992 | CE | 1992 | 1 | 7
-nf: 1
+@calvados | Préfet du Calvados | CE, Sect., avis, 20 mars 1992 | CE | 1992 | 1 | 7
 ap: Loi qui renvoie à un décret : pas d'habilitation des collectivités
-h: Une loi renvoie à un décret, et le décret tarde. Une collectivité peut-elle s'en passer ? Non : ici, la carence du pouvoir national n'habilite personne. C'est la limite de la solution Cergy-Pontoise.
+h: Une loi de 1990 laisse les assemblées locales fixer les primes de leurs agents, dans la limite de celles de l'État. Le décret prévu tarde, et le conseil général du Calvados délibère quand même. Le préfet défère, le tribunal de Caen interroge le Conseil d'État. Réponse : sans le décret, la règle ne s'applique pas. C'est la limite de la solution Cergy-Pontoise.
+f: Un conseil général fixe le régime indemnitaire de ses agents en application d'une loi de 1990, avant le décret d'application prévu.
+pr: Le préfet défère les délibérations au tribunal administratif de Caen, qui saisit le Conseil d'État pour avis.
 q: La carence du pouvoir national à prendre le décret prévu par la loi habilite-t-elle les collectivités à agir à sa place ?
-s: Non. Lorsque la loi renvoie à un décret, la carence du pouvoir national n'habilite pas les collectivités.
+s: Non. La règle n'est pas assez précise pour s'appliquer sans le décret prévu : la carence du pouvoir national n'habilite pas les collectivités.
 po: L'habilitation implicite de 1985 ne joue que dans le silence de la loi.
 
 @meyet-1992 | Meyet (1992) | CE, Ass., 10 sept. 1992 | CE | 1992 | 3 | 7
 ap: Décret délibéré en Conseil des ministres : compétence du PR
 h: Été 1992, référendum sur Maastricht. M. Meyet attaque les décrets d'organisation : ils relevaient du Premier ministre, pas du Président. Le Conseil d'État répond qu'ils ont été délibérés en Conseil des ministres. Peu importe qu'aucun texte ne l'exigeait : le Président devait signer.
-f: Le Président signe en 1992 des décrets organisant le référendum sur le traité de Maastricht, délibérés en Conseil des ministres sans qu'un texte l'impose.
+f: Le Président signe des décrets organisant le référendum sur le traité de Maastricht, délibérés en Conseil des ministres sans qu'un texte l'impose.
 pr: Un requérant saisit le Conseil d'État en invoquant la violation des articles 13 et 21.
 q: Un décret délibéré en Conseil des ministres sans qu'un texte l'impose relève-t-il de la compétence du Président ?
 s: Oui. Ayant été délibérés en Conseil des ministres, ces décrets devaient être signés par le Président, même si aucun texte ne l'imposait.
 po: La pratique de délibération commande la compétence. Effet cliquet : seul un décret en Conseil des ministres pourra les modifier.
 x: Un décret signé à tort par le Président est-il sauvé lorsqu'il porte le contreseing du Premier ministre ? || C'est Sicard (1962). Ici, le décret a bien été délibéré en Conseil des ministres.
-x: Une loi devenue incompatible avec un traité postérieur doit-elle être écartée par le juge administratif ? || C'est l'autre Meyet, celui de 1999, sur les sondages.
+x: Une loi peut-elle devenir incompatible avec un traité après son adoption, par le seul effet du temps ? || C'est l'autre Meyet, celui de 1999, sur les sondages.
 
 @collas | Ministre de la Défense c. Collas | CE, 9 sept. 1996 | CE | 1996 | 1 | 7
 nf: 1
@@ -165,7 +166,7 @@ po: Tempérament à l'effet cliquet né de Meyet (1992).
 
 @jousselin | Jousselin | CE, 19 sept. 2014 | CE | 2014 | 1 | 7
 ap: Consécration du terme « lignes directrices »
-h: M. Jousselin, père de deux enfants scolarisés dans un lycée français à l'étranger, se voit refuser une bourse. L'instruction de l'agence exigeait des justificatifs. Le Conseil d'État qualifie enfin ce type de texte : ni règlement ni simple avis, des lignes directrices.
+h: M. Jousselin, père de deux enfants scolarisés dans un établissement français à l'étranger, se voit refuser une bourse. L'instruction de l'agence exigeait des justificatifs. Le Conseil d'État qualifie enfin ce type de texte : ni règlement ni simple avis, des lignes directrices.
 f: L'Agence pour l'enseignement français à l'étranger refuse une bourse scolaire à un parent résidant en Californie, en appliquant son instruction.
 pr: Après un rejet par la cour administrative d'appel de Paris, il se pourvoit devant le Conseil d'État.
 q: Comment qualifier une instruction qui guide les décisions sans poser de norme impérative et qu'on peut écarter en motivant ?
@@ -195,7 +196,7 @@ x: Le fonctionnaire qui fait grève peut-il être sanctionné malgré le droit d
 @aurore | Société du journal L'Aurore | CE, Ass., 25 juin 1948 | CE | 1948 | 2 | 8
 ap: Égalité devant le service public (et non-rétroactivité des règlements)
 h: Fin 1947, un arrêté augmente le prix de l'électricité à partir du premier relevé de 1948. Résultat : des consommations antérieures sont facturées au nouveau tarif, et selon la date du relevé, les usagers ne paient pas pareil. Le journal L'Aurore attaque.
-f: Un arrêté du 30 décembre 1947 augmente le prix de l'électricité dès le premier relevé de 1948, ce qui vise aussi des consommations passées.
+f: Un arrêté de décembre augmente le prix de l'électricité dès le premier relevé de janvier, ce qui vise aussi des consommations passées.
 pr: La société éditrice du journal demande l'annulation au Conseil d'État.
 q: Un arrêté tarifaire peut-il s'appliquer à des consommations antérieures et traiter différemment des usagers placés dans la même situation ?
 s: Non. Les règlements ne disposent que pour l'avenir, et les usagers doivent être traités également. Annulation.
@@ -235,16 +236,16 @@ h: Territoire de Belfort. Mme Peynet, agente non titulaire, est licenciée alors
 f: Une femme employée par une administration comme agente non titulaire est licenciée alors qu'elle est enceinte.
 pr: Elle saisit le juge administratif de cette décision.
 q: Le principe interdisant de licencier une salariée enceinte s'applique-t-il aux agents publics sans texte particulier ?
-s: Oui. Ce principe général, dont s'inspire le Code du travail, s'applique aux agentes publiques. Annulation.
+s: Oui. Ce principe général, dont s'inspire le Code du travail, s'applique aux agentes publiques, sauf nécessité propre au service. Annulation.
 po: Le juge tire un PGD d'un texte de droit privé et l'étend à l'administration.
 
 @cc-79-105 | Droit de grève à la radio-télévision | CC, 79-105 DC, 25 juill. 1979 | CC | 1979 | 2 | 8
 ap: Continuité du service public : valeur constitutionnelle
 h: Les grèves perturbent la radio et la télévision publiques. Une loi de 1979 organise un service minimum. Le Conseil constitutionnel doit concilier le droit de grève avec une autre exigence : le service public ne s'arrête pas.
-f: Une loi de 1979 encadre le droit de grève à la radio et à la télévision publiques pour assurer la continuité du service.
+f: Une loi encadre le droit de grève à la radio et à la télévision publiques pour assurer la continuité du service.
 pr: Le Conseil constitutionnel est saisi avant la promulgation.
 q: Le législateur peut-il limiter le droit de grève pour assurer la continuité du service public ?
-s: Oui. La continuité du service public a valeur constitutionnelle et doit être conciliée avec le droit de grève.
+s: Oui. La continuité du service public a valeur constitutionnelle et doit être conciliée avec le droit de grève. Censure partielle : la réquisition pour assurer le « service normal » va trop loin.
 po: L'un des rares principes vraiment communs au Conseil constitutionnel et au juge administratif.
 
 @rnaf | Rassemblement des nouveaux avocats de France | CE, Ass., 12 oct. 1979 | CE | 1979 | 1 | 8
@@ -253,7 +254,7 @@ ap: Égalité devant la justice
 h: Le principe d'égalité s'étend au procès. Le Conseil d'État ajoute un compartiment au principe gigogne : les justiciables doivent être traités également devant la justice.
 q: Le principe d'égalité s'étend-il aux justiciables devant les juridictions ?
 s: Oui. L'égalité devant la justice s'impose au pouvoir réglementaire.
-po: Principe rattaché ensuite à la Déclaration de 1789.
+po: Le principe d'égalité gagne un compartiment : celui de la justice.
 
 @brgm | BRGM | Cass. 1re civ., 21 déc. 1987 | Cass. | 1987 | 1 | 8
 ap: Insaisissabilité des biens des personnes publiques
@@ -273,13 +274,13 @@ s: Il la présente comme la généralisation d'un principe commun à plusieurs t
 po: Technique de légitimation, à rapprocher d'Alitalia et d'Alusuisse.
 
 @milhaud | Milhaud | CE, Ass., 2 juill. 1993 | CE | 1993 | 2 | 8
-ap: Respect de la dignité humaine, même après la mort
-h: Amiens, 1985. Le docteur Milhaud, anesthésiste, teste une technique sur un patient en état de mort cérébrale, sans consentement. L'ordre des médecins le sanctionne. Il répond que le patient n'était plus une personne. Le Conseil d'État lui oppose la dignité.
+ap: Respect de la personne humaine, même après la mort
+h: Amiens, 1988. Le docteur Milhaud, anesthésiste, teste une technique sur un patient en état de mort cérébrale, sans consentement. L'ordre des médecins le sanctionne. Il répond que le patient n'était plus une personne. Le Conseil d'État lui oppose le respect de la personne humaine.
 f: Un médecin expérimente une technique sur un patient en état de mort cérébrale. La juridiction ordinale lui inflige un blâme.
 pr: Il se pourvoit en cassation devant le Conseil d'État.
 q: Les principes déontologiques de respect de la personne s'appliquent-ils encore après la mort ?
-s: Oui. Ils ne cessent pas de s'appliquer avec la mort du patient : on ne peut expérimenter sans finalité thérapeutique ni encadrement. Rejet.
-po: Le juge administratif consacre la dignité avant le Conseil constitutionnel (1994).
+s: Oui. Ils ne cessent pas de s'appliquer avec la mort du patient : on ne peut expérimenter sans constat régulier de la mort, nécessité scientifique reconnue et accord de l'intéressé ou des proches. Rejet.
+po: Le cours y voit la dignité, consacrée avant le Conseil constitutionnel (1994). L'arrêt, lui, dit « respect de la personne humaine ».
 
 @alusuisse | Société Alusuisse-Lonza-France | CE, Ass., 8 juill. 2005 | CE | 2005 | 2 | 8
 ap: Remise en état d'un site pollué : prescription trentenaire
@@ -307,18 +308,18 @@ h: Guadeloupe, marché de signalisation à l'aéroport. Tropic, écartée, veut 
 f: Une entreprise évincée d'un marché public en Guadeloupe veut contester directement la validité du contrat.
 pr: Elle saisit le juge des référés, puis le Conseil d'État en cassation, qui statue en Assemblée.
 q: Le juge peut-il différer l'application dans le temps d'une règle jurisprudentielle nouvelle qu'il pose lui-même ?
-s: Oui. Il ouvre un recours aux concurrents évincés et décide qu'il ne vaudra que pour les contrats signés après sa décision.
+s: Oui. Il ouvre un recours aux concurrents évincés et décide qu'il ne vaudra que pour les contrats dont la procédure de passation est engagée après sa décision.
 po: Le juge reconnaît implicitement mais nécessairement son pouvoir normatif.
 x: L'autorité réglementaire doit-elle prévoir des mesures transitoires pour les contrats en cours d'exécution ? || C'est KPMG (2006). Tropic parle du juge, pas de l'auteur du règlement.
 x: Les usagers tiers au contrat peuvent-ils demander à l'autorité concédante d'en faire respecter les clauses ? || C'est Croix-de-Seguey-Tivoli (1906).
 
 @daillieres | d'Aillières | CE, Ass., 7 févr. 1947 | CE | 1947 | 2 | 9
 ap: Juridiction administrative : saisie de questions de droit public
-h: Après la Libération, un jury d'honneur décide quels parlementaires ayant voté les pleins pouvoirs à Pétain resteront inéligibles. M. d'Aillières veut attaquer sa décision. Le texte n'en dit rien. Le Conseil d'État qualifie : ce jury est une juridiction administrative.
+h: Après la Libération, un jury d'honneur décide quels parlementaires ayant voté les pleins pouvoirs à Pétain resteront inéligibles. M. d'Aillières veut attaquer sa décision. Le texte dit que ses décisions ne sont susceptibles d'aucun recours. Le Conseil d'État qualifie : ce jury est une juridiction administrative.
 f: Un jury d'honneur, créé à la Libération, maintient l'inéligibilité d'un parlementaire ayant voté les pleins pouvoirs en 1940.
-pr: L'intéressé saisit le Conseil d'État, alors qu'aucun texte ne prévoit de recours.
+pr: L'intéressé saisit le Conseil d'État, alors que le texte exclut tout recours.
 q: Un organisme qui statue sur des questions de droit public, sans qualification par un texte, est-il une juridiction administrative ?
-s: Oui. Il est une juridiction administrative, et ses décisions relèvent du Conseil d'État par la voie de la cassation.
+s: Oui. Il est une juridiction administrative, et les mots « aucun recours » n'écartent pas la cassation. Décision annulée faute d'avoir entendu l'intéressé, renvoi devant le jury.
 po: Critère de la nature des litiges. Le recours en cassation existe même sans texte.
 
 @de-bayo | De Bayo | CE, Ass., 12 déc. 1953 | CE | 1953 | 2 | 9
@@ -331,10 +332,10 @@ po: Critère fonctionnel, complété par des indices de composition et de procé
 
 @cc-80-119 | Validation d'actes administratifs | CC, 80-119 DC, 22 juill. 1980 | CC | 1980 | 3 | 9
 ap: PFRLR : indépendance des juridictions administratives
-h: En 1980, le Conseil d'État annule une mesure relative à des décrets de 1977. Le Parlement valide aussitôt ces décrets par une loi. Censure déguisée ? Des parlementaires saisissent le Conseil constitutionnel, qui accepte la loi mais offre au juge administratif une protection constitutionnelle.
-f: Après une annulation par le Conseil d'État, une loi valide rétroactivement des décrets de 1977 et les actes pris sur leur fondement.
+h: En 1980, le Conseil d'État annule en partie un décret de 1977 sur un comité paritaire universitaire. Le Parlement valide aussitôt les décrets pris après consultation de ce comité. Censure déguisée ? Des parlementaires saisissent le Conseil constitutionnel, qui accepte la loi mais offre au juge administratif une protection constitutionnelle.
+f: Après l'annulation partielle d'un décret de 1977 sur un comité paritaire, une loi valide les décrets pris après consultation de ce comité et les actes fondés sur eux.
 pr: Soixante députés et soixante sénateurs défèrent la loi au Conseil constitutionnel.
-q: Une loi peut-elle valider des actes annulés par le juge administratif sans porter atteinte à l'indépendance de la juridiction ?
+q: Une loi peut-elle valider des actes menacés par une annulation sans porter atteinte à l'indépendance de la juridiction ?
 s: Oui, pour l'intérêt général, sans censurer le juge ni lui adresser d'injonction. L'indépendance des juridictions administratives est un PFRLR. Conformité.
 po: La juridiction administrative a une existence constitutionnelle : une simple loi ne peut la supprimer.
 x: Le juge administratif dispose-t-il d'un noyau de compétence protégé pour annuler les actes de puissance publique ? || C'est Conseil de la concurrence (1987).
@@ -348,7 +349,7 @@ pr: Des députés défèrent la loi au Conseil constitutionnel.
 q: Le législateur peut-il transférer au juge judiciaire le contentieux de décisions prises par une autorité administrative ?
 s: Il existe un PFRLR de compétence du juge administratif, qu'une bonne administration de la justice peut aménager. Mais l'absence de sursis prive d'une garantie : censure.
 po: Noyau dur : annulation ou réformation des décisions de puissance publique, hors matières réservées au juge judiciaire.
-x: Une loi peut-elle valider des actes annulés par le Conseil d'État sans violer l'indépendance des juridictions ? || C'est la décision de 1980.
+x: Une loi peut-elle valider des actes menacés par une annulation sans violer l'indépendance des juridictions ? || C'est la décision de 1980.
 x: Le Conseil de la concurrence est-il une juridiction soumise aux garanties du procès équitable ? || Non : le Conseil le qualifie d'organisme administratif, et ce n'est pas le cœur de la décision.
 
 @didier | Didier | CE, Ass., 3 déc. 1999 | CE | 1999 | 2 | 9
@@ -371,7 +372,7 @@ po: Confirme l'existence constitutionnelle de la juridiction administrative.
 
 @snpst | Syndicat national des professionnels de santé au travail | CE, 17 juill. 2013 | CE | 2013 | 1 | 9
 ap: Consultation obligatoire omise : moyen d'ordre public
-h: Un décret de 2012 réorganise la médecine du travail. Certains articles auraient dû passer devant le Conseil d'État, en formation consultative. Personne ne l'a fait. Le juge relève lui-même l'oubli : c'est plus grave qu'une irrégularité ordinaire.
+h: Un décret de 2012 réorganise la médecine du travail. Certains articles auraient dû passer devant le Conseil d'État, en formation consultative. Personne ne l'a fait. Le juge doit relever l'oubli, au besoin d'office : c'est plus grave qu'une irrégularité ordinaire.
 f: Un décret de 2012 sur les services de santé au travail est pris sans la consultation obligatoire du Conseil d'État pour une partie de ses articles.
 pr: Des syndicats en demandent l'annulation au Conseil d'État.
 q: L'omission d'une consultation obligatoire du Conseil d'État peut-elle être relevée d'office par le juge ?
@@ -421,21 +422,21 @@ f: Un accord franco-américain de 2013 oblige les banques à transmettre au fisc
 pr: L'association attaque devant le Conseil d'État les refus d'abroger les actes pris pour son application.
 q: Comment le juge traite-t-il le moyen tiré de l'incompatibilité d'un traité avec un autre traité ?
 s: Il concilie les deux normes. À défaut, il applique celle dans le champ de laquelle l'administration s'est placée, sauf droit de l'Union. Rejet.
-po: Pas de hiérarchie entre traités. Généralisation de Kandyrine (2011).
+po: Pas de hiérarchie entre traités. Reprise de la méthode de Kandyrine (2011), réserve du droit de l'Union comprise.
 
 @kandyrine | Kandyrine de Brito Paiva | CE, Ass., 23 déc. 2011 | CE | 2011 | 2 | 10
 ap: Première méthode de conciliation entre deux traités
-h: Les porteurs d'emprunts russes sont indemnisés en vertu d'un accord franco-russe de 1997, réservé aux Français. Une exclue invoque la Convention européenne. Le Conseil d'État doit concilier deux engagements de la France de même valeur.
+h: Les porteurs d'emprunts russes sont indemnisés en vertu d'un accord franco-russe de 1997, réservé aux Français. Un exclu, portugais, invoque la Convention européenne. Le Conseil d'État doit concilier deux engagements de la France de même valeur.
 f: Un accord franco-russe de 1997 réserve aux Français l'indemnisation des porteurs d'emprunts russes. Une personne exclue invoque la non-discrimination.
 pr: Elle saisit le juge administratif, jusqu'au Conseil d'État.
 q: Que fait le juge lorsque l'application d'un traité heurte un autre traité de même valeur ?
 s: Il recherche une conciliation et, à défaut, applique le traité dans le champ duquel la décision a été prise.
-po: Méthode reprise et étendue par Américains accidentels (2019).
+po: Méthode reprise par Américains accidentels (2019).
 
 @lcen | Loi pour la confiance dans l'économie numérique | CC, 2004-496 DC, 10 juin 2004 | CC | 2004 | 2 | 10
 ap: La transposition des directives est une exigence constitutionnelle
 h: 2004, loi sur l'économie numérique. Elle recopie une directive sur les hébergeurs. Des parlementaires l'attaquent. Le Conseil constitutionnel répond avec l'article 88-1 : la transposition est une exigence constitutionnelle, et il ne lui revient pas de contrôler ce qui découle nécessairement de la directive.
-f: Une loi de 2004 sur l'économie numérique transpose une directive européenne.
+f: Une loi sur l'économie numérique transpose une directive européenne.
 pr: Des députés et des sénateurs la défèrent au Conseil constitutionnel.
 q: La transposition d'une directive est-elle une exigence constitutionnelle qui limite le contrôle du Conseil ?
 s: Oui, sur le fondement de l'article 88-1, sauf disposition expresse contraire de la Constitution.

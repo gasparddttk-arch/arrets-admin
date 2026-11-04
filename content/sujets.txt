@@ -46,7 +46,7 @@ pb: La suprématie de la Constitution et l'effectivité du droit de l'Union peuv
 1a: La suprématie de la Constitution | sarran, snip
 1b: La directive au-dessus du règlement et de la loi | alitalia, rothmans
 2: Une hiérarchie neutralisée par la conciliation
-2a: Des mécanismes d'équivalence | lcen, dadvsi, arcelor
+2a: Des mécanismes de conciliation | lcen, dadvsi, arcelor
 2b: Un point de rupture encadré | fdn, air-france
 m: C'est le plan proposé dans ton programme de TD 4. Il répond à l'alternative du sujet : la hiérarchie existe, mais les juges s'organisent pour ne pas avoir à l'appliquer.
 b: HORS || Le plan traite de l'invocabilité des directives par les particuliers. C'est un autre sujet : il manque la Constitution. || Une invocabilité d'abord refusée aux particuliers || Le refus de principe de l'arrêt Cohn-Bendit || Les parades de l'invocabilité d'exclusion || Une invocabilité enfin consacrée par le juge || L'abandon de Cohn-Bendit par Perreux || Les conditions de l'invocabilité de substitution
@@ -118,7 +118,7 @@ pb: Le juge qui se disait serviteur de la loi en est-il devenu le censeur ?
 1a: Le contrôle de constitutionnalité refusé | arrighi, air-algerie
 1b: L'interprétation plutôt que la censure | lamotte
 2: Un juge devenu censeur de la loi
-2a: La loi inconventionnelle écartée | nicolo, rothmans, anthroposophique
+2a: La loi confrontée aux traités, au besoin écartée | nicolo, rothmans, anthroposophique
 2b: Le dommage causé par la loi réparé | gardedieu
 m: Le plan reprend les mots mêmes du cours, serviteur et censeur. Il répond au point d'interrogation par une thèse nuancée.
 b: REDITE || Le I et le II traitent tous deux du contrôle de conventionnalité. Le plan tourne en rond et oublie la loi-écran. || Un juge contrôlant les traités au regard de l'article 55 || Le visa de l'article 55 dans l'arrêt Nicolo || L'extension du contrôle aux directives || Un juge contrôlant les lois au regard de l'article 55 || La compatibilité de la loi avec le traité || L'extension du contrôle au droit dérivé
@@ -127,7 +127,7 @@ b: NIVEAU || L'opposition entre le juge et le législateur met sur le même plan
 &independance | D | L'indépendance de la juridiction administrative | 1,9
 pb: Comment une juridiction née de l'administration a-t-elle acquis une indépendance reconnue par la Constitution ?
 1: Une séparation conquise sur l'administration
-1a: La fin de la justice retenue | blanco
+1a: La justice déléguée, confortée par un droit spécial | blanco
 1b: La fin du ministre-juge | cadot
 2: Une indépendance consacrée par la Constitution
 2a: La garantie d'existence | cc-80-119, cc-2009-595
@@ -193,7 +193,7 @@ pb: Comment le Conseil d'État peut-il abandonner Cohn-Bendit tout en refusant d
 2a: L'effet direct refusé à l'article 10 |
 2b: La preuve aménagée par le juge | barel
 m: C'est le plan de ton corrigé de TD 4. Il colle à l'arrêt : le principe d'abord, le paradoxe de l'espèce ensuite.
-b: PRETEXTE || Le plan récite l'histoire des directives. L'arrêt n'est plus qu'un prétexte : la fiche de méthode reproche précisément de réciter un cours. || La jurisprudence antérieure à l'arrêt Perreux || La position de la Cour de justice en 1974 || La position du Conseil d'État en 1978 || La jurisprudence postérieure à l'arrêt Perreux || L'application dans l'affaire Mme Lévèque || L'extension dans l'affaire Mme Montaut
+b: PRETEXTE || Le plan récite l'histoire des directives. L'arrêt n'est plus qu'un prétexte : la fiche de méthode reproche précisément de réciter un cours. || La jurisprudence antérieure à l'arrêt Perreux || La position de la Cour de justice en 1974 || La position du Conseil d'État en 1978 || La jurisprudence postérieure à l'arrêt Perreux || L'application à la discrimination en 2011 || L'extension au harcèlement moral en 2011
 b: CONTRESENS || Le plan croit que Mme Perreux obtient gain de cause et que l'article 10 a effet direct. La requête est rejetée et l'effet direct refusé. || La victoire de la requérante || L'effet direct de l'article 10 || L'annulation de l'arrêté de nomination || La condamnation de l'État || L'indemnisation de la discrimination || L'injonction de nomination
 
 &c-nicolo | C | CE, Ass., 20 octobre 1989, Nicolo | 5
@@ -295,8 +295,8 @@ b: COMPROC || Recopier le plan de la décision par rubriques de procédure ne co
 &c-air-france | C | CC, 2021-940 QPC, 15 octobre 2021, Société Air France | 3
 pb: Comment affirmer la suprématie de la Constitution sans provoquer de conflit avec le droit de l'Union ?
 1: Un contrôle limité de la loi transposée
-1a: L'incompétence de principe | dadvsi
-1b: La réserve d'identité | arcelor
+1a: L'incompétence de principe | lcen
+1b: La réserve d'identité | dadvsi
 2: Une reconnaissance sans conflit
 2a: La force publique, principe d'identité |
 2b: Une conformité qui évite la rupture | fdn

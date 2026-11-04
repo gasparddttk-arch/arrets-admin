@@ -18,12 +18,12 @@ x: Un service public exploité comme une entreprise privée échappe-t-il au jug
 
 @cadot | Cadot | CE, 13 déc. 1889 | CE | 1889 | 3 | 1,9
 ap1: Fin du ministre-juge : le CE devient juge de droit commun, le lien organique est rompu
-ap9: Séparation organique : on saisit le CE directement, sans passer par le ministre
-h: M. Cadot dirige la voirie et les eaux de Marseille quand la ville supprime son emploi. Il réclame des dommages-intérêts et essuie un refus. Reste une question très simple, que personne n'avait tranchée : devant qui se plaindre, alors qu'aucun texte ne répond ?
+ap9: Séparation organique : le CE peut être saisi directement, le ministre n'est plus juge
+h: M. Cadot dirige la voirie et les eaux de Marseille quand la ville supprime son emploi. Il réclame des dommages-intérêts. Le juge judiciaire puis le conseil de préfecture se disent incompétents, et le ministre rejette sa demande. Reste une question très simple : devant qui se plaindre, alors qu'aucun texte ne répond ?
 f: Le directeur de la voirie et des eaux de Marseille perd son emploi, supprimé par la ville. Il réclame des dommages-intérêts et se heurte à un refus.
-pr: Il demande directement au Conseil d'État d'annuler ce refus, alors qu'aucun texte ne lui attribue compétence.
-q: Le Conseil d'État peut-il être saisi directement d'un recours contre une décision administrative, sans texte et sans décision préalable d'un ministre-juge ?
-s: Le Conseil d'État se déclare compétent : sauf texte contraire, il connaît des recours en annulation contre les décisions administratives.
+pr: Les juges judiciaires puis le conseil de préfecture se déclarent incompétents. Le ministre de l'Intérieur rejette sa réclamation le 17 octobre 1885. Il attaque cette décision devant le Conseil d'État.
+q: Le Conseil d'État peut-il être saisi directement d'un recours contre une décision administrative, sans texte et sans que le ministre soit juge de premier ressort ?
+s: Le Conseil d'État se déclare compétent : sauf texte contraire, il connaît des recours en annulation contre les décisions administratives. Au fond, la requête est rejetée.
 po: Fin de la théorie du ministre-juge. Le Conseil d'État devient juge de droit commun et le lien organique entre l'administration et son juge est rompu.
 x: Le Conseil d'État statue-t-il encore au nom du chef de l'État, ou rend-il désormais la justice au nom du peuple français ? || C'est la justice déléguée, posée par la loi du 24 mai 1872, pas par Cadot.
 x: Une ville peut-elle supprimer l'emploi d'un de ses agents sans lui verser la moindre indemnité de licenciement ? || C'est le fond du dossier. L'arrêt est célèbre pour la compétence du juge.
@@ -39,9 +39,9 @@ po: Naissance des services publics industriels et commerciaux. Le service public
 
 @arrighi | Arrighi | CE, Sect., 6 nov. 1936 | CE | 1936 | 3 | 2
 ap: Loi-écran : le juge refuse de contrôler la constitutionnalité d'une loi
-h: En 1934, une loi permet de mettre des fonctionnaires à la retraite d'office par décret. M. Arrighi, touché par la mesure, plaide que cette loi viole les lois constitutionnelles de 1875. Réponse glaciale du Conseil d'État : ce moyen n'est pas de ceux qu'on discute devant lui.
-f: Un fonctionnaire est mis d'office à la retraite par un décret pris en application d'une loi de 1934.
-pr: Il saisit le Conseil d'État et soutient que la loi fondant le décret méconnaît les lois constitutionnelles de 1875.
+h: En 1934, une loi autorise le Gouvernement à prendre par décret des mesures d'économies. M. Arrighi, mis d'office à la retraite sur ce fondement, plaide que cette loi viole les lois constitutionnelles de 1875. Réponse glaciale du Conseil d'État : ce moyen n'est pas de ceux qu'on discute devant lui.
+f: Un fonctionnaire est mis d'office à la retraite par le ministre de la Guerre, en application de décrets fondés sur une loi de 1934.
+pr: Il saisit le Conseil d'État et soutient que la loi fondant ces décrets méconnaît les lois constitutionnelles de 1875.
 q: Le juge administratif peut-il apprécier la constitutionnalité de la loi sur laquelle un acte administratif est fondé ?
 s: Non. « En l'état actuel du droit public français », ce moyen n'est pas de nature à être discuté devant le Conseil d'État.
 po: Naissance de la loi-écran, au nom de la séparation des pouvoirs et de la volonté générale. Elle subsiste aujourd'hui, mais la QPC la contourne.
@@ -63,9 +63,9 @@ ap2: Limite de la loi-écran : le juge interprète la loi pour « vider le venin
 ap8: PGD : droit au recours pour excès de pouvoir contre toute décision, même sans texte
 h: Dame Lamotte voit ses terres de l'Ain concédées à un tiers par le préfet. Le Conseil d'État annule, le préfet recommence, le Conseil annule encore. Vichy vote alors une loi qui exclut « tout recours ». Le préfet recommence une dernière fois. Le Conseil répond que « tout recours » ne visait pas le sien.
 f: Le préfet de l'Ain concède à un tiers des terres d'une propriétaire, malgré des annulations répétées. Une loi de 1943 exclut alors tout recours contre ces concessions.
-pr: La propriétaire saisit de nouveau le Conseil d'État, qui doit interpréter la loi de 1943.
+pr: Le conseil de préfecture de Lyon annule la concession de 1944. Le ministre de l'Agriculture saisit le Conseil d'État : la loi de 1943 rendrait ce recours irrecevable.
 q: Une loi qui exclut « tout recours » contre une décision administrative supprime-t-elle le recours pour excès de pouvoir ?
-s: Non. Le recours pour excès de pouvoir existe même sans texte contre tout acte administratif ; il faudrait une exclusion expresse. Annulation.
+s: Non. Le recours pour excès de pouvoir existe même sans texte contre tout acte administratif ; il faudrait une exclusion expresse. Le préfet est censuré pour détournement de pouvoir : il voulait faire échec aux décisions du Conseil.
 po: Le juge vide la loi de son venin sans la contrôler. Le droit au recours devient un principe général du droit.
 x: Le préfet peut-il concéder de nouveau des terres malgré trois annulations déjà prononcées par le Conseil d'État ? || C'est l'histoire de l'affaire. La vraie question porte sur le sens des mots « tout recours ».
 x: Le juge administratif peut-il refuser d'appliquer une loi de Vichy contraire aux lois de la République ? || Le juge n'écarte pas la loi : il l'interprète. C'est toute l'astuce de l'arrêt.
@@ -74,7 +74,7 @@ x: Le juge administratif peut-il refuser d'appliquer une loi de Vichy contraire 
 ap: 1er PFRLR dégagé par le CE (liberté d'association)
 h: Paris, 1953. L'Amicale des Annamites réunit des Vietnamiens. Le ministre de l'Intérieur la traite en association étrangère et constate sa nullité par arrêté, sur le fondement d'un décret de 1939. Mais les ressortissants de l'Union française sont-ils des étrangers ?
 f: Par arrêté du 30 avril 1953, le ministre de l'Intérieur constate la nullité d'une association déclarée dont les membres sont vietnamiens.
-pr: L'association et un de ses secrétaires généraux saisissent le Conseil d'État en excès de pouvoir.
+pr: L'association et son secrétaire général saisissent le Conseil d'État en excès de pouvoir.
 q: Le ministre peut-il constater la nullité d'une association de ressortissants de l'Union française malgré les principes rappelés par le Préambule de 1946 ?
 s: Annulation. Les principes reconnus par les lois de la République, dont la liberté d'association, s'appliquent à ces ressortissants.
 po: Le Conseil d'État est le premier à appliquer un PFRLR, quinze ans avant le Conseil constitutionnel.
@@ -91,11 +91,11 @@ po: Le pouvoir réglementaire autonome n'échappe pas au juge : il reste soumis 
 @liberte-association | Liberté d'association | CC, 71-44 DC, 16 juill. 1971 | CC | 1971 | 3 | 2,8
 ap2: Le Préambule entre dans le bloc de constitutionnalité
 ap8: Le CC donne une base textuelle à ses principes (gouvernement des juges)
-h: 1970. Simone de Beauvoir veut déclarer les Amis de la Cause du peuple. Le préfet de police bloque le récépissé. Battu devant le juge, le gouvernement fait voter une loi : le préfet pourra faire contrôler une association avant sa naissance. Le président du Sénat saisit le Conseil constitutionnel, et tout change.
-f: Après un refus de récépissé annulé par le juge, le Parlement vote une loi permettant de contrôler la création d'une association avant même sa déclaration.
+h: 1970. Simone de Beauvoir veut déclarer les Amis de la Cause du peuple. Le préfet de police bloque le récépissé. Battu devant le juge, le gouvernement fait voter une loi : le préfet pourra saisir le juge judiciaire avant qu'une association acquière la capacité juridique. Le président du Sénat saisit le Conseil constitutionnel, et tout change.
+f: Après un refus de récépissé annulé par le juge, le Parlement vote une loi subordonnant la capacité juridique d'associations déclarées à un contrôle préalable du juge judiciaire.
 pr: Le président du Sénat défère la loi au Conseil constitutionnel avant sa promulgation.
 q: Le législateur peut-il soumettre la constitution d'une association au contrôle préalable de l'autorité judiciaire ?
-s: Non. La liberté d'association est un PFRLR : aucune autorisation ni contrôle préalable ne peut lui être imposé. Censure.
+s: Non. La liberté d'association est un PFRLR : aucune autorisation ni contrôle préalable ne peut lui être imposé. Censure partielle.
 po: Le Conseil se fonde pour la première fois sur le Préambule. Il devient gardien des libertés face à la loi.
 x: Le préfet de police peut-il refuser le récépissé d'une association dont les objectifs paraissent contraires à l'ordre public ? || C'est le litige d'origine, tranché par le juge administratif, pas la question posée au Conseil.
 x: Le Conseil constitutionnel peut-il contrôler une loi au regard d'un traité protégeant la liberté d'association ? || Le contrôle se fait au regard du Préambule. Le refus du contrôle des traités viendra en 1975.
@@ -104,7 +104,7 @@ x: Le Conseil constitutionnel peut-il contrôler une loi au regard d'un traité 
 ap2: Contournement de la loi-écran : contrôle de conventionnalité, quasi-contrôle de constitutionnalité
 ap5: Le CE contrôle la conventionnalité des lois (art. 55 visé)
 h: Juin 1989, élections européennes. M. Nicolo, simple électeur, conteste le vote des citoyens d'outre-mer : selon lui, cela viole le traité de Rome. Il perd. Mais pour lui répondre, le Conseil d'État vient de faire ce qu'il refusait depuis vingt ans : vérifier qu'une loi respecte un traité.
-f: Un électeur conteste les élections européennes de juin 1989, parce que les citoyens d'outre-mer y ont participé en vertu de la loi de 1977.
+f: Un électeur conteste des élections européennes, parce que les citoyens d'outre-mer y ont participé en vertu de la loi de 1977.
 pr: Il saisit le Conseil d'État, juge de ces élections, en invoquant le traité de Rome.
 q: Le juge administratif peut-il vérifier la compatibilité d'une loi avec un traité qui lui est antérieur ?
 s: Rejet. Visant l'article 55, le juge compare la loi de 1977 au traité de Rome et conclut à leur compatibilité.
@@ -128,7 +128,7 @@ f: Un décret accorde au Mali l'extradition d'un de ses ressortissants, poursuiv
 pr: L'intéressé demande au Conseil d'État l'annulation du décret, en invoquant le but politique de la demande.
 q: Un traité d'extradition doit-il être interprété à la lumière d'un principe constitutionnel interdisant d'extrader dans un but politique ?
 s: Oui. Le traité s'interprète conformément à ce PFRLR, tiré de la loi du 10 mars 1927. En l'espèce, le but politique n'est pas établi. Rejet.
-po: Dernier PFRLR dégagé par le Conseil d'État. L'interprétation conforme fait primer la Constitution sans le dire.
+po: Encore un PFRLR dégagé par le Conseil d'État. L'interprétation conforme fait primer la Constitution sans le dire.
 
 @air-algerie | Société Air Algérie | CE, 6 déc. 2012 | CE | 2012 | 1 | 2
 ap: Écran transparent élargi : l'écran ne joue que si l'acte se borne à réitérer la loi
@@ -165,7 +165,7 @@ f: Le Parlement adopte la loi relative à l'interruption volontaire de grossesse
 pr: Des députés la défèrent au Conseil constitutionnel, en invoquant notamment la Convention européenne des droits de l'homme et l'article 55.
 q: Le Conseil constitutionnel peut-il contrôler la conformité d'une loi à un traité sur le fondement de l'article 55 ?
 s: Non. Une loi contraire à un traité n'est pas pour autant contraire à la Constitution : le contrôle absolu et définitif diffère du contrôle relatif et contingent.
-po: Le Conseil renvoie le contrôle de conventionnalité aux juges ordinaires. Il faudra attendre Jacques Vabre (1975) et Nicolo (1989).
+po: Le Conseil renvoie le contrôle de conventionnalité aux juges ordinaires. Il faudra attendre Jacques Vabre, puis Nicolo (1989).
 x: Le Conseil constitutionnel peut-il contrôler une loi au regard du Préambule de 1946 sur le droit à la vie ? || Il le fait, et cela ne fait pas difficulté depuis 1971. Le point célèbre est le refus de contrôler les traités.
 x: Le juge ordinaire peut-il écarter une loi contraire à la Convention européenne des droits de l'homme ? || C'est la question laissée aux juges ordinaires, tranchée par Jacques Vabre et Nicolo.
 
@@ -182,7 +182,7 @@ po: Nicolo ne vaut pas pour la coutume. Elle s'impose aux actes administratifs, 
 @sarran | Sarran | CE, Ass., 30 oct. 1998 | CE | 1998 | 3 | 3
 ap: Dans l'ordre interne, la Constitution l'emporte sur les traités
 h: Nouvelle-Calédonie, 1998. Un décret restreint le corps électoral appelé à se prononcer sur l'accord de Nouméa. M. Sarran et d'autres, exclus du vote, invoquent des traités sur les droits civils. Le Conseil d'État répond que la restriction vient de la Constitution elle-même, et que les traités ne passent pas au-dessus.
-f: Un décret de 1998 organise en Nouvelle-Calédonie une consultation réservée à certains électeurs, comme le prévoit l'article 76 de la Constitution.
+f: Un décret organise en Nouvelle-Calédonie une consultation réservée à certains électeurs, comme le prévoit l'article 76 de la Constitution.
 pr: Des électeurs exclus du vote saisissent le Conseil d'État en invoquant des engagements internationaux.
 q: Un traité peut-il être invoqué contre un acte qui applique directement une disposition de valeur constitutionnelle ?
 s: Non. La suprématie de l'article 55 ne s'applique pas, dans l'ordre interne, aux dispositions de nature constitutionnelle. Rejet.
@@ -263,7 +263,7 @@ h: 2008, droit au logement opposable. Un décret durcit les conditions pour les 
 f: Un décret de 2008 impose à certains étrangers deux ans de résidence préalable pour bénéficier du droit au logement opposable, et en exclut d'autres.
 pr: Deux associations demandent au Conseil d'État l'annulation du décret en invoquant la convention n° 97 de l'OIT.
 q: À quelles conditions une stipulation d'un traité peut-elle être invoquée par un particulier devant le juge administratif ?
-s: Il faut qu'elle n'ait pas pour objet exclusif de régir les relations entre États et ne requière aucun acte complémentaire. Annulation, à effet différé.
+s: Il faut qu'elle n'ait pas pour objet exclusif de régir les relations entre États et ne requière aucun acte complémentaire. Annulation partielle, à effet différé.
 po: Les critères de l'effet direct sont unifiés. La seule mention des États comme sujets de l'obligation ne suffit plus à l'exclure.
 x: Le juge doit-il vérifier que l'État étranger applique la convention avant de la confronter à un décret français ? || C'est la réciprocité, traitée par Cheriet-Benseghir en 2010.
 x: Le juge administratif peut-il interpréter lui-même une convention internationale sans la renvoyer au ministre ? || C'est GISTI 1990. Attention au piège : même sigle, autre arrêt.

@@ -11,7 +11,7 @@ rx: Le Code civil s'applique, mais il revient au juge administratif de l'interpr
 rx: Les employés étant fautifs, l'État n'a pas à répondre d'un dommage causé par eux. || Faux : l'arrêt reconnaît une responsabilité de l'État, seulement non générale ni absolue.
 
 %cadot
-c: Un agent municipal voit son emploi supprimé et réclame une indemnité. La ville refuse. Aucun texte ne dit où se plaindre. Il vient directement devant toi, au Conseil d'État, sans passer par le ministre.
+c: Un agent municipal voit son emploi supprimé et réclame une indemnité. La ville refuse. Aucun texte ne dit où se plaindre. Le ministre rejette sa demande, et il vient devant toi, au Conseil d'État.
 d: Tu te déclares compétent pour connaître de sa réclamation | Tu le renvoies devant le ministre, juge de droit commun | Tu le renvoies devant le juge civil de Marseille
 r: Sauf texte contraire, tout recours contre une décision administrative va au Conseil d'État.
 rx: Le ministre reste le juge de droit commun des litiges de son administration en premier ressort. || Faux : c'est précisément la théorie du ministre-juge que l'arrêt abandonne.
@@ -27,20 +27,20 @@ rx: Le bac n'étant pas un service public, le droit administratif ne peut pas s'
 rx: Le naufrage étant un cas de force majeure, aucune responsabilité n'est à rechercher ici. || Faux : la question posée au Tribunal des conflits est celle de la compétence.
 
 %arrighi
-c: Un fonctionnaire est mis d'office à la retraite par un décret pris en application d'une loi. Il te demande d'annuler le décret : la loi elle-même violerait la Constitution. Nous sommes en 1936.
-d: Tu écartes ce moyen sans l'examiner | Tu annules le décret pour inconstitutionnalité | Tu renvoies la question au Parlement
+c: Un fonctionnaire est mis d'office à la retraite en application de décrets fondés sur une loi. Il te demande d'annuler cette mesure : la loi elle-même violerait la Constitution. Nous sommes en 1936.
+d: Tu écartes ce moyen sans l'examiner | Tu annules la mesure pour inconstitutionnalité | Tu renvoies la question au Parlement
 r: En l'état du droit public, la constitutionnalité d'une loi ne se discute pas devant ce juge.
 rx: La loi étant conforme aux lois de 1875, le moyen manque en fait et doit être écarté. || Faux : le juge ne se prononce pas sur la conformité de la loi, il refuse de l'examiner.
-rx: Un acte pris en application d'une loi échappe à tout recours pour excès de pouvoir. || Faux : le décret reste attaquable pour d'autres moyens. Seul ce moyen est refusé.
+rx: Un acte pris en application d'une loi échappe à tout recours pour excès de pouvoir. || Faux : l'acte reste attaquable pour d'autres moyens. Seul ce moyen est refusé.
 rx: La question relève du Conseil constitutionnel, seul juge de la conformité des lois. || Faux : anachronisme. Le Conseil constitutionnel naît en 1958.
 
 %lamotte
-c: Un préfet concède à un tiers des terres d'une propriétaire, malgré plusieurs annulations. Une loi dit désormais que ces concessions ne peuvent faire l'objet d'aucun recours. La propriétaire revient devant toi.
-d: Tu annules la concession malgré la loi | Tu rejettes la requête : la loi l'interdit | Tu écartes la loi comme inconstitutionnelle
+c: Un préfet concède à un tiers des terres d'une propriétaire, malgré plusieurs annulations. Une loi dit désormais que ces concessions ne peuvent faire l'objet d'aucun recours. Le conseil de préfecture lui donne raison, et le ministre te saisit.
+d: Tu confirmes l'annulation malgré la loi | Tu donnes raison au ministre : la loi l'interdit | Tu écartes la loi comme inconstitutionnelle
 r: Le recours pour excès de pouvoir existe sans texte, et aucune loi ne l'exclut expressément ici.
 rx: La loi est contraire à la Constitution, si bien que le juge peut refuser de l'appliquer. || Faux : le juge ne contrôle pas la loi. Il l'interprète.
 rx: Toute loi adoptée par le régime de Vichy est nulle de plein droit depuis la Libération. || Faux : le raisonnement ne passe pas par la nullité de la loi.
-rx: Une loi peut exclure les recours, mais le préfet a méconnu l'autorité de la chose jugée. || Faux : le cœur de l'arrêt est l'interprétation des mots « tout recours ».
+rx: La loi exclut expressément le recours pour excès de pouvoir, mais le préfet a violé la chose jugée. || Faux : la loi ne vise pas ce recours, et c'est cette lecture qui ouvre l'examen du fond.
 
 %annamites
 c: Le ministre de l'Intérieur constate la nullité d'une association parisienne de Vietnamiens, en la traitant d'association étrangère. Nous sommes en 1956, l'association te saisit.
@@ -208,10 +208,10 @@ d: Tu annules le licenciement | Tu rejettes : aucun texte ne la protège | Tu re
 r: Ce principe général, dont s'inspire le Code du travail, protège aussi les agentes publiques.
 rx: Le Code du travail s'applique directement à tous les agents publics, titulaires ou non. || Faux : le juge ne l'applique pas, il en tire un principe.
 rx: La maternité est protégée par le Préambule de 1946, qui se suffit à lui-même en l'espèce. || Faux : le fondement retenu est un principe général du droit.
-rx: Une agente non titulaire peut être licenciée librement, sauf si le licenciement est disciplinaire. || Faux : c'est la thèse de l'administration.
+rx: Une agente non titulaire peut être licenciée librement, sauf si le licenciement est disciplinaire. || Faux : le principe protège l'agente, sauf nécessité propre au service.
 
 %milhaud
-c: Un médecin expérimente une technique sur un patient en état de mort cérébrale, sans finalité thérapeutique. L'ordre le sanctionne. Il soutient que le patient, juridiquement mort, n'a plus de droits.
+c: Un médecin expérimente une technique sur un patient en état de mort cérébrale, sans nécessité scientifique reconnue. L'ordre le sanctionne. Il soutient que le patient, juridiquement mort, n'a plus de droits.
 d: Tu rejettes son pourvoi | Tu annules la sanction | Tu renvoies au juge pénal
 r: Le respect dû à la personne humaine ne cesse pas avec la mort du patient.
 rx: Le patient n'est pas mort, car seul le juge peut constater un décès. || Faux : le décès n'est pas contesté par le juge.
@@ -243,8 +243,8 @@ rx: Seul le législateur peut décider de l'application dans le temps d'une règ
 rx: L'autorité réglementaire doit prévoir une transition avant d'appliquer toute règle nouvelle. || Faux : c'est KPMG. Ici, c'est le juge qui agit sur sa propre règle.
 
 %liberte-association
-c: Une loi permet au préfet de faire contrôler par le juge judiciaire une association avant même sa création. Le président du Sénat te saisit, au Conseil constitutionnel, en 1971.
-d: Tu censures la loi | Tu déclares la loi conforme | Tu te déclares incompétent
+c: Une loi permet au préfet de faire contrôler par le juge judiciaire une association avant qu'elle acquière la capacité juridique. Le président du Sénat te saisit, au Conseil constitutionnel, en 1971.
+d: Tu censures cette disposition | Tu déclares la loi conforme | Tu te déclares incompétent
 r: Cette liberté fondamentale exclut par principe toute autorisation et tout contrôle préalable.
 rx: Le Conseil ne contrôle que la répartition des compétences entre les pouvoirs publics. || Faux : c'était la conception initiale, que la décision dépasse.
 rx: Le contrôle préalable relève du juge administratif et non de l'autorité judiciaire. || Faux : c'est le contrôle préalable lui-même qui est refusé.
@@ -283,12 +283,12 @@ rx: Toute ordonnance est une loi dès sa publication, quelle que soit la date de
 rx: Le Conseil constitutionnel contrôle tous les actes du Président de la République. || Faux : sa compétence est d'attribution.
 
 %daillieres
-c: À la Libération, un jury décide quels élus resteront inéligibles. Aucun texte ne prévoit de recours. Un élu te saisit. Ce jury statue sur des questions de droit public.
-d: Tu exerces un contrôle de cassation | Tu te déclares incompétent, faute de texte | Tu juges l'affaire comme un recours pour excès de pouvoir
-r: Ce jury est une juridiction administrative : la cassation existe même sans texte.
+c: À la Libération, un jury décide quels élus resteront inéligibles. Le texte dit que ses décisions ne sont susceptibles d'aucun recours. Un élu te saisit. Ce jury statue sur des questions de droit public.
+d: Tu exerces un contrôle de cassation | Tu te déclares incompétent : le texte exclut tout recours | Tu juges l'affaire comme un recours pour excès de pouvoir
+r: Ce jury est une juridiction administrative : sauf volonté contraire claire, la cassation reste ouverte.
 rx: Ce jury est une autorité administrative, dont les décisions relèvent de l'excès de pouvoir. || Faux : le critère des questions de droit public en fait une juridiction.
 rx: Un organe politique créé à la Libération échappe à tout contrôle juridictionnel. || Faux : c'est l'inverse, le juge retient sa compétence.
-rx: Aucun recours n'est possible sans texte contre une juridiction spécialisée de ce type. || Faux : le pourvoi en cassation est ouvert sans texte.
+rx: Les mots « aucun recours » ferment aussi la voie de la cassation devant le Conseil d'État. || Faux : sans volonté contraire clairement exprimée, ils ne l'écartent pas.
 
 %chevassier
 c: Une fédération de chasseurs, créée sous forme d'association, collabore à un service public et son président est nommé par le ministre. Elle révoque un garde. La loi la présente comme un établissement privé.

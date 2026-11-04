@@ -55,7 +55,7 @@ m: alitalia = Après coup : obligation d'abroger
 m: tete = Sans règlement : le vide est lui-même illégal
 
 %traites-actes | Traités et actes administratifs
-p: Aucun de ces arrêts ne touche à la loi. Le juge compare un acte à une norme internationale.
+p: Le juge compare un acte à une norme internationale. Aquarone ajoute une limite : la coutume ne prime pas la loi.
 m: kirkwood = Traité invocable contre un décret, sous la IVe
 m: belgacem = Même chose sous la Ve, avec la Convention européenne
 m: aquarone = La coutume compte aussi, mais pas contre une loi
@@ -100,7 +100,7 @@ p: Il contrôle l'entrée du traité, pas son contenu, et il ne hiérarchise pas
 m: blotzheim = Le juge vérifie la procédure (art. 53)
 m: tende = Il liste les moyens recevables et ceux qui sont inopérants
 m: kandyrine = Deux traités : concilier
-m: americains-accidentels = Méthode généralisée à tous les actes
+m: americains-accidentels = Deux traités : même méthode, pour FATCA et le RGPD
 
 %frontieres | Les bavardages de la loi
 p: La première tolère le débordement, la seconde censure le vide.
@@ -124,7 +124,7 @@ m: collas = Le Président peut rendre la main
 p: Il n'a aucun pouvoir général, mais il organise ses services.
 m: jamart = Oui : chef de service, sans texte
 m: brabant = Non : pas de pouvoir réglementaire général
-m: credit-foncier = Oui : orientations à ses services
+m: credit-foncier = Oui : orientations générales (une commission dans l'arrêt, les ministres dans le cours)
 m: labonne = Non : la police nationale est au chef de l'État
 
 %police | La police générale nationale
@@ -221,4 +221,4 @@ m: gisti-2020 = 2020 : le recours contre les documents généraux
 %les-meyet | Deux Meyet, deux sujets
 p: Même requérant, mais aucun rapport entre les deux arrêts.
 m: meyet-1992 = 1992 : la signature du Président, référendum de Maastricht
-m: meyet-1999 = 1999 : l'interdiction des sondages, loi devenue incompatible
+m: meyet-1999 = 1999 : l'interdiction des sondages, incompatibilité survenue admise en principe
