@@ -1,10 +1,11 @@
 // Service worker : tout le contenu est mis en cache à l'installation, pour jouer sans réseau.
-const VERSION = '881537814d39';
+const VERSION = 'be6c33c1b939';
 const FICHIERS = ["./","content.json","css/app.css","fonts/bodoni-700.woff2","fonts/garamond-400.woff2","fonts/garamond-400i.woff2","fonts/garamond-500.woff2","fonts/garamond-600.woff2","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable.png","js/config.js","js/engine.js","js/games.js","js/main.js","js/notif.js","js/state.js","js/ui.js","manifest.webmanifest"];
 const CACHE = `arrets-${VERSION}`;
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FICHIERS)));
+  // GitHub Pages garde ses fichiers dix minutes en cache : on exige les versions fraîches.
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FICHIERS.map((f) => new Request(f, { cache: 'reload' })))));
 });
 
 self.addEventListener('activate', (e) => {

@@ -4,7 +4,8 @@ const FICHIERS = __FICHIERS__;
 const CACHE = `arrets-${VERSION}`;
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FICHIERS)));
+  // GitHub Pages garde ses fichiers dix minutes en cache : on exige les versions fraîches.
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FICHIERS.map((f) => new Request(f, { cache: 'reload' })))));
 });
 
 self.addEventListener('activate', (e) => {

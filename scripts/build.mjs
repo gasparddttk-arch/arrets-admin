@@ -39,7 +39,7 @@ const fichiers = [];
 fichiers.sort();
 
 const empreinte = createHash('sha256');
-for (const f of fichiers) empreinte.update(f).update(readFileSync(join(SORTIE, f)));
+for (const f of [...fichiers, 'sw.js']) empreinte.update(f).update(readFileSync(join(SORTIE, f)));
 const version = empreinte.digest('hex').slice(0, 12);
 const liste = ['./', ...fichiers.filter((f) => f !== 'index.html')];
 const sw = readFileSync(join(SORTIE, 'sw.js'), 'utf8').replace('__VERSION__', version).replace('__FICHIERS__', JSON.stringify(liste));

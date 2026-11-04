@@ -1,6 +1,7 @@
 // Tests de bout en bout sur écran d'iPhone : parties complètes, série, boutique, sauvegarde, mode avion.
 const { chromium, devices } = require('playwright');
 const assert = require('assert');
+const fs = require('fs'); const os = require('os'); const path = require('path');
 const serveur = require('./serveur.cjs');
 const PORT = 8124; const URLB = `http://localhost:${PORT}/`;
 const CAP = 'tests/captures/';
@@ -267,6 +268,33 @@ async function debordement(p, nom) {
   await q.evaluate(() => window.__app.aller('palais'));
   await q.tap('text=Défi du jour'); await jouer(q, { capture: 'petit' }); await debordement(q, 'résultats 320');
   await petit.close();
+
+  // 10. Mise à jour : nouvelle version publiée, bandeau, contenu neuf, progression intacte.
+  const copie = fs.mkdtempSync(path.join(os.tmpdir(), 'arrets-'));
+  fs.cpSync('docs', copie, { recursive: true });
+  const s2 = await serveur(copie, PORT + 1);
+  const URL2 = `http://localhost:${PORT + 1}/`;
+  const maj = await b.newContext({ ...devices['iPhone 13'] });
+  const m = await maj.newPage();
+  m.on('pageerror', (x) => erreurs.push(x.message));
+  await m.goto(URL2 + '?test'); await m.waitForSelector('.tribune');
+  await m.evaluate(() => navigator.serviceWorker.ready); await m.waitForTimeout(500);
+  await m.tap('text=Juste trois minutes'); await jouer(m); await m.tap('text=Retour au Palais');
+  const avantMaj = await etat(m);
+  assert.equal(avantMaj.serie.n, 1, 'une séance jouée avant la mise à jour');
+  const fsw = path.join(copie, 'sw.js');
+  fs.writeFileSync(fsw, fs.readFileSync(fsw, 'utf8').replace(/const VERSION = '[^']+'/, "const VERSION = 'nouvelle'"));
+  const fc = path.join(copie, 'content.json'); const neuf = JSON.parse(fs.readFileSync(fc, 'utf8')); neuf.version = 'version-neuve';
+  fs.writeFileSync(fc, JSON.stringify(neuf));
+  await m.reload(); await m.waitForSelector('.maj', { timeout: 10000 });
+  await m.tap('.maj');
+  await m.waitForFunction(() => document.querySelector('.tribune') && !document.querySelector('.maj'), null, { timeout: 10000 });
+  await m.waitForFunction(() => window.__app); await m.evaluate(() => window.__app.aller('profil'));
+  assert.match(await m.textContent('.version'), /version-neuve/, 'le contenu neuf est servi');
+  const apresMaj = await etat(m);
+  assert.deepEqual([apresMaj.serie, apresMaj.xp, apresMaj.jetons], [avantMaj.serie, avantMaj.xp, avantMaj.jetons], 'progression intacte');
+  await maj.close(); s2.close(); fs.rmSync(copie, { recursive: true, force: true });
+  log('mise à jour ok');
 
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }
