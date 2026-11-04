@@ -34,7 +34,7 @@ function qcm(zone, ctx, { question, options, pourquoiBon, indice, surtitre, id, 
     let repondu = false;
     const bloc = h('div', { class: 'qcm' });
     const lignes = options.map((o) => {
-      const b = h('button', { class: 'option', onClick: () => choisir(o, b) }, h('span', { class: 'option-t' }, o.t));
+      const b = h('button', { class: 'option', 'data-ok': window.__app ? String(!!o.ok) : null, onClick: () => choisir(o, b) }, h('span', { class: 'option-t' }, o.t));
       o.el = b; return b;
     });
     const noteIndice = h('p', { class: 'indice', hidden: true }, indice || '');
@@ -168,7 +168,7 @@ export async function jouerPuzzle(zone, ctx, round, ix) {
         }, h('span', {}, s.l), b ? h('small', {}, `${b.t.slice(0, 48)}…`) : null);
       });
       const libres = blocs.filter((b) => !Object.values(place).includes(b));
-      const liste = libres.map((b) => h('button', { class: 'bloc', onClick: () => {
+      const liste = libres.map((b) => h('button', { class: 'bloc', 'data-cle': window.__app && b.de === a.id ? b.k : null, onClick: () => {
         son('tap');
         place[round.slots[idx].k] = b;
         const suivant = round.slots.findIndex((s) => !place[s.k]);
@@ -256,7 +256,7 @@ export async function jouerPlan(zone, ctx, round) {
   const choixPlan = await new Promise((suite) => {
     let fait = false;
     const plans = round.plans.map((p) => {
-      const b = feuillePlan(p.plan, { tag: 'button', attrs: { onClick: () => {
+      const b = feuillePlan(p.plan, { tag: 'button', attrs: { 'data-ok': window.__app ? String(!!p.ok) : null, onClick: () => {
         if (fait) return; fait = true;
         ctx.combo(p.ok); son(p.ok ? 'ok' : 'ko');
         b.classList.add('choisi');
@@ -311,7 +311,7 @@ export async function jouerArchitecte(zone, ctx, round, ix) {
         h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre),
         h('div', { class: 'squelette' }, lignes),
         !complet ? h('p', { class: 'aide' }, 'Certains intitulés sont de trop.') : null,
-        h('div', { class: 'tuiles' }, libres.map((t) => h('button', { class: 'tuile', onClick: () => {
+        h('div', { class: 'tuiles' }, libres.map((t) => h('button', { class: 'tuile', 'data-case': window.__app ? (t.c || 'leurre') : null, onClick: () => {
           son('tap'); place[CASES[idx]] = t;
           const suivant = CASES.findIndex((c) => !place[c]); idx = suivant === -1 ? idx : suivant; rendre();
         } }, t.t))),

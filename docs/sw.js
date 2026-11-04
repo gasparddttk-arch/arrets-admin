@@ -1,5 +1,5 @@
 // Service worker : tout le contenu est mis en cache à l'installation, pour jouer sans réseau.
-const VERSION = 'fb127441aba3';
+const VERSION = '78ba479c0737';
 const FICHIERS = ["./","content.json","css/app.css","fonts/bodoni-700.woff2","fonts/garamond-400.woff2","fonts/garamond-400i.woff2","fonts/garamond-500.woff2","fonts/garamond-600.woff2","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable.png","js/config.js","js/engine.js","js/games.js","js/main.js","js/notif.js","js/state.js","js/ui.js","manifest.webmanifest"];
 const CACHE = `arrets-${VERSION}`;
 

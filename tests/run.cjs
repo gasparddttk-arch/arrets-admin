@@ -40,6 +40,41 @@ async function jouer(p, { capture = false, bonnes = false } = {}) {
   throw new Error('Partie non terminée');
 }
 
+// Joue en donnant les bonnes réponses, grâce aux repères du mode test.
+async function jouerParfait(p) {
+  for (let n = 0; n < 900; n++) {
+    if (await p.$('.resultats')) return;
+    const fait = await p.evaluate(() => {
+      const clic = (e) => { e.click(); return true; };
+      const pied = document.querySelector('.pied button'); if (pied) return clic(pied);
+      const chip = document.querySelector('.chip:not([disabled]):not(.reussi)');
+      if (chip) {
+        if (!chip.classList.contains('vise')) chip.click();
+        const nom = chip.textContent; const st = window.__app; const a = st.ix.arrets.find((x) => x.nom === nom);
+        const cible = [...document.querySelectorAll('.carte-paire:not([disabled])')].find((c) => {
+          const t = c.textContent; if (t === String(a.an)) return true;
+          if (Object.values(a.ap).includes(t)) return true;
+          return st.ix.familles.some((f) => f.m.some((m) => m.id === a.id && m.k === t));
+        });
+        if (cible) return clic(cible);
+        return false;
+      }
+      const opt = document.querySelector('.option[data-ok="true"]:not([disabled])'); if (opt) return clic(opt);
+      const fente = document.querySelector('.fente.active span');
+      if (fente) { const k = { Faits: 'f', 'Procédure': 'pr', Solution: 's', 'Portée': 'po' }[fente.textContent]; const b = document.querySelector(`.bloc[data-cle="${k}"]`); if (b) return clic(b); }
+      const plan = document.querySelector('button.feuille-plan[data-ok="true"]:not([disabled])'); if (plan) return clic(plan);
+      const active = document.querySelector('.case-plan.active');
+      if (active) {
+        const ordre = [...document.querySelectorAll('.case-plan')].indexOf(active); const c = ['1', '1a', '1b', '2', '2a', '2b'][ordre];
+        const t = document.querySelector(`.tuile[data-case="${c}"]`); if (t) return clic(t);
+      }
+      return false;
+    });
+    if (!fait) await p.waitForTimeout(30); else await p.waitForTimeout(6);
+  }
+  throw new Error('Partie parfaite non terminée');
+}
+
 async function debordement(p, nom) {
   const d = await p.evaluate(() => ({ s: document.documentElement.scrollWidth, c: document.documentElement.clientWidth }));
   assert(d.s <= d.c + 1, `Débordement horizontal sur ${nom} : ${d.s} > ${d.c}`);
@@ -88,6 +123,29 @@ async function debordement(p, nom) {
   assert.equal(e.serie.n, 1, 'la série doit valoir 1'); assert(e.xp > 0, 'XP'); assert(e.stats.seances === 1);
   assert(Object.keys(e.arrets).length > 3, 'arrêts notés');
   log('défi terminé :', { xp: e.xp, jetons: e.jetons, vus: Object.keys(e.arrets).length });
+  await p.tap('text=Retour au Palais');
+
+  // 1 bis. Partie parfaite : sans faute, coffre de série, nouveau grade, audience gagnée.
+  await p.evaluate(() => { const e = window.__app.etat(); e.xp = 295; e.serie.n = 6; e.serie.dernier -= 1; });
+  await p.evaluate(() => { const e = window.__app.etat(); e.jours = {}; window.__app.aller('palais'); });
+  await p.tap('text=Défi du jour');
+  await jouerParfait(p);
+  await p.waitForTimeout(1300);
+  await p.screenshot({ path: CAP + 'parfait.png', fullPage: true });
+  e = await etat(p);
+  assert.equal(e.serie.n, 7, 'série à 7'); assert(e.coffres[7], 'coffre des 7 jours');
+  assert(e.stats.parfaites >= 1, 'séance parfaite comptée'); assert(e.trophees.sansfaute, 'trophée sans faute');
+  assert(await p.locator('.decret').count(), 'décret de nomination affiché');
+  log('partie parfaite ok');
+  await p.tap('text=Retour au Palais');
+  await p.locator('.onglet', { hasText: 'Chambres' }).click();
+  await p.locator('.salle', { hasText: 'Normes constitutionnelles' }).locator('button').click();
+  await p.tap('text=Audience solennelle');
+  await jouerParfait(p);
+  e = await etat(p);
+  assert(e.zones.gagnees.includes(2), 'audience gagnée'); assert(e.zones.ouvertes.includes(3), 'chambre suivante ouverte');
+  assert(e.zones.parfaites.includes(2), 'audience sans faute'); assert(e.trophees.bossParfait, 'trophée audience');
+  log('audience gagnée ok');
   await p.tap('text=Retour au Palais');
 
   // 2. Chaque mode, seul, plusieurs fois, pour couvrir le contenu.
@@ -163,24 +221,24 @@ async function debordement(p, nom) {
   log('copie de secours ok');
 
   // 7. Série : lendemain, sursis, rupture et relevé de forclusion.
-  e = await etat(p); assert.equal(e.serie.n, 1);
+  e = await etat(p); const n0 = e.serie.n;
   await p.goto(URLB + '?test&decalage=1'); await p.waitForSelector('.tribune');
-  assert.equal((await etat(p)).serie.n, 1, 'le lendemain, la série tient');
+  assert.equal((await etat(p)).serie.n, n0, 'le lendemain, la série tient');
   await p.tap('text=Juste trois minutes'); await jouer(p);
-  assert.equal((await etat(p)).serie.n, 2, 'série à 2');
+  assert.equal((await etat(p)).serie.n, n0 + 1, 'série prolongée');
   await p.tap('text=Retour au Palais');
   const sursis = (await etat(p)).inv.sursis;
   await p.goto(URLB + '?test&decalage=3'); await p.waitForSelector('.tribune');
   e = await etat(p);
-  assert.equal(e.serie.n, 2, 'un jour manqué couvert par un sursis'); assert.equal(e.inv.sursis, sursis - 1, 'sursis consommé');
+  assert.equal(e.serie.n, n0 + 1, 'un jour manqué couvert par un sursis'); assert.equal(e.inv.sursis, sursis - 1, 'sursis consommé');
   await p.evaluate(() => { window.__app.etat().inv.sursis = 0; window.__app.etat().jetons = 300; localStorage.setItem('arrets-admin.v1', JSON.stringify(window.__app.etat())); });
   await p.goto(URLB + '?test&decalage=6'); await p.waitForSelector('.rupture');
   await p.screenshot({ path: CAP + 'rupture.png' });
   e = await etat(p); assert.equal(e.serie.n, 0, 'série rompue'); assert(e.rompue);
   await p.locator('.rupture button').click();
-  e = await etat(p); assert.equal(e.serie.n, 2, 'série rétablie');
+  e = await etat(p); assert.equal(e.serie.n, n0 + 1, 'série rétablie');
   await p.tap('text=Juste trois minutes'); await jouer(p);
-  assert.equal((await etat(p)).serie.n, 3, 'série prolongée après relevé');
+  assert.equal((await etat(p)).serie.n, n0 + 2, 'série prolongée après relevé');
   log('série ok');
 
   // 8. Hors ligne, comme dans le métro.
