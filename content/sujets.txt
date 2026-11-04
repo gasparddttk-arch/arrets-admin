@@ -1,0 +1,305 @@
+# Sujets de dissertation (D) et de commentaire (C).
+# &id | D ou C | intitulé | zones
+# pb: problématique   1: titre du I   1a: titre I.A | arrêts   1b: ...   2: ...   2a: ...   2b: ...
+# m: pourquoi ce plan fonctionne
+# b: CODE || pourquoi ce plan pèche || I || I.A || I.B || II || II.A || II.B
+
+&loi-ecran | D | La loi-écran | 2
+pb: Comment une théorie née du respect de la loi a-t-elle pu survivre en perdant l'essentiel de ses effets ?
+1: Un écran fondé sur le respect de la loi
+1a: L'interdiction de juger la loi | arrighi, udt
+1b: Une justification aujourd'hui fragilisée | semoules, ivg
+2: Un écran devenu largement perméable
+2a: Des limites internes à la théorie | lamotte, eky, quintin, air-algerie
+2b: Un contournement par d'autres contrôles | nicolo, force-5
+m: Le plan tient une thèse : l'écran subsiste en droit, mais il n'arrête plus grand-chose. Le I montre pourquoi il existe, le II comment on le traverse.
+b: CHRONO || Le plan raconte des périodes au lieu de démontrer une idée. Rien n'indique pourquoi l'écran résiste ni ce qu'il vaut aujourd'hui. || L'écran avant la Constitution de 1958 || La naissance de la théorie en 1936 || La confirmation sous la IVe République || L'écran depuis la Constitution de 1958 || Les années de résistance jusqu'en 1989 || Les années de recul depuis 1989
+b: CONTRESENS || Le plan affirme que le juge administratif contrôle la constitutionnalité des lois depuis Nicolo. C'est faux : Nicolo porte sur les traités, et la loi-écran subsiste. || Un contrôle de constitutionnalité enfin conquis || L'abandon d'Arrighi par l'arrêt Nicolo || La confirmation par la QPC de 2010 || Un contrôle resté incomplet || Le maintien de la coutume hors contrôle || L'absence de contrôle du règlement autonome
+
+&pgd | D | Les principes généraux du droit | 8
+pb: Comment le juge administratif peut-il créer des normes sans se reconnaître législateur ?
+1: Une création prétorienne à demi assumée
+1a: Une découverte prudente | aramu, billard-volle, alusuisse
+1b: Un contenu sans cesse élargi | aurore, barel, peynet, milhaud, kpmg
+2: Une autorité liée à la place du juge
+2a: Une valeur infra-législative et supra-décrétale | lamotte, chenes-lieges
+2b: Une coexistence avec le juge constitutionnel | liberte-association, cc-79-105
+m: Le I traite de la création, le II de l'autorité. La distinction répond à la problématique, et la thèse de Chapus prend place au II.
+b: NIVEAU || Théorie et pratique ne sont pas au même niveau : c'est l'exemple même de distinction que la fiche de méthode interdit. || La théorie des principes généraux du droit || Leur définition par la doctrine classique || Leur valeur selon le président Chapus || La pratique des principes généraux du droit || Leur application par le juge administratif || Leur réception par l'administration active
+b: RECIT || Le plan énumère des catégories de principes. Il récite le cours sans répondre à aucune question : la dissertation n'est jamais une question de cours. || Les principes relevant de l'égalité || L'égalité devant le service public || L'égalité d'accès aux emplois publics || Les principes relevant de la liberté || Le droit au recours même sans texte || La dignité de la personne humaine
+
+&conventionnalite | D | Le juge administratif et la supériorité des traités sur la loi | 5
+pb: Pourquoi le Conseil d'État a-t-il mis vingt ans à appliquer l'article 55, et que reste-t-il de sa résistance ?
+1: Une résistance longtemps assumée
+1a: Des palliatifs sans aveu de hiérarchie |
+1b: Le verrou de la loi-écran | semoules, udt
+2: Un ralliement subi mais généralisé
+2a: Un isolement devenu intenable | ivg, jacques-vabre, simmenthal, val-d-oise
+2b: Une solution à portée universelle | nicolo, boisdet, cnafc, rothmans, gardedieu
+m: Le plan oppose deux temps qui expliquent le revirement au lieu de le raconter. Chaque intitulé énonce une idée.
+b: CONTRESENS || Le plan attribue le contrôle de conventionnalité au Conseil constitutionnel. Celui-ci le refuse depuis 1975 et le laisse aux juges ordinaires. || Un contrôle né au Conseil constitutionnel || L'ouverture par la décision IVG || L'extension par le juge électoral || Un contrôle repris par le Conseil d'État || L'alignement par Nicolo || La confirmation par Rothmans
+b: HORS || Le plan traite du rapport entre traités et Constitution. Le sujet porte sur la loi : la moitié de la copie serait à côté. || La Constitution au-dessus des traités || La solution de Sarran || La confirmation de SNIP || Le dialogue avec l'Union || Le mécanisme d'Arcelor || La réserve de French Data Network
+
+&constitution-directives | D | La Constitution et les directives de l'Union : hiérarchie ou conciliation ? | 3
+pb: La suprématie de la Constitution et l'effectivité du droit de l'Union peuvent-elles coexister sans qu'un juge ait à choisir ?
+1: Une hiérarchie maintenue en droit interne
+1a: La suprématie de la Constitution | sarran, snip
+1b: La directive au-dessus du règlement et de la loi | alitalia, rothmans
+2: Une hiérarchie neutralisée par la conciliation
+2a: Des mécanismes d'équivalence | lcen, dadvsi, arcelor
+2b: Un point de rupture encadré | fdn, air-france
+m: C'est le plan proposé dans ton programme de TD 4. Il répond à l'alternative du sujet : la hiérarchie existe, mais les juges s'organisent pour ne pas avoir à l'appliquer.
+b: HORS || Le plan traite de l'invocabilité des directives par les particuliers. C'est un autre sujet : il manque la Constitution. || Une invocabilité d'abord refusée aux particuliers || Le refus de principe de l'arrêt Cohn-Bendit || Les parades de l'invocabilité d'exclusion || Une invocabilité enfin consacrée par le juge || L'abandon de Cohn-Bendit par Perreux || Les conditions de l'invocabilité de substitution
+b: BANAL || Comparer deux juges par ressemblances et différences est une division banale, sans thèse sur la question posée. || Les ressemblances entre les deux juges || Le recours commun à l'article 88-1 || La recherche commune d'un équivalent || Les différences entre les deux juges || L'acte contrôlé par chacun des deux juges || Le test retenu par chacun des deux juges
+
+&ordonnances | D | Les ordonnances de l'article 38, régime exceptionnel ? | 6
+pb: Un mécanisme conçu comme une exception peut-il rester exceptionnel lorsqu'il devient un mode ordinaire de production du droit ?
+1: Une dérogation encadrée par le Parlement
+1a: L'habilitation, condition d'entrée |
+1b: La ratification, clé du régime |
+2: Une procédure banalisée au contrôle brouillé
+2a: Un usage devenu ordinaire |
+2b: Un contrôle partagé entre deux juges | force-5, cfdt-finances
+m: Le plan suit la thèse et l'antithèse du cours : un mécanisme exceptionnel en droit, ordinaire en pratique, dont le contrôle s'est compliqué.
+b: DESCR || Les intitulés décrivent des étapes sans énoncer la moindre idée. On ne sait pas si le candidat répond au point d'interrogation. || L'élaboration des ordonnances de l'article 38 || L'habilitation donnée par le Parlement || La signature par le Président || Le régime juridique des ordonnances || Le régime avant la ratification || Le régime après la ratification
+b: CONTRESENS || Le plan soutient que l'ordonnance a valeur de loi dès sa publication. Non ratifiée, elle reste un acte administratif : Force 5 n'y change rien, sauf pour la QPC. || Une loi dès la publication au Journal officiel || Le transfert du pouvoir législatif au Gouvernement || L'exclusion de tout recours administratif || Une ratification sans aucune portée || Le maintien de la ratification implicite || L'inutilité du vote du Parlement
+
+&pr-pm | D | Le pouvoir réglementaire du Président de la République et du Premier ministre | 7
+pb: Comment une répartition favorable au Premier ministre dans le texte a-t-elle pu tourner à l'avantage du Président ?
+1: Un texte favorable au Premier ministre
+1a: Une compétence de principe | comite-resistance
+1b: Une compétence présidentielle d'attribution | sicard, pelon
+2: Une jurisprudence favorable au Président
+2a: Le critère de la délibération effective | meyet-1992
+2b: L'effet cliquet, à peine tempéré | collas
+m: Le contraste entre le texte et la jurisprudence reprend la formule du cours : sur le papier le Premier ministre, en pratique le Président.
+b: BANAL || Traiter un titulaire par partie est une division sans problématique : deux exposés juxtaposés, sans lien entre eux. || Le Président de la République || Ses décrets en Conseil des ministres || Ses ordonnances de l'article 38 || Le Premier ministre || Ses décrets simples || Ses mesures de police
+b: REDITE || Les deux parties disent la même chose : le I et le II traitent chacun de la compétence du Président. Le plan n'avance pas. || Une compétence présidentielle extensive || Le critère de la délibération || Un décret sauvé par le contreseing || Une compétence présidentielle renforcée || La délibération en Conseil des ministres || L'impossibilité de revenir en arrière
+
+&invocabilite | D | L'invocabilité des directives devant le juge administratif | 4
+pb: Comment le juge administratif est-il passé d'un refus de principe à une invocabilité presque complète ?
+1: Une invocabilité d'abord cantonnée
+1a: Le refus de l'effet direct | cohn-bendit
+1b: Le détour par l'exclusion | ornithologique, alitalia, tete
+2: Une invocabilité aujourd'hui alignée
+2a: Le ralliement à la Cour de justice | van-duyn, ratti, perreux
+2b: Des limites maintenues | lilly
+m: L'opposition entre l'exclusion et la substitution structure la démonstration. Les limites évitent de conclure trop vite à une invocabilité totale.
+b: CONTRESENS || Le plan soutient que l'État peut se prévaloir d'une directive non transposée. Lilly dit le contraire : l'invocabilité joue pour les particuliers. || Une invocabilité ouverte à tous || Le droit reconnu aux particuliers || Le droit reconnu à l'État || Une invocabilité sans condition || L'indifférence du délai de transposition || L'indifférence de la précision du texte
+b: HORS || Le plan porte sur le contrôle de la transposition et non sur ce que peut faire le justiciable. Arcelor ne traite pas de l'invocabilité. || La transposition sous contrôle || Le contrôle du décret par le Conseil d'État || Le contrôle de la loi par le Conseil constitutionnel || La Constitution préservée || La réserve d'identité || La jurisprudence French Data Network
+
+&declin-loi | D | La loi, source affaiblie du droit administratif | 2,6
+pb: La loi, expression de la volonté générale, conserve-t-elle encore l'autorité qui fondait sa place ?
+1: Une loi privée de son immunité
+1a: Contestable au regard des traités | nicolo, jacques-vabre
+1b: Contestable au regard de la Constitution | liberte-association, force-5
+2: Une loi dépréciée par ses propres excès
+2a: Un débordement toléré sur le règlement | blocage-prix
+2b: Une normativité appauvrie | avenir-ecole
+m: Le I montre l'affaiblissement venu de l'extérieur, le II celui que la loi s'inflige. La distinction est claire et les intitulés portent une idée.
+b: CHRONO || Le plan découpe en régimes politiques et raconte l'histoire de la loi au lieu de démontrer son affaiblissement. || La loi sous les IIIe et IVe Républiques || La loi souveraine de 1875 || Le bloc de légalité de 1946 || La loi sous la Ve République || Les débuts de la Constitution de 1958 || La loi depuis la révision de 2008
+b: DESEQ || Tout le poids est dans le I. Le II tient en une remarque, et le plan avoue qu'il n'a rien à dire sur l'autorité restante de la loi. || Une loi attaquée de toutes parts par les juges || Le contrôle de conventionnalité par le juge ordinaire || Le contrôle de constitutionnalité par voie de QPC || Une loi encore présente dans les textes || Son existence formelle || Sa publication au Journal officiel
+
+&ministres | D | Les ministres et le pouvoir réglementaire | 7
+pb: Privés de pouvoir réglementaire général, les ministres sont-ils pour autant dépourvus de pouvoir normatif ?
+1: Un pouvoir réglementaire général refusé
+1a: L'incompétence de principe | brabant
+1b: Des attributions seulement ponctuelles |
+2: Des substituts efficaces
+2a: Le pouvoir du chef de service | jamart, dehaene
+2b: Les lignes directrices | credit-foncier, jousselin, gisti-2020
+m: La problématique joue sur la différence entre le droit et la réalité : le refus de principe a suscité des palliatifs bien réels.
+b: CONTRESENS || Le plan soutient que Jamart donne aux ministres un pouvoir réglementaire général. Jamart ne vise que l'organisation du service. || Un pouvoir général reconnu par Jamart || La règle sans texte || La portée nationale du pouvoir || Un pouvoir confirmé par Brabant || L'extension aux administrés || La disparition de la délégation
+b: DESCR || Les intitulés se contentent de nommer des arrêts. Un plan n'est pas une liste : aucun titre n'énonce une idée. || La jurisprudence ancienne du Conseil d'État || L'arrêt Jamart de 1936 || L'arrêt Société Distillerie Brabant de 1969 || La jurisprudence récente du Conseil d'État || L'arrêt Jousselin de 2014 || L'arrêt GISTI de 2020
+
+&juge-de-la-loi | D | Le juge administratif, juge de la loi ? | 2,5
+pb: Le juge qui se disait serviteur de la loi en est-il devenu le censeur ?
+1: Un juge resté serviteur de la loi
+1a: Le contrôle de constitutionnalité refusé | arrighi, air-algerie
+1b: L'interprétation plutôt que la censure | lamotte
+2: Un juge devenu censeur de la loi
+2a: La loi inconventionnelle écartée | nicolo, rothmans, anthroposophique
+2b: Le dommage causé par la loi réparé | gardedieu
+m: Le plan reprend les mots mêmes du cours, serviteur et censeur. Il répond au point d'interrogation par une thèse nuancée.
+b: REDITE || Le I et le II traitent tous deux du contrôle de conventionnalité. Le plan tourne en rond et oublie la loi-écran. || Un juge contrôlant les traités au regard de l'article 55 || Le visa de l'article 55 dans l'arrêt Nicolo || L'extension du contrôle aux directives || Un juge contrôlant les lois au regard de l'article 55 || La compatibilité de la loi avec le traité || L'extension du contrôle au droit dérivé
+b: NIVEAU || L'opposition entre le juge et le législateur met sur le même plan deux organes. Le sujet porte sur l'office du seul juge. || Le juge et sa lecture de la loi || La lecture constructive de la loi || Le pouvoir d'écarter la loi || Le législateur et ses réponses au juge || La validation rétroactive des actes || La réponse aux revirements du juge
+
+&independance | D | L'indépendance de la juridiction administrative | 1,9
+pb: Comment une juridiction née de l'administration a-t-elle acquis une indépendance reconnue par la Constitution ?
+1: Une séparation conquise sur l'administration
+1a: La fin de la justice retenue | blanco
+1b: La fin du ministre-juge | cadot
+2: Une indépendance consacrée par la Constitution
+2a: La garantie d'existence | cc-80-119, cc-2009-595
+2b: La garantie de compétence | conseil-concurrence
+m: Le I dit comment la séparation s'est faite, le II ce qui la protège aujourd'hui. Les arrêts s'y placent sans forcer.
+b: RECIT || Le plan décrit l'organisation des juridictions : c'est le chapitre du cours, pas une démonstration. || Les juridictions de premier ressort || Les tribunaux administratifs || Les cours administratives d'appel || Le Conseil d'État || Ses sections administratives || Sa section du contentieux
+b: CONTRESENS || Le plan fonde l'indépendance sur la loi de 1790 elle-même. Le Conseil constitutionnel dit que ces textes n'ont pas valeur constitutionnelle : le fondement est un PFRLR. || Une indépendance née en 1790 || La valeur constitutionnelle de la loi d'août || La confirmation par Blanco || Une indépendance sans limite || L'absence d'aménagement possible || L'absence de matière judiciaire
+
+&normes-internationales | D | Les normes internationales dans la hiérarchie des normes | 3,5
+pb: Peut-on parler d'une place unique des normes internationales dans l'ordre juridique français ?
+1: Une supériorité affirmée sur la loi
+1a: La sanction de l'article 55 | nicolo, boisdet, rothmans
+1b: Une supériorité sous conditions | blotzheim, cheriet, aquarone
+2: Une infériorité maintenue à la Constitution
+2a: La Constitution au sommet de l'ordre interne | sarran, snip
+2b: Une suprématie aménagée pour l'Union | arcelor, fdn
+m: Le plan situe les normes au-dessus de la loi, puis sous la Constitution : deux questions réellement distinctes, avec le droit de l'Union comme cas particulier.
+b: DESCR || Les intitulés recopient des catégories du cours sans rien affirmer. Le lecteur ne sait pas ce que le candidat soutient. || Le droit international originaire || Les traités régulièrement ratifiés || La coutume internationale générale || Le droit dérivé de l'Union européenne || Les règlements de l'Union européenne || Les directives de l'Union européenne
+b: BANAL || Opposer l'international et le national est une distinction trop générale, qui ne répond pas à la question de la place de ces normes. || L'ordre juridique international || La règle pacta sunt servanda || La primauté selon la Cour de justice || L'ordre juridique interne || La souveraineté nationale proclamée || Le rôle du Parlement dans la ratification
+
+&frontiere-34-37 | D | La frontière entre la loi et le règlement | 6
+pb: Pourquoi une frontière conçue pour protéger le règlement a-t-elle fini par protéger la loi ?
+1: Une frontière pensée contre la loi
+1a: Un domaine législatif limité | eky
+1b: Des garde-fous pour le règlement |
+2: Une frontière retournée au profit de la loi
+2a: Un débordement toléré | blocage-prix
+2b: Un domaine législatif mieux gardé |
+m: Le plan suit la phrase clé du cours : la Constitution voulait protéger le règlement contre la loi, la pratique protège la loi contre le règlement.
+b: CONTRESENS || Le plan soutient que le Conseil constitutionnel censure les lois qui débordent. Depuis 1982, il refuse précisément de le faire. || Une frontière strictement gardée || La censure des lois débordantes || Le rôle décisif de l'article 41 || Un règlement solidement protégé || L'autonomie conquise du règlement || Le recul du domaine de la loi
+b: DESEQ || Le plan consacre tout le I à la loi et réduit le règlement à une ligne. Or le sujet demande de les confronter. || La loi dans la Constitution de 1958 || Les matières énumérées par l'article 34 || Les règles et les principes fondamentaux || Le règlement dans la Constitution de 1958 || Sa définition par l'article 37 || Son auteur désigné par l'article 21
+
+&administration-juge | D | L'administration et son juge : séparation ou proximité ? | 9
+pb: La séparation organique a-t-elle réellement mis fin à la proximité entre l'administration et son juge ?
+1: Une séparation organique achevée
+1a: La sortie de l'administrateur-juge | cadot
+1b: Une indépendance garantie | cc-80-119, conseil-concurrence
+2: Des liens fonctionnels persistants
+2a: Le juge qui conseille l'administration | snpst
+2b: L'administration qui juge | csa-88-248, didier
+m: Le plan oppose l'organique au fonctionnel, comme le cours. Il répond directement à l'alternative du sujet.
+b: NIVEAU || Le droit et le fait ne sont pas au même niveau. Le plan ne dit rien de la nature des liens entre les deux institutions. || La séparation en droit des deux institutions || Les textes issus de la Révolution || La loi du 24 mai 1872 || La proximité en fait des deux institutions || Les parcours de leurs membres || Les habitudes de travail en commun
+b: RECIT || Le plan décrit les fonctions du Conseil d'État sans se demander ce que cela implique. Il manque une thèse. || La fonction contentieuse du Conseil d'État || Les recours pour excès de pouvoir || Les recours de plein contentieux || La fonction consultative du Conseil d'État || Les avis sur les projets de loi || Les avis sur les projets de décret
+
+&c-arcelor | C | CE, Ass., 8 février 2007, Société Arcelor Atlantique et Lorraine | 3
+pb: Comment le juge peut-il contrôler la constitutionnalité d'un décret qui recopie une directive sans atteindre celle-ci ni renoncer à la suprématie de la Constitution ?
+1: Le contrôle du décret maintenu
+1a: L'article 88-1, source de l'obligation | lcen, dadvsi
+1b: La Constitution toujours au sommet | sarran, snip
+2: Un contrôle déplacé vers le droit de l'Union
+2a: Le mécanisme d'équivalence |
+2b: Un dialogue des juges structuré | fdn, air-france
+m: C'est le plan de ton corrigé de TD 4 : la conciliation donne l'enjeu, le mécanisme donne la technique.
+b: COMPROC || Une partie sur la procédure et une partie sur la portée sont expressément interdites par la fiche de méthode. Tout le commentaire doit dégager la portée. || La procédure suivie devant le Conseil d'État || Les recours contre les refus d'abroger || Le sursis à statuer et le renvoi || La portée de l'arrêt du Conseil d'État || La suite donnée par la CJCE en 2008 || La postérité de la solution depuis 2009
+b: CONTRESENS || Le plan soutient que la directive l'emporte sur la Constitution. L'arrêt dit l'inverse : il déplace le contrôle pour ne pas avoir à trancher. || La primauté de la directive sur la Constitution || L'abandon de la solution Sarran || L'abandon de la solution SNIP || L'effacement du juge national || Le renoncement au contrôle du décret || La compétence exclusive de la Cour
+
+&c-perreux | C | CE, Ass., 30 octobre 2009, Mme Perreux | 4
+pb: Comment le Conseil d'État peut-il abandonner Cohn-Bendit tout en refusant d'appliquer la directive en l'espèce ?
+1: La consécration de l'invocabilité de substitution
+1a: L'abandon de Cohn-Bendit | cohn-bendit, van-duyn
+1b: Les conditions de l'invocabilité | ratti
+2: Une application paradoxale en l'espèce
+2a: L'effet direct refusé à l'article 10 |
+2b: La preuve aménagée par le juge | barel
+m: C'est le plan de ton corrigé de TD 4. Il colle à l'arrêt : le principe d'abord, le paradoxe de l'espèce ensuite.
+b: PRETEXTE || Le plan récite l'histoire des directives. L'arrêt n'est plus qu'un prétexte : la fiche de méthode reproche précisément de réciter un cours. || La jurisprudence antérieure à l'arrêt Perreux || La position de la Cour de justice en 1974 || La position du Conseil d'État en 1978 || La jurisprudence postérieure à l'arrêt Perreux || L'application dans l'affaire Mme Lévèque || L'extension dans l'affaire Mme Montaut
+b: CONTRESENS || Le plan croit que Mme Perreux obtient gain de cause et que l'article 10 a effet direct. La requête est rejetée et l'effet direct refusé. || La victoire de la requérante || L'effet direct de l'article 10 || L'annulation de l'arrêté de nomination || La condamnation de l'État || L'indemnisation de la discrimination || L'injonction de nomination
+
+&c-nicolo | C | CE, Ass., 20 octobre 1989, Nicolo | 5
+pb: Pourquoi un revirement aussi important peut-il être opéré sans un mot de justification ?
+1: Un revirement sans théorie
+1a: La rupture avec les Semoules | semoules, udt
+1b: Un visa pour toute explication |
+2: Un contrôle aux effets considérables
+2a: Le juge administratif censeur de la loi | gardedieu
+2b: Une portée bientôt universelle | boisdet, cnafc, rothmans
+m: Le plan exploite la singularité de l'arrêt : un bouleversement caché dans un visa, et des suites immenses.
+b: PRETEXTE || Le plan raconte le débat doctrinal sans jamais citer l'arrêt. Le texte commenté doit rester le centre de l'exercice. || Le débat sur l'article 55 || Les thèses de la doctrine || Les conclusions de Frydman || Le débat sur la loi-écran || L'héritage de Carré de Malberg || Le légicentrisme français
+b: CONTRESENS || Le plan croit que le juge annule les élections et la loi. Il rejette la requête, et ne fait que vérifier la compatibilité. || L'annulation des élections de 1989 || L'irrégularité du vote outre-mer || La violation du traité de Rome || L'annulation de la loi de 1977 || L'abrogation par le juge || L'abandon du suffrage direct
+
+&c-cohn-bendit | C | CE, Ass., 22 décembre 1978, Ministre de l'Intérieur c. Cohn-Bendit | 4,5
+pb: Le refus opposé à la Cour de justice est-il une hostilité au droit communautaire ou une lecture fidèle du traité ?
+1: Un refus frontal de l'effet direct
+1a: Une lecture littérale du traité de Rome |
+1b: L'acte clair contre Van Duyn | van-duyn
+2: Un refus aux portes laissées ouvertes
+2a: La réserve des mesures réglementaires | tete, alitalia
+2b: Une solution appelée à disparaître | perreux
+m: Le plan évite la lecture caricaturale : il montre le refus, puis ce que l'arrêt réserve lui-même. Ton corrigé rappelle que l'arrêt n'est pas une pure hostilité.
+b: CONTRESENS || Le plan dit que l'arrêt renvoie à la Cour de justice. C'est le contraire : le Conseil d'État annule le jugement qui renvoyait. || Un renvoi préjudiciel pleinement assumé || La saisine de la Cour de justice || La réponse apportée par Luxembourg || Une coopération exemplaire avec la Cour || L'application de l'arrêt de la Cour || L'annulation de l'arrêté d'expulsion
+b: COMPROC || Rappeler les faits et la procédure en partie n'est pas commenter. Ces éléments vont dans l'introduction. || Les faits de l'espèce en cause || L'expulsion prononcée en mai 1968 || La demande d'abrogation de 1975 || La procédure suivie jusqu'au Conseil || Le jugement rendu par le tribunal de Paris || L'appel formé par le ministre
+
+&c-blanco | C | TC, 8 février 1873, Blanco | 1
+pb: Pourquoi un simple accident de wagon a-t-il pu devenir l'acte de naissance d'un droit autonome ?
+1: Une responsabilité soustraite au Code civil
+1a: Le refus des règles du droit privé |
+1b: Une responsabilité ni générale ni absolue |
+2: Une compétence liée au fond
+2a: Le lien entre juge et droit applicable |
+2b: Le service public au cœur du raisonnement | bac-eloka
+m: Le plan part des mots de l'arrêt, « ni générale ni absolue », puis en tire la portée. Bac d'Eloka apporte la limite de ce raisonnement.
+b: CHRONO || Le plan découpe l'histoire du droit administratif. Blanco y devient un épisode, et le texte disparaît. || Le droit administratif avant l'arrêt Blanco || Les lois de la période révolutionnaire || La justice déléguée instaurée en 1872 || Le droit administratif après l'arrêt Blanco || L'école de Bordeaux autour de Duguit || L'école de la puissance publique d'Hauriou
+b: CONTRESENS || Le plan croit que le Tribunal des conflits applique le Code civil à l'État. Il l'écarte précisément. || Une responsabilité fondée sur le Code civil || L'application de l'article 1384 || La faute des employés de l'État || Une compétence judiciaire confirmée || Le rejet de l'arrêté de conflit || Le maintien du tribunal civil de Bordeaux
+
+&c-lamotte | C | CE, Ass., 17 février 1950, Dame Lamotte | 2,8
+pb: Comment un juge qui ne peut pas écarter la loi parvient-il à en neutraliser les effets ?
+1: Une loi neutralisée par l'interprétation
+1a: Une lecture restrictive de « tout recours » |
+1b: Vider le venin sans contrôler la loi | arrighi
+2: Un recours érigé en principe général
+2a: Un droit au recours existant sans texte | aramu
+2b: Un principe qui survit à la loi |
+m: Le plan part de la technique, l'interprétation, avant d'en dégager le principe. Il respecte le sens de l'arrêt : le juge ne censure pas la loi.
+b: CONTRESENS || Le plan dit que le juge écarte la loi de 1943 pour inconstitutionnalité. Il la lit autrement, sans jamais la contrôler. || La censure de la loi de Vichy || L'inconstitutionnalité de la loi de 1943 || L'abandon de la loi-écran || La disparition du recours préfectoral || L'incompétence du préfet de l'Ain || La nullité de toutes les concessions
+b: PRETEXTE || Le plan traite du recours pour excès de pouvoir en général : c'est le cours, et l'arrêt sert seulement d'exemple. || L'origine du recours pour excès de pouvoir || Le recours au cours du XIXe siècle || L'arrêt Cadot de 1889 || Les conditions du recours pour excès de pouvoir || Le délai de deux mois || L'intérêt à agir du requérant
+
+&c-gisti-fapil | C | CE, Ass., 11 avril 2012, GISTI et FAPIL | 3
+pb: Comment le juge clarifie-t-il l'effet direct sans le rendre automatique ?
+1: Une définition unifiée de l'effet direct
+1a: Deux critères négatifs et cumulatifs |
+1b: La fin de l'argument formel | van-duyn
+2: Une application protectrice et maîtrisée
+2a: L'effet direct de la convention de 1949 |
+2b: L'annulation à effet différé | tropic
+m: Le plan part du principe avant son application. L'annulation différée est un vrai point du commentaire, à relier à la modulation.
+b: CONTRESENS || Le plan confond effet direct et réciprocité, et il annonce une interprétation par le ministre. Rien de cela n'est dans l'arrêt. || La réciprocité de la convention internationale || L'appréciation confiée au ministre || Le contrôle exercé par le juge || L'interprétation de la convention de 1949 || Le renvoi au ministre des Affaires étrangères || L'avis rendu par le ministre
+b: COMPROC || Une partie intitulée portée de la solution est à proscrire : c'est tout le commentaire qui doit la dégager. || La solution retenue par l'arrêt || L'annulation du décret de 2008 || Le report au 1er octobre 2012 || La portée de l'arrêt du Conseil d'État || La portée doctrinale de la solution || La portée pratique de la solution
+
+&c-rubin | C | CE, Ass., 2 mars 1962, Rubin de Servens | 6
+pb: Le juge peut-il garder une prise sur des pleins pouvoirs que la Constitution paraît laisser sans contrôle ?
+1: Une décision hors de portée du juge
+1a: Un acte de gouvernement |
+1b: L'absence de contrôle de la durée |
+2: Des mesures soumises à leur domaine
+2a: Un partage selon les articles 34 et 37 |
+2b: Une logique matérielle d'avenir | force-5
+m: Le plan suit la double réponse de l'arrêt. La logique du domaine matériel se retrouve pour les ordonnances, comme le note le cours.
+b: CONTRESENS || Le plan croit que le juge contrôle la décision de recourir à l'article 16, et qu'il annule le tribunal. Il ne fait ni l'un ni l'autre. || Un contrôle de la décision présidentielle || La vérification de la menace || L'annulation du recours à l'article 16 || Un contrôle des mesures législatives || L'annulation du tribunal militaire || La remise en liberté des officiers
+b: PRETEXTE || Le plan raconte le putsch et l'article 16. Le commentaire devient un récit historique, sans analyse de l'arrêt. || Le putsch des généraux d'avril 1961 || Les événements d'Alger et leurs suites || La réaction du général de Gaulle || L'article 16 dans la crise de 1961 || La durée du recours à l'article 16 || Le rôle du Parlement réuni de plein droit
+
+&c-kpmg | C | CE, Ass., 24 mars 2006, Société KPMG | 8
+pb: Comment concilier le pouvoir de changer la règle et la protection de ceux qui vivent sous la règle ancienne ?
+1: La consécration de la sécurité juridique
+1a: Une exigence nouvelle pour l'administration | aurore
+1b: Un principe général et autonome | aramu
+2: Une exigence aux effets mesurés
+2a: L'obligation de mesures transitoires |
+2b: Une annulation limitée aux contrats en cours | tropic
+m: Le plan rend compte du principe, puis de sa mesure : l'arrêt ne fige pas le droit, il impose une transition.
+b: CONTRESENS || Le plan parle de rétroactivité. Le décret ne rétroagit pas : il s'applique immédiatement, et c'est l'absence de transition qui pose problème. || La rétroactivité du décret || L'application aux contrats passés || La méconnaissance de la jurisprudence L'Aurore || Le droit acquis des cabinets || Le maintien de la règle ancienne || L'indemnisation des commissaires aux comptes
+b: BANAL || Opposer les avantages et les inconvénients d'un principe est une division banale, sans lien avec l'arrêt. || Les avantages de la sécurité juridique || Les avantages pour les entreprises || Les avantages pour les administrés || Les inconvénients de la sécurité juridique || Les inconvénients pour l'administration || Les inconvénients pour le législateur
+
+&c-conseil-concurrence | C | CC, 86-224 DC, 23 janvier 1987, Conseil de la concurrence | 9
+pb: Comment protéger la compétence du juge administratif tout en admettant qu'elle soit aménagée ?
+1: La reconnaissance d'un noyau de compétence
+1a: Le dépassement de la loi de 1790 |
+1b: Un PFRLR propre au juge administratif | cc-80-119
+2: Un noyau aménageable sous conditions
+2a: La bonne administration de la justice |
+2b: Une censure fondée sur le sursis |
+m: Le plan rend compte des deux temps de la décision et de son issue surprenante : le transfert est admis, mais la loi est censurée pour la perte du sursis.
+b: CONTRESENS || Le plan dit que le transfert au juge judiciaire est interdit. La décision l'admet : la censure vient de la perte du sursis. || L'interdiction de tout transfert || La valeur constitutionnelle de la loi de 1790 || Le monopole du juge administratif || La protection absolue du Conseil d'État || L'exclusion de la cour d'appel de Paris || L'impossibilité d'un aménagement
+b: COMPROC || Recopier le plan de la décision par rubriques de procédure ne commente rien. || La procédure législative suivie || La saisine par les députés || La question de la ratification implicite || Le contrôle de la loi déférée || Les griefs soulevés par les députés || Le dispositif de la décision
+
+&c-air-france | C | CC, 2021-940 QPC, 15 octobre 2021, Société Air France | 3
+pb: Comment affirmer la suprématie de la Constitution sans provoquer de conflit avec le droit de l'Union ?
+1: Un contrôle limité de la loi transposée
+1a: L'incompétence de principe | dadvsi
+1b: La réserve d'identité | arcelor
+2: Une reconnaissance sans conflit
+2a: La force publique, principe d'identité |
+2b: Une conformité qui évite la rupture | fdn
+m: Le plan restitue la logique : la décision pose une arme puissante et prend soin de ne pas s'en servir.
+b: CONTRESENS || Le plan croit que le Conseil censure la loi. Il reconnaît le principe et juge la disposition conforme. || La censure de la loi de transposition || La violation de l'article 12 || L'abrogation de l'article L. 213-4 || La rupture avec le droit de l'Union || Le refus de la directive || L'annulation de l'amende
+b: HORS || Le plan traite de l'immigration et des frontières. Le cœur de la décision porte sur le contrôle d'une loi de transposition. || Le contrôle aux frontières extérieures || Le refus d'entrée sur le territoire || Le rôle des transporteurs aériens || Le droit des étrangers en zone d'attente || La directive de 2001 sur les transporteurs || La convention d'application de Schengen

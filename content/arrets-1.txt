@@ -1,0 +1,291 @@
+# Zones 1 à 3 : origines, Constitution, traités (notion et place)
+# Format : @id | nom | référence | juge | année | importance | zones
+# ap / apN : apport (général ou propre à la zone N)  h : histoire  f : faits  pr : procédure
+# q : problème de droit  s : solution  po : portée  x : faux problème || pourquoi il est faux
+# nf:1 : faits non confirmés, l'arrêt ne sert ni au puzzle ni au juge
+
+@blanco | Blanco | TC, 8 févr. 1873 | TC | 1873 | 3 | 1,9
+ap1: Un droit spécial pour l'administration, distinct du Code civil
+ap9: Un droit spécial reconnu : l'indépendance du juge administratif s'affirme
+h: Bordeaux, novembre 1871. Agnès Blanco, cinq ans et demi, passe devant l'entrepôt des tabacs quand un wagon poussé par des employés de l'État la renverse et lui passe sur la cuisse. Elle est amputée. Son père réclame 40 000 francs à l'État devant le tribunal civil, Code civil à la main.
+f: Une enfant est gravement blessée à Bordeaux par un wagon poussé par des employés de la manufacture des tabacs. Son père demande réparation à l'État sur le fondement du Code civil.
+pr: Le tribunal civil de Bordeaux retient sa compétence. Le préfet élève le conflit et le Tribunal des conflits est saisi.
+q: La responsabilité de l'État pour les dommages causés par ses agents dans le service public relève-t-elle du Code civil et du juge judiciaire ?
+s: Le conflit est confirmé. Cette responsabilité n'est ni générale ni absolue, elle a ses règles spéciales : l'autorité administrative est seule compétente.
+po: L'arrêt lie droit spécial et compétence administrative. L'école du service public en fera, trente ans plus tard, son texte fondateur.
+x: L'État répond-il devant les tribunaux civils d'une faute personnelle détachable du service commise par ses agents ? || La faute personnelle n'est pas le sujet : le litige vise la responsabilité de l'État lui-même.
+x: Un service public exploité comme une entreprise privée échappe-t-il au juge administratif et au droit public ? || C'est la question de Bac d'Eloka (1921). En 1873, personne ne parle encore de gestion privée.
+
+@cadot | Cadot | CE, 13 déc. 1889 | CE | 1889 | 3 | 1,9
+ap1: Fin du ministre-juge : le CE devient juge de droit commun, le lien organique est rompu
+ap9: Séparation organique : on saisit le CE directement, sans passer par le ministre
+h: M. Cadot dirige la voirie et les eaux de Marseille quand la ville supprime son emploi. Il réclame des dommages-intérêts et essuie un refus. Reste une question très simple, que personne n'avait tranchée : devant qui se plaindre, alors qu'aucun texte ne répond ?
+f: Le directeur de la voirie et des eaux de Marseille perd son emploi, supprimé par la ville. Il réclame des dommages-intérêts et se heurte à un refus.
+pr: Il demande directement au Conseil d'État d'annuler ce refus, alors qu'aucun texte ne lui attribue compétence.
+q: Le Conseil d'État peut-il être saisi directement d'un recours contre une décision administrative, sans texte et sans décision préalable d'un ministre-juge ?
+s: Le Conseil d'État se déclare compétent : sauf texte contraire, il connaît des recours en annulation contre les décisions administratives.
+po: Fin de la théorie du ministre-juge. Le Conseil d'État devient juge de droit commun et le lien organique entre l'administration et son juge est rompu.
+x: Le Conseil d'État statue-t-il encore au nom du chef de l'État, ou rend-il désormais la justice au nom du peuple français ? || C'est la justice déléguée, posée par la loi du 24 mai 1872, pas par Cadot.
+x: Une ville peut-elle supprimer l'emploi d'un de ses agents sans lui verser la moindre indemnité de licenciement ? || C'est le fond du dossier. L'arrêt est célèbre pour la compétence du juge.
+
+@bac-eloka | Bac d'Eloka | TC, 22 janv. 1921 | TC | 1921 | 2 | 1
+ap: Des services publics gérés comme une entreprise privée : le critère du service public s'effondre
+h: Côte d'Ivoire, 1920. La colonie exploite un bac payant sur la lagune d'Ébrié, comme le ferait une entreprise de transport. Le bac coule. La Société commerciale de l'Ouest africain, victime du naufrage, assigne la colonie devant le juge civil.
+f: La colonie de Côte d'Ivoire exploite un bac payant. Après un naufrage, la Société commerciale de l'Ouest africain l'assigne devant le juge judiciaire.
+pr: Le lieutenant-gouverneur élève le conflit et le Tribunal des conflits est saisi.
+q: Un service public exploité dans les mêmes conditions qu'un industriel ordinaire relève-t-il du juge administratif ?
+s: Non. Le bac est exploité dans les mêmes conditions qu'un industriel ordinaire : le litige relève du juge judiciaire.
+po: Naissance des services publics industriels et commerciaux. Le service public cesse d'être le critère unique du droit administratif.
+
+@arrighi | Arrighi | CE, Sect., 6 nov. 1936 | CE | 1936 | 3 | 2
+ap: Loi-écran : le juge refuse de contrôler la constitutionnalité d'une loi
+h: En 1934, une loi permet de mettre des fonctionnaires à la retraite d'office par décret. M. Arrighi, touché par la mesure, plaide que cette loi viole les lois constitutionnelles de 1875. Réponse glaciale du Conseil d'État : ce moyen n'est pas de ceux qu'on discute devant lui.
+f: Un fonctionnaire est mis d'office à la retraite par un décret pris en application d'une loi de 1934.
+pr: Il saisit le Conseil d'État et soutient que la loi fondant le décret méconnaît les lois constitutionnelles de 1875.
+q: Le juge administratif peut-il apprécier la constitutionnalité de la loi sur laquelle un acte administratif est fondé ?
+s: Non. « En l'état actuel du droit public français », ce moyen n'est pas de nature à être discuté devant le Conseil d'État.
+po: Naissance de la loi-écran, au nom de la séparation des pouvoirs et de la volonté générale. Elle subsiste aujourd'hui, mais la QPC la contourne.
+x: Le juge administratif peut-il écarter une loi contraire à un traité régulièrement ratifié et publié par la France ? || C'est la question de Semoules (1968) puis de Nicolo (1989), pas celle d'un contrôle de constitutionnalité.
+x: Une loi peut-elle retirer aux fonctionnaires le droit de contester devant le juge une mesure qui les vise ? || C'est plutôt la logique de Dame Lamotte (1950). Ici, le recours existe, c'est le moyen qui est refusé.
+
+@dehaene | Dehaene | CE, Ass., 7 juill. 1950 | CE | 1950 | 2 | 2,7
+ap2: Le Préambule de 1946 s'applique : le droit de grève, à concilier avec le service
+ap7: Le chef de service peut encadrer le droit de grève
+h: Été 1948, grève dans les préfectures. Le ministre de l'Intérieur prévient : les agents d'autorité qui suivront seront sanctionnés. M. Dehaene, chef de bureau à la préfecture d'Indre-et-Loire, fait grève quand même. Il est suspendu, puis blâmé.
+f: Un chef de bureau de préfecture participe à une grève malgré l'annonce du ministre de l'Intérieur. Il est suspendu puis reçoit un blâme.
+pr: Il saisit le Conseil d'État en invoquant le droit de grève reconnu par le Préambule de 1946.
+q: En l'absence de loi, le gouvernement peut-il limiter le droit de grève des agents publics pour assurer le fonctionnement du service ?
+s: Rejet. La grève est un droit, mais à défaut de loi le gouvernement, responsable du service, peut en fixer la nature et l'étendue des limites.
+po: Le Préambule de 1946 entre dans la légalité. Le chef de service reçoit le pouvoir de concilier grève et continuité.
+
+@lamotte | Dame Lamotte | CE, Ass., 17 févr. 1950 | CE | 1950 | 3 | 2,8
+ap2: Limite de la loi-écran : le juge interprète la loi pour « vider le venin »
+ap8: PGD : droit au recours pour excès de pouvoir contre toute décision, même sans texte
+h: Dame Lamotte voit ses terres de l'Ain concédées à un tiers par le préfet. Le Conseil d'État annule, le préfet recommence, le Conseil annule encore. Vichy vote alors une loi qui exclut « tout recours ». Le préfet recommence une dernière fois. Le Conseil répond que « tout recours » ne visait pas le sien.
+f: Le préfet de l'Ain concède à un tiers des terres appartenant à Dame Lamotte, malgré des annulations répétées. Une loi de 1943 exclut alors tout recours contre ces concessions.
+pr: Dame Lamotte saisit de nouveau le Conseil d'État, qui doit interpréter la loi de 1943.
+q: Une loi qui exclut « tout recours » contre une décision administrative supprime-t-elle le recours pour excès de pouvoir ?
+s: Non. Le recours pour excès de pouvoir existe même sans texte contre tout acte administratif ; il faudrait une exclusion expresse. Annulation.
+po: Le juge vide la loi de son venin sans la contrôler. Le droit au recours devient un principe général du droit.
+x: Le préfet peut-il concéder de nouveau des terres malgré trois annulations déjà prononcées par le Conseil d'État ? || C'est l'histoire de l'affaire. La vraie question porte sur le sens des mots « tout recours ».
+x: Le juge administratif peut-il refuser d'appliquer une loi de Vichy contraire aux lois de la République ? || Le juge n'écarte pas la loi : il l'interprète. C'est toute l'astuce de l'arrêt.
+
+@annamites | Amicale des Annamites de Paris | CE, Ass., 11 juill. 1956 | CE | 1956 | 2 | 2
+ap: 1er PFRLR dégagé par le CE (liberté d'association)
+h: Paris, 1953. L'Amicale des Annamites réunit des Vietnamiens. Le ministre de l'Intérieur la traite en association étrangère et constate sa nullité par arrêté, sur le fondement d'un décret de 1939. Mais les ressortissants de l'Union française sont-ils des étrangers ?
+f: Par arrêté du 30 avril 1953, le ministre de l'Intérieur constate la nullité d'une association déclarée dont les membres sont vietnamiens.
+pr: L'association et un de ses secrétaires généraux saisissent le Conseil d'État en excès de pouvoir.
+q: Le ministre peut-il constater la nullité d'une association de ressortissants de l'Union française malgré les principes rappelés par le Préambule de 1946 ?
+s: Annulation. Les principes reconnus par les lois de la République, dont la liberté d'association, s'appliquent à ces ressortissants.
+po: Le Conseil d'État est le premier à appliquer un PFRLR, quinze ans avant le Conseil constitutionnel.
+
+@eky | Société Eky | CE, Sect., 12 févr. 1960 | CE | 1960 | 2 | 2
+ap: Le règlement autonome doit respecter le Préambule
+h: Décembre 1958 : un décret punit d'amende et de courte prison l'usage de moyens de paiement remplaçant la monnaie légale. La société Eky s'indigne, Déclaration de 1789 en main : seule la loi crée les peines. Le Conseil d'État prend le moyen au sérieux, puis le rejette.
+f: Un décret de décembre 1958 punit d'amende et de courte peine de prison l'usage de moyens de paiement destinés à remplacer la monnaie légale.
+pr: La société Eky demande l'annulation de ces articles, en invoquant l'article 8 de la Déclaration de 1789 et l'article 34 de la Constitution.
+q: Un décret du domaine réglementaire autonome peut-il être contrôlé au regard des textes auxquels renvoie le Préambule de 1958 ?
+s: Rejet. Le juge confronte le décret à la Déclaration, mais les contraventions relèvent du règlement selon les articles 34 et 37.
+po: Le pouvoir réglementaire autonome n'échappe pas au juge : il reste soumis aux principes du Préambule.
+
+@liberte-association | Liberté d'association | CC, 71-44 DC, 16 juill. 1971 | CC | 1971 | 3 | 2,8
+ap2: Le Préambule entre dans le bloc de constitutionnalité
+ap8: Le CC donne une base textuelle à ses principes (gouvernement des juges)
+h: 1970. Simone de Beauvoir veut déclarer les Amis de la Cause du peuple. Le préfet de police bloque le récépissé. Battu devant le juge, le gouvernement fait voter une loi : le préfet pourra faire contrôler une association avant sa naissance. Le président du Sénat saisit le Conseil constitutionnel, et tout change.
+f: Après un refus de récépissé annulé par le juge, le Parlement vote une loi permettant de contrôler la création d'une association avant même sa déclaration.
+pr: Le président du Sénat défère la loi au Conseil constitutionnel avant sa promulgation.
+q: Le législateur peut-il soumettre la constitution d'une association au contrôle préalable de l'autorité judiciaire ?
+s: Non. La liberté d'association est un PFRLR : aucune autorisation ni contrôle préalable ne peut lui être imposé. Censure.
+po: Le Conseil se fonde pour la première fois sur le Préambule. Il devient gardien des libertés face à la loi.
+x: Le préfet de police peut-il refuser le récépissé d'une association dont les objectifs paraissent contraires à l'ordre public ? || C'est le litige d'origine, tranché par le juge administratif, pas la question posée au Conseil.
+x: Le Conseil constitutionnel peut-il contrôler une loi au regard d'un traité protégeant la liberté d'association ? || Le contrôle se fait au regard du Préambule. Le refus du contrôle des traités viendra en 1975.
+
+@nicolo | Nicolo | CE, Ass., 20 oct. 1989 | CE | 1989 | 3 | 2,5
+ap2: Contournement de la loi-écran : contrôle de conventionnalité, quasi-contrôle de constitutionnalité
+ap5: Le CE contrôle la conventionnalité des lois (art. 55 visé)
+h: Juin 1989, élections européennes. M. Nicolo, simple électeur, conteste le vote des citoyens d'outre-mer : selon lui, cela viole le traité de Rome. Il perd. Mais pour lui répondre, le Conseil d'État vient de faire ce qu'il refusait depuis vingt ans : vérifier qu'une loi respecte un traité.
+f: Un électeur conteste les élections européennes de juin 1989, parce que les citoyens d'outre-mer y ont participé en vertu de la loi de 1977.
+pr: Il saisit le Conseil d'État, juge de ces élections, en invoquant le traité de Rome.
+q: Le juge administratif peut-il vérifier la compatibilité d'une loi avec un traité qui lui est antérieur ?
+s: Rejet. Visant l'article 55, le juge compare la loi de 1977 au traité de Rome et conclut à leur compatibilité.
+po: Abandon de Semoules : pour la première fois, le juge administratif contrôle une loi, même postérieure au traité, sans théoriser ce revirement.
+x: Le juge administratif peut-il apprécier la constitutionnalité d'une loi électorale au regard de l'article 3 de la Constitution ? || Non : c'est la loi-écran d'Arrighi, que Nicolo laisse intacte.
+x: Une directive non transposée peut-elle être invoquée par un électeur à l'appui d'un recours contre des élections ? || Le texte invoqué est le traité de Rome lui-même, pas une directive.
+
+@quintin | Quintin | CE, 17 mai 1991 | CE | 1991 | 2 | 2
+ap: Écran transparent : la loi qui renvoie au règlement ne fait pas écran
+h: Un propriétaire du Finistère veut bâtir des maisons sur un terrain isolé, loin de toute agglomération. Le préfet lui oppose un certificat d'urbanisme négatif. Il invoque son droit de propriété contre les règles appliquées. Le Conseil d'État examine le moyen : aucun écran ne l'en empêche.
+f: Un propriétaire du Finistère reçoit un certificat d'urbanisme négatif pour un terrain rural isolé, en application du code de l'urbanisme.
+pr: Après un rejet par le tribunal administratif de Rennes, il saisit le Conseil d'État en invoquant le droit de propriété.
+q: Le juge peut-il contrôler la constitutionnalité d'un acte réglementaire lorsque la loi se borne à renvoyer au pouvoir réglementaire ?
+s: Oui, et le moyen est examiné : ces règles ne méconnaissent ni le droit de propriété ni le protocole de la Convention. Rejet.
+po: L'écran est transparent quand la loi ne fait que renvoyer au règlement : le juge contrôle alors l'acte au regard de la Constitution.
+
+@kone | Koné | CE, Ass., 3 juill. 1996 | CE | 1996 | 2 | 2
+ap: PFRLR : pas d'extradition dans un but politique
+h: M. Koné, Malien, est réclamé par Bamako pour une affaire d'enrichissement illicite. Le traité franco-malien semble protéger seulement les infractions politiques. Le Conseil d'État lit le traité à la lumière d'un principe de 1927 : on n'extrade pas pour un but politique. Mais M. Koné ne relève pas de ce cas.
+f: Un décret accorde au Mali l'extradition d'un de ses ressortissants, poursuivi pour complicité d'atteinte aux biens publics et enrichissement illicite.
+pr: L'intéressé demande au Conseil d'État l'annulation du décret, en invoquant le but politique de la demande.
+q: Un traité d'extradition doit-il être interprété à la lumière d'un principe constitutionnel interdisant d'extrader dans un but politique ?
+s: Oui. Le traité s'interprète conformément à ce PFRLR, tiré de la loi du 10 mars 1927. En l'espèce, le but politique n'est pas établi. Rejet.
+po: Dernier PFRLR dégagé par le Conseil d'État. L'interprétation conforme fait primer la Constitution sans le dire.
+
+@air-algerie | Société Air Algérie | CE, 6 déc. 2012 | CE | 2012 | 1 | 2
+ap: Écran transparent élargi : l'écran ne joue que si l'acte se borne à réitérer la loi
+h: 2011 : un décret fait entrer les compagnies aériennes dans le marché européen des quotas de carbone. Air Algérie invoque la Constitution. Trop tard : le décret ne fait que reprendre une loi. Hors QPC, le Conseil d'État ne touche pas à ce moyen.
+f: Un décret du 24 janvier 2011 intègre les activités aériennes au système européen de quotas d'émission. La compagnie Air Algérie le conteste.
+pr: Elle saisit le Conseil d'État et invoque des principes constitutionnels ainsi que plusieurs conventions internationales.
+q: Un moyen constitutionnel est-il recevable contre un décret qui se borne à réitérer une loi, en dehors d'une QPC ?
+s: Non. Le décret ne faisant que reprendre la loi, ces moyens sont écartés hors QPC, et les autres griefs sont rejetés.
+po: Le critère s'élargit : la loi ne fait écran que si l'acte se borne à la réitérer. Sinon, le contrôle redevient possible.
+
+@dantzig | Nationaux polonais à Dantzig | CPJI, avis, 4 févr. 1932 | CPJI | 1932 | 1 | 3
+ap: Un État ne peut opposer sa Constitution à ses engagements
+h: Entre-deux-guerres, ville libre de Dantzig. On se dispute le traitement des Polonais qui y vivent. La Cour permanente de justice internationale pose une règle qui vaut encore : un État ne se libère pas d'un traité en brandissant sa propre Constitution.
+f: Un différend oppose la Pologne et la ville libre de Dantzig sur le traitement des nationaux polonais et des personnes d'origine polonaise.
+pr: La Cour permanente de justice internationale est saisie pour avis.
+q: Un État peut-il invoquer sa propre Constitution pour se soustraire à ses obligations internationales ?
+s: Non. Un État ne peut opposer à un autre sa Constitution pour échapper aux obligations que lui impose le droit international.
+po: Vu de l'ordre international, la Constitution n'est qu'un fait interne. C'est l'expression de pacta sunt servanda.
+
+@internationale-hg | Internationale Handelsgesellschaft | CJCE, 17 déc. 1970 | CJCE | 1970 | 2 | 3
+ap: Le droit communautaire prime même les constitutions
+h: Une société allemande de négoce perd un cautionnement exigé pour exporter. Le tribunal de Francfort juge ce système contraire à la Loi fondamentale. La Cour de justice répond froidement : un acte communautaire ne s'évalue pas à l'aune d'une constitution nationale.
+f: Une société allemande perd un cautionnement exigé par un règlement communautaire pour obtenir une licence d'exportation.
+pr: Le tribunal administratif de Francfort, qui doute de la conformité du système à la Loi fondamentale, saisit la Cour à titre préjudiciel.
+q: La validité d'un acte communautaire peut-elle s'apprécier au regard des droits fondamentaux d'une constitution nationale ?
+s: Non. Le droit communautaire ne peut être écarté par une règle nationale, même constitutionnelle. Les droits fondamentaux sont protégés par ses propres principes.
+po: Primauté absolue, vue de Luxembourg. Les États, eux, gardent leur Constitution au sommet.
+
+@ivg | IVG | CC, 74-54 DC, 15 janv. 1975 | CC | 1975 | 3 | 3,5
+ap3: Le CC refuse de contrôler la conformité des lois aux traités
+ap5: Conventionnalité ≠ constitutionnalité : tombe le 2e argument de Semoules
+h: Fin 1974, la loi Veil sur l'interruption de grossesse est votée. Des députés saisissent le Conseil constitutionnel : elle violerait le droit à la vie protégé par la Convention européenne. Le Conseil se dérobe : une loi contraire à un traité n'est pas pour autant contraire à la Constitution.
+f: Le Parlement adopte la loi relative à l'interruption volontaire de grossesse.
+pr: Des députés la défèrent au Conseil constitutionnel, en invoquant notamment la Convention européenne des droits de l'homme et l'article 55.
+q: Le Conseil constitutionnel peut-il contrôler la conformité d'une loi à un traité sur le fondement de l'article 55 ?
+s: Non. Une loi contraire à un traité n'est pas pour autant contraire à la Constitution : le contrôle absolu et définitif diffère du contrôle relatif et contingent.
+po: Le Conseil renvoie le contrôle de conventionnalité aux juges ordinaires. Il faudra attendre Jacques Vabre (1975) et Nicolo (1989).
+x: Le Conseil constitutionnel peut-il contrôler une loi au regard du Préambule de 1946 sur le droit à la vie ? || Il le fait, et cela ne fait pas difficulté depuis 1971. Le point célèbre est le refus de contrôler les traités.
+x: Le juge ordinaire peut-il écarter une loi contraire à la Convention européenne des droits de l'homme ? || C'est la question laissée aux juges ordinaires, tranchée par Jacques Vabre et Nicolo.
+
+@aquarone | Aquarone | CE, Ass., 6 juin 1997 | CE | 1997 | 2 | 3,4
+ap3: Coutume : supérieure aux actes administratifs, pas aux lois
+ap4: La coutume internationale s'impose aux actes administratifs
+h: M. Aquarone, ancien greffier de la Cour internationale de justice, refuse de payer l'impôt français sur sa pension. Il invoque une coutume internationale d'exonération. Le Conseil d'État lui oppose la loi fiscale : l'article 55 parle des traités, pas de la coutume.
+f: Un ancien greffier de la Cour internationale de justice conteste l'imposition en France de sa pension, en invoquant une coutume internationale d'exonération.
+pr: Sa demande est rejetée par les juges du fond et l'affaire arrive au Conseil d'État.
+q: Une coutume internationale l'emporte-t-elle sur une loi contraire en vertu de l'article 55 de la Constitution ?
+s: Non. Ni l'article 55 ni aucune disposition constitutionnelle n'impose de faire prévaloir la coutume sur la loi. Rejet.
+po: Nicolo ne vaut pas pour la coutume. Elle s'impose aux actes administratifs, mais la loi contraire l'emporte.
+
+@sarran | Sarran | CE, Ass., 30 oct. 1998 | CE | 1998 | 3 | 3
+ap: Dans l'ordre interne, la Constitution l'emporte sur les traités
+h: Nouvelle-Calédonie, 1998. Un décret restreint le corps électoral appelé à se prononcer sur l'accord de Nouméa. M. Sarran et d'autres, exclus du vote, invoquent des traités sur les droits civils. Le Conseil d'État répond que la restriction vient de la Constitution elle-même, et que les traités ne passent pas au-dessus.
+f: Un décret de 1998 organise en Nouvelle-Calédonie une consultation réservée à certains électeurs, comme le prévoit l'article 76 de la Constitution.
+pr: Des électeurs exclus du vote saisissent le Conseil d'État en invoquant des engagements internationaux.
+q: Un traité peut-il être invoqué contre un acte qui applique directement une disposition de valeur constitutionnelle ?
+s: Non. La suprématie de l'article 55 ne s'applique pas, dans l'ordre interne, aux dispositions de nature constitutionnelle. Rejet.
+po: La Constitution reste au sommet de l'ordre interne. La Cour de cassation jugera de même dans Fraisse (2000).
+x: Le juge peut-il vérifier qu'un traité a été régulièrement ratifié avant de le confronter à un décret électoral ? || C'est le contrôle ouvert par Blotzheim, rendu quelques semaines plus tard.
+x: La loi électorale de Nouvelle-Calédonie doit-elle être écartée si elle viole le droit à des élections libres ? || Le problème porte sur le rapport entre traité et Constitution, pas sur une simple loi.
+
+@blotzheim | SARL du parc d'activités de Blotzheim | CE, Ass., 18 déc. 1998 | CE | 1998 | 2 | 3
+ap: Le juge contrôle la régularité de la ratification
+h: Une société alsacienne s'oppose à l'extension de l'aéroport de Bâle-Mulhouse. L'accord franco-suisse a été publié sans loi d'autorisation. Elle attaque le décret de publication. Pour la première fois, le Conseil d'État accepte de regarder si le Parlement aurait dû être consulté.
+f: Un accord franco-suisse sur l'aéroport de Bâle-Mulhouse est publié par décret sans autorisation parlementaire. Une société riveraine conteste cette publication.
+pr: Elle saisit le Conseil d'État d'un recours contre le décret de publication.
+q: Le juge administratif peut-il vérifier qu'un traité devait être autorisé par une loi avant sa ratification ou son approbation ?
+s: Oui. Saisi du décret de publication, le juge contrôle le respect de l'article 53. En l'espèce, le moyen n'aboutit pas. Rejet.
+po: L'article 55 exige un traité « régulièrement ratifié » : le juge en vérifie désormais la procédure, jamais le contenu.
+
+@snip | SNIP | CE, 3 déc. 2001 | CE | 2001 | 1 | 3
+ap: La Constitution reste la norme suprême
+h: Après une contribution annulée à la suite d'un arrêt de la Cour de justice, l'État en crée une nouvelle sur les laboratoires pharmaceutiques. Le Syndicat national de l'industrie pharmaceutique brandit la primauté du droit communautaire. Le Conseil d'État lui rappelle où s'arrête cette primauté.
+f: Un décret de 2000 fixe le taux d'une contribution sur les laboratoires, créée pour compenser le remboursement d'une contribution antérieure.
+pr: Le syndicat saisit le Conseil d'État, notamment au nom de la primauté du droit communautaire.
+q: La primauté du droit communautaire peut-elle remettre en cause, dans l'ordre interne, la suprématie de la Constitution ?
+s: Non. Ce principe ne saurait remettre en cause, dans l'ordre interne, la suprématie de la Constitution. Rejet.
+po: Sarran étendu au droit communautaire, y compris à ses normes les plus éminentes.
+
+@chevrol | Chevrol c. France | CEDH, 13 févr. 2003 | CEDH | 2003 | 1 | 3
+ap: Renvoyer la réciprocité au ministre viole le procès équitable
+h: Mme Chevrol, diplômée de médecine en Algérie, veut s'inscrire à l'ordre des médecins en France. Tout dépend de l'application des accords d'Évian par l'Algérie. Le Conseil d'État demande au ministre et s'estime lié par sa réponse. Strasbourg condamne : le juge ne peut pas déléguer son office.
+f: Une médecin diplômée en Algérie se voit refuser l'inscription à l'ordre, faute de réciprocité dans l'application d'une déclaration franco-algérienne.
+pr: Le Conseil d'État s'estime lié par l'avis du ministre des Affaires étrangères. Elle saisit la Cour européenne.
+q: Un juge national qui s'estime lié par l'avis d'un ministre sur la réciprocité respecte-t-il le droit à un tribunal ?
+s: Non. Le juge a renoncé à examiner lui-même un point décisif : violation de l'article 6 § 1.
+po: La jurisprudence française devra changer. Ce sera Cheriet-Benseghir, en 2010.
+
+@dadvsi | DADVSI | CC, 2006-540 DC, 27 juill. 2006 | CC | 2006 | 3 | 3
+ap: Transposer est une exigence constitutionnelle (art. 88-1), sauf identité constitutionnelle
+h: 2006, la loi sur le droit d'auteur à l'ère du téléchargement. Elle transpose une directive. Le Conseil constitutionnel, qui n'a qu'un mois, fixe les règles du jeu : il censure seulement une transposition manifestement incorrecte, et ne touche à la directive qu'au nom de l'identité constitutionnelle.
+f: Le Parlement adopte la loi sur le droit d'auteur, qui transpose une directive de 2001.
+pr: Des députés défèrent la loi au Conseil constitutionnel avant sa promulgation.
+q: Jusqu'où le Conseil constitutionnel peut-il contrôler une loi qui transpose une directive ?
+s: Il ne censure qu'une transposition manifestement incorrecte, et une contrariété à la Constitution seulement si un principe inhérent à l'identité constitutionnelle est en cause.
+po: Première formulation de la réserve d'identité. Il faudra quinze ans pour en voir un exemple (Air France, 2021).
+x: Le Conseil d'État peut-il contrôler la constitutionnalité d'un décret qui recopie une directive précise ? || C'est Arcelor (2007). Ici, le juge est le Conseil constitutionnel et l'acte est une loi.
+x: Le droit d'auteur a-t-il valeur constitutionnelle au titre du droit de propriété de la Déclaration de 1789 ? || Ce n'est pas l'apport que le cours retient de cette décision.
+
+@arcelor | Arcelor Atlantique et Lorraine | CE, Ass., 8 févr. 2007 | CE | 2007 | 3 | 3
+ap: Décret de transposition : chercher un équivalent du principe en droit de l'UE
+h: 2004 : un décret transpose le marché européen des quotas de CO2 et y soumet la sidérurgie, pas le plastique ni l'aluminium. Arcelor crie à l'inégalité. Le Conseil d'État est coincé : censurer le décret, c'est censurer la directive ; ne rien faire, c'est abandonner la Constitution.
+f: Un décret du 19 août 2004 transpose une directive sur les quotas de gaz à effet de serre et l'applique à la sidérurgie, mais ni au plastique ni à l'aluminium.
+pr: Les sociétés demandent l'abrogation du décret et attaquent les refus implicites devant le Conseil d'État.
+q: Comment le juge contrôle-t-il la constitutionnalité d'un décret qui reprend des dispositions précises et inconditionnelles d'une directive ?
+s: Il cherche un équivalent du principe en droit communautaire. S'il existe, il contrôle la directive et renvoie en cas de difficulté sérieuse ; sinon, il contrôle le décret directement.
+po: La suprématie de la Constitution est sauvée sans heurt avec le droit de l'Union. La CJCE validera la directive en 2008.
+x: Une loi de transposition peut-elle être censurée si elle heurte un principe inhérent à l'identité constitutionnelle ? || C'est le raisonnement du Conseil constitutionnel (2006-540 DC, Air France), pas celui du juge du décret.
+x: Une entreprise peut-elle invoquer une directive non transposée contre une décision individuelle qui la vise ? || C'est Perreux (2009). Ici, la directive est transposée et c'est le décret qui est attaqué.
+
+@cheriet | Cheriet-Benseghir | CE, Ass., 9 juill. 2010 | CE | 2010 | 2 | 3
+ap: Le juge apprécie lui-même la réciprocité
+h: Mme Cheriet-Benseghir, Française diplômée de médecine à Oran, se voit refuser l'inscription à l'ordre : l'Algérie n'appliquerait pas la déclaration de 1962. Le Conseil d'État vérifie lui-même, et donne tort à l'ordre sur ce point. Elle perd pourtant : son diplôme n'a pas été obtenu dans des conditions identiques.
+f: Une Française diplômée de médecine à Oran est refusée à l'ordre des médecins, au motif que l'Algérie n'appliquerait pas la déclaration de 1962.
+pr: Elle attaque devant le Conseil d'État la décision du Conseil national de l'ordre.
+q: Le juge administratif peut-il apprécier lui-même si un traité est appliqué par l'autre partie ?
+s: Oui, après avoir recueilli les observations du ministre. La réciprocité n'est pas écartée, mais un autre motif fonde la décision. Rejet.
+po: Le Conseil d'État tire les leçons de Chevrol et abandonne le renvoi préjudiciel au ministre sur la réciprocité.
+
+@libre-pensee | Fédération nationale de la libre pensée | CE, Ass., 9 juill. 2010 | CE | 2010 | 1 | 3
+ap: La Constitution reste au sommet de l'ordre interne
+h: 2008 : la France et le Saint-Siège s'accordent sur la reconnaissance de diplômes. La Fédération de la libre pensée attaque le décret de publication et invoque la Constitution. Le Conseil d'État vérifie la procédure de ratification, sans juger le contenu de l'accord à l'aune de la Constitution.
+f: Un accord de 2008 entre la France et le Saint-Siège sur la reconnaissance de diplômes est publié par décret.
+pr: La fédération et d'autres requérants demandent au Conseil d'État l'annulation de ce décret.
+q: Que peut contrôler le juge saisi d'un recours contre le décret de publication d'un traité ?
+s: Il contrôle la régularité de la ratification ou de l'approbation, mais pas la conformité du traité à la Constitution. Rejet.
+po: Le juge ne se fait pas juge du contenu du traité. Ce rôle revient au Conseil constitutionnel avant ratification.
+
+@gisti-fapil | GISTI et FAPIL | CE, Ass., 11 avr. 2012 | CE | 2012 | 3 | 3
+ap: Effet direct : deux critères négatifs et cumulatifs
+h: 2008, droit au logement opposable. Un décret durcit les conditions pour les étrangers non européens : deux ans de résidence, et certains titres exclus. Le GISTI et la FAPIL invoquent une convention de l'OIT de 1949. Le ministre répond que ce texte s'adresse aux États. Le Conseil d'État balaie l'argument.
+f: Un décret de 2008 impose à certains étrangers deux ans de résidence préalable pour bénéficier du droit au logement opposable, et en exclut d'autres.
+pr: Deux associations demandent au Conseil d'État l'annulation du décret en invoquant la convention n° 97 de l'OIT.
+q: À quelles conditions une stipulation d'un traité peut-elle être invoquée par un particulier devant le juge administratif ?
+s: Il faut qu'elle n'ait pas pour objet exclusif de régir les relations entre États et ne requière aucun acte complémentaire. Annulation, à effet différé.
+po: Les critères de l'effet direct sont unifiés. La seule mention des États comme sujets de l'obligation ne suffit plus à l'exclure.
+x: Le juge doit-il vérifier que l'État étranger applique la convention avant de la confronter à un décret français ? || C'est la réciprocité, traitée par Cheriet-Benseghir en 2010.
+x: Le juge administratif peut-il interpréter lui-même une convention internationale sans la renvoyer au ministre ? || C'est GISTI 1990. Attention au piège : même sigle, autre arrêt.
+
+@fdn | French Data Network | CE, Ass., 21 avr. 2021 | CE | 2021 | 3 | 3
+ap: Exigence constitutionnelle sans équivalent UE : le droit de l'UE peut être écarté
+h: La Cour de justice interdit de conserver massivement les données de connexion. Le gouvernement français, inquiet pour le renseignement, demande au Conseil d'État de juger qu'elle est sortie de ses compétences. Le Conseil refuse ce terrain, mais trouve une autre voie : la Constitution.
+f: Des associations attaquent le refus d'abroger les décrets imposant la conservation généralisée des données de connexion, que la Cour de justice juge contraire au droit de l'Union.
+pr: Le Gouvernement demande au Conseil d'État d'écarter la jurisprudence de la Cour comme ultra vires.
+q: Le juge peut-il refuser d'appliquer le droit de l'Union si cela prive de garanties une exigence constitutionnelle sans équivalent européen ?
+s: Il refuse le contrôle ultra vires, mais vérifie qu'appliquer le droit de l'Union ne prive pas de garantie effective une exigence constitutionnelle sans équivalent.
+po: Arcelor renversé en défense : la Constitution sert de bouclier, dans la stricte mesure nécessaire.
+x: Le juge national peut-il constater que la Cour de justice a excédé ses compétences en interprétant une directive ? || Le Conseil d'État refuse précisément ce contrôle ultra vires, adopté par certaines cours étrangères.
+x: Le Conseil constitutionnel peut-il censurer une loi de transposition au nom de l'identité constitutionnelle de la France ? || C'est la réserve du Conseil constitutionnel. Ici, c'est le juge administratif qui statue.
+
+@air-france | Société Air France | CC, 2021-940 QPC, 15 oct. 2021 | CC | 2021 | 3 | 3
+ap: 1re atteinte reconnue à l'identité constitutionnelle de la France
+h: Air France doit ramener les étrangers refoulés à la frontière, sous peine d'amende. La compagnie plaide qu'on lui confie la force publique. Le Conseil constitutionnel reconnaît enfin un principe inhérent à l'identité constitutionnelle : la force publique ne se délègue pas. Mais le transporteur, dit-il, ne contraint personne.
+f: Une compagnie aérienne est sanctionnée pour n'avoir pas réacheminé un étranger refusé à la frontière. Cette obligation transpose une directive de 2001.
+pr: À l'occasion de sa contestation, elle pose une QPC, transmise par le Conseil d'État.
+q: Le Conseil constitutionnel peut-il contrôler une loi qui transpose une directive, et l'obligation de réacheminer délègue-t-elle la force publique ?
+s: Il ne contrôle qu'un principe inhérent à l'identité constitutionnelle. L'interdiction de déléguer la force publique en est un, mais le transporteur n'exerce aucune contrainte. Conformité.
+po: Premier principe d'identité, quinze ans après la réserve de 2006. Le constituant garde le dernier mot.
+x: Le Conseil d'État peut-il contrôler lui-même une loi de transposition au regard de l'article 12 de la Déclaration ? || Non : devant lui, la loi fait écran. Le contrôle passe par la QPC.
+x: Une compagnie aérienne peut-elle invoquer une directive non transposée contre l'amende qui la frappe ? || La directive est transposée, et c'est la compagnie qui la conteste.

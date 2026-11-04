@@ -1,0 +1,224 @@
+# Faux jumeaux : arrêts que l'on confond, et ce qui les sépare.
+# %id | Titre
+# p: le piège    m: arrêt = ce qui le distingue
+
+%origines | Les trois fondateurs
+p: Tous parlent de naissance du droit administratif, mais pas de la même naissance.
+m: blanco = Un droit spécial, loin du Code civil
+m: cadot = Un juge : fin du ministre-juge
+m: bac-eloka = Une limite : le service public géré comme une entreprise
+
+%loi-ecran | Les visages de la loi-écran
+p: Tous tournent autour de l'écran, mais chacun fait autre chose avec lui.
+m: arrighi = Pose l'écran
+m: lamotte = Contourne par l'interprétation
+m: quintin = Écran transparent : la loi renvoie au règlement
+m: air-algerie = L'acte qui se borne à réitérer la loi reste à l'abri
+m: udt = Maintient l'écran malgré la décision de 1975
+
+%preambule | Préambule et PFRLR
+p: Le juge administratif a utilisé le Préambule bien avant le Conseil constitutionnel.
+m: dehaene = Grève : le Préambule de 1946 s'applique
+m: annamites = Premier PFRLR, dégagé par le Conseil d'État
+m: eky = Le règlement autonome reste soumis au Préambule de 1958
+m: liberte-association = Le Conseil constitutionnel entre en scène
+m: kone = Dernier PFRLR du Conseil d'État, par interprétation d'un traité
+
+%sommet | Qui est au sommet ?
+p: La réponse change selon le juge qui parle.
+m: dantzig = Vu de l'international : la Constitution n'est qu'un fait
+m: internationale-hg = Vu de Luxembourg : le droit communautaire prime tout
+m: sarran = Vu du Conseil d'État : la Constitution sur les traités
+m: snip = Même solution face au droit communautaire
+m: libre-pensee = Le juge ne contrôle pas le traité au regard de la Constitution
+
+%transposition | Le contrôle de la transposition
+p: Mêmes mots, mais deux juges et deux actes différents.
+m: lcen = 2004 : transposer est une exigence constitutionnelle
+m: dadvsi = 2006 : réserve d'identité, loi de transposition, CC
+m: arcelor = 2007 : décret de transposition, recherche d'un équivalent, CE
+m: fdn = 2021 : la Constitution en défense, refus de l'ultra vires
+m: air-france = 2021 : premier principe d'identité, CC en QPC
+
+%invocabilite | Qui peut invoquer une directive ?
+p: Luxembourg dit oui dès 1974, Paris attend 2009. Et l'État, lui, ne peut jamais.
+m: van-duyn = Oui, si claire et inconditionnelle
+m: ratti = Oui, une fois le délai expiré
+m: cohn-bendit = Non contre un acte individuel
+m: perreux = Oui contre un acte non réglementaire
+m: lilly = Jamais au profit de l'État qui n'a pas transposé
+
+%directive-reglement | Directive contre règlement
+p: Le règlement est visé à trois moments différents.
+m: ornithologique = À l'édiction : annulation du règlement
+m: alitalia = Après coup : obligation d'abroger
+m: tete = Sans règlement : le vide est lui-même illégal
+
+%traites-actes | Traités et actes administratifs
+p: Aucun de ces arrêts ne touche à la loi. Le juge compare un acte à une norme internationale.
+m: kirkwood = Traité invocable contre un décret, sous la IVe
+m: belgacem = Même chose sous la Ve, avec la Convention européenne
+m: aquarone = La coutume compte aussi, mais pas contre une loi
+
+%de-non-a-oui | De Semoules à Nicolo
+p: Qui dit oui, qui dit non, et pour quelle raison ?
+m: semoules = CE, non : deux arguments
+m: ivg = CC : ce n'est pas mon contrôle
+m: jacques-vabre = Cour de cassation : oui, tout de suite
+m: simmenthal = Luxembourg : tout juge doit écarter la loi
+m: udt = CE, non : un seul argument
+m: val-d-oise = CC juge électoral : il regarde la loi au regard du traité
+m: nicolo = CE, oui, en 1989
+
+%extensions | Nicolo s'étend
+p: Trois arrêts d'extension, trois normes différentes.
+m: boisdet = Règlements européens
+m: cnafc = Convention européenne des droits de l'homme
+m: rothmans = Directives
+
+%suites-nicolo | Les suites de Nicolo
+p: Ces arrêts tirent chacun une conséquence différente du contrôle de conventionnalité.
+m: anthroposophique = L'exécutif ne doit pas appliquer la loi inconventionnelle
+m: meyet-1999 = Une loi peut devenir incompatible avec le temps
+m: deprez = L'article 55 est une règle de conflit de normes
+
+%responsabilite | Qui paie, et à quel titre ?
+p: La nature de la responsabilité dépend de celui à qui la violation est imputée.
+m: veuve-renard = Faute : décret d'application jamais pris
+m: arizona-tobacco = Faute : règlement contraire à une directive
+m: gardedieu = Sans faute, officiellement : la loi seule
+
+%juge-ministre | Le juge et le ministre
+p: Interpréter et apprécier la réciprocité sont deux questions distinctes.
+m: gisti-1990 = Interprétation : le juge décide seul
+m: beaumartin = Interprétation : condamnation de la France
+m: chevrol = Réciprocité : condamnation de la France
+m: cheriet = Réciprocité : le juge décide seul
+
+%insertion | Le juge face au traité lui-même
+p: Il contrôle l'entrée du traité, pas son contenu, et il ne hiérarchise pas deux traités.
+m: blotzheim = Le juge vérifie la procédure (art. 53)
+m: tende = Il liste les moyens recevables et ceux qui sont inopérants
+m: kandyrine = Deux traités : concilier
+m: americains-accidentels = Méthode généralisée à tous les actes
+
+%frontieres | Les bavardages de la loi
+p: La première tolère le débordement, la seconde censure le vide.
+m: blocage-prix = Loi qui déborde sur le règlement : pas de censure
+m: avenir-ecole = Loi sans portée normative : censure
+
+%crise-ordonnances | Domaine matériel plutôt qu'auteur
+p: Même logique dans les trois : on regarde la matière pour qualifier l'acte.
+m: rubin-de-servens = Article 16 : décision et mesures
+m: force-5 = Ordonnance non ratifiée : QPC possible
+m: cfdt-finances = Le Conseil d'État garde les autres moyens
+
+%president-premier-ministre | Président ou Premier ministre ?
+p: Chacun répond à une question différente sur les décrets.
+m: sicard = Signature inutile : le contreseing sauve le décret
+m: pelon = Qui sont les ministres responsables ?
+m: meyet-1992 = Délibéré en Conseil : le Président signe
+m: collas = Le Président peut rendre la main
+
+%ministres | Les pouvoirs d'un ministre
+p: Il n'a aucun pouvoir général, mais il organise ses services.
+m: jamart = Oui : chef de service, sans texte
+m: brabant = Non : pas de pouvoir réglementaire général
+m: credit-foncier = Oui : orientations à ses services
+m: labonne = Non : la police nationale est au chef de l'État
+
+%police | La police générale nationale
+p: Même pouvoir, mais pas le même titulaire.
+m: labonne = Chef de l'État, sans texte (1919)
+m: comite-resistance = Premier ministre (1978)
+
+%lignes | Directives, lignes directrices, documents
+p: Trois étapes d'une même histoire, à ne pas confondre avec le droit de l'Union.
+m: credit-foncier = Le mot « directive », 1970
+m: jousselin = Le mot « lignes directrices », 2014
+m: gisti-2020 = Le recours contre tout document général, 2020
+
+%hierarchie-actes | Où sont les normes ?
+p: Dans le contrat, dans le règlement, dans la promulgation.
+m: seguey-tivoli = Une clause de contrat peut valoir norme
+m: clamart = L'acte individuel plie devant le règlement
+m: montory = La promulgation donne sa force à la loi
+
+%aai | Les autorités indépendantes
+p: Deux décisions, deux limites différentes.
+m: cc-86-217 = Le Premier ministre reste au-dessus
+m: csa-88-248 = Portée limitée par le champ et le contenu
+
+%collectivites | Collectivités sans décret
+p: Tout dépend de ce que dit la loi.
+m: cergy-pontoise = La loi se tait : habilitation implicite
+m: calvados = La loi renvoie à un décret : pas d'habilitation
+
+%personnes-privees | Personne privée, service public
+p: Tout organisme lié à un service public n'est pas une personne publique.
+m: barbier = Société : son règlement d'organisation est administratif
+m: fifas = Fédération : acte administratif
+m: chevassier = Association : personne privée selon la loi
+m: gip-his = GIP : personne publique
+m: paris-2 = Établissement public : il ne filialise pas ses missions
+
+%egalite | Le principe gigogne d'égalité
+p: Cinq arrêts pour un seul principe. Retiens le lieu où il s'applique.
+m: aurore = Devant le service public
+m: barel = Dans l'accès aux emplois publics
+m: biberon = Devant le domaine public
+m: chenes-lieges = Devant les charges publiques
+m: rnaf = Devant la justice
+
+%sans-texte | Un droit sans texte
+p: Quatre principes dégagés sans qu'un texte les pose.
+m: aramu = Se défendre avant une sanction
+m: lamotte = Former un recours contre toute décision
+m: peynet = Ne pas être licenciée enceinte
+m: milhaud = Dignité, même après la mort
+
+%temps | Le temps et les règles
+p: L'auteur de la règle et le moment visé ne sont pas les mêmes.
+m: aurore = Le règlement ne dispose que pour l'avenir
+m: kpmg = L'auteur du règlement doit prévoir une transition
+m: tropic = Le juge module sa propre règle
+
+%methode | Comment le juge crée la règle
+p: Chacun montre une façon de ne pas dire qu'on légifère.
+m: alitalia = Il invoque un principe général
+m: billard-volle = Il généralise plusieurs textes
+m: alusuisse = Il s'inspire du Code civil pour fixer trente ans
+
+%auteurs | Les autres créateurs de règles
+p: Le Conseil d'État n'a pas le monopole des principes.
+m: brgm = Le juge judiciaire : insaisissabilité
+m: liberte-association = Le CC, avec une base textuelle
+m: cc-79-105 = Le CC, avec des antécédents administratifs
+
+%juge-naturel | Le juge administratif protégé
+p: L'existence, la compétence et la place au sommet viennent de trois décisions.
+m: cc-80-119 = Son indépendance (1980)
+m: conseil-concurrence = Sa compétence (1987)
+m: cc-2009-595 = Le Conseil d'État au sommet (2009)
+
+%juridiction | Reconnaître une juridiction
+p: L'un qualifie une juridiction, l'autre la rattache à l'ordre administratif.
+m: de-bayo = Juridiction : elle tranche selon le droit
+m: daillieres = Administrative : elle traite de droit public
+
+%liens-fonctionnels | Juge et administration, liens croisés
+p: L'un concerne le juge qui conseille, les autres l'administration qui punit.
+m: snpst = Le Conseil d'État consulté : l'oubli est sanctionné
+m: csa-88-248 = L'administration qui sanctionne : garanties pénales
+m: didier = L'administration qui sanctionne : procès équitable
+
+%les-gisti | Trois GISTI, trois questions
+p: Même association, mais trois questions sans rapport entre elles.
+m: gisti-1990 = 1990 : le juge interprète seul le traité
+m: gisti-fapil = 2012 : les critères de l'effet direct
+m: gisti-2020 = 2020 : le recours contre les documents généraux
+
+%les-meyet | Deux Meyet, deux sujets
+p: Même requérant, mais aucun rapport entre les deux arrêts.
+m: meyet-1992 = 1992 : la signature du Président, référendum de Maastricht
+m: meyet-1999 = 1999 : l'interdiction des sondages, loi devenue incompatible

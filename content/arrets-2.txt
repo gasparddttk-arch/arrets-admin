@@ -1,0 +1,302 @@
+# Zones 4 à 6 : actes administratifs et traités, lois et traités, loi et règlement
+
+@kirkwood | Dame Kirkwood | CE, Ass., 30 mai 1952 | CE | 1952 | 2 | 4
+ap: Les actes administratifs doivent respecter les traités
+h: 1951, une femme est détenue à Caen. Un décret la livre aux autorités américaines. Elle invoque la convention d'extradition de 1909 contre ce décret. Le Conseil d'État accepte de l'entendre sur ce terrain. Elle perd, mais le traité vient d'entrer dans le prétoire.
+f: Un décret du 25 septembre 1951 accorde aux États-Unis l'extradition d'une femme détenue à Caen.
+pr: Elle demande au Conseil d'État l'annulation du décret, en invoquant la convention franco-américaine de 1909.
+q: Un particulier peut-il invoquer un traité à l'appui d'un recours pour excès de pouvoir contre un acte administratif ?
+s: Oui, la convention peut être invoquée contre le décret. Le moyen n'aboutit pas en l'espèce. Rejet.
+po: Le traité entre dans le bloc de légalité dès la IVe République : l'article 26 de 1946 lui donnait force de loi.
+
+@van-duyn | Van Duyn | CJCE, 4 déc. 1974 | CJCE | 1974 | 2 | 4
+ap: Directive précise et inconditionnelle invocable par les particuliers
+h: Yvonne van Duyn, Néerlandaise, vient travailler comme secrétaire pour l'Église de scientologie au Royaume-Uni. On lui refuse l'entrée à l'aéroport. Elle invoque une directive de 1964. Londres répond qu'une directive n'oblige que les États. La Cour de justice lui donne raison sur ce point.
+f: Une Néerlandaise se voit refuser l'entrée au Royaume-Uni, où elle venait travailler pour l'Église de scientologie.
+pr: Elle saisit le juge britannique, qui interroge la Cour de justice à titre préjudiciel.
+q: Un particulier peut-il se prévaloir devant son juge national d'une directive qui s'adresse pourtant aux États ?
+s: Oui. L'effet utile de la directive serait affaibli si les justiciables ne pouvaient pas s'en prévaloir, lorsqu'elle est claire et inconditionnelle.
+po: La Cour contredit la lettre du traité de Rome. Cohn-Bendit (1978) est la réponse française.
+
+@cohn-bendit | Cohn-Bendit | CE, Ass., 22 déc. 1978 | CE | 1978 | 3 | 4,5
+ap4: Directive non invocable contre un acte individuel
+ap5: Théorie de l'acte clair : le CE donne son propre sens à la directive, contre Van Duyn
+h: Mai 68 : Daniel Cohn-Bendit, étudiant allemand, est expulsé de France. En 1975, il demande l'abrogation de l'arrêté pour revenir travailler. Le ministre refuse sans motiver sa décision. Il invoque une directive de 1964. Le tribunal de Paris veut interroger Luxembourg. Le Conseil d'État coupe court.
+f: Expulsé en 1968, un ressortissant allemand demande en 1975 l'abrogation de l'arrêté. Le ministre de l'Intérieur refuse sans motiver sa décision.
+pr: Le tribunal administratif de Paris sursoit à statuer et interroge la Cour de justice. Le ministre fait appel devant le Conseil d'État.
+q: Un particulier peut-il invoquer une directive non transposée à l'appui d'un recours contre un acte administratif individuel ?
+s: Non. Quelle que soit leur précision, les directives ne peuvent être invoquées contre un acte individuel. La contestation des mesures réglementaires reste réservée.
+po: Trente ans d'écart avec Luxembourg, jusqu'à Perreux (2009). L'arrêt laisse pourtant ouverte la voie du règlement.
+x: Une directive précise peut-elle être invoquée contre le règlement national sur lequel un acte individuel est fondé ? || Cette voie reste ouverte, et l'arrêt la réserve. Le refus vise l'acte individuel lui-même.
+x: La directive peut-elle être invoquée contre la loi sur laquelle l'expulsion est fondée ? || En 1978, le juge n'écarte aucune loi : il faudra Nicolo (1989) et Rothmans (1992).
+
+@ratti | Ratti | CJCE, 5 avr. 1979 | CJCE | 1979 | 1 | 4
+ap: Invocabilité d'une directive non transposée dans le délai
+h: Tullio Ratti, patron d'une usine milanaise de solvants, étiquette ses produits comme l'exige une directive que l'Italie n'a pas transposée. Il est poursuivi au nom de la loi italienne, plus sévère. La Cour de justice lui donne raison pour le texte dont le délai est expiré.
+f: Un industriel italien est poursuivi pour avoir étiqueté ses solvants selon une directive non transposée, et non selon la loi italienne.
+pr: Le juge pénal de Milan interroge la Cour de justice à titre préjudiciel.
+q: Un particulier peut-il se prévaloir d'une directive précise et inconditionnelle que son État n'a pas transposée à temps ?
+s: Oui, une fois le délai expiré : l'État défaillant ne peut opposer son droit interne à celui qui respecte la directive.
+po: Les deux conditions de l'invocabilité sont posées : délai expiré et disposition précise et inconditionnelle. Perreux les reprend.
+
+@alitalia | Compagnie Alitalia | CE, Ass., 3 févr. 1989 | CE | 1989 | 3 | 4,8
+ap4: Obligation d'abroger un règlement devenu illégal (contraire à une directive)
+ap8: Méthode : règle nouvelle présentée comme inspirée d'un principe général
+h: Alitalia veut déduire sa TVA sur certaines dépenses. Le code général des impôts le lui interdit, alors qu'une directive l'y autorise. La compagnie demande au Premier ministre d'abroger le texte. Silence. Le Conseil d'État transforme ce silence en faute.
+f: Une compagnie aérienne demande au Premier ministre d'abroger des dispositions réglementaires relatives à la TVA, contraires à une directive.
+pr: Face au refus implicite, elle saisit le Conseil d'État en excès de pouvoir.
+q: L'autorité administrative est-elle tenue d'abroger un règlement illégal, y compris devenu contraire à une directive ?
+s: Oui. Saisie d'une demande, l'autorité doit abroger le règlement illégal dès l'origine ou devenu illégal. Le refus est annulé.
+po: Le contrôle des règlements devient permanent. Solution aujourd'hui inscrite à l'article L. 243-2 du CRPA.
+x: Un particulier peut-il invoquer une directive non transposée à l'encontre d'un acte individuel de l'administration fiscale ? || C'est Cohn-Bendit puis Perreux. Alitalia concerne un acte réglementaire.
+x: Le juge administratif peut-il écarter une loi fiscale postérieure contraire aux objectifs d'une directive ? || C'est Rothmans (1992). Ici, le texte en cause est un règlement.
+
+@belgacem | Belgacem | CE, Ass., 19 avr. 1991 | CE | 1991 | 1 | 4
+ap: Sous la Ve, contrôle des actes administratifs au regard des traités
+h: M. Belgacem, Algérien, est frappé d'un arrêté d'expulsion alors que sa vie familiale est en France. Il invoque l'article 8 de la Convention européenne. Le Conseil d'État accepte de peser cette mesure à l'aune du traité.
+f: Un ressortissant algérien fait l'objet d'un arrêté d'expulsion alors que sa famille vit en France.
+pr: Il conteste la mesure devant le juge administratif, en invoquant l'article 8 de la Convention européenne.
+q: Un acte administratif individuel peut-il être contrôlé au regard du droit au respect de la vie familiale garanti par un traité ?
+s: Oui. Le juge vérifie que la mesure ne porte pas une atteinte disproportionnée au droit protégé par l'article 8.
+po: Solution de Dame Kirkwood reprise sous la Ve République, et naissance d'un contrôle de proportionnalité fondé sur la Convention.
+
+@lilly | SA Lilly France | CE, Sect., 23 juin 1995 | CE | 1995 | 1 | 4
+ap: L'État ne peut se prévaloir d'une directive non transposée
+h: Le ministre de la Santé prolonge de soixante jours l'examen du prix d'un médicament. Son argument : une directive de 1988 le permet quand les demandes affluent. Mais la France n'a pas transposé ce passage. Le Conseil d'État le renvoie à ses devoirs.
+f: Pour prolonger de soixante jours l'examen d'un prix de médicament, le ministre de la Santé invoque une disposition de directive non transposée.
+pr: Le laboratoire saisit le Conseil d'État de cette prorogation.
+q: L'administration peut-elle se prévaloir contre un particulier d'une directive qu'elle n'a pas transposée ?
+s: Non. Les autorités de l'État ne peuvent se prévaloir des dispositions d'une directive non transposée : le délai ne pouvait être prorogé.
+po: L'État défaillant ne profite pas de sa carence. L'invocabilité joue au bénéfice des particuliers, jamais contre eux.
+
+@tete | Tête | CE, Ass., 6 févr. 1998 | CE | 1998 | 2 | 4
+ap: L'absence de transposition est elle-même illégale
+h: Lyon, années 1990. La communauté urbaine confie le périphérique nord à un concessionnaire, sans publicité européenne : aucune règle française n'oblige à la faire. M. Tête, élu local, invoque une directive sur les marchés de travaux. Le silence du droit français ne sauve pas la délibération.
+f: La communauté urbaine de Lyon concède la construction de son périphérique nord sans la publicité prévue par une directive, faute de texte français de transposition.
+pr: M. Tête et une association attaquent la délibération devant le juge administratif.
+q: Une directive peut-elle être invoquée contre un acte lorsque le droit interne ne comporte aucune règle de transposition ?
+s: Oui. L'absence de règle transposant la directive est elle-même illégale : la délibération est annulée.
+po: Même sans règlement à attaquer, le vide réglementaire donne prise à la directive. C'est encore une invocabilité d'exclusion.
+
+@ornithologique | Association ornithologique et mammalogique de Saône-et-Loire | CE, 10 mars 1999 | CE | 1999 | 2 | 4
+ap: Annulation d'un règlement contraire à une directive
+h: 1996, un arrêté du ministre de l'Environnement ouvre la chasse au gibier d'eau en Saône-et-Loire. Problème : des oiseaux sont encore en période de reproduction, et la directive « oiseaux » protège cette période. Une association d'ornithologues saisit le Conseil d'État, face aux chasseurs venus défendre l'arrêté.
+f: Un arrêté du ministre de l'Environnement du 27 juin 1996 fixe l'ouverture de la chasse au gibier d'eau en Saône-et-Loire avant la fin de la reproduction des espèces.
+pr: L'association demande l'annulation au Conseil d'État ; les fédérations de chasseurs interviennent en défense.
+q: Un acte réglementaire incompatible avec les objectifs d'une directive doit-il être annulé dès son édiction ?
+s: Oui. La directive lie l'État quant au résultat : ouvrir la chasse avant la fin de la reproduction contrevient à ses objectifs. Annulation.
+po: Premier volet du double contrôle des règlements : à l'édiction par l'annulation, a posteriori par Alitalia.
+
+@perreux | Mme Perreux | CE, Ass., 30 oct. 2009 | CE | 2009 | 3 | 4
+ap: Fin de Cohn-Bendit : directive invocable contre un acte individuel
+h: Mme Perreux, magistrate et responsable syndicale, brigue un poste à l'École nationale de la magistrature. Une autre est nommée. Elle crie à la discrimination syndicale, mais comment le prouver ? Elle invoque une directive sur la charge de la preuve. Elle perd, et le Conseil d'État enterre pourtant Cohn-Bendit.
+f: Une magistrate syndicaliste candidate à un poste à l'ENM voit une autre candidate nommée par arrêté du 29 août 2006. Elle invoque une discrimination syndicale.
+pr: Recours pour excès de pouvoir devant le Conseil d'État, jugé en Assemblée. Elle invoque une directive de 2000 non transposée à temps.
+q: Un justiciable peut-il invoquer une directive non transposée à l'appui d'un recours contre un acte non réglementaire ?
+s: Oui, si le délai est expiré et la disposition précise et inconditionnelle. L'article invoqué ne l'est pas, mais le juge aménage lui-même la preuve. Rejet.
+po: Invocabilité de substitution et abandon implicite de Cohn-Bendit, après trente ans d'écart avec Luxembourg.
+x: Le juge peut-il annuler un règlement national contraire aux objectifs d'une directive transposée trop tard ? || Cette voie existait depuis longtemps. La nouveauté vise les actes non réglementaires.
+x: Une discrimination syndicale doit-elle être prouvée par le requérant seul devant le juge administratif ? || C'est le second apport de l'arrêt, mais la question de principe porte sur l'invocabilité de la directive.
+
+@semoules | Syndicat général des fabricants de semoules de France | CE, Sect., 1er mars 1968 | CE | 1968 | 3 | 5
+ap: Refus d'écarter une loi contraire au droit communautaire (loi-écran)
+h: Années 1960. Une ordonnance française organise l'importation de semoule d'Algérie, en contradiction avec un règlement communautaire. Les fabricants attaquent. Le Conseil d'État refuse : il n'est pas censeur de la loi, et le contrôle de l'article 55 ne serait qu'un contrôle de constitutionnalité.
+f: Une ordonnance de valeur législative organise l'importation de semoules d'Algérie, en contradiction avec un règlement communautaire antérieur.
+pr: Le syndicat saisit le Conseil d'État d'une décision prise sur ce fondement.
+q: Le juge administratif peut-il écarter une loi postérieure contraire à un règlement communautaire ?
+s: Non. Le juge ne peut se faire censeur de la loi, et faire jouer l'article 55 reviendrait à en contrôler la constitutionnalité. Rejet.
+po: Vingt et un ans de refus, jusqu'à Nicolo. Le second argument tombe dès 1975.
+x: Le juge administratif peut-il contrôler la conformité d'une loi au règlement national qui l'exécute ? || La hiérarchie est inversée : c'est le règlement qui doit respecter la loi.
+x: Un règlement communautaire s'applique-t-il en France sans mesure nationale de transposition ? || L'applicabilité du règlement n'est pas le problème. La difficulté vient de la loi qui le contredit.
+
+@jacques-vabre | Société des cafés Jacques Vabre | Cass., ch. mixte, 24 mai 1975 | Cass. | 1975 | 3 | 5
+ap: La Cour de cassation contrôle la conventionnalité des lois
+h: Le café soluble importé des Pays-Bas subit une taxe plus lourde que le café français. La loi fiscale, postérieure au traité de Rome, l'autorise. Jacques Vabre réclame le remboursement. Quatre mois après le refus du Conseil constitutionnel, la Cour de cassation franchit le pas.
+f: Une société importe du café soluble des Pays-Bas et paie une taxe plus lourde que sur le café français, en vertu d'une loi postérieure au traité de Rome.
+pr: L'administration des douanes se pourvoit contre l'arrêt qui ordonne le remboursement. La chambre mixte statue.
+q: Le juge judiciaire peut-il écarter une loi postérieure contraire au traité de Rome ?
+s: Oui. Le traité a une autorité supérieure à celle de la loi en vertu de l'article 55. Rejet du pourvoi.
+po: Le juge judiciaire devance le Conseil d'État de quatorze ans. Il assume ce que le Conseil constitutionnel venait de lui laisser.
+x: Le juge judiciaire peut-il contrôler la constitutionnalité d'une loi fiscale contraire à l'égalité devant l'impôt ? || Il ne le peut pas. C'est bien la conventionnalité qui est en jeu.
+x: Une directive non transposée peut-elle fonder une action en remboursement contre l'administration des douanes ? || Le texte en cause est le traité de Rome lui-même.
+
+@simmenthal | Simmenthal | CJCE, 9 mars 1978 | CJCE | 1978 | 2 | 5
+ap: Le juge national écarte toute loi contraire au droit communautaire
+h: Simmenthal importe de la viande en Italie et doit payer des contrôles sanitaires à la frontière. Le juge italien de Suse constate la contradiction, mais son droit l'oblige à attendre la Cour constitutionnelle. Luxembourg tranche : il n'a pas à attendre.
+f: Une société paie des contrôles sanitaires à l'importation de viande en Italie, en vertu d'une loi contraire au droit communautaire.
+pr: Le juge italien de Suse interroge la Cour de justice à titre préjudiciel.
+q: Le juge national doit-il laisser inappliquée de lui-même toute loi contraire au droit communautaire, même postérieure ?
+s: Oui. Il doit l'écarter sans attendre son élimination par le législateur ou une juridiction constitutionnelle.
+po: Le Conseil d'État, qui s'obstine depuis Semoules, se retrouve ouvertement en contradiction avec Luxembourg.
+
+@udt | Union démocratique du travail | CE, Ass., 22 oct. 1979 | CE | 1979 | 1 | 5
+ap: Refus maintenu, sur le seul argument de la loi-écran
+h: 1979, premières élections européennes au suffrage direct. Le décret d'organisation est attaqué au nom de la Constitution et du traité de Rome. Le Conseil d'État constate qu'il applique simplement la loi de 1977. Moyens refusés : malgré 1975, l'écran tient bon.
+f: Un décret du 28 février 1979 organise l'élection des représentants à l'Assemblée européenne en appliquant la loi du 7 juillet 1977.
+pr: Le décret est attaqué devant le Conseil d'État, pour contrariété à la Constitution et au traité de Rome.
+q: Malgré la décision IVG, le juge administratif peut-il examiner un moyen tiré de ce qu'une loi serait contraire à un traité ?
+s: Non. Le décret se borne à appliquer la loi : les moyens visent en réalité celle-ci, et le juge ne peut pas les examiner.
+po: Le second argument de Semoules est tombé, mais le refus demeure. Le Conseil d'État s'isole.
+
+@val-d-oise | Élections législatives du Val-d'Oise | CC, 88-1082/1117 AN, 21 oct. 1988 | CC | 1988 | 2 | 5
+ap: Le CC, juge électoral, contrôle la compatibilité d'une loi avec un traité
+h: Deux électeurs contestent une élection législative dans le Val-d'Oise : le mode de scrutin violerait le droit à des élections libres garanti par la Convention européenne. Le Conseil constitutionnel n'est plus ici juge de la loi, mais juge d'une élection. Il regarde alors la loi au regard du traité.
+f: Des requérants contestent une élection législative de 1988 : le mode de scrutin méconnaîtrait le protocole n° 1 à la Convention européenne.
+pr: Le Conseil constitutionnel statue comme juge de l'élection.
+q: Le Conseil constitutionnel, juge électoral, peut-il examiner la compatibilité d'une loi avec un traité ?
+s: Oui. Il vérifie la compatibilité et juge que la loi de 1986 n'est pas incompatible avec le protocole. Rejet des requêtes.
+po: Le Conseil de la décision IVG se comporte en juge ordinaire : la solution d'IVG ne vaut que pour le contrôle a priori. Nicolo arrive un an plus tard.
+
+@gisti-1990 | GISTI | CE, Ass., 29 juin 1990 | CE | 1990 | 3 | 5
+ap: Le juge interprète lui-même les traités
+h: Une circulaire de 1986 applique l'accord franco-algérien aux travailleurs et étudiants algériens. Le GISTI l'attaque. Jusqu'ici, le juge aurait demandé au ministre ce que veut dire le traité. Cette fois, il lit le traité lui-même et annule la circulaire sur un point.
+f: Une circulaire du 14 mars 1986 précise l'application de l'accord franco-algérien de 1968, notamment pour les étudiants algériens.
+pr: Le Groupe d'information et de soutien des immigrés en demande l'annulation au Conseil d'État.
+q: Le juge administratif peut-il donner lui-même le sens d'une stipulation internationale, sans la renvoyer au ministre ?
+s: Oui. Il interprète lui-même le traité, et peut consulter le ministre sans être lié. La circulaire est annulée sur un point.
+po: Fin du renvoi préjudiciel au ministre. Le Conseil d'État anticipe la condamnation Beaumartin (1994).
+x: Une stipulation internationale crée-t-elle des droits dont les particuliers peuvent directement se prévaloir ? || C'est l'effet direct : GISTI et FAPIL (2012). Même association, autre question.
+x: Une association peut-elle attaquer un document de portée générale émanant d'une autorité administrative ? || C'est GISTI 2020. Le piège est dans le sigle, pas dans le problème.
+
+@boisdet | Boisdet | CE, 24 sept. 1990 | CE | 1990 | 2 | 5
+ap: Nicolo étendu aux règlements européens
+h: Val-de-Loire, années 1980. Un arrêté étend à tous les producteurs de pommes de douze départements les règles d'un comité agricole. Une loi de 1980 le permet, mais un règlement européen de 1972 ne vise que les adhérents. Entre les deux, le Conseil d'État choisit Bruxelles.
+f: Un arrêté de 1981 étend à tous les producteurs de pommes de douze départements les règles d'un comité économique agricole, sur le fondement d'une loi de 1980.
+pr: L'affaire vient devant le Conseil d'État, qui doit apprécier la base légale de cet arrêté.
+q: Une loi postérieure peut-elle servir de base légale à un acte alors qu'elle est incompatible avec un règlement communautaire ?
+s: Non. La loi de 1980, incompatible avec le règlement de 1972, ne peut servir de base légale. L'arrêté est illégal.
+po: Un an après Nicolo, la solution s'étend au droit dérivé : le règlement l'emporte sur la loi, même postérieure.
+
+@cnafc | Conf. nat. des associations familiales catholiques | CE, Ass., 21 déc. 1990 | CE | 1990 | 2 | 5
+ap: Nicolo étendu à la Conv. EDH
+h: Le ministre de la Santé autorise la pilule abortive RU 486. Des associations catholiques attaquent : la loi sur l'avortement elle-même violerait le droit à la vie de la Convention européenne. Ce que le Conseil constitutionnel avait refusé d'examiner en 1975, le Conseil d'État l'examine.
+f: Un arrêté du ministre de la Santé autorise le RU 486, utilisé pour les interruptions volontaires de grossesse.
+pr: Une confédération d'associations familiales saisit le Conseil d'État et invoque la Convention européenne contre la loi de 1975.
+q: Le juge administratif peut-il vérifier la compatibilité de la loi sur l'IVG avec le droit à la vie garanti par la Convention européenne ?
+s: Oui, et la loi est jugée compatible avec la Convention et le Pacte de l'ONU, vu les conditions qu'elle pose. Rejet.
+po: Nicolo vaut pour la Convention européenne : le contrôle de conventionnalité devient un quasi-contrôle des droits fondamentaux.
+
+@rothmans | Rothmans International France | CE, Ass., 28 févr. 1992 | CE | 1992 | 2 | 5
+ap: Nicolo étendu aux directives
+h: En France, le prix du tabac est fixé par le ministre, en vertu d'une loi de 1976. Une directive laisse pourtant les fabricants fixer leurs prix. Rothmans et Philip Morris demandent une hausse, refusée. Le Conseil d'État écarte la loi et annule le refus.
+f: Le ministre refuse d'homologuer les prix demandés par des fabricants de tabac, en appliquant une loi de 1976 contraire à une directive.
+pr: Les sociétés saisissent le Conseil d'État de ce refus.
+q: Une directive l'emporte-t-elle sur une loi postérieure contraire, de sorte que cette loi ne puisse fonder une décision ?
+s: Oui. La loi est écartée pour incompatibilité avec les objectifs de la directive, et le refus perd sa base légale. Annulation.
+po: La directive reçoit une valeur supra-législative. Avec Boisdet et CNAFC, Nicolo couvre tout le droit écrit.
+
+@arizona-tobacco | Société Arizona Tobacco Products | CE, Ass., 28 févr. 1992 | CE | 1992 | 2 | 5
+ap: Violation imputable à un règlement : responsabilité pour faute
+h: Même jour, même dossier du tabac que Rothmans. Cette fois, les importateurs veulent de l'argent : les prix bloqués leur ont coûté cher. La faute vient de décrets et d'arrêtés pris sur une loi contraire à la directive. L'État paiera.
+f: Des importateurs de tabac subissent un préjudice du fait de prix fixés par des actes réglementaires pris en application d'une loi contraire à une directive.
+pr: Ils demandent réparation à l'État devant le juge administratif.
+q: L'État engage-t-il sa responsabilité lorsqu'un acte réglementaire pris sur le fondement d'une loi viole une directive ?
+s: Oui, pour faute : l'illégalité de l'acte réglementaire ouvre droit à réparation, même s'il applique une loi.
+po: La faute est imputée au règlement. Pour la loi seule, il faudra Gardedieu (2007), sans parler de faute.
+
+@beaumartin | Beaumartin c. France | CEDH, 24 nov. 1994 | CEDH | 1994 | 1 | 5
+ap: Le renvoi au ministre pour interpréter viole le procès équitable
+h: Les époux Beaumartin perdent des biens au Maroc et réclament une indemnité prévue par un accord franco-marocain. Pour comprendre l'accord, le Conseil d'État demande au ministre. Or l'État est partie au litige : il choisit le sens qui l'arrange. Strasbourg condamne.
+f: Des particuliers réclament une indemnité prévue par un accord franco-marocain après la perte de biens au Maroc.
+pr: Le Conseil d'État renvoie l'interprétation au ministre des Affaires étrangères. Les requérants saisissent la Cour européenne.
+q: Un juge qui renvoie l'interprétation d'un traité au ministre, alors que l'État est partie au litige, reste-t-il un tribunal indépendant ?
+s: Non. Violation de l'article 6 § 1 : le juge n'a pas statué lui-même et l'État était juge et partie.
+po: Condamnation tardive, car GISTI avait déjà changé la règle en 1990. L'affaire était antérieure.
+
+@anthroposophique | Assoc. de patients de la médecine anthroposophique | CE, 24 févr. 1999 | CE | 1999 | 1 | 5
+ap: Ne pas prendre les décrets d'une loi inconventionnelle
+h: La médecine anthroposophique défend ses préparations, qu'un décret de 1998 sur l'homéopathie encadre. Les associations reprochent au gouvernement de n'avoir pas appliqué une disposition de la loi. Le Conseil d'État lui donne raison : cette loi allait au-delà des objectifs de la directive.
+f: Un décret de 1998 sur les médicaments homéopathiques ne met pas en œuvre un article du code de la santé publique. Des associations s'en plaignent.
+pr: Elles demandent au Conseil d'État l'annulation du décret.
+q: Le Gouvernement doit-il prendre les mesures d'application d'une loi incompatible avec une directive ?
+s: Non. La disposition dépassant les objectifs de la directive, ne pas l'appliquer est conforme à la hiérarchie des normes. Rejet.
+po: Le contrôle de conventionnalité commande aussi l'action de l'exécutif, qui doit s'abstenir d'exécuter la loi contraire.
+
+@meyet-1999 | Meyet (1999) | CE, Sect., 2 juin 1999 | CE | 1999 | 1 | 5
+ap: Loi devenue incompatible avec un traité postérieur : écartée
+h: 1999, élections européennes. Une loi de 1977 interdit de publier des sondages la dernière semaine. M. Meyet soutient qu'avec Internet et la presse étrangère, cette interdiction ne tient plus au regard de la Convention européenne. Il perd, mais le juge accepte le raisonnement sur le temps qui passe.
+f: Le CSA et la commission des sondages rappellent l'interdiction de publier des sondages la semaine précédant un scrutin, posée par une loi de 1977.
+pr: M. Meyet saisit le Conseil d'État en soutenant que cette loi est devenue incompatible avec des engagements internationaux.
+q: Le juge peut-il écarter une loi qui, compatible à l'origine, serait devenue incompatible avec un engagement international ?
+s: Il examine le moyen, mais la restriction reste compatible avec l'article 10 vu sa brièveté. La requête est irrecevable.
+po: Le contrôle de conventionnalité se fait dans le temps : une loi peut devenir inconventionnelle à la date où le juge statue.
+
+@deprez | Deprez et Baillard | CE, 5 janv. 2005 | CE | 2005 | 1 | 5
+ap: L'art. 55 pose une règle de conflit de normes
+h: Un décret de 2003 durcit la sécurité routière, notamment les sanctions pour défaut de ceinture. Deux automobilistes l'attaquent et invoquent, entre autres, les droits fondamentaux européens. Au détour de l'arrêt, le Conseil d'État habille enfin sa jurisprudence Nicolo.
+f: Un décret du 31 mars 2003 sur la sécurité routière alourdit notamment les sanctions liées au port de la ceinture.
+pr: Deux requérants en demandent l'annulation au Conseil d'État.
+q: En quoi le contrôle de conventionnalité exercé par le juge se distingue-t-il du contrôle de constitutionnalité de la loi ?
+s: L'article 55 pose une règle de conflit de normes que le juge doit appliquer ; ce n'est pas un contrôle de constitutionnalité. Rejet.
+po: Habillage tardif de Nicolo : le juge confirme la lecture de 1975, position discutable selon le Pr Seiller.
+
+@gardedieu | Gardedieu | CE, Ass., 8 févr. 2007 | CE | 2007 | 3 | 5
+ap: Responsabilité de l'État du fait des lois inconventionnelles
+h: M. Gardedieu, chirurgien-dentiste, conteste ses cotisations de retraite, fixées par un décret illégal. En 1994, une loi valide rétroactivement tout cela, et lui ferme la porte. Cette loi viole le procès équitable. Il réclame réparation, et l'État paie pour une faute de son législateur qu'on refuse d'appeler faute.
+f: Un chirurgien-dentiste perd son litige sur des cotisations de retraite à cause d'une loi de validation rétroactive de 1994, contraire à la Convention européenne.
+pr: Il demande réparation à l'État. La cour administrative d'appel de Paris rejette sa demande et il se pourvoit devant le Conseil d'État.
+q: L'État peut-il voir sa responsabilité engagée du seul fait d'une loi contraire à ses engagements internationaux ?
+s: Oui. L'État doit réparer tous les préjudices nés de l'intervention d'une loi adoptée en méconnaissance de ses engagements internationaux.
+po: Officiellement sans faute. Pour le Pr Seiller, solution « hypocrite » : la loi ne saurait être fautive, mais c'est bien une faute.
+x: L'État engage-t-il sa responsabilité pour faute lorsqu'un règlement d'application viole une norme internationale ? || C'est Arizona Tobacco (1992). Ici, la violation n'est imputable qu'à la loi.
+x: Le retard pris pour adopter les décrets d'application d'une loi engage-t-il la responsabilité de l'État ? || C'est Dame veuve Renard (1964).
+
+@rubin-de-servens | Rubin de Servens | CE, Ass., 2 mars 1962 | CE | 1962 | 3 | 6
+ap: Art. 16 : la décision est un acte de gouvernement ; les mesures, selon leur domaine
+h: Avril 1961, putsch d'Alger. De Gaulle déclenche l'article 16 et crée un tribunal militaire spécial, sans appel. Des officiers qui y sont renvoyés, dont le lieutenant Rubin de Servens, attaquent cette décision. Le Conseil d'État doit dire s'il peut juger le président en plein état de crise.
+f: Après le putsch d'Alger, le chef de l'État recourt à l'article 16 et crée par décision un tribunal militaire. Des officiers qui y sont renvoyés contestent cette création.
+pr: Ils saisissent le Conseil d'État d'un recours contre la décision du 3 mai 1961.
+q: Le juge administratif peut-il contrôler la décision de recourir à l'article 16 et les mesures prises sur ce fondement ?
+s: La mise en œuvre est un acte de gouvernement. Les mesures suivent leur domaine : législatives si art. 34, réglementaires si art. 37. Le tribunal relevant de la loi, incompétence.
+po: La nature d'un acte dépend de son domaine matériel, non de son auteur. Même logique pour les ordonnances et Force 5.
+x: Le Président de la République peut-il créer une juridiction d'exception sans porter atteinte à la séparation des pouvoirs ? || La question est celle de l'office du juge : il ne se prononce pas sur le bien-fondé.
+x: Une ordonnance de l'article 38 non ratifiée peut-elle être attaquée devant le juge administratif ? || C'est le régime des ordonnances, sans rapport avec l'article 16.
+
+@veuve-renard | Dame veuve Renard | CE, Ass., 27 nov. 1964 | CE | 1964 | 1 | 6
+ap: Retard des décrets d'application : faute de l'État
+h: Le mari de Mme Renard a servi l'État deux fois : officier des Haras, puis ingénieur aux Eaux et Forêts. À sa mort, ses années de titulaire ne comptent pas pour la pension : le décret de coordination prévu depuis 1951 n'a jamais été pris. La veuve demande des comptes.
+f: Une veuve voit sa pension réduite, car le décret de coordination prévu par un texte de 1951 n'a jamais été pris.
+pr: Le ministre des Finances fait appel de la condamnation de l'État devant le Conseil d'État.
+q: L'abstention prolongée du Gouvernement à prendre un décret d'application engage-t-elle la responsabilité de l'État ?
+s: Oui. Le Gouvernement devait agir dans un délai raisonnable : cette abstention est fautive. Le recours du ministre est rejeté.
+po: Le pouvoir réglementaire d'exécution n'est pas une faculté : c'est une obligation sanctionnée par la responsabilité.
+
+@blocage-prix | Blocage des prix et des revenus | CC, 82-143 DC, 30 juill. 1982 | CC | 1982 | 3 | 6
+ap: Pas de censure d'une loi qui empiète sur le règlement
+h: 1982, le gouvernement Mauroy bloque prix et revenus. La loi votée contient des dispositions de nature réglementaire. Des parlementaires saisissent le Conseil, qui répond : le Gouvernement disposait de l'article 41. S'il ne l'a pas utilisé, il a accepté l'empiètement.
+f: Une loi sur les prix et les revenus comporte des dispositions relevant du domaine réglementaire.
+pr: Des parlementaires la défèrent au Conseil constitutionnel, avant sa promulgation.
+q: Une loi qui intervient dans le domaine réglementaire est-elle pour autant contraire à la Constitution ?
+s: Non. La Constitution n'a pas entendu frapper d'inconstitutionnalité ces dispositions : le Gouvernement pouvait s'y opposer (art. 41) ou les délégaliser (art. 37 al. 2).
+po: La frontière des articles 34 et 37 devient une faculté du Gouvernement, non une obligation. Le règlement n'est plus protégé.
+x: Le Gouvernement peut-il modifier par décret une loi adoptée après 1958 sans saisir le Conseil constitutionnel ? || Non : c'est la délégalisation de l'article 37 al. 2, qui suppose justement cette saisine.
+x: Un décret qui empiète sur le domaine de la loi peut-il être annulé par le juge administratif ? || C'est l'hypothèse inverse, celle de la protection du domaine législatif.
+
+@avenir-ecole | Loi sur l'avenir de l'école | CC, 2005-512 DC, 21 avr. 2005 | CC | 2005 | 1 | 6
+ap: Dispositions sans portée normative contraires à la Constitution
+h: 2005, une loi sur l'école proclame que « l'objectif de l'école est la réussite de tous les élèves ». Bel affichage, mais quelle règle ? Le Conseil constitutionnel, lassé des lois bavardes, censure ce qui n'a pas de portée normative.
+f: Une loi d'orientation sur l'école contient des dispositions proclamatoires, dépourvues de véritable contenu normatif.
+pr: Des députés et sénateurs la défèrent au Conseil constitutionnel.
+q: Une disposition législative dépourvue de portée normative est-elle conforme à la Constitution ?
+s: Non. La loi a vocation à énoncer des règles : de telles dispositions sont censurées.
+po: Remède contre les lois bavardes, au nom de la normativité de la loi. Efficacité limitée.
+
+@force-5 | Force 5 | CC, 2020-843 QPC, 28 mai 2020 | CC | 2020 | 3 | 6
+ap: Ordonnance non ratifiée : QPC possible après le délai d'habilitation
+h: En Bretagne, l'association Force 5 combat une centrale électrique à Landivisiau. Le texte en cause vient d'une ordonnance jamais ratifiée, donc en principe un simple acte administratif. L'association pose une QPC. Le Conseil constitutionnel accepte, au prix d'une belle fiction.
+f: Une association conteste l'autorisation d'une centrale électrique, délivrée sur le fondement d'une disposition issue d'une ordonnance non ratifiée.
+pr: Le Conseil d'État transmet une QPC au Conseil constitutionnel.
+q: Une disposition d'une ordonnance non ratifiée peut-elle faire l'objet d'une QPC une fois le délai d'habilitation expiré ?
+s: Oui. Passé ce délai, ses dispositions du domaine de la loi sont des dispositions législatives au sens de l'article 61-1.
+po: Fiction : l'acte reste réglementaire mais il est traité comme une loi. Le Conseil d'État perd une partie de son contrôle.
+x: L'ordonnance ratifiée perd-elle sa nature réglementaire et acquiert-elle valeur législative dans sa globalité ? || C'est sans débat depuis longtemps. La nouveauté concerne l'ordonnance non ratifiée.
+x: Le juge administratif peut-il annuler une ordonnance qui dépasse le champ de son habilitation législative ? || Il le peut, mais ce n'est pas la question posée au Conseil constitutionnel.
+
+@cfdt-finances | Fédération CFDT Finances | CE, Ass., 16 déc. 2020 | CE | 2020 | 2 | 6
+ap: Le CE se rallie à Force 5 et partage le contrôle
+h: Printemps 2020, confinement. Une ordonnance impose à des fonctionnaires de poser des jours de congés ou de RTT, dont cinq avec effet rétroactif. Les syndicats attaquent. Le Conseil d'État doit dire ce qu'il lui reste à juger après Force 5.
+f: Une ordonnance du 15 avril 2020 impose à des agents publics de prendre des jours de congé ou de RTT, en partie rétroactivement.
+pr: Des syndicats demandent son annulation au Conseil d'État, l'ordonnance n'étant pas ratifiée.
+q: Après l'expiration du délai d'habilitation, quel juge contrôle une ordonnance non ratifiée, et sur quels moyens ?
+s: Les griefs tirés des droits et libertés constitutionnels passent par la QPC ; le Conseil d'État garde les autres moyens. Rejet.
+po: Répartition du contrôle entre les deux juges, sans bouleverser le recours pour excès de pouvoir.

@@ -1,0 +1,307 @@
+# Le juge, c'est toi.
+# %arrêt   c: le cas   d: décisions (la première est la bonne, séparées par " | ")
+# r: bon raisonnement   rx: mauvais raisonnement || pourquoi il est faux
+
+%blanco
+c: Une fillette est renversée par un wagon poussé par des employés d'une manufacture d'État. Son père assigne l'État devant le tribunal civil et invoque le Code civil. Le préfet revendique l'affaire. Tu présides le Tribunal des conflits.
+d: Tu confirmes le conflit : le juge civil est incompétent | Tu annules le conflit : le juge civil reste saisi | Tu renvoies l'affaire contre les agents, auteurs du dommage
+r: Cette responsabilité obéit à des règles spéciales, distinctes de celles du Code civil.
+rx: Toute action dirigée contre l'État relève par nature du juge administratif, quel qu'en soit l'objet. || Faux : le critère est le service public, pas la seule présence de l'État. Bac d'Eloka le montrera.
+rx: Le Code civil s'applique, mais il revient au juge administratif de l'interpréter dans ce litige. || Faux : le texte écarte justement le Code civil pour ces rapports.
+rx: Les employés étant fautifs, l'État n'a pas à répondre d'un dommage causé par eux. || Faux : l'arrêt reconnaît une responsabilité de l'État, seulement non générale ni absolue.
+
+%cadot
+c: Un agent municipal voit son emploi supprimé et réclame une indemnité. La ville refuse. Aucun texte ne dit où se plaindre. Il vient directement devant toi, au Conseil d'État, sans passer par le ministre.
+d: Tu te déclares compétent pour connaître de sa réclamation | Tu le renvoies devant le ministre, juge de droit commun | Tu le renvoies devant le juge civil de Marseille
+r: Sauf texte contraire, tout recours contre une décision administrative va au Conseil d'État.
+rx: Le ministre reste le juge de droit commun des litiges de son administration en premier ressort. || Faux : c'est précisément la théorie du ministre-juge que l'arrêt abandonne.
+rx: Un contrat d'emploi entre une ville et son agent relève toujours du juge judiciaire du lieu. || Faux : la question est celle du recours contre un refus de l'administration.
+rx: Le Conseil d'État statue seulement sur renvoi du chef de l'État, dans le cadre de la justice retenue. || Faux : la justice est déléguée depuis la loi du 24 mai 1872.
+
+%bac-eloka
+c: Une colonie exploite un bac payant sur une lagune, exactement comme le ferait une entreprise. Un naufrage cause des dommages. Une société assigne la colonie devant le juge civil et le lieutenant-gouverneur élève le conflit.
+d: Tu annules le conflit : le juge judiciaire reste compétent | Tu confirmes le conflit : l'affaire revient au juge administratif | Tu déclares que personne ne peut connaître de ce naufrage
+r: Exploité comme par un industriel ordinaire, ce service relève du droit privé et du juge judiciaire.
+rx: Tout ce que fait une personne publique pour un service public relève du juge administratif. || Faux : c'est la thèse que l'arrêt fait tomber.
+rx: Le bac n'étant pas un service public, le droit administratif ne peut pas s'y appliquer. || Faux : le service public n'est pas nié, il est géré comme une entreprise.
+rx: Le naufrage étant un cas de force majeure, aucune responsabilité n'est à rechercher ici. || Faux : la question posée au Tribunal des conflits est celle de la compétence.
+
+%arrighi
+c: Un fonctionnaire est mis d'office à la retraite par un décret pris en application d'une loi. Il te demande d'annuler le décret : la loi elle-même violerait la Constitution. Nous sommes en 1936.
+d: Tu écartes ce moyen sans l'examiner | Tu annules le décret pour inconstitutionnalité | Tu renvoies la question au Parlement
+r: En l'état du droit public, la constitutionnalité d'une loi ne se discute pas devant ce juge.
+rx: La loi étant conforme aux lois de 1875, le moyen manque en fait et doit être écarté. || Faux : le juge ne se prononce pas sur la conformité de la loi, il refuse de l'examiner.
+rx: Un acte pris en application d'une loi échappe à tout recours pour excès de pouvoir. || Faux : le décret reste attaquable pour d'autres moyens. Seul ce moyen est refusé.
+rx: La question relève du Conseil constitutionnel, seul juge de la conformité des lois. || Faux : anachronisme. Le Conseil constitutionnel naît en 1958.
+
+%lamotte
+c: Un préfet concède à un tiers des terres d'une propriétaire, malgré plusieurs annulations. Une loi dit désormais que ces concessions ne peuvent faire l'objet d'aucun recours. La propriétaire revient devant toi.
+d: Tu annules la concession malgré la loi | Tu rejettes la requête : la loi l'interdit | Tu écartes la loi comme inconstitutionnelle
+r: Le recours pour excès de pouvoir existe sans texte, et aucune loi ne l'exclut expressément ici.
+rx: La loi est contraire à la Constitution, si bien que le juge peut refuser de l'appliquer. || Faux : le juge ne contrôle pas la loi. Il l'interprète.
+rx: Toute loi adoptée par le régime de Vichy est nulle de plein droit depuis la Libération. || Faux : le raisonnement ne passe pas par la nullité de la loi.
+rx: Une loi peut exclure les recours, mais le préfet a méconnu l'autorité de la chose jugée. || Faux : le cœur de l'arrêt est l'interprétation des mots « tout recours ».
+
+%annamites
+c: Le ministre de l'Intérieur constate la nullité d'une association parisienne de Vietnamiens, en la traitant d'association étrangère. Nous sommes en 1956, l'association te saisit.
+d: Tu annules l'arrêté du ministre | Tu rejettes : le décret de 1939 s'applique | Tu renvoies au juge pénal de Paris
+r: La liberté d'association est un principe reconnu par les lois de la République, applicable ici.
+rx: Les associations étrangères bénéficient en France du même régime que toutes les associations. || Faux : le juge ne dit pas cela. Il raisonne sur les ressortissants de l'Union française.
+rx: Le ministre aurait dû saisir le juge judiciaire avant de se prononcer sur la nullité. || Faux : ce n'est pas le motif. Le contrôle préalable par ce juge sera censuré en 1971.
+rx: Un arrêté ministériel ne peut jamais viser une association régulièrement déclarée en préfecture. || Faux : formule trop large. Le motif tient aux principes du Préambule.
+
+%sarran
+c: Un décret organise un vote réservé à certains électeurs, comme le prévoit expressément un article de la Constitution. Des exclus invoquent devant toi plusieurs traités sur les droits civils.
+d: Tu rejettes les requêtes des électeurs | Tu annules le décret pour violation des traités | Tu saisis la Cour européenne pour avis
+r: L'article 55 ne fait pas primer les traités sur les dispositions constitutionnelles.
+rx: Les traités l'emportent sur la Constitution, mais ceux-ci n'ont pas d'effet direct devant le juge. || Faux : le juge n'admet pas cette primauté, et l'effet direct n'est pas le motif.
+rx: Le corps électoral ne figure pas dans le champ de ces traités, qui ne protègent pas ce droit. || Faux : le motif est le rang de la Constitution, pas le champ du traité.
+rx: Le juge ne peut pas contrôler un décret électoral, acte de gouvernement par nature. || Faux : le juge contrôle bien le décret. Il rejette au fond.
+
+%cohn-bendit
+c: Nous sommes en 1978. Un étranger expulsé conteste le refus d'abroger son expulsion, non motivé. Une directive précise impose de motiver. Le tribunal de Paris veut interroger Luxembourg. Le ministre fait appel devant toi.
+d: Tu annules le jugement et tu écartes la directive | Tu confirmes le renvoi préjudiciel à la Cour de justice | Tu annules le refus : la directive est claire
+r: Quelle que soit leur précision, les directives ne sont pas invocables contre un acte individuel.
+rx: La directive n'a pas été publiée au Journal officiel français, elle n'a donc aucune existence. || Faux : le motif tient à la nature de la directive, selon la lettre du traité.
+rx: L'ordre public étant en cause, aucune norme européenne ne peut limiter le pouvoir du ministre. || Faux : le motif ne repose pas sur l'ordre public.
+rx: Seule la Cour de justice peut dire si un particulier peut invoquer une directive de ce type. || Faux : le Conseil d'État use justement de l'acte clair pour ne pas la saisir.
+
+%alitalia
+c: Une compagnie aérienne demande au Premier ministre d'abroger des dispositions réglementaires sur la TVA, devenues contraires à une directive. Le Premier ministre ne répond pas. Elle te saisit.
+d: Tu annules le refus d'abroger | Tu rejettes : le délai de recours est expiré | Tu demandes au Parlement de modifier le texte
+r: Saisie d'une demande, l'autorité doit abroger un règlement illégal dès l'origine ou devenu tel.
+rx: Un règlement devenu illégal disparaît de lui-même, sans qu'aucune abrogation soit nécessaire. || Faux : il faut une abrogation, que l'administration doit prononcer sur demande.
+rx: La compagnie peut attaquer le règlement sans délai, car il viole le droit communautaire. || Faux : la voie est la demande d'abrogation, pas un recours direct sans délai.
+rx: Une directive l'emporte sur toute loi fiscale postérieure, même sans mesure de transposition. || Faux : c'est Rothmans (1992), et le texte visé ici est un règlement.
+
+%perreux
+c: Une magistrate syndicaliste écartée d'un poste invoque contre un arrêté de nomination une directive sur la preuve des discriminations. La France l'a transposée en retard. L'article invoqué permet aux États de ne pas l'appliquer quand le juge dirige l'instruction.
+d: Tu admets le principe, mais tu rejettes sa requête | Tu refuses : Cohn-Bendit s'applique toujours | Tu annules l'arrêté au nom de la directive invoquée
+r: Invocable si le délai est expiré et le texte précis et inconditionnel, ce qui manque ici.
+rx: La directive est invocable contre un acte individuel dès lors qu'elle protège un droit fondamental. || Faux : la condition est la précision, l'inconditionnalité et le délai expiré.
+rx: L'article est inconditionnel, mais la discrimination n'est pas prouvée par la seule requérante. || Faux : l'article n'est pas inconditionnel, et le juge aménage lui-même la preuve.
+rx: Seul un acte réglementaire peut être confronté à une directive, jamais une nomination individuelle. || Faux : c'est la règle ancienne, que l'arrêt abandonne.
+
+%lilly
+c: Un ministre veut gagner du temps sur un dossier de médicament. Il s'appuie sur une directive qui permet de prolonger le délai, mais que la France n'a pas transposée sur ce point. Le laboratoire te saisit.
+d: Tu donnes raison au laboratoire sur ce délai | Tu donnes raison au ministre : la directive s'impose | Tu renvoies la question à la Cour de justice
+r: L'État ne peut pas opposer à un particulier une directive qu'il n'a pas transposée.
+rx: Une directive non transposée est dépourvue de tout effet juridique en droit interne français. || Faux : elle peut être invoquée par les particuliers, et s'impose aux règlements.
+rx: Le délai de transposition n'étant pas expiré, personne ne peut encore invoquer cette directive. || Faux : le motif tient à l'absence de transposition par l'État qui s'en prévaut.
+rx: Le ministre n'est pas compétent pour fixer les prix, qui relèvent par nature de la loi. || Faux : la compétence n'est pas en cause ici.
+
+%rothmans
+c: Une loi confie au ministre le soin de fixer le prix du tabac. Une directive, elle, laisse les fabricants fixer leurs prix. Le ministre refuse une hausse, en appliquant la loi. Le fabricant te saisit.
+d: Tu écartes la loi et tu annules le refus | Tu appliques la loi et tu rejettes la requête | Tu renvoies au Conseil constitutionnel
+r: Une loi incompatible avec les objectifs de la directive ne peut pas fonder la décision.
+rx: Le ministre a commis une faute, ce qui oblige l'État à indemniser immédiatement le fabricant. || Faux : ce recours vise l'annulation. La réparation relève d'Arizona Tobacco.
+rx: Une directive n'a d'effet que si la France l'a transposée par une loi postérieure à son adoption. || Faux : elle prime la loi contraire, même postérieure.
+rx: La loi, expression de la volonté générale, n'est pas contrôlable en dehors d'une QPC. || Faux : c'est vrai pour la Constitution, pas pour les traités depuis 1989.
+
+%gardedieu
+c: Une loi valide rétroactivement des cotisations de retraite et fait perdre son procès à un professionnel. Cette loi viole le droit au procès équitable. Il te demande une indemnité. Aucun règlement n'est en cause.
+d: Tu condamnes l'État à réparer | Tu rejettes : la loi ne peut pas engager l'État | Tu saisis le Conseil constitutionnel
+r: L'État répare le préjudice né d'une loi contraire à ses engagements internationaux.
+rx: Le législateur a commis une faute lourde en votant cette loi, ce qui ouvre droit à indemnité. || Faux : le juge évite le mot faute. C'est ce que le Pr Seiller juge hypocrite.
+rx: Le dommage étant grave et spécial, le préjudice subi doit être indemnisé selon la jurisprudence ordinaire. || Faux : la responsabilité ne repose pas ici sur la rupture d'égalité.
+rx: L'État répond de tout règlement illégal, même lorsque celui-ci applique fidèlement une loi. || Faux : c'est Arizona Tobacco. Ici, seule la loi est en cause.
+
+%arcelor
+c: Un décret recopie mot pour mot une directive sur les quotas de CO2. Une entreprise invoque le principe constitutionnel d'égalité contre ce décret. Ce principe existe aussi en droit communautaire, et le doute est sérieux.
+d: Tu sursois à statuer et tu saisis la Cour de justice | Tu annules le décret pour inconstitutionnalité | Tu rejettes la requête : le décret échappe à ton contrôle
+r: L'équivalent existe : le contrôle vise la directive, et la Cour tranche en cas de doute.
+rx: La directive étant supérieure à la Constitution, le moyen constitutionnel est sans effet ici. || Faux : la Constitution reste au sommet. Le juge déplace la question.
+rx: Un décret de transposition se contrôle toujours comme un décret ordinaire devant le juge. || Faux : la reprise de dispositions précises impose un contrôle adapté.
+rx: Le principe d'égalité n'a pas d'équivalent européen, le juge contrôle donc le décret directement. || Faux : l'égalité est bien un principe général du droit communautaire.
+
+%gisti-fapil
+c: Un décret durcit l'accès au droit au logement pour certains étrangers. Des associations invoquent une convention internationale du travail, qui parle des obligations des États membres. Le ministre répond que ce texte ne vise que les États.
+d: Tu annules le décret, avec effets différés | Tu rejettes : la convention ne vise que les États | Tu renvoies au ministre pour interpréter le traité
+r: Le texte ne vise pas que les États et n'appelle aucun acte complémentaire pour s'appliquer.
+rx: Tout traité régulièrement ratifié peut être invoqué par un particulier devant le juge. || Faux : il faut remplir les deux critères de l'effet direct.
+rx: La convention lie la France, si bien que seule l'OIT peut en sanctionner la violation. || Faux : l'effet direct permet au juge national de l'appliquer.
+rx: Les associations agissant pour autrui, elles ne peuvent pas se prévaloir de ce traité. || Faux : l'invocabilité dépend de la stipulation, pas de la qualité du requérant.
+
+%fdn
+c: La Cour de justice interdit la conservation généralisée des données de connexion. Le gouvernement te demande de juger qu'elle a excédé ses compétences. Le renseignement en dépend, et aucune garantie européenne équivalente ne protège la sécurité nationale.
+d: Tu préserves l'exigence constitutionnelle | Tu juges la Cour de justice incompétente | Tu appliques l'arrêt de la Cour sans réserve
+r: Le juge ne contrôle pas la Cour, mais il peut préserver une exigence constitutionnelle.
+rx: La Cour de justice a excédé ses compétences, ce que tout juge suprême peut constater. || Faux : c'est la thèse du gouvernement, rejetée par le Conseil d'État.
+rx: Le droit de l'Union prime toute norme nationale, y compris la Constitution, dans l'ordre interne. || Faux : contraire à Sarran et SNIP.
+rx: Seul le Conseil constitutionnel peut invoquer l'identité constitutionnelle face au droit de l'Union. || Faux : le Conseil d'État raisonne en termes de garantie effective.
+
+%air-france
+c: Une compagnie aérienne doit ramener les étrangers refusés à la frontière, en vertu d'une loi qui transpose une directive. Elle soulève une QPC : la force publique serait déléguée à une personne privée.
+d: Tu reconnais le principe, mais la loi est conforme | Tu censures la loi de transposition en cause | Tu te déclares incompétent sans autre examen
+r: Le principe relève de l'identité, mais le transporteur n'exerce aucune contrainte.
+rx: Toute disposition de la Déclaration de 1789 est, par nature, inhérente à l'identité constitutionnelle. || Faux : le Conseil écarte les principes protégés par le droit de l'Union.
+rx: Une loi de transposition ne peut jamais être contrôlée par le Conseil constitutionnel. || Faux : la réserve d'identité existe précisément pour ce cas.
+rx: L'obligation de réacheminement méconnaît les droits des passagers protégés par la Convention européenne. || Faux : le Conseil ne contrôle pas la loi au regard des traités.
+
+%jamart
+c: Un ministre interdit à un médecin d'entrer dans les centres de son ministère, après des lettres injurieuses. Aucun texte ne lui donne ce pouvoir. Le médecin te saisit.
+d: Tu reconnais le pouvoir, mais tu annules la mesure | Tu rejettes la requête, car le ministre a bien agi | Tu juges le ministre incompétent pour tout acte
+r: Tout chef de service organise son service, mais cette mesure dépassait ce qu'il exigeait.
+rx: Un ministre ne peut prendre aucune mesure sans texte, car il n'a pas de pouvoir réglementaire. || Faux : l'arrêt admet le pouvoir d'organisation, sans texte.
+rx: Le ministre tient de la Constitution un pouvoir de police générale sur tout le territoire. || Faux : la police générale n'est pas en cause, et le ministre ne la détient pas.
+rx: L'interdiction est légale, car les lettres injurieuses constituent une infraction pénale. || Faux : l'interdiction est annulée, et le juge ne raisonne pas en droit pénal.
+
+%brabant
+c: Un ministre décide que tout établissement du bassin parisien sera écarté d'un avantage fiscal, alors que la loi ne dit rien de tel. Une distillerie se voit refuser l'agrément sur ce seul motif.
+d: Tu annules le refus | Tu rejettes : la directive du ministre s'impose | Tu renvoies au Premier ministre
+r: Le ministre n'avait ni pouvoir légal ni pouvoir d'organisation pour ajouter cette condition.
+rx: Une circulaire ministérielle s'impose aux services, ce qui justifie le refus opposé à la distillerie. || Faux : encore faut-il que le ministre ait le pouvoir d'édicter la règle.
+rx: Un refus d'agrément fiscal relève du juge judiciaire, seul compétent pour les droits de mutation. || Faux : l'affaire est jugée au fond par le juge administratif.
+rx: La distillerie n'avait pas d'intérêt à agir contre une règle générale qui ne la visait pas. || Faux : elle attaque le refus qui lui est opposé.
+
+%labonne
+c: Avant toute loi sur l'automobile, un décret crée un certificat de capacité pour conduire, valable sur tout le territoire. Un conducteur dont le certificat est retiré soutient que seule la loi pouvait limiter sa liberté.
+d: Tu rejettes : le chef de l'État pouvait agir | Tu annules le décret pour incompétence | Tu renvoies au préfet de police
+r: Hors de toute habilitation, le chef de l'État peut prendre des mesures de police pour tout le territoire.
+rx: Le maire étant l'autorité de police, le décret ne pouvait pas intervenir en cette matière. || Faux : l'arrêt admet un pouvoir national aux côtés des polices locales.
+rx: Un décret peut toujours restreindre une liberté, dès lors qu'il est pris en Conseil d'État. || Faux : le fondement est le pouvoir de police, pas la forme du décret.
+rx: Le ministre de l'Intérieur est le titulaire naturel du pouvoir de police générale nationale. || Faux : les ministres ne sont que des autorités de police spéciale.
+
+%meyet-1992
+c: Le Président signe des décrets organisant un référendum. Aucun texte n'imposait de les délibérer en Conseil des ministres, mais ils l'ont été. Un requérant soutient qu'ils relevaient du Premier ministre.
+d: Tu écartes ce moyen : le Président était compétent | Tu annules : seul le Premier ministre pouvait signer | Tu sauves les décrets grâce au contreseing
+r: Un décret effectivement délibéré en Conseil des ministres doit être signé par le Président.
+rx: Le Président détient le pouvoir réglementaire général, le Premier ministre ne l'exerçant que par délégation. || Faux : c'est l'inverse selon les articles 13 et 21.
+rx: Un décret signé à tort par le Président vaut décret du Premier ministre s'il est contresigné. || Faux : c'est Sicard, pour un décret non délibéré.
+rx: Les actes relatifs au référendum sont des actes de gouvernement et échappent au juge. || Faux : le juge les contrôle, et annule même certaines dispositions.
+
+%barbier
+c: Le règlement du personnel d'une compagnie aérienne, société gérant un service public industriel, interdit aux hôtesses de se marier. Une hôtesse est licenciée. La question de la nature de ce règlement arrive devant toi.
+d: Tu qualifies ce règlement d'acte administratif | Tu y vois une simple clause de contrat de travail | Tu le juges dépourvu de toute valeur
+r: Les dispositions qui organisent le service public sont administratives, quel qu'en soit l'auteur.
+rx: Un acte émanant d'une société commerciale relève par nature du droit privé et du juge judiciaire. || Faux : l'arrêt admet l'acte administratif d'une personne privée.
+rx: La compagnie étant une personne publique, tous ses actes sont des actes administratifs. || Faux : c'est une société, et seule l'organisation du service est visée.
+rx: Le licenciement d'une salariée ressort toujours du juge administratif lorsque le service est public. || Faux : le litige individuel reste judiciaire, seul le règlement est administratif.
+
+%fifas
+c: Une fédération sportive, association privée, n'homologue les balles de compétition qu'à condition que chaque fabricant paie 5 000 francs, bien plus que le coût du contrôle. Les fabricants te saisissent.
+d: Tu annules la décision de la fédération | Tu te déclares incompétent : c'est une association | Tu rejettes : la fédération est souveraine
+r: La fédération exécute un service public, mais cette redevance excède sa délégation.
+rx: Une association loi de 1901 ne prend jamais d'acte administratif, quelles que soient ses missions. || Faux : c'est l'inverse, pour celles qui exécutent un service public.
+rx: Une fédération peut fixer librement ses tarifs, comme toute personne privée dans ses relations. || Faux : le juge contrôle ce pouvoir, délégué par le ministre.
+rx: La redevance est une sanction, soumise aux garanties des droits de la défense. || Faux : c'est une redevance excédant le coût du service.
+
+%aramu
+c: En 1944, un commissaire est révoqué sur proposition d'une commission d'épuration, sans jamais connaître les griefs. Un texte écarte les formalités ordinaires. Il te demande d'annuler sa révocation.
+d: Tu annules la révocation | Tu rejettes : le texte écarte les formalités | Tu renvoies devant la juridiction pénale
+r: Même sans texte, une personne doit connaître l'essentiel des griefs pour pouvoir se défendre.
+rx: L'article 65 de la loi de 1905 impose la communication du dossier dans tous les cas. || Faux : le texte était écarté ici. L'apport est de se passer de tout texte.
+rx: La Déclaration de 1789 garantit les droits de la défense et s'impose à tout décret. || Faux : le juge pose un principe général, sans s'appuyer sur la Déclaration.
+rx: Un décret du Comité de la libération n'a aucune valeur juridique après le retour de la République. || Faux : le décret est annulé pour un vice de procédure.
+
+%barel
+c: Un secrétaire d'État écarte cinq candidats à un concours national. La presse dit que c'est pour leurs opinions communistes. Tu demandes les dossiers. L'administration ne répond pas.
+d: Tu annules l'exclusion des candidats | Tu rejettes : le choix est discrétionnaire | Tu ordonnes un nouveau concours
+r: Les opinions ne comptent pas, et le silence de l'administration se retourne contre elle.
+rx: L'administration doit motiver chaque refus d'accès à un concours, sous peine d'annulation automatique. || Faux : le juge n'impose pas une motivation générale. Il exige de pouvoir contrôler.
+rx: Le jury d'un concours est souverain, sauf preuve apportée par les seuls candidats écartés. || Faux : le juge aménage justement la preuve, sans la laisser aux seuls requérants.
+rx: Un candidat peut être écarté s'il présente un risque pour l'ordre public en raison de ses idées. || Faux : les opinions ne peuvent pas fonder ce refus.
+
+%peynet
+c: Une administration licencie une agente non titulaire enceinte. Aucun texte de droit public ne l'interdit, seul le Code du travail le prévoit pour le privé. Elle te saisit.
+d: Tu annules le licenciement | Tu rejettes : aucun texte ne la protège | Tu renvoies au juge prud'homal
+r: Ce principe général, dont s'inspire le Code du travail, protège aussi les agentes publiques.
+rx: Le Code du travail s'applique directement à tous les agents publics, titulaires ou non. || Faux : le juge ne l'applique pas, il en tire un principe.
+rx: La maternité est protégée par le Préambule de 1946, qui se suffit à lui-même en l'espèce. || Faux : le fondement retenu est un principe général du droit.
+rx: Une agente non titulaire peut être licenciée librement, sauf si le licenciement est disciplinaire. || Faux : c'est la thèse de l'administration.
+
+%milhaud
+c: Un médecin expérimente une technique sur un patient en état de mort cérébrale, sans finalité thérapeutique. L'ordre le sanctionne. Il soutient que le patient, juridiquement mort, n'a plus de droits.
+d: Tu rejettes son pourvoi | Tu annules la sanction | Tu renvoies au juge pénal
+r: Le respect dû à la personne humaine ne cesse pas avec la mort du patient.
+rx: Le patient n'est pas mort, car seul le juge peut constater un décès. || Faux : le décès n'est pas contesté par le juge.
+rx: Le médecin aurait dû recueillir l'accord écrit du comité d'éthique. || Faux : le motif repose sur les principes déontologiques.
+rx: Toute recherche médicale est interdite dans les hôpitaux publics. || Faux : formule bien trop large, qui ne correspond pas à l'arrêt.
+
+%alusuisse
+c: Un préfet impose des travaux à l'ancien exploitant d'une usine fermée en 1968, dont les déchets menacent un quartier. La société répond qu'on ne peut pas la poursuivre indéfiniment.
+d: Tu fixes une limite de trente ans, ici non atteinte | Tu juges l'obligation imprescriptible | Tu libères la société de toute obligation
+r: Un principe issu du Code civil fixe la limite à trente ans après la cessation d'activité.
+rx: La police des installations classées étant une police spéciale, elle ne connaît aucune limite de temps. || Faux : c'est la thèse de l'imprescriptibilité, refusée ici.
+rx: La vente du terrain a transféré toutes les obligations de remise en état au nouveau propriétaire. || Faux : l'obligation pèse bien sur l'ancien exploitant.
+rx: La prescription de quatre ans des créances publiques s'applique à ces mesures de police. || Faux : le juge retient la logique trentenaire de l'article 2262.
+
+%kpmg
+c: Un décret interdit soudain certains cumuls aux commissaires aux comptes, sans le moindre délai, alors que des contrats sont en cours. Un cabinet te saisit.
+d: Tu annules le texte faute de mesures transitoires | Tu rejettes : le pouvoir réglementaire est libre | Tu indemnises les cabinets concernés
+r: La sécurité juridique impose des mesures transitoires quand la règle bouleverse les situations.
+rx: Les contrats en cours échappent toujours à la règle nouvelle, sauf loi expresse contraire. || Faux : l'arrêt n'interdit pas le changement. Il impose d'en aménager la transition.
+rx: Le décret est rétroactif, car il remet en cause des contrats signés avant son adoption. || Faux : il ne rétroagit pas. Il s'applique immédiatement sans transition.
+rx: Les usagers d'un service public ont un droit acquis au maintien de la réglementation. || Faux : c'est même l'inverse. Nul n'a droit au maintien d'un règlement.
+
+%tropic
+c: Une entreprise écartée d'un marché public veut contester le contrat lui-même. Tu décides de lui ouvrir ce recours nouveau, mais il bouleverserait les contrats déjà signés.
+d: Tu ouvres le recours pour les seuls contrats à venir | Tu l'ouvres aussi pour tous les contrats passés | Tu refuses de créer un nouveau recours
+r: Pour la sécurité juridique, le juge peut fixer l'application dans le temps de sa propre règle.
+rx: Une règle jurisprudentielle n'est jamais rétroactive, puisqu'elle ne vaut que pour l'avenir. || Faux : la jurisprudence est rétroactive par nature, d'où le besoin de moduler.
+rx: Seul le législateur peut décider de l'application dans le temps d'une règle nouvelle. || Faux : c'est justement ce que l'arrêt dépasse.
+rx: L'autorité réglementaire doit prévoir une transition avant d'appliquer toute règle nouvelle. || Faux : c'est KPMG. Ici, c'est le juge qui agit sur sa propre règle.
+
+%liberte-association
+c: Une loi permet au préfet de faire contrôler par le juge judiciaire une association avant même sa création. Le président du Sénat te saisit, au Conseil constitutionnel, en 1971.
+d: Tu censures la loi | Tu déclares la loi conforme | Tu te déclares incompétent
+r: Cette liberté fondamentale exclut par principe toute autorisation et tout contrôle préalable.
+rx: Le Conseil ne contrôle que la répartition des compétences entre les pouvoirs publics. || Faux : c'était la conception initiale, que la décision dépasse.
+rx: Le contrôle préalable relève du juge administratif et non de l'autorité judiciaire. || Faux : c'est le contrôle préalable lui-même qui est refusé.
+rx: La loi viole le traité de Rome, qui garantit la libre circulation des associations. || Faux : le Conseil se fonde sur le Préambule, jamais sur un traité.
+
+%blocage-prix
+c: Une loi votée par le Parlement contient des dispositions qui relèvent clairement du domaine réglementaire. Le Gouvernement n'a rien dit pendant la procédure. Des parlementaires te saisissent.
+d: Tu ne censures pas ces dispositions | Tu les censures pour incompétence | Tu renvoies au Conseil d'État
+r: Faute d'usage de l'article 41, l'empiètement est accepté : il n'est pas inconstitutionnel.
+rx: Le domaine du règlement n'existe plus depuis 1958, la loi pouvant intervenir en toute matière. || Faux : les domaines existent. C'est leur sanction qui est facultative.
+rx: Toute loi promulguée est par nature conforme à la Constitution, quelle que soit sa matière. || Faux : la loi n'est pas encore promulguée, et la formule est fausse.
+rx: Le Conseil ne peut être saisi qu'après la promulgation, par voie de question prioritaire. || Faux : c'est un contrôle a priori (art. 61 al. 2).
+
+%conseil-concurrence
+c: Une loi transfère au juge judiciaire les recours contre un organisme administratif de la concurrence, et lui enlève la possibilité d'ordonner un sursis. Des députés te saisissent.
+d: Tu censures la loi pour une garantie manquante | Tu censures la loi pour atteinte au noyau protégé | Tu déclares la loi conforme à la Constitution
+r: Le transfert est permis, mais la perte du sursis prive d'une garantie essentielle.
+rx: Tout contentieux de décisions administratives relève du juge administratif, sans aucune exception. || Faux : il existe des aménagements et des matières réservées au juge judiciaire.
+rx: Le principe de séparation des autorités a valeur constitutionnelle dans la loi de 1790 elle-même. || Faux : ces textes n'ont pas en eux-mêmes valeur constitutionnelle.
+rx: Le législateur est libre de répartir les compétences entre les ordres de juridiction. || Faux : il existe justement un noyau garanti.
+
+%rubin-de-servens
+c: Le chef de l'État recourt à l'article 16 et crée un tribunal militaire d'exception. Des officiers y sont renvoyés et attaquent cette décision devant toi. La création d'une juridiction relève de l'article 34.
+d: Tu te déclares incompétent | Tu annules la création du tribunal | Tu annules le recours à l'article 16
+r: L'article 16 est un acte de gouvernement, et la mesure relève ici du domaine de la loi.
+rx: Toute mesure prise en vertu de l'article 16 est un acte administratif attaquable. || Faux : seules celles du domaine réglementaire le sont.
+rx: Toute mesure prise en vertu de l'article 16 est un acte de gouvernement, sans exception. || Faux : le régime dépend du domaine de la mesure.
+rx: Seul le Conseil constitutionnel peut contrôler les mesures prises en vertu de l'article 16. || Faux : il est consulté, mais ne les juge pas.
+
+%force-5
+c: Une disposition issue d'une ordonnance jamais ratifiée fonde une autorisation contestée. Le délai d'habilitation est expiré. Une association pose une QPC devant toi, au Conseil constitutionnel.
+d: Tu acceptes d'examiner la question | Tu refuses : c'est un acte administratif | Tu renvoies au Parlement pour ratification
+r: Une fois ce délai expiré, ces dispositions sont législatives au sens de l'article 61-1.
+rx: L'ordonnance a été ratifiée de façon implicite, ce qui lui donne valeur législative. || Faux : l'ordonnance n'est pas ratifiée, et la ratification doit être expresse depuis 2008.
+rx: Toute ordonnance est une loi dès sa publication, quelle que soit la date de la ratification. || Faux : elle reste un acte réglementaire tant qu'elle n'est pas ratifiée.
+rx: Le Conseil constitutionnel contrôle tous les actes du Président de la République. || Faux : sa compétence est d'attribution.
+
+%daillieres
+c: À la Libération, un jury décide quels élus resteront inéligibles. Aucun texte ne prévoit de recours. Un élu te saisit. Ce jury statue sur des questions de droit public.
+d: Tu exerces un contrôle de cassation | Tu te déclares incompétent, faute de texte | Tu juges l'affaire comme un recours pour excès de pouvoir
+r: Ce jury est une juridiction administrative : la cassation existe même sans texte.
+rx: Ce jury est une autorité administrative, dont les décisions relèvent de l'excès de pouvoir. || Faux : le critère des questions de droit public en fait une juridiction.
+rx: Un organe politique créé à la Libération échappe à tout contrôle juridictionnel. || Faux : c'est l'inverse, le juge retient sa compétence.
+rx: Aucun recours n'est possible sans texte contre une juridiction spécialisée de ce type. || Faux : le pourvoi en cassation est ouvert sans texte.
+
+%chevassier
+c: Une fédération de chasseurs, créée sous forme d'association, collabore à un service public et son président est nommé par le ministre. Elle révoque un garde. La loi la présente comme un établissement privé.
+d: Tu renvoies au juge judiciaire | Tu retiens la compétence administrative | Tu annules la révocation
+r: La volonté du législateur l'emporte sur les indices : c'est une personne privée.
+rx: Toute participation à un service public fait de l'organisme une personne publique. || Faux : l'arrêt montre le contraire.
+rx: La nomination du président par le ministre suffit à rendre l'organisme public. || Faux : c'est un indice, qui s'efface devant la loi.
+rx: Le garde ayant une commission du ministre, il est agent public quel que soit l'employeur. || Faux : l'arrêt l'écarte expressément.
+
+%gip-his
+c: Un groupement créé entre l'État et des personnes privées gère un service public administratif de relogement. Une agente non statutaire licenciée a saisi le juge judiciaire. La loi n'en fait ni un établissement public ni une société.
+d: Tu retiens la compétence administrative | Tu confirmes la compétence judiciaire | Tu transmets au ministre
+r: Le législateur en a fait une personne publique, et le service géré est administratif.
+rx: Le groupement est un établissement public soumis aux règles ordinaires de cette catégorie. || Faux : il n'est pas un établissement public, sauf par analogie sur l'article 34.
+rx: La présence de personnes privées suffit à soumettre le groupement au droit privé. || Faux : la qualification vient de la volonté du législateur.
+rx: Tout licenciement d'un agent relève du juge administratif, quel que soit l'employeur. || Faux : tout dépend de la nature de l'employeur et du service.

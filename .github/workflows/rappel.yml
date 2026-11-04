@@ -1,0 +1,38 @@
+name: Rappel quotidien
+
+on:
+  schedule:
+    # 8 h 41 à Paris, en été puis en hiver. GitHub prend souvent quelques minutes de retard.
+    - cron: '41 6 * * *'
+    - cron: '41 7 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['rappel/test.txt']
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  rappel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --omit=dev
+      - name: Envoyer le rappel
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_SUBSCRIPTION: ${{ secrets.PUSH_SUBSCRIPTION }}
+          CRON_PREVU: ${{ github.event.schedule }}
+        run: node scripts/rappel.mjs
+      # GitHub suspend les tâches programmées après 60 jours sans activité : on les réactive.
+      - name: Garder la tâche active
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/rappel.yml/enable"

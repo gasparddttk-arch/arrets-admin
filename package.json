@@ -1,0 +1,17 @@
+{
+  "name": "arrets-admin",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "node tests/run.cjs"
+  },
+  "devDependencies": {
+    "@fontsource/bodoni-moda": "5.3.0",
+    "@fontsource/eb-garamond": "5.3.0"
+  },
+  "dependencies": {
+    "web-push": "3.6.7"
+  }
+}
