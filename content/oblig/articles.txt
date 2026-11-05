@@ -1,0 +1,95 @@
+# Articles du Code civil.
+# numéro | chambres | importance (1 à 3) | titre | règle reformulée, sans le numéro
+# Les chambres 8 et 9 sont en travaux : le cours n'y est pas encore arrivé.
+
+1100 | 1 | 2 | Sources des obligations | Les obligations naissent d'actes juridiques, de faits juridiques ou de la seule autorité de la loi. Elles peuvent aussi naître de l'exécution volontaire ou de la promesse d'exécuter un devoir de conscience.
+1100-1 | 1 | 2 | Actes juridiques | Les actes juridiques sont des manifestations de volonté destinées à produire des effets de droit. Ils sont conventionnels ou unilatéraux.
+1100-2 | 1 | 1 | Faits juridiques | Les faits juridiques sont des agissements ou des événements auxquels la loi attache des effets de droit.
+1101 | 1 | 3 | Définition du contrat | Le contrat est un accord de volontés destiné à créer, modifier, transmettre ou éteindre des obligations.
+1102 | 1,2 | 3 | Liberté contractuelle | Chacun est libre de contracter ou non, de choisir son cocontractant, de fixer le contenu et la forme du contrat, dans les limites de la loi et sans déroger à l'ordre public.
+1103 | 1 | 3 | Force obligatoire | Les contrats légalement formés tiennent lieu de loi à ceux qui les ont faits.
+1104 | 1,2 | 3 | Bonne foi | Les contrats doivent être négociés, formés et exécutés de bonne foi. Cette disposition est d'ordre public.
+1106 | 1 | 2 | Synallagmatique ou unilatéral | Le contrat est synallagmatique si les contractants s'obligent réciproquement, unilatéral si l'engagement n'est pas réciproque.
+1107 | 1 | 2 | Onéreux ou gratuit | Le contrat est à titre onéreux si chacun reçoit un avantage en contrepartie de celui qu'il procure, à titre gratuit si l'un procure un avantage sans contrepartie.
+1108 | 1 | 2 | Commutatif ou aléatoire | Le contrat est commutatif si les avantages sont regardés comme équivalents, aléatoire si les parties font dépendre gains et pertes d'un événement incertain.
+1109 | 1 | 2 | Consensuel, solennel, réel | Le contrat est consensuel s'il se forme par le seul échange des consentements, solennel si sa validité exige des formes, réel si sa formation exige la remise d'une chose.
+1110 | 1 | 2 | Gré à gré ou adhésion | Le contrat de gré à gré a des stipulations négociables. Le contrat d'adhésion a des conditions générales soustraites à la négociation et fixées à l'avance par une partie.
+1111 | 1,7 | 2 | Contrat-cadre | Le contrat-cadre fixe les caractéristiques générales des relations futures. Des contrats d'application en précisent les modalités d'exécution.
+1111-1 | 1 | 1 | Exécution instantanée ou successive | Le contrat à exécution instantanée s'exécute en une prestation unique, le contrat à exécution successive en plusieurs prestations échelonnées.
+
+1112 | 2 | 3 | Négociations | L'initiative, le déroulement et la rupture des négociations sont libres mais doivent respecter la bonne foi. La faute n'oblige pas à compenser les avantages attendus du contrat, ni la perte de chance de les obtenir.
+1112-1 | 2 | 3 | Devoir d'information | Celui qui connaît une information déterminante pour le consentement de l'autre doit la lui donner si l'autre l'ignore légitimement ou lui fait confiance. Ce devoir ne porte pas sur la valeur de la prestation.
+1112-2 | 2 | 2 | Confidentialité | Celui qui utilise ou divulgue sans autorisation une information confidentielle obtenue pendant les négociations engage sa responsabilité.
+
+1113 | 3 | 3 | Rencontre des volontés | Le contrat se forme par la rencontre d'une offre et d'une acceptation. La volonté résulte d'une déclaration ou d'un comportement non équivoque.
+1114 | 3 | 3 | Offre | L'offre comprend les éléments essentiels du contrat et exprime la volonté d'être lié en cas d'acceptation. À défaut, il n'y a qu'une invitation à négocier.
+1115 | 3 | 3 | Rétractation avant réception | L'offre peut être librement rétractée tant qu'elle n'est pas parvenue à son destinataire.
+1116 | 3 | 3 | Rétractation fautive | L'offre ne peut être rétractée avant la fin du délai fixé ou d'un délai raisonnable. La rétractation empêche pourtant le contrat et engage la responsabilité extracontractuelle de son auteur.
+1117 | 3 | 3 | Caducité de l'offre | L'offre est caduque à la fin du délai fixé ou d'un délai raisonnable, ainsi qu'en cas d'incapacité ou de décès de son auteur, ou de décès de son destinataire.
+1118 | 3 | 3 | Acceptation | L'acceptation exprime la volonté d'être lié dans les termes de l'offre. Elle se rétracte tant qu'elle n'est pas parvenue à l'offrant. Non conforme, elle ne vaut au plus qu'offre nouvelle.
+1119 | 3 | 1 | Conditions générales | Les conditions générales n'ont d'effet que si elles ont été portées à la connaissance de l'autre partie et acceptées par elle. Les clauses incompatibles de deux séries de conditions sont sans effet.
+1120 | 3 | 3 | Silence | Le silence ne vaut pas acceptation, sauf si la loi, les usages, les relations d'affaires ou des circonstances particulières en décident autrement.
+1121 | 3 | 3 | Moment et lieu du contrat | Le contrat est conclu dès que l'acceptation parvient à l'offrant, et au lieu où elle est parvenue.
+1122 | 3 | 2 | Délais de réflexion et de rétractation | La loi ou le contrat peuvent prévoir un délai de réflexion, avant lequel on ne peut accepter, ou un délai de rétractation, pendant lequel on peut revenir sur son consentement.
+1127-1 | 3 | 1 | Offre en ligne | Le professionnel qui propose un contrat par voie électronique met à disposition les stipulations applicables d'une manière qui permet de les conserver et de les reproduire.
+1127-2 | 3 | 2 | Double clic | Le contrat en ligne n'est valable que si le client a pu vérifier sa commande et son prix total, et corriger ses erreurs, avant de confirmer.
+
+1123 | 4 | 3 | Pacte de préférence | Le pacte oblige à proposer en priorité au bénéficiaire de traiter avec lui. Violé, il ouvre droit à réparation, et à la nullité ou à la substitution si le tiers connaissait le pacte et l'intention de s'en prévaloir.
+1124 | 4 | 3 | Promesse unilatérale | La promesse accorde au bénéficiaire le droit d'opter pour un contrat dont il ne manque que son consentement. Sa révocation n'empêche pas le contrat promis. Le contrat conclu avec un tiers qui la connaissait est nul.
+1583 | 4 | 2 | Vente parfaite | La vente est parfaite entre les parties dès l'accord sur la chose et sur le prix, même si la chose n'est pas livrée ni le prix payé.
+1589 | 4 | 2 | Promesse de vente | La promesse de vente vaut vente lorsqu'il y a consentement réciproque des deux parties sur la chose et sur le prix.
+1589-2 | 4 | 1 | Forme de la promesse immobilière | La promesse unilatérale de vente d'un immeuble est nulle si elle n'est pas constatée par acte authentique ou enregistrée dans les dix jours de son acceptation par le bénéficiaire.
+
+1128 | 5 | 3 | Conditions de validité | Un contrat suppose le consentement des parties, leur capacité de contracter et un contenu licite et certain.
+1129 | 5 | 2 | Sain d'esprit | Il faut être sain d'esprit pour consentir valablement à un contrat.
+1130 | 5 | 3 | Vices du consentement | L'erreur, le dol et la violence vicient le consentement quand, sans eux, la partie n'aurait pas contracté ou aurait contracté à des conditions substantiellement différentes.
+1131 | 5 | 3 | Nullité relative | Les vices du consentement sont une cause de nullité relative du contrat.
+1132 | 5 | 3 | Erreur | L'erreur de droit ou de fait, sauf si elle est inexcusable, est une cause de nullité quand elle porte sur les qualités essentielles de la prestation ou du cocontractant.
+1133 | 5 | 3 | Qualités essentielles | Les qualités essentielles sont celles convenues, expressément ou tacitement, et en considération desquelles on a contracté. L'erreur peut porter sur sa propre prestation. L'acceptation d'un aléa l'exclut.
+1134 | 5 | 2 | Erreur sur la personne | L'erreur sur les qualités essentielles du cocontractant n'est une cause de nullité que dans les contrats conclus en considération de la personne.
+1135 | 5 | 3 | Erreur sur le motif | L'erreur sur un simple motif n'est pas une cause de nullité, sauf si les parties en ont fait expressément un élément déterminant. L'erreur sur le motif d'une libéralité reste une cause de nullité.
+1136 | 5 | 3 | Erreur sur la valeur | L'appréciation économique inexacte, sans erreur sur les qualités essentielles, n'est pas une cause de nullité.
+1137 | 5 | 3 | Dol | Le dol consiste à obtenir le consentement par des manœuvres ou des mensonges, ou par la dissimulation intentionnelle d'une information qu'on sait déterminante. Taire son estimation de la valeur n'est pas un dol.
+1138 | 5 | 2 | Auteur du dol | Le dol peut émaner du contractant, de son représentant, gérant d'affaires, préposé ou porte-fort, ou d'un tiers de connivence.
+1139 | 5 | 3 | Erreur provoquée | L'erreur qui résulte d'un dol est toujours excusable. Elle est une cause de nullité même si elle porte sur la valeur ou sur un simple motif.
+1144 | 5,6 | 2 | Point de départ du délai | Le délai de l'action en nullité court du jour de la découverte de l'erreur ou du dol, et du jour où la violence a cessé.
+
+1140 | 6 | 3 | Violence | Il y a violence quand une partie s'engage sous la pression d'une contrainte qui lui inspire la crainte d'exposer sa personne, sa fortune ou celles de ses proches à un mal considérable.
+1141 | 6 | 3 | Menace d'une voie de droit | La menace d'une voie de droit n'est pas une violence, sauf si elle est détournée de son but ou invoquée pour obtenir un avantage manifestement excessif.
+1142 | 6 | 2 | Violence d'un tiers | La violence est une cause de nullité, qu'elle émane de l'autre partie ou d'un tiers.
+1143 | 6 | 3 | Abus de dépendance | Il y a violence quand une partie abuse de l'état de dépendance de l'autre à son égard pour obtenir un engagement qu'elle n'aurait pas pris sans cette contrainte, et en tire un avantage manifestement excessif.
+1145 | 6 | 2 | Capacité | Toute personne physique peut contracter, sauf incapacité prévue par la loi.
+1146 | 6 | 2 | Incapables de contracter | Sont incapables de contracter les mineurs non émancipés et les majeurs protégés, dans la mesure prévue par la loi.
+1147 | 6 | 2 | Sanction de l'incapacité | L'incapacité de contracter est une cause de nullité relative.
+1148 | 6 | 2 | Actes courants | L'incapable peut accomplir seul les actes courants autorisés par la loi ou l'usage, s'ils sont conclus à des conditions normales.
+1151 | 6 | 2 | Sauver l'acte | Le contractant capable échappe à la nullité en montrant que l'acte était utile et sans lésion, ou qu'il a profité à la personne protégée. Il peut aussi opposer la confirmation de l'incapable redevenu capable.
+
+6 | 7 | 2 | Ordre public et bonnes mœurs | On ne peut déroger, par des conventions particulières, aux lois qui intéressent l'ordre public et les bonnes mœurs.
+1162 | 7 | 3 | Contenu licite | Le contrat ne peut déroger à l'ordre public ni par ses stipulations, ni par son but, que ce but ait été connu ou non de toutes les parties.
+1163 | 7 | 3 | Contenu certain | L'obligation a pour objet une prestation présente ou future, possible, déterminée ou déterminable.
+1164 | 7 | 3 | Prix dans le contrat-cadre | Le contrat-cadre peut prévoir que le prix sera fixé unilatéralement, à charge de le motiver en cas de contestation. L'abus ouvre droit à des dommages et intérêts, et parfois à la résolution.
+1165 | 7 | 3 | Prix dans la prestation de service | Sans accord avant l'exécution, le prix d'une prestation de service peut être fixé par le créancier, à charge de le motiver. L'abus ouvre droit à des dommages et intérêts, et parfois à la résolution.
+1166 | 7 | 1 | Qualité de la prestation | Si la qualité n'est pas déterminée, le débiteur doit une prestation conforme aux attentes légitimes des parties.
+1168 | 7 | 2 | Lésion | Dans les contrats synallagmatiques, le défaut d'équivalence des prestations n'est pas une cause de nullité, sauf si la loi en dispose autrement.
+1169 | 7 | 2 | Contrepartie dérisoire | Un contrat à titre onéreux est nul si, au moment de sa formation, la contrepartie convenue est illusoire ou dérisoire.
+1195 | 8 | 2 | Imprévision | En cas de changement de circonstances imprévisible rendant l'exécution excessivement onéreuse, une partie peut demander une renégociation, puis saisir le juge.
+1217 | 8 | 3 | Tableau des sanctions | Face à l'inexécution, le créancier peut refuser d'exécuter, poursuivre l'exécution forcée, réduire le prix, provoquer la résolution, demander réparation.
+1218 | 8 | 3 | Force majeure | Il y a force majeure quand un événement échappant au contrôle du débiteur, imprévisible et irrésistible, empêche l'exécution.
+1219 | 8 | 3 | Exception d'inexécution | Une partie peut refuser d'exécuter son obligation si l'autre n'exécute pas la sienne et si cette inexécution est suffisamment grave.
+1220 | 8 | 2 | Exception pour risque | Une partie peut suspendre son exécution s'il est manifeste que l'autre n'exécutera pas à l'échéance, avec des conséquences suffisamment graves. Elle le notifie sans délai.
+1221 | 8 | 3 | Exécution forcée en nature | Le créancier peut, après mise en demeure, poursuivre l'exécution en nature, sauf impossibilité ou disproportion manifeste entre son coût pour le débiteur de bonne foi et son intérêt pour lui.
+1222 | 8 | 2 | Remplacement | Après mise en demeure, le créancier peut faire exécuter lui-même l'obligation, dans un délai et à un coût raisonnables, et en demander le remboursement.
+1223 | 8 | 2 | Réduction du prix | Après mise en demeure, le créancier peut accepter une exécution imparfaite et réduire proportionnellement le prix.
+1224 | 8 | 3 | Résolution | La résolution résulte d'une clause résolutoire, d'une notification du créancier en cas d'inexécution suffisamment grave, ou d'une décision de justice.
+1226 | 8 | 2 | Résolution par notification | Le créancier peut, à ses risques et périls, résoudre le contrat par notification, après une mise en demeure restée vaine, sauf urgence.
+1229 | 8 | 2 | Effets de la résolution | La résolution met fin au contrat. Les restitutions dépendent de l'utilité que les prestations échangées ont trouvée dans l'exécution complète du contrat.
+1231-1 | 8 | 3 | Dommages et intérêts | Le débiteur est condamné à des dommages et intérêts pour l'inexécution ou le retard, sauf force majeure.
+1231-3 | 8 | 2 | Dommage prévisible | Le débiteur ne répond que des dommages prévus ou prévisibles à la conclusion du contrat, sauf faute lourde ou dolosive.
+1231-5 | 8 | 2 | Clause pénale | Le juge peut modérer ou augmenter la pénalité convenue si elle est manifestement excessive ou dérisoire.
+
+1240 | 2,9 | 3 | Responsabilité pour faute | Tout fait quelconque de l'homme qui cause à autrui un dommage oblige celui par la faute duquel il est arrivé à le réparer.
+1241 | 9 | 2 | Négligence et imprudence | Chacun est responsable du dommage causé par son fait, mais aussi par sa négligence ou son imprudence.
+1242 | 9 | 3 | Choses et personnes | On est responsable du dommage causé par son propre fait, par le fait des personnes dont on doit répondre ou des choses que l'on a sous sa garde.
+1242-4 | 9 | 3 | Responsabilité des parents | Les parents qui exercent l'autorité parentale sont solidairement responsables du dommage causé par leurs enfants mineurs habitant avec eux.
+1242-5 | 9 | 3 | Responsabilité des commettants | Les maîtres et commettants sont responsables du dommage causé par leurs domestiques et préposés dans les fonctions auxquelles ils les ont employés.
+1245 | 9 | 3 | Produits défectueux | Le producteur est responsable du dommage causé par un défaut de son produit, qu'il soit ou non lié par un contrat avec la victime.

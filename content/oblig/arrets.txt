@@ -1,0 +1,346 @@
+# Arrêts du droit des obligations (cours et TD 1 à 3 de l'équipe 2, puis chapitres en travaux).
+# Format : @id | nom | référence | juge | année | importance | chambres
+# ap : apport   f : faits   q : problème de droit   s : solution   po : portée
+# Les faits absents sont ceux que les documents ne donnent pas et qui n'ont pas été vérifiés.
+
+@naturelle | Obligation naturelle | Civ. 1re, 10 oct. 1995, n° 93-20.300 | Cass. | 1995 | 2 | 1
+ap: Promettre d'exécuter un devoir de conscience crée une obligation civile
+q: Un engagement pris seul, sur un simple devoir moral, peut-il obliger son auteur ?
+s: L'obligation naturelle devient civile par l'engagement unilatéral d'exécuter ce devoir.
+po: L'engagement unilatéral de volonté obtient droit de cité. La réforme de 2016 le rejoint à l'article 1100.
+
+@manoukian | Manoukian | Com., 26 nov. 2003, n° 00-10.243 | Cass. | 2003 | 3 | 2
+ap: Rupture fautive des pourparlers : les frais se réparent, pas les gains espérés
+f: Une société négocie le rachat d'actions. Les cédants rompent brutalement et vendent à un tiers avec lequel ils discutaient en parallèle.
+q: La faute dans la rupture des pourparlers oblige-t-elle à réparer la perte de chance de réaliser les gains espérés du contrat ?
+s: Non. La faute n'est pas la cause de cette perte : seuls les frais de négociation et d'études sont réparés. Le tiers n'est fautif qu'en cas d'intention de nuire ou de manœuvres frauduleuses.
+po: La liberté de ne pas contracter est sauvée : ce qui est fautif, ce sont les circonstances de la rupture. L'article 1112 consacre la solution.
+
+@baldus | Baldus | Civ. 1re, 3 mai 2000, n° 98-11.381 | Cass. | 2000 | 3 | 2,5
+ap: L'acheteur n'a pas à informer le vendeur de la valeur du bien
+f: Une vendeuse cède à bas prix des photographies de Baldus à un acheteur qui, sachant leur valeur, les revend bien plus cher. Elle agit en nullité pour dol.
+q: L'acheteur qui connaît la vraie valeur doit-il la révéler au vendeur ?
+s: Non. Aucune obligation d'information ne pesait sur l'acheteur. Il n'y a pas de réticence dolosive.
+po: La solution passe dans les articles 1112-1 al. 2 et 1137 al. 3 : chacun évalue lui-même ce qu'il vend ou achète.
+
+@fastfood | Cession du fast-food | Com., 14 mai 2025, n° 23-17.948 | Cass. | 2025 | 3 | 2
+ap: Le devoir d'information suppose un lien direct avec le contrat et une importance déterminante
+f: Le cessionnaire d'une société de restauration rapide reproche au cédant d'avoir tu l'impossibilité d'installer une extraction de fumée. Il n'établit pas que la friture était déterminante pour lui.
+q: Toute information liée au contenu du contrat doit-elle être donnée ?
+s: Non. Le devoir ne porte que sur l'information qui a un lien direct et nécessaire avec le contenu du contrat ou la qualité des parties et dont l'importance est déterminante pour le consentement.
+po: Les deux critères sont cumulatifs. Le pourvoi qui les confondait est rejeté.
+
+@taxefonciere | Taxe foncière | Civ. 3e, 27 nov. 2025, n° 23-18.439 | Cass. | 2025 | 2 | 2
+ap: L'acheteuse qui n'a rien demandé ne prouve pas le caractère déterminant de la taxe foncière
+f: L'acquéreuse d'une maison découvre une taxe foncière bien plus élevée que prévu. Elle n'avait pas demandé les avis d'imposition, et l'acte ne fixait aucun maximum.
+q: Le montant de la taxe foncière est-il une information due au sens de l'article 1112-1 ?
+s: Pas ici. Le lien avec le contrat ne suffit pas : les juges du fond déduisent souverainement que ce montant n'était pas déterminant pour elle.
+po: La chambre civile reprend la solution de la chambre commerciale du 14 mai 2025.
+
+@guilloux | Guilloux | Civ., 25 mai 1870 | Cass. | 1870 | 3 | 3
+ap: Le silence seul ne vaut pas acceptation
+q: Le silence de celui qu'on prétend obligé suffit-il à prouver son engagement ?
+s: Non. En l'absence de toute autre circonstance, le silence ne peut suffire.
+po: Le principe se retrouve à l'article 1120, avec ses quatre exceptions.
+
+@bert | Remise de loyers | Req., 29 mars 1938 | Cass. | 1938 | 2 | 3
+ap: Le silence vaut acceptation si l'offre est faite dans l'intérêt exclusif du destinataire
+f: Un bailleur accorde une remise sur des loyers échus, puis poursuit ses locataires pour le solde. Il tente ensuite de revenir sur la remise.
+q: Le locataire qui se tait a-t-il accepté la remise de dette ?
+s: Oui : les juges peuvent le décider, car l'offre était faite dans l'intérêt exclusif de son destinataire.
+po: C'est le cas type des « circonstances particulières » de l'article 1120.
+
+@gerstaecker | Gerstaecker | Civ. 3e, 25 juin 2026, n° 25-10.765 | Cass. | 2026 | 3 | 3
+ap: L'offre rétractée dans le délai légal ne forme pas la vente, elle n'ouvre droit qu'à réparation
+f: Des bailleurs offrent leur local à leur locataire, qui dispose d'un mois pour se prononcer. Ils se rétractent avant son acceptation. La cour d'appel constate pourtant la vente.
+q: La rétractation d'une offre avant la fin du délai légal empêche-t-elle la vente ?
+s: Oui. Non encore acceptée, l'offre rétractée n'expose son auteur qu'à une action en réparation, exclusive de toute exécution forcée.
+po: La Cour applique l'article 1116 même au droit de préférence du locataire commercial. L'arrêt d'appel est cassé.
+
+@duplessis | Duplessis de Grenadan | Civ. 1re, 22 déc. 1959 | Cass. | 1959 | 2 | 4
+ap: La prescription du pacte ne court pas tant que le bénéficiaire ne peut pas agir
+f: Quatre sœurs stipulent en 1920 un droit de préférence réciproque sur leurs lots. L'une vend en 1957.
+q: Le bénéficiaire peut-il perdre son droit par prescription avant toute vente ?
+s: Non. Tant qu'aucune vente n'est projetée, il est dans l'impossibilité d'agir : la prescription ne court pas contre lui.
+po: Un pacte sans durée peut donc survivre très longtemps, d'où la question de sa durée.
+
+@priorite | Priorité de reprise | Civ. 1re, 6 juin 2001 | Cass. | 2001 | 2 | 4
+ap: Ni prix ni délai ne sont des conditions de validité du pacte
+f: Un courtier accorde à un partenaire une priorité de reprise sur des contrats, sans prix ni durée. Il en demande ensuite la nullité.
+q: Le pacte de préférence doit-il fixer un prix et un délai ?
+s: Non. Il n'est pas dans sa nature de prédéterminer le prix, et le délai n'est pas une condition de validité.
+po: Le débiteur reste libre de fixer ses conditions le jour où il décide de contracter.
+
+@pactedurable | Pacte perpétuel | Civ. 1re, 25 sept. 2024, n° 23-14.777 | Cass. | 2024 | 3 | 4
+ap: Le pacte perpétuel n'est pas nul : chacun peut y mettre fin à tout moment
+f: Un pacte de 1990 ne comporte aucun terme. En 2011, la propriétaire veut vendre à un tiers et les bénéficiaires exercent leur droit. Le légataire de la propriétaire invoque la nullité.
+q: Le pacte sans terme encourt-il la nullité pour engagement perpétuel ?
+s: Non. Les engagements perpétuels ne sont pas nuls : chacun peut y mettre fin avec un préavis. Sans résiliation, le droit de préférence pouvait être exercé.
+po: La Cour écarte la nullité par un motif substitué et rejoint la logique de l'article 1210.
+
+@mixte2006 | SCI Emeraude | Ch. mixte, 26 mai 2006, n° 03-19.376 | Cass. | 2006 | 3 | 4
+ap: La violation du pacte ouvre la nullité et la substitution si le tiers savait
+f: Un bien grevé d'un pacte de préférence est vendu à la SCI Emeraude. La bénéficiaire demande à lui être substituée.
+q: Le bénéficiaire peut-il obtenir sa substitution au tiers acquéreur ?
+s: Oui, à condition que le tiers ait connu, en contractant, l'existence du pacte et l'intention du bénéficiaire de s'en prévaloir.
+po: La sanction en nature entre dans le droit positif. La preuve de la double connaissance reste difficile. L'article 1123 al. 2 consacre la solution.
+
+@cruz | Consorts Cruz | Civ. 3e, 15 déc. 1993, n° 91-10.199 | Cass. | 1993 | 3 | 4
+ap: La rétractation du promettant avant la levée d'option exclut la vente
+f: Une promettante notifie sa décision de ne plus vendre. Les bénéficiaires lèvent l'option ensuite, dans le délai, et demandent la réalisation forcée.
+q: La rétractation du promettant fait-elle obstacle à la vente ?
+s: Oui. Son obligation n'étant qu'une obligation de faire, la levée d'option postérieure exclut la rencontre des volontés.
+po: Solution très critiquée, car elle réduit la promesse à des dommages et intérêts. La pratique répond par des clauses, le législateur par l'article 1124.
+
+@promesse2018 | Promesse, 2018 | Civ. 3e, 6 déc. 2018, n° 17-21.170 | Cass. | 2018 | 1 | 4
+ap: Pour les promesses d'avant 2016, la Cour maintient d'abord la solution Cruz
+q: La jurisprudence Cruz survit-elle à la réforme pour les promesses antérieures ?
+s: Oui, à ce stade. L'arrêt de renvoi conduira toutefois au revirement de 2021.
+po: C'est le premier arrêt de l'affaire qui aboutit au revirement du 23 juin 2021.
+
+@revirement2021 | Revirement de 2021 | Civ. 3e, 23 juin 2021, n° 20-17.554 | Cass. | 2021 | 3 | 4
+ap: Le promettant s'oblige définitivement à vendre dès la promesse
+f: Une promesse de 1999 ne peut être levée qu'au décès d'une occupante. La promettante se rétracte en 2010, les bénéficiaires lèvent l'option en 2011.
+q: La rétractation empêche-t-elle la vente pour une promesse antérieure à la réforme ?
+s: Non. Le promettant s'oblige définitivement à vendre dès l'avant-contrat, sans possibilité de rétractation, sauf stipulation contraire. La vente est parfaite.
+po: La Cour abandonne Cruz et aligne le droit antérieur sur l'article 1124 al. 2.
+
+@reiteration1994 | Compromis et réitération | Civ. 3e, 20 déc. 1994, n° 92-20.878 | Cass. | 1994 | 2 | 4
+ap: Le compromis vaut vente, sauf si la réitération est un élément du consentement
+f: Un compromis prévoit que l'acquéreur ne sera propriétaire qu'à la réitération par acte authentique. La cour d'appel n'y voit qu'une obligation de faire.
+q: La réitération reportée suffit-elle à empêcher la vente de valoir ?
+s: Non. Il faut relever des circonstances montrant que les parties en ont fait un élément constitutif de leur consentement.
+po: L'accord sur la chose et le prix suffit en principe : article 1589.
+
+@reiteration2012 | Élément constitutif | Civ. 3e, 19 juin 2012, n° 10-22.906 | Cass. | 2012 | 2 | 4
+ap: Les parties peuvent faire de l'acte authentique un élément de leur consentement
+q: Les parties peuvent-elles subordonner leur consentement à la signature de l'acte authentique ?
+s: Oui. La réitération peut être un élément constitutif du consentement, et non une simple modalité d'exécution.
+po: C'est l'exception prévue en 1994 : la promesse ne vaut alors pas encore vente.
+
+@poussin | Poussin | Civ. 1re, 22 févr. 1978, n° 76-11.551 | Cass. | 1978 | 3 | 5
+ap: Le vendeur peut invoquer une erreur sur sa propre prestation
+f: Des époux vendent un tableau présenté comme de l'école des Carrache. Les musées nationaux le préemptent, puis le présentent comme un Poussin.
+q: Le vendeur qui se trompe sur l'authenticité de ce qu'il vend peut-il agir en nullité ?
+s: Oui. Il faut rechercher si son consentement a été vicié par sa conviction erronée que le tableau ne pouvait pas être de Poussin.
+po: L'erreur s'apprécie au jour de la vente, et l'article 1133 al. 2 l'admet sur sa propre prestation.
+
+@fragonard | Fragonard | Civ. 1re, 24 mars 1987, n° 85-15.736 | Cass. | 1987 | 3 | 5
+ap: L'aléa accepté sur l'authenticité exclut l'erreur
+f: En 1933, un tableau est vendu comme « attribué à Fragonard ». Son authenticité est ensuite reconnue. Les héritiers du vendeur demandent la nullité.
+q: Le vendeur peut-il invoquer l'erreur quand l'incertitude se dissipe ?
+s: Non. L'aléa sur l'authenticité était entré dans le champ contractuel : aucune partie ne peut alléguer l'erreur.
+po: La solution figure à l'article 1133 al. 3.
+
+@malraux | Avantages fiscaux | Civ. 1re, 13 févr. 2001, n° 98-15.092 | Cass. | 2001 | 2 | 5
+ap: Le motif extérieur à l'objet du contrat ne vaut pas nullité, sauf stipulation expresse
+f: Un acheteur acquiert un lot à rénover pour obtenir un avantage fiscal, qui lui est refusé. Le vendeur connaissait ce but.
+q: L'erreur sur un motif déterminant et connu de l'autre partie est-elle une cause de nullité ?
+s: Non, faute de stipulation expresse faisant entrer ce motif dans le champ contractuel.
+po: L'article 1135 al. 1 reprend cette exigence : il ne suffit pas que l'autre partie connaisse le motif.
+
+@working | Société Working | Com., 26 mars 1974, n° 72-14.791 | Cass. | 1974 | 2 | 5
+ap: L'erreur sur la rentabilité d'une société est une erreur sur la valeur
+f: Des cessionnaires achètent des actions en croyant acquérir une entreprise saine, alors qu'elle est déficitaire. Elle reste apte à remplir son objet.
+q: L'erreur sur la santé financière de la société cédée est-elle une erreur sur la substance ?
+s: Non. Elle porte seulement sur la valeur et n'est pas une cause de nullité.
+po: Solution reprise par l'article 1136.
+
+@socgen2005 | Stock-options | Com., 28 juin 2005, n° 03-16.794 | Cass. | 2005 | 3 | 5
+ap: Manquer à l'information ne suffit pas : le dol exige l'intention et l'erreur déterminante
+f: Un salarié reproche à sa banque de ne pas l'avoir informé sur un contrat d'options et demande l'annulation pour réticence dolosive.
+q: Le manquement à l'obligation d'information suffit-il à caractériser le dol ?
+s: Non. Il faut constater le caractère intentionnel du manquement et une erreur déterminante provoquée par lui.
+po: La distinction vaut toujours entre l'article 1112-1 et l'article 1137.
+
+@sleeping | Le Sleeping | Com., 18 sept. 2024, n° 23-10.183 | Cass. | 2024 | 3 | 5
+ap: Le dol reste sanctionné même si l'acheteur ne s'est pas renseigné
+f: Le cessionnaire de parts découvre des dettes tues par le cédant. La cour d'appel lui reproche de ne pas s'être renseigné.
+q: Le défaut de renseignement de la victime exclut-il la réticence dolosive ?
+s: Non. Ces motifs sont impropres à l'exclure, car elle rend toujours excusable l'erreur provoquée.
+po: Application directe des articles 1137 et 1139.
+
+@parsys | Parsys | Com., 10 juill. 2012, n° 11-21.954 | Cass. | 2012 | 2 | 5
+ap: Sans demande de nullité, seule la perte de chance de meilleures conditions est réparée
+q: Quel préjudice répare-t-on quand la victime du dol garde le contrat ?
+s: La perte de chance de contracter à des conditions plus avantageuses, et non celle de ne pas avoir contracté.
+po: La victime choisit entre nullité et dommages et intérêts, mais son choix borne le préjudice réparable.
+
+@voiedroit | Menace d'une voie de droit | Civ. 3e, 17 janv. 1984 | Cass. | 1984 | 2 | 6
+ap: Annoncer qu'on exercera son droit n'est pas, en soi, une violence
+q: La menace d'agir en justice vicie-t-elle le consentement ?
+s: Non, c'est l'exercice d'un droit, sauf détournement.
+po: L'article 1141 consacre le principe et son exception.
+
+@garage | Garage incendié | Civ. 1re, 30 mai 2000, n° 98-15.242 | Cass. | 2000 | 2 | 6
+ap: La contrainte économique se rattache à la violence, non à la lésion
+f: Un assuré dont le garage a brûlé transige avec son assureur sur une indemnité qu'il juge ensuite très insuffisante.
+q: La transaction peut-elle être attaquée pour contrainte économique ?
+s: Oui. La contrainte économique se rattache à la violence, et la transaction peut être attaquée dans tous les cas où il y a violence.
+po: La violence économique entre en droit positif, sans encore être définie.
+
+@kannas | Kannas | Civ. 1re, 3 avr. 2002, n° 00-12.932 | Cass. | 2002 | 3 | 6
+ap: Seule l'exploitation abusive d'une dépendance économique vicie le consentement
+f: Une salariée d'une maison d'édition lui cède ses droits sur un ouvrage, puis invoque la crainte d'un licenciement.
+q: À quelles conditions la dépendance économique vicie-t-elle le consentement ?
+s: Il faut l'exploitation abusive d'une situation de dépendance, pour tirer profit de la crainte d'un mal menaçant directement les intérêts légitimes de la personne.
+po: Le critère prépare l'article 1143. L'arrêt d'appel est cassé.
+
+@honoraires2021 | Honoraires d'avocat | Civ. 2e, 9 déc. 2021, n° 20-10.096 | Cass. | 2021 | 2 | 6
+ap: L'abus de dépendance se juge à l'exploitation et à l'avantage excessif tiré
+f: Un avocat dont un client représente l'essentiel de l'activité signe une convention d'honoraires très défavorable, puis invoque la violence économique.
+q: La convention d'honoraires peut-elle être annulée pour violence économique ?
+s: Oui. La Cour approuve les juges du fond, qui retiennent la dépendance économique et l'avantage excessif tiré par le client.
+po: La Cour se met en phase avec les textes nouveaux, sans y être tenue pour ce contrat ancien.
+
+@bailrural | Bail rural des parents | Civ. 3e, 4 juin 2026, n° 24-15.070 | Cass. | 2026 | 3 | 6
+ap: L'état de dépendance peut naître d'une vulnérabilité connue du cocontractant
+f: Des parents âgés et diminués consentent à leur fils un bail rural sur 72 hectares pour un loyer dérisoire. Le bail est annulé.
+q: L'article 1143 exige-t-il une dépendance préexistante et des actes de menace ?
+s: Non. La dépendance peut résulter d'une vulnérabilité connue, et il n'est pas nécessaire d'établir des actes positifs de menace ou d'oppression.
+po: L'arrêt ouvre largement le texte, malgré les mots « à son égard » ajoutés en 2018. Ton cours le juge peu satisfaisant.
+
+@ourbody | Our Body | Civ. 1re, 29 oct. 2014, n° 13-19.729 | Cass. | 2014 | 2 | 7
+ap: L'ordre public peut être appliqué à un contrat conclu avant le texte qui l'exprime
+f: L'organisateur de l'exposition de cadavres « Our Body » s'assure contre son annulation. L'exposition est interdite et l'assureur plaide la nullité.
+q: Le contrat d'assurance, conclu avant l'article 16-1-1, est-il illicite ?
+s: Oui. Le principe d'ordre public selon lequel le respect dû au corps humain ne cesse pas avec la mort préexistait à la loi de 2008.
+po: L'ordre public virtuel est mis en lumière par le juge.
+
+@donation1999 | Donation et adultère | Civ. 1re, 3 févr. 1999, n° 96-11.946 | Cass. | 1999 | 2 | 7
+ap: La libéralité liée à une relation adultère n'est plus contraire aux bonnes mœurs
+q: La libéralité consentie à l'occasion d'une relation adultère est-elle nulle ?
+s: Non, elle n'a pas une cause contraire aux bonnes mœurs.
+po: C'est le premier recul net de la notion de bonnes mœurs.
+
+@leg2004 | Libéralité de 2004 | Ass. plén., 29 oct. 2004, n° 03-11.238 | Cass. | 2004 | 3 | 7
+ap: La libéralité adultère reste valable, même faite pour maintenir la relation
+q: La libéralité destinée à maintenir une relation adultère est-elle nulle ?
+s: Non. N'est pas nulle comme contraire aux bonnes mœurs la libéralité consentie à l'occasion d'une relation adultère.
+po: L'Assemblée plénière ferme le débat ouvert en 1999.
+
+@courtage | Courtage matrimonial | Civ. 1re, 4 nov. 2011, n° 10-20.114 | Cass. | 2011 | 2 | 7
+ap: Le courtage conclu par une personne mariée n'est pas nul pour autant
+f: Un homme marié conclut un contrat de courtage matrimonial, puis en demande la nullité.
+q: Le contrat de courtage matrimonial conclu par une personne mariée est-il illicite ?
+s: Non. Il n'est pas nul comme ayant une cause illicite ou immorale.
+po: Attention : l'arrêt vient de la 1re chambre civile, pas de la 3e.
+
+@gleeden | Gleeden | Civ. 1re, 16 déc. 2020, n° 19-19.387 | Cass. | 2020 | 2 | 7
+ap: L'infidélité ne peut être sanctionnée que par l'époux, pas par un tiers
+f: Une association catholique attaque un site de rencontres extraconjugales et sa publicité.
+q: Un site qui promeut l'infidélité est-il illicite ?
+s: Non. Le devoir de fidélité ne peut être invoqué que par l'époux, et l'adultère n'est plus une faute pénale.
+po: La morale conjugale n'est plus un ordre public opposable aux tiers.
+
+@but1998 | But illicite | Civ. 1re, 7 oct. 1998, n° 96-14.359 | Cass. | 1998 | 2 | 7
+ap: Le but illicite annule le contrat même si une partie l'ignorait
+q: Une partie qui ignore le but illicite de l'autre échappe-t-elle à la nullité ?
+s: Non. Le contrat peut être annulé pour cause illicite même si une partie n'en a pas connaissance.
+po: L'article 1162 reprend la règle : l'ordre public l'emporte sur la sécurité juridique.
+
+@alcatel | Alcatel | Civ. 1re, 29 nov. 1994, n° 91-21.009 | Cass. | 1994 | 2 | 7
+ap: Le prix au tarif du fournisseur est déterminable, sauf profit illégitime
+f: Un client conclut un contrat d'installation et d'entretien d'une ligne téléphonique au tarif du fournisseur, puis conteste le prix.
+q: Le prix fixé par le tarif du fournisseur est-il déterminable ?
+s: Oui. Le tarif rend le prix déterminable, sauf à sanctionner le profit illégitime que le fournisseur en tirerait.
+po: C'est l'étape qui annonce les arrêts de 1995.
+
+@ap1995 | Arrêts de 1995 | Ass. plén., 1er déc. 1995, n° 91-15.578 | Cass. | 1995 | 3 | 7
+ap: L'indétermination du prix n'annule plus le contrat-cadre : seul l'abus est sanctionné
+q: L'indétermination du prix des contrats d'application affecte-t-elle la validité du contrat-cadre ?
+s: Non, sauf texte particulier. L'abus dans la fixation du prix ne donne lieu qu'à résiliation ou indemnisation.
+po: Ces quatre arrêts inspirent les articles 1164 et 1165. Attention : ils datent du 1er décembre, pas du 12.
+
+@craponne | Canal de Craponne | Civ., 6 mars 1876 | Cass. | 1876 | 3 | 8
+ap: Le juge ne peut pas modifier le contrat, même devenu injuste
+f: Une redevance d'arrosage fixée au XVIe siècle est devenue dérisoire. La cour d'appel l'augmente.
+q: Le juge peut-il réviser un contrat que le temps a déséquilibré ?
+s: Non. Le juge ne peut pas, même au nom de l'équité, modifier les conventions des parties.
+po: Le principe a tenu 140 ans, jusqu'à l'article 1195.
+
+@tocqueville | Tocqueville | Civ. 1re, 13 oct. 1998, n° 96-21.485 | Cass. | 1998 | 3 | 8
+ap: La gravité du comportement permet de rompre seul, aux risques et périls du créancier
+q: Une partie peut-elle rompre le contrat sans passer par le juge ?
+s: Oui. La gravité du comportement d'une partie peut justifier que l'autre y mette fin unilatéralement, à ses risques et périls.
+po: La résolution par notification de l'article 1226 en est l'héritière.
+
+@chronopost | Chronopost | Com., 22 oct. 1996, n° 93-18.632 | Cass. | 1996 | 3 | 8
+ap: La clause qui contredit l'obligation essentielle est réputée non écrite
+f: Un pli confié pour une livraison rapide arrive en retard. Le transporteur oppose sa clause limitative de réparation.
+q: Une clause peut-elle vider de sa substance l'obligation essentielle ?
+s: Non. Elle contredit la portée de l'engagement et est réputée non écrite.
+po: La règle est aujourd'hui à l'article 1170.
+
+@faurecia | Faurecia II | Com., 29 juin 2010, n° 09-11.841 | Cass. | 2010 | 2 | 8
+ap: Seule la clause qui vide l'obligation essentielle tombe, pas tout plafond de réparation
+q: La clause limitative est-elle nulle du seul fait qu'elle porte sur l'obligation essentielle ?
+s: Non. Elle n'est réputée non écrite que si elle vide cette obligation de toute substance.
+po: La Cour apprécie le plafond au regard de l'économie du contrat.
+
+@marechaux | Les Maréchaux | Com., 10 juill. 2007, n° 06-14.768 | Cass. | 2007 | 2 | 8
+ap: La bonne foi sanctionne l'usage déloyal d'une prérogative, pas la substance du contrat
+q: Le juge peut-il, au nom de la bonne foi, atteindre la substance des droits et obligations ?
+s: Non. Il peut sanctionner l'usage déloyal d'une prérogative contractuelle, mais pas toucher à la substance du contrat.
+po: L'arrêt fixe la limite de la bonne foi de l'article 1104.
+
+@teffaine | Teffaine | Civ., 16 juin 1896 | Cass. | 1896 | 3 | 9
+ap: Le propriétaire répond du dommage causé par sa chose, sans faute à prouver
+f: Le mécanicien d'un remorqueur est tué par l'explosion d'un tube de chaudière. Sa veuve agit contre le propriétaire.
+q: Le propriétaire répond-il du dommage causé par sa chose, sans faute prouvée ?
+s: Oui. Le vice de la chose, qui exclut le cas fortuit et la force majeure, engage sa responsabilité. Il ne peut pas s'en défaire en prouvant la faute du constructeur.
+po: La Cour découvre dans l'ancien article 1384 al. 1 un principe que les rédacteurs n'avaient pas voulu.
+
+@jandheur | Jand'heur | Ch. réun., 13 févr. 1930 | Cass. | 1930 | 3 | 9
+ap: La présomption pèse sur le gardien, sans distinguer selon que la chose est actionnée ou non
+f: Une fillette est renversée par un camion. L'assureur soutient qu'il faut prouver une faute, puisque la chose était conduite par l'homme.
+q: La responsabilité du fait des choses suppose-t-elle un vice de la chose ou la preuve d'une faute ?
+s: Non. Le gardien est présumé responsable. Il ne s'exonère que par un cas fortuit, une force majeure ou une cause étrangère.
+po: L'arrêt fonde le régime moderne du fait des choses.
+
+@franck | Franck | Ch. réun., 2 déc. 1941 | Cass. | 1941 | 3 | 9
+ap: Le gardien est celui qui a l'usage, la direction et le contrôle de la chose
+f: Une voiture volée au fils du docteur Franck tue un facteur. Le propriétaire est assigné.
+q: Le propriétaire dépossédé par un vol reste-t-il gardien ?
+s: Non. Privé de l'usage, de la direction et du contrôle, il a perdu la garde.
+po: La définition de la garde vaut toujours.
+
+@blieck | Blieck | Ass. plén., 29 mars 1991, n° 89-15.231 | Cass. | 1991 | 3 | 9
+ap: Un principe général de responsabilité du fait d'autrui existe
+f: Un handicapé mental placé dans un centre met le feu à une forêt. Le centre avait accepté d'organiser et de contrôler son mode de vie.
+q: Peut-on être responsable d'autrui hors des cas énumérés par le code ?
+s: Oui. Le centre, qui a accepté d'organiser et de contrôler à titre permanent le mode de vie de la personne, doit répondre de ses actes.
+po: La liste de l'ancien article 1384 n'est plus limitative.
+
+@fullenwarth | Fullenwarth | Ass. plén., 9 mai 1984, n° 79-16.612 | Cass. | 1984 | 2 | 9
+ap: Un simple acte de l'enfant, cause directe du dommage, engage ses parents
+q: La responsabilité des parents suppose-t-elle une faute de l'enfant ?
+s: Non. Il suffit d'un acte qui soit la cause directe du dommage, même sans discernement.
+po: L'enfant n'a plus à être fautif.
+
+@bertrand | Bertrand | Civ. 2e, 19 févr. 1997, n° 94-21.111 | Cass. | 1997 | 3 | 9
+ap: Seules la force majeure ou la faute de la victime exonèrent les parents
+f: Un enfant à vélo heurte un motocycliste. Le père soutient qu'il n'a commis aucun défaut de surveillance.
+q: Les parents s'exonèrent-ils en prouvant qu'ils n'ont pas commis de faute ?
+s: Non. Seules la force majeure ou la faute de la victime peuvent les exonérer.
+po: La responsabilité des parents devient une responsabilité de plein droit.
+
+@levert | Levert | Civ. 2e, 10 mai 2001, n° 99-11.287 | Cass. | 2001 | 2 | 9
+ap: La responsabilité des parents n'exige pas une faute de l'enfant
+q: La faute de l'enfant est-elle une condition de la responsabilité des parents ?
+s: Non. Elle n'est pas subordonnée à l'existence d'une faute de l'enfant.
+po: La solution de 1984 est confirmée après Bertrand.
+
+@costedoat | Costedoat | Ass. plén., 25 févr. 2000, n° 97-17.378 | Cass. | 2000 | 3 | 9
+ap: Le préposé agissant dans sa mission n'engage pas sa responsabilité
+f: Un pilote d'hélicoptère, salarié, pulvérise un produit qui abîme les cultures d'un voisin.
+q: La victime peut-elle agir contre le préposé resté dans les limites de sa mission ?
+s: Non. Il n'engage pas sa responsabilité à l'égard des tiers.
+po: Le commettant répond seul, sauf abus de fonctions.
+
+@cousin | Cousin | Ass. plén., 14 déc. 2001, n° 00-82.066 | Cass. | 2001 | 3 | 9
+ap: Le préposé condamné pour une infraction intentionnelle répond de son acte
+f: Un comptable commet, sur ordre, une escroquerie aux subventions.
+q: Le préposé reste-t-il à l'abri quand il commet intentionnellement une infraction ?
+s: Non. Condamné pénalement pour une infraction intentionnelle, même commise sur ordre, il engage sa responsabilité civile.
+po: L'immunité de Costedoat trouve sa limite.
