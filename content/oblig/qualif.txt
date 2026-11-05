@@ -1,0 +1,107 @@
+# Qualifier les faits : des faits à relier à une notion. Chaque famille réunit des notions voisines.
+# %id | titre | chambres
+# m: notion | texte | fait | pourquoi
+
+%contrats | Quel type de contrat ? | 1
+m: Contrat synallagmatique | art. 1106 | Une agence loue un studio : l'un met le logement à disposition, l'autre paie un loyer. | Chacun est à la fois créancier et débiteur de l'autre.
+m: Contrat unilatéral | art. 1106 | Une tante donne sa bague à sa nièce, qui accepte le cadeau. | Il y a deux volontés, mais une seule partie s'oblige.
+m: Contrat aléatoire | art. 1108 | Une assurance incendie court depuis dix ans sans qu'aucun sinistre ne survienne. | Gains et pertes dépendent d'un événement incertain.
+m: Contrat commutatif | art. 1108 | Un libraire vend un livre 20 euros, un prix regardé comme équivalent. | Les deux avantages sont connus et regardés comme équivalents.
+m: Contrat réel | art. 1109 | Un voisin prête sa tondeuse : le contrat n'existe qu'une fois l'outil remis. | La formation suppose la remise de la chose.
+m: Contrat solennel | art. 1109 | Un parent fait une donation devant notaire, seule forme qui la rend valable. | La validité dépend d'une forme fixée par la loi.
+m: Contrat consensuel | art. 1109 | Deux amis se mettent d'accord oralement sur la vente d'un vélo. | Le seul échange des consentements suffit.
+m: Contrat d'adhésion | art. 1110 | Un client accepte en bloc les conditions générales imposées par son opérateur. | Les conditions sont soustraites à la négociation.
+m: Contrat-cadre | art. 1111 | Une enseigne fixe avec un fournisseur les règles de toutes leurs commandes à venir. | Il organise des contrats d'application futurs.
+
+%actes | Acte, fait ou contrat ? | 1
+m: Acte juridique unilatéral | art. 1100-1 | Un homme rédige seul son testament. | Une seule volonté produit des effets de droit.
+m: Fait juridique | art. 1100-2 | Un cycliste renverse un passant : la loi l'oblige à réparer. | Les effets de droit sont attachés par la loi, sans être voulus.
+m: Contrat | art. 1101 | Deux sociétés s'accordent pour modifier leur convention de livraison. | Depuis 2016, l'accord peut aussi modifier une obligation.
+m: Promesse de devoir de conscience | art. 1100 | Un homme s'engage par écrit à aider financièrement un ancien ami dans le besoin. | Ce devoir moral devient une obligation civile.
+
+%pourparlers | Dans les négociations | 2
+m: Rupture libre | art. 1112 | Après trois réunions, une société renonce, sans mentir, à un projet trop cher. | La liberté de ne pas contracter couvre la rupture sincère.
+m: Rupture fautive | art. 1112 | Une société fait durer des discussions très avancées alors qu'elle a déjà signé avec un concurrent. | Ce sont les circonstances déloyales qui fautent.
+m: Manquement au devoir d'information | art. 1112-1 | Un vendeur oublie de signaler une servitude qui interdit le projet connu de l'acheteur. | Il connaissait une information déterminante, sans intention établie de tromper.
+m: Violation de la confidentialité | art. 1112-2 | Après une data room, un repreneur réutilise les fichiers clients qu'il y a découverts. | L'utilisation suffit, même sans divulgation.
+m: Absence de devoir sur la valeur | art. 1112-1 | Un antiquaire achète un vase sans dire à la vendeuse ce qu'il vaut vraiment. | Le devoir d'information ne porte pas sur la valeur. Baldus.
+
+%offre | Offre ou pas offre ? | 3
+m: Offre | art. 1114 | Une affiche indique : vélo, modèle Ville, 200 euros, le premier arrivé l'emporte. | Elle est précise, ferme et peut viser le public.
+m: Invitation à négocier | art. 1114 | Une annonce dit : appartement à vendre, prix à débattre. | Il manque un élément essentiel, le prix.
+m: Offre sous réserve d'agrément | art. 1114 | Un bailleur propose un studio en précisant qu'il choisira son locataire. | Le contrat ne se forme pas par la seule acceptation : la fermeté manque.
+m: Offre caduque | art. 1117 | Une offre valable huit jours reçoit une réponse positive le quinzième jour. | Le délai fixé est expiré.
+m: Acceptation non conforme | art. 1118 | Un acheteur répond qu'il prend le lot, mais à un prix inférieur. | La réponse ne vaut qu'offre nouvelle.
+m: Rétractation libre | art. 1115 | Un auteur envoie un mail qui rattrape son courrier d'offre, encore non reçu. | L'offre n'est pas encore parvenue à son destinataire.
+m: Rétractation fautive | art. 1116 | Un vendeur retire son offre après trois jours, alors qu'il avait donné un mois pour répondre. | Le délai n'est pas expiré, mais le contrat n'est pas formé pour autant.
+
+%silence | Que vaut ce silence ? | 3
+m: Silence sans effet | art. 1120 | Un magazine écrit que l'abonnement est reconduit sauf réponse, et le client ne répond pas. | Un offrant ne peut pas imposer au destinataire de répondre.
+m: Silence et relations d'affaires | art. 1120 | Un grossiste livre depuis des années sans répondre aux bons de commande. | Une pratique constante donne un sens au silence.
+m: Silence et intérêt exclusif | art. 1120 | Un bailleur offre une remise de loyers, et les locataires se taisent. | L'offre est faite dans leur seul intérêt. Req., 29 mars 1938.
+m: Silence et usages | art. 1120 | Dans un métier, le défaut de protestation sous 48 heures vaut accord pour tous les professionnels. | Dans ce milieu, l'usage fait du silence un langage.
+m: Silence et loi | art. 1120 | Un texte prévoit que l'absence de réponse dans un délai vaut accord. | La loi elle-même donne ce sens au silence.
+
+%avantcontrats | Quel avant-contrat ? | 4
+m: Pacte de préférence | art. 1123 | Un propriétaire s'engage, s'il vend un jour, à proposer d'abord son terrain à son voisin. | Il ne promet pas de vendre, il donne une priorité.
+m: Promesse unilatérale | art. 1124 | Une propriétaire consent à vendre à 300 000 euros et laisse deux mois à l'acheteur pour décider. | Seul manque le consentement du bénéficiaire.
+m: Promesse synallagmatique | art. 1589 | Vendeur et acheteur signent un compromis sur la chose et le prix. | Chacun s'engage, ce qui vaut en principe vente.
+m: Levée d'option | art. 1124 | L'acheteur notifie, dans le délai prévu, qu'il achète. | Il donne le consentement qui manquait.
+m: Tiers de mauvaise foi | art. 1123 | L'acquéreur savait pour le pacte et savait que le bénéficiaire voulait s'en prévaloir. | Cette double connaissance ouvre nullité et substitution.
+m: Indemnité d'immobilisation | art. 1124 | Le bénéficiaire renonce à acheter et le vendeur garde la somme convenue. | C'est le prix de l'exclusivité consentie, sans être une sanction.
+
+%erreurs | Quelle erreur ? | 5
+m: Erreur sur une qualité essentielle | art. 1133 | Un acheteur paie un tableau signé qui se révèle une copie récente. | L'authenticité était une qualité convenue.
+m: Erreur sur le motif | art. 1135 | Une acheteuse prend un studio pour une mutation qui n'aura jamais lieu. | Le motif n'a pas été stipulé.
+m: Erreur sur la valeur | art. 1136 | Un vendeur cède ses actions et découvre qu'elles valaient plus. | Il n'y a qu'une appréciation économique inexacte.
+m: Erreur sur la personne | art. 1134 | Un patient confie une opération délicate à celui qu'il prend pour un chirurgien réputé. | Le contrat est conclu en considération de la personne.
+m: Erreur inexcusable | art. 1132 | Un professionnel achète un bien sans lire la description qui décrivait son défaut. | Une erreur grossière ne protège pas.
+m: Aléa accepté | art. 1133 | Un amateur achète un bronze vendu comme « attribué à » un grand sculpteur. | L'incertitude est entrée dans le contrat. Fragonard.
+m: Erreur sur le motif d'une libéralité | art. 1135 | Une femme donne ses biens à une amie, se croyant à tort sans héritier. | Pour une libéralité, le motif erroné vaut nullité.
+
+%dol | Dol ou pas dol ? | 5
+m: Dol par manœuvres | art. 1137 | Un garagiste trafique le compteur d'une voiture avant de la vendre. | La mise en scène vise à obtenir le consentement.
+m: Dol par mensonge | art. 1137 | Le vendeur affirme que la voiture n'a jamais eu d'accident, alors qu'il sait le contraire. | Le texte vise expressément le mensonge.
+m: Réticence dolosive | art. 1137 | Le vendeur sait que la voiture a eu un accident et le tait pour vendre. | Il dissimule volontairement une information déterminante.
+m: Dol d'un tiers de connivence | art. 1138 | Un ami du vendeur, de mèche avec lui, ment sur l'état du bien. | Le tiers complice engage le contrat.
+m: Tiers sans lien | art. 1138 | Un voisin ment à l'acheteur sans que le vendeur le sache. | Sans connivence, le contrat n'est pas atteint par ce dol.
+m: Silence sur la valeur | art. 1137 | Un acheteur averti ne révèle pas son estimation du bien. | La loi de 2018 écarte le dol. Baldus.
+
+%contrainte | Violence ou pas ? | 6
+m: Violence physique | art. 1140 | Un homme signe après des coups et des menaces de mort. | La crainte d'un mal considérable le contraint.
+m: Violence d'un tiers | art. 1142 | Le frère du vendeur menace l'acheteur à l'insu du vendeur. | Peu importe l'auteur.
+m: Menace légitime | art. 1141 | Un créancier annonce qu'il saisira le tribunal si on ne le paie pas. | Il exerce simplement son droit.
+m: Voie de droit détournée | art. 1141 | Un employeur menace de déposer plainte, sauf si son salarié lui cède sa maison. | La voie de droit sert un but étranger.
+m: Abus de dépendance | art. 1143 | Un distributeur sans autre client accepte des prix ruineux imposés par son fournisseur unique. | Il y a dépendance, abus et avantage manifestement excessif.
+m: Simple lésion | art. 1168 | Une personne libre signe une mauvaise affaire sans contrainte ni tromperie. | Le déséquilibre seul n'est pas une cause de nullité.
+
+%capacite | Peut-il contracter ? | 6
+m: Acte courant du mineur | art. 1148 | Une adolescente achète un livre de poche à la librairie. | Acte de la vie courante, à des conditions normales.
+m: Incapacité du mineur | art. 1146 | Un jeune de 16 ans vend seul la moto héritée de son père. | L'acte dépasse les actes courants.
+m: Insanité d'esprit | art. 1129 | Une personne âgée, confuse et non protégée, vend sa maison lors d'un épisode de démence. | Il faut être sain d'esprit pour consentir.
+m: Confirmation | art. 1151 | Devenu majeur, un jeune confirme par écrit la vente qu'il a conclue mineur. | L'acte est sauvé par la confirmation.
+
+%contenu | Le contenu du contrat | 7
+m: Contenu illicite | art. 1162 | Deux personnes signent un contrat pour acheter le vote de plusieurs électeurs. | Il déroge à l'ordre public.
+m: But illicite | art. 1162 | Un local est loué pour une activité illégale, ce que le bailleur ignore. | Le but suffit, même s'il n'est pas connu de tous.
+m: Prestation impossible | art. 1163 | Un vendeur s'engage à livrer un bien qui n'existe plus. | La prestation doit être possible.
+m: Prestation indéterminée | art. 1163 | Un contrat prévoit la vente de « quelques machines », sans autre précision. | La prestation n'est pas déterminable.
+m: Contrepartie dérisoire | art. 1169 | Une maison est vendue pour un euro symbolique, sans autre contrepartie. | Le contrat à titre onéreux est nul.
+m: Prix fixé unilatéralement | art. 1164 | Un contrat-cadre renvoie au tarif du franchiseur, qui devra se justifier. | La clause est licite, seul l'abus est sanctionné.
+m: Prix du prestataire | art. 1165 | Un plombier fixe son prix après l'intervention et le motive. | Sans accord préalable, le créancier fixe le prix.
+
+%sanctions | Quelle sanction d'inexécution ? | 8
+m: Exception d'inexécution | art. 1219 | Le locataire d'un logement inhabitable suspend le paiement du loyer. | Il refuse d'exécuter face à une inexécution grave.
+m: Exécution forcée en nature | art. 1221 | Un acheteur exige que le vendeur livre enfin le bien payé. | Il veut la prestation elle-même.
+m: Réduction du prix | art. 1223 | Un client garde un travail imparfait et paie moins cher. | Il accepte une exécution imparfaite.
+m: Résolution | art. 1224 | Une entreprise met fin au contrat après des manquements graves et répétés. | Le contrat disparaît pour inexécution suffisamment grave.
+m: Remplacement | art. 1222 | Après mise en demeure, un client fait finir le chantier par un autre artisan. | Il fait exécuter l'obligation à la place du débiteur.
+m: Force majeure | art. 1218 | Une crue imprévisible emporte la marchandise avant la livraison. | L'événement est imprévisible, irrésistible et étranger au débiteur.
+
+%regimes | Quelle responsabilité ? | 9
+m: Responsabilité contractuelle | art. 1231-1 | Un artisan ne livre pas la table commandée. | Le dommage naît de l'inexécution d'un contrat.
+m: Responsabilité pour faute | art. 1240 | Un chasseur tire sans regarder et blesse un randonneur. | Un fait fautif cause le dommage.
+m: Fait des choses | art. 1242 | Une tuile tombe d'un toit sur une voiture en stationnement. | Le gardien répond de sa chose.
+m: Fait d'autrui, parents | art. 1242 | Un enfant de 8 ans casse le pare-brise d'un voisin avec un ballon. | Les parents répondent de leur enfant mineur vivant avec eux.
+m: Fait d'autrui, commettant | art. 1242 | Un salarié blesse un client pendant sa mission. | Le commettant répond de son préposé.
+m: Produit défectueux | art. 1245 | Une batterie neuve explose dans un téléphone, à cause d'un défaut de fabrication. | Le producteur répond du défaut.
