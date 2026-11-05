@@ -296,6 +296,35 @@ async function debordement(p, nom) {
   await maj.close(); s2.close(); fs.rmSync(copie, { recursive: true, force: true });
   log('mise à jour ok');
 
+  // 11. Copie en ligne et rappel, service simulé.
+  const nuage = await b.newContext({ ...devices['iPhone 13'] });
+  const base = new Map(); const rpc = [];
+  await nuage.route('**/rest/v1/rpc/**', async (r) => {
+    const nom = r.request().url().split('/').pop(); const c = r.request().postDataJSON(); rpc.push(nom);
+    if (nom === 'ecrire_sauvegarde') base.set(c.code, c.donnees);
+    return r.fulfill({ status: 200, contentType: 'application/json', body: nom === 'lire_sauvegarde' ? JSON.stringify(base.get(c.code) ?? null) : 'null' });
+  });
+  const n = await nuage.newPage(); n.on('pageerror', (x) => erreurs.push(x.message));
+  await n.goto(URLB + '?test&cloud'); await n.waitForSelector('.tribune');
+  await n.tap('text=Juste trois minutes'); await jouer(n);
+  await n.waitForFunction(() => window.__app.etat().serie.n === 1 && window.__app.etat().cloud.dernier !== null, null, { timeout: 8000 });
+  const avantC = await etat(n);
+  for (let i = 0; i < 40 && !(base.has(avantC.cloud.code) && JSON.parse(base.get(avantC.cloud.code)).xp === avantC.xp); i++) await n.waitForTimeout(100);
+  assert(base.has(avantC.cloud.code), 'copie envoyée');
+  assert.match(avantC.cloud.code, /^([A-Z2-9]{6}-){3}[A-Z2-9]{6}$/, 'format du code');
+  assert(!JSON.parse(base.get(avantC.cloud.code)).enCours, 'pas de séance dans la copie');
+  const autre = await nuage.browser().newContext({ ...devices['iPhone 13'] });
+  await autre.route('**/rest/v1/rpc/**', (r) => { const c = r.request().postDataJSON(); return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(base.get(c.code) ?? null) }); });
+  const m2 = await autre.newPage(); await m2.goto(URLB + '?test&cloud'); await m2.waitForSelector('.tribune');
+  await m2.evaluate(() => window.__app.aller('profil'));
+  await debordement(m2, 'profil en ligne');
+  await m2.fill('.cloud input', avantC.cloud.code.toLowerCase().replace(/-/g, ' '));
+  await m2.tap('text=Restaurer avec ce code'); await m2.waitForSelector('.tribune');
+  const restau = await etat(m2);
+  assert.deepEqual([restau.xp, restau.serie.n, restau.cloud.code], [avantC.xp, avantC.serie.n, avantC.cloud.code], 'progression retrouvée');
+  await autre.close(); await nuage.close();
+  log('copie en ligne ok');
+
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }
   log('\nTous les tests sont passés.');

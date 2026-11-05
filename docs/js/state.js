@@ -92,12 +92,13 @@ function etatInitial() {
     stats: { seances: 0, parfaites: 0, comboMax: 0, juge: 0, plan: 0, archi: 0 },
     reglages: { son: true, toutOuvert: false },
     defi: { jour: null, fini: false },
+    cloud: { code: null, dernier: null },
   };
 }
 
 function fusion(base, x) {
   const o = { ...base, ...x };
-  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi']) o[k] = { ...base[k], ...(x[k] || {}) };
+  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud']) o[k] = { ...base[k], ...(x[k] || {}) };
   return o;
 }
 

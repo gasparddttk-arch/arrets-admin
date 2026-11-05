@@ -22,7 +22,8 @@ for (const [nom, src] of Object.entries(polices)) cpSync(join('node_modules', sr
 
 // Clé publique des notifications (la clé privée reste un secret du dépôt).
 const cle = existsSync('rappel/cle-publique.txt') ? readFileSync('rappel/cle-publique.txt', 'utf8').trim() : '';
-writeFileSync(join(SORTIE, 'js/config.js'), `export const CLE_PUBLIQUE_VAPID = ${JSON.stringify(cle)};\n`);
+const supa = existsSync('rappel/supabase.json') ? JSON.parse(readFileSync('rappel/supabase.json', 'utf8')) : { url: '', cle: '' };
+writeFileSync(join(SORTIE, 'js/config.js'), `export const CLE_PUBLIQUE_VAPID = ${JSON.stringify(cle)};\nexport const SUPABASE_URL = ${JSON.stringify(supa.url)};\nexport const SUPABASE_CLE = ${JSON.stringify(supa.cle)};\n`);
 
 const contenu = lireContenu();
 const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeZone: 'Europe/Paris' }).format(new Date());

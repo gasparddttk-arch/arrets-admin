@@ -6,7 +6,8 @@ import {
 } from './state.js';
 import { indexer, composerDefi, composerBoss, tirerRound, jumeaux, melange } from './engine.js';
 import { JEUX, NOMS_MODES, continuer } from './games.js';
-import { activerRappel, etatRappel, testerNotification, estInstallee } from './notif.js';
+import { activerRappel, etatRappel, testerNotification, estInstallee, abonnementActuel } from './notif.js';
+import { cloudActif, inscrireAbonnement, copierEnLigne, codeRecuperation, restaurerEnLigne } from './cloud.js';
 
 let ix = null;
 const racine = document.getElementById('app');
@@ -202,6 +203,7 @@ function lancer({ rounds, titre, type, zone, reprise }) {
 }
 
 function resultats(S, reussi) {
+  setTimeout(copierEnLigne, 1500);
   const avant = rang();
   const moyenne = S.scores.reduce((a, b) => a + b, 0) / (S.scores.length || 1);
   etat.stats.seances++;
@@ -412,6 +414,13 @@ function profil() {
       return;
     }
     if (e === 'refuse') { blocRappel.replaceChildren(h('p', {}, 'Les notifications sont bloquées. Autorise-les dans Réglages, Notifications, Arrêts.')); return; }
+    if (cloudActif()) {
+      const liste = [];
+      if (e === 'actif') liste.push(h('p', {}, 'Rappel activé sur ce téléphone, chaque jour vers 9 h.'), h('button', { class: 'bouton-lien sombre', onClick: async () => { await testerNotification(); toast('Notification envoyée.'); } }, 'Tester sur ce téléphone'));
+      else liste.push(h('button', { class: 'bouton-or', onClick: async () => { try { await inscrireAbonnement(JSON.parse(await activerRappel())); toast('Rappel activé.'); rendreRappel(); } catch (err) { toast(err.message); } } }, 'Activer le rappel de 9 h'));
+      blocRappel.replaceChildren(...liste);
+      return;
+    }
     const liste = [];
     if (code) {
       liste.push(h('p', {}, 'Copie ce code et colle-le dans le secret PUSH_SUBSCRIPTION du dépôt.'),
@@ -436,12 +445,26 @@ function profil() {
     h('label', { class: 'reglage' }, h('span', {}, 'Sons'), h('input', { type: 'checkbox', checked: etat.reglages.son, onChange: (e) => { etat.reglages.son = e.target.checked; sauver(); } })),
     h('label', { class: 'reglage' }, h('span', {}, 'Ouvrir toutes les chambres'), h('input', { type: 'checkbox', checked: etat.reglages.toutOuvert, onChange: (e) => { etat.reglages.toutOuvert = e.target.checked; sauver(); } })),
     h('h2', {}, 'Sauvegarde'),
-    h('p', { class: 'aide-claire' }, 'Ta progression reste sur ce téléphone. Garde une copie de ce code avant de changer d’appareil ou de supprimer l’appli.'),
+    cloudActif() ? blocCloud() : null,
+    h('p', { class: 'aide-claire' }, cloudActif() ? 'Copie manuelle, si tu préfères garder ton propre code.' : 'Ta progression reste sur ce téléphone. Garde une copie de ce code avant de changer d’appareil ou de supprimer l’appli.'),
     h('button', { class: 'bouton-or', onClick: async () => { const c = exporter(); try { await navigator.clipboard.writeText(c); toast('Sauvegarde copiée.'); } catch { champSauvegarde.value = c; toast('Copie le code affiché.'); } } }, 'Copier ma sauvegarde'),
     champSauvegarde,
     h('button', { class: 'bouton-lien', onClick: () => { try { importer(champSauvegarde.value); appliquerTheme(); toast('Progression restaurée.'); aller('palais'); } catch { toast('Ce code de sauvegarde est illisible.'); } } }, 'Restaurer ce code'),
     h('p', { class: 'version' }, `Contenu du ${ix.version}`)));
   rendreRappel();
+}
+
+// Copie automatique : le code de récupération est la seule chose à garder.
+function blocCloud() {
+  const code = codeRecuperation();
+  const champ = h('input', { class: 'code', placeholder: 'XXXXXX-XXXXXX-XXXXXX-XXXXXX', 'aria-label': 'Code de récupération', autocapitalize: 'characters', autocomplete: 'off' });
+  return h('div', { class: 'cloud' },
+    h('p', { class: 'aide-claire' }, etat.cloud.dernier === jour() ? 'Copie en ligne à jour.' : etat.cloud.dernier ? 'Copie en ligne faite après ta dernière séance connectée.' : 'Ta progression se copie en ligne après chaque séance.'),
+    h('p', { class: 'aide-claire' }, 'Note ce code une fois, hors de l’appli. Lui seul permet de retrouver ta progression sur un autre téléphone. Ne le partage pas.'),
+    h('p', { class: 'code-recup' }, code),
+    h('button', { class: 'bouton-or', onClick: async () => { try { await navigator.clipboard.writeText(code); toast('Code copié.'); } catch { toast('Recopie le code affiché.'); } } }, 'Copier le code de récupération'),
+    champ,
+    h('button', { class: 'bouton-lien', onClick: async () => { try { await restaurerEnLigne(champ.value); appliquerTheme(); toast('Progression restaurée.'); aller('palais'); } catch (err) { toast(err.message); } } }, 'Restaurer avec ce code'));
 }
 
 function guideInstallation() {
@@ -478,6 +501,11 @@ async function demarrer() {
         n?.addEventListener('statechange', () => { if (n.state === 'installed' && navigator.serviceWorker.controller) bandeauMiseAJour(reg); });
       });
       let recharge = false;
+      if (cloudActif()) {
+        abonnementActuel().then((s) => s && inscrireAbonnement(s)).catch(() => {});
+        copierEnLigne();
+        window.addEventListener('online', copierEnLigne);
+      }
       navigator.serviceWorker.addEventListener('controllerchange', () => { if (!recharge && document.querySelector('.maj')) { recharge = true; location.reload(); } });
     } catch (e) { console.warn('Service worker indisponible', e); }
   }

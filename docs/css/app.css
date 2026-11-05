@@ -196,6 +196,8 @@ body:has(#onglets[hidden]) #app { padding-bottom: calc(24px + var(--bas-sur)); }
 .reglage { display: flex; justify-content: space-between; align-items: center; min-height: 46px; border-bottom: 1px solid var(--nuit-3); }
 .reglage input { width: 24px; height: 24px; accent-color: var(--or); }
 .rappel { display: grid; gap: 10px; }
+.cloud { display: grid; gap: 8px; margin-bottom: 14px; }
+.code-recup { font-size: 17px; letter-spacing: .03em; overflow-wrap: anywhere; background: var(--velin); color: var(--encre); padding: 8px 10px; border-radius: 3px; }
 .code { width: 100%; background: var(--velin); color: var(--encre); border: 0; border-radius: 3px; padding: 8px 10px; font-size: 15px; margin-top: 10px; }
 .guide { list-style: decimal; padding-left: 22px; }
 .version { color: var(--texte-2); font-size: 15px; margin-top: 18px; }

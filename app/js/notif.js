@@ -25,6 +25,14 @@ export async function activerRappel() {
   return JSON.stringify(sub);
 }
 
+// Un téléphone déjà abonné s'inscrit tout seul sur la liste au démarrage.
+export async function abonnementActuel() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  const reg = await navigator.serviceWorker.getRegistration();
+  const sub = await reg?.pushManager.getSubscription();
+  return sub ? sub.toJSON() : null;
+}
+
 export async function testerNotification() {
   const reg = await navigator.serviceWorker.ready;
   await reg.showNotification('Ta série t’attend', { body: 'Le rappel fonctionne sur ce téléphone.', icon: 'icons/icon-192.png', badge: 'icons/icon-192.png' });

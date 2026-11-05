@@ -1,11 +1,11 @@
 // Envoie le rappel quotidien au téléphone. Lancé par GitHub Actions vers 9 h, heure de Paris.
-import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
 import webpush from 'web-push';
 
 const prive = process.env.VAPID_PRIVATE_KEY;
-const abonnement = process.env.PUSH_SUBSCRIPTION;
-if (!prive || !abonnement) {
-  console.log('Secrets absents : VAPID_PRIVATE_KEY et PUSH_SUBSCRIPTION doivent être renseignés. Rien à envoyer.');
+if (!prive) {
+  console.log('Secret absent : VAPID_PRIVATE_KEY doit être renseigné. Rien à envoyer.');
   process.exit(0);
 }
 
@@ -33,10 +33,39 @@ const accroches = [
 const [title, body] = accroches[jourAn % accroches.length];
 
 webpush.setVapidDetails('https://github.com/gasparddttk-arch/arrets-admin', readFileSync('rappel/cle-publique.txt', 'utf8').trim(), prive);
-try {
-  await webpush.sendNotification(JSON.parse(abonnement), JSON.stringify({ title, body, question }), { TTL: 6 * 3600, urgency: 'normal' });
-  console.log('Rappel envoyé.');
-} catch (e) {
-  console.error(`Envoi refusé : ${e.statusCode || ''} ${e.body || e.message}`);
-  process.exit(1);
+
+// La liste vient de Supabase ; la preuve dérive de la clé privée, sans la révéler.
+const supa = existsSync('rappel/supabase.json') ? JSON.parse(readFileSync('rappel/supabase.json', 'utf8')) : null;
+const preuve = createHash('sha256').update(`arrets-admin:${prive}`).digest('hex');
+async function rpc(nom, corps) {
+  const r = await fetch(`${supa.url}/rest/v1/rpc/${nom}`, { method: 'POST', headers: { apikey: supa.cle, 'Content-Type': 'application/json' }, body: JSON.stringify(corps) });
+  if (!r.ok) throw new Error(`${nom} : ${r.status}`);
+  const t = await r.text();
+  return t ? JSON.parse(t) : null;
 }
+
+const abonnes = new Map();
+if (process.env.PUSH_SUBSCRIPTION) {
+  const a = JSON.parse(process.env.PUSH_SUBSCRIPTION);
+  for (const s of Array.isArray(a) ? a : [a]) abonnes.set(s.endpoint, s);
+}
+let listeLue = false;
+if (supa) {
+  try { for (const s of await rpc('lister_abonnes', { preuve })) abonnes.set(s.endpoint, s); listeLue = true; } catch (e) { console.error(`Liste indisponible : ${e.message}`); }
+}
+
+let envoyes = 0; let echecs = 0;
+for (const s of abonnes.values()) {
+  try {
+    await webpush.sendNotification(s, JSON.stringify({ title, body, question }), { TTL: 6 * 3600, urgency: 'normal' });
+    envoyes++;
+  } catch (e) {
+    echecs++;
+    console.error(`Envoi refusé : ${e.statusCode || ''}`);
+    // 404 et 410 : l'appli a été supprimée, l'adresse ne servira plus.
+    if (supa && listeLue && [404, 410].includes(e.statusCode)) await rpc('retirer_abonne', { preuve, point: s.endpoint }).catch(() => {});
+  }
+}
+console.log(`Rappel : ${envoyes} envoyé(s), ${echecs} échec(s).`);
+if (!listeLue && supa) process.exit(1);
+if (abonnes.size && !envoyes) process.exit(1);
