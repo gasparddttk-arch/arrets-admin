@@ -30,7 +30,7 @@ async function jouer(p, { capture = false } = {}) {
     }
     const pied = await p.$('.pied button');
     if (pied) { await toucher(pied); await p.waitForTimeout(15); continue; }
-    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)'];
+    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)', 'button.case-frise:not(.pleine)'];
     let fait = false;
     for (const s of sel) {
       const e = await p.$(s);
@@ -64,6 +64,8 @@ async function jouerParfait(p) {
         return cible ? clic(cible) : false;
       }
       const opt = document.querySelector('.option[data-ok="true"]:not([disabled])'); if (opt) return clic(opt);
+      const etape = document.querySelector('.tuile-frise');
+      if (etape) return clic(document.querySelector(`.case-frise[data-i="${etape.dataset.rang}"]`));
       const ecarter = document.querySelector('.dock-bas .bouton-fantome');
       const piece = document.querySelector('.carte-piece');
       if (piece) return piece.dataset.cle === 'piege' ? clic(ecarter) : clic(document.querySelector(`.vers[data-k="${piece.dataset.cle}"]`));
@@ -311,6 +313,8 @@ async function debordement(p, nom) {
   assert.deepEqual([ev.theme, ev.themes, ev.jetons, ev.xp], ['palais', ['palais'], 460, 40], 'tenues remboursées, progression intacte');
   await vp.reload(); await vp.waitForSelector('.tribune');
   assert.equal((await etat(vp)).jetons, 460, 'remboursement unique');
+  ev = await etat(vp);
+  assert.deepEqual([ev.matiere, ev.oblig.xp, ev.xp], ['admin', 0, 40], 'ancienne progression rattachée au droit administratif');
   await vieux.close();
   log('anciennes tenues ok');
 
@@ -400,6 +404,90 @@ async function debordement(p, nom) {
   assert.deepEqual([restau.xp, restau.serie.n, restau.cloud.code], [avantC.xp, avantC.serie.n, avantC.cloud.code], 'progression retrouvée');
   await autre.close(); await nuage.close();
   log('copie en ligne ok');
+
+  // 15. Écran de choix, obligations, carrières séparées, plafond de pièces.
+  const ob = await b.newContext({ ...devices['iPhone 13'] });
+  const o = await ob.newPage(); o.on('pageerror', (x) => erreurs.push(x.message));
+  o.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
+  await o.goto(URLB + '?test&choix'); await o.waitForSelector('.portes');
+  await debordement(o, 'écran de choix');
+  await o.screenshot({ path: CAP + 'choix.png' });
+  await o.locator('.porte-oblig').click(); await o.waitForSelector('.tribune');
+  assert.equal((await etat(o)).matiere, 'oblig', 'matière choisie');
+  for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan']) {
+    await o.locator(`.role-ligne[data-mode="${m}"]`).click();
+    await jouerParfait(o);
+    await debordement(o, `résultats ${m}`);
+    await o.tap('text=Retour au Palais');
+  }
+  let oe = await etat(o);
+  assert(oe.oblig.xp > 0, 'points gagnés en obligations'); assert.equal(oe.xp, 0, 'carrière administrative intacte');
+  assert.equal(oe.oblig.gains.n, 22, 'deux pièces par épreuve réussie');
+  assert.equal(oe.jetons, 52, 'pièces créditées');
+  assert(oe.stats.cas >= 2 && oe.stats.frise >= 2, 'statistiques des exercices');
+  await o.tap('text=Défi du jour'); await jouerParfait(o);
+  await o.waitForSelector('.res-texte');
+  oe = await etat(o);
+  assert.equal(oe.oblig.gains.n, 30, 'plafond de 30 pièces par jour'); assert.equal(oe.jetons, 60, 'plafond respecté');
+  assert.equal(oe.serie.n, 1, 'la séance d’obligations garde la série');
+  await o.tap('text=Retour au Palais');
+  await o.tap('.bouton-matiere'); await o.waitForSelector('.portes');
+  await o.locator('.porte-admin').click(); await o.waitForSelector('.tribune');
+  await o.tap('text=Juste trois minutes'); await jouerParfait(o);
+  oe = await etat(o);
+  assert.equal(oe.gains.n, 6, 'plafond propre à l’administratif'); assert(oe.xp > 0, 'points en administratif');
+  assert(oe.trophees.deux, 'trophée des deux matières');
+  await o.tap('text=Retour au Palais');
+  log('obligations ok');
+
+  // 16. Dunk shot : achat en boutique, cinq paniers, puis partie infinie.
+  await o.evaluate(() => { const e = window.__app.etat(); e.jetons = 400; window.__app.ouvrirMatiere('oblig'); window.__app.aller('boutique'); });
+  assert(await o.locator('.article', { hasText: 'Dunk shot infini' }).locator('button').isDisabled(), 'infini bloqué avant les cinq paniers');
+  await o.locator('.article', { hasText: 'Cinq paniers' }).locator('button').click();
+  await o.locator('.article', { hasText: 'Dunk shot infini' }).locator('button').click();
+  oe = await etat(o);
+  assert.equal(oe.jetons, 0, '100 puis 300 pièces'); assert(oe.dunk.cinq && oe.dunk.infini, 'mini-jeux débloqués');
+  await o.evaluate(() => window.__app.aller('palais'));
+  await debordement(o, 'accueil avec dunk');
+  const panier = async (ok) => {
+    await o.waitForSelector('.dunk-question:not([data-fini]) .option', { timeout: 6000 });
+    await textePropre(o);
+    await o.evaluate((v) => [...document.querySelectorAll('.dunk-question .option')].find((x) => x.dataset.ok === String(v)).click(), ok);
+    await o.waitForTimeout(20);
+  };
+  await o.locator('.dunk-choix button').first().click();
+  for (let i = 0; i < 5; i++) await panier(true);
+  await o.waitForSelector('.dunk-fin');
+  await debordement(o, 'fin de dunk');
+  oe = await etat(o);
+  assert.equal(oe.dunk.record, 5, 'record de cinq paniers'); assert(oe.trophees.dunk5 === undefined || oe.trophees.dunk5, 'trophée possible');
+  await o.tap('text=Retour au Palais');
+  await o.locator('.dunk-choix button').last().click();
+  for (let i = 0; i < 7; i++) await panier(true);
+  await panier(false);
+  await o.waitForSelector('.dunk-question .pied button'); await o.locator('.dunk-question .pied button').click();
+  await o.waitForSelector('.dunk-fin');
+  oe = await etat(o);
+  assert.equal(oe.dunk.record, 7, 'l’erreur met fin à la partie infinie');
+  assert.equal(oe.oblig.gains.n, 30, 'le plafond vaut aussi pour Dunk shot');
+  await o.tap('text=Retour au Palais');
+  await o.reload(); await o.waitForSelector('.portes');
+  assert.equal((await etat(o)).matiere, 'oblig', 'dernière matière retenue');
+  await ob.close();
+  log('dunk ok');
+
+  // 17. Petit écran : chaque exercice des obligations, sans débordement.
+  const po = await b.newContext({ ...devices['iPhone 13'], viewport: { width: 320, height: 568 } });
+  const q2 = await po.newPage(); q2.on('pageerror', (x) => erreurs.push(x.message));
+  await q2.goto(URLB + '?test&matiere=oblig'); await q2.waitForSelector('.tribune');
+  for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan']) {
+    await q2.locator(`.role-ligne[data-mode="${m}"]`).click();
+    await jouer(q2, { capture: 'oblig-petit' });
+    await debordement(q2, `petit ${m}`);
+    await q2.tap('text=Retour au Palais');
+  }
+  await po.close();
+  log('petit écran obligations ok');
 
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }

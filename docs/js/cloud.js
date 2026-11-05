@@ -41,6 +41,7 @@ export async function copierEnLigne() {
   try {
     const code = codeCloud();
     const { enCours: seance, ...reste } = etat; void seance;
+    reste.oblig = { ...etat.oblig, enCours: null };
     await appel('ecrire_sauvegarde', { code, donnees: JSON.stringify(reste) });
     etat.cloud.dernier = jour(); sauver();
     return true;

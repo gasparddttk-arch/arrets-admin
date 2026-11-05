@@ -1,0 +1,125 @@
+# Sujets de commentaire (C) et de dissertation (D) en droit des obligations.
+# &id | D ou C | intitulé | chambres
+# pb: problématique   1: titre du I   1a: titre I.A | arrêts   1b: ...   2: ...   2a: ...   2b: ...
+# m: pourquoi ce plan fonctionne
+# b: CODE || pourquoi ce plan pèche || I || I.A || I.B || II || II.A || II.B
+
+&com-2021 | C | Civ. 3e, 23 juin 2021, revirement sur la promesse | 4
+pb: En affirmant que le promettant s'oblige définitivement à vendre dès l'avant-contrat, la Cour redonne-t-elle sa force à la promesse sans anticiper la réforme ?
+1: L'abandon d'une analyse condamnée
+1a: Le rejet de l'obligation de faire | cruz, promesse2018
+1b: La distinction de la promesse et de l'offre |
+2: L'affirmation de la force de la promesse
+2a: Un consentement définitif dès l'avant-contrat | revirement2021
+2b: Un alignement du droit ancien sur l'article 1124 | a1124
+m: Le plan suit les deux gestes de l'arrêt : il défait l'analyse de 1993, puis il fonde une nouvelle solution. Chaque partie reste accrochée au texte.
+b: COMPROC || Le plan reprend les étapes de la décision au lieu d'en dégager le sens. || La procédure de l'arrêt || Les faits || La décision d'appel || La solution de la Cour || Le moyen || Le rejet
+b: PRETEXTE || L'arrêt disparaît derrière une question de cours sur les avant-contrats. || Les promesses en droit français || La promesse unilatérale || La promesse synallagmatique || Le pacte de préférence || Sa notion || Ses sanctions
+
+&com-2006 | C | Ch. mixte, 26 mai 2006, la sanction du pacte de préférence | 4
+pb: En admettant la substitution sous une stricte condition, la Cour concilie-t-elle la force du pacte et la sécurité du tiers ?
+1: La reconnaissance d'une sanction en nature
+1a: Le dépassement de la seule réparation | mixte2006
+1b: L'efficacité nouvelle du pacte | priorite
+2: Une sanction subordonnée à la mauvaise foi du tiers
+2a: L'exigence d'une double connaissance | mixte2006
+2b: Une protection difficile à mettre en œuvre | a1123
+m: Le I dit ce que la Cour accorde, le II ce qu'elle retient. C'est l'équilibre même de l'arrêt.
+b: COMPROC || Le découpage reprend la structure interne de la décision. || Les faits et la procédure || Le pacte de 1957 || La vente de 1985 || La réponse de la Cour || Le moyen || La solution
+b: CONTRESENS || Le plan affirme que la connaissance du seul pacte suffirait. || Une sanction en nature généralisée || La substitution de principe || Une nullité automatique || Une condition unique || La simple connaissance du pacte || L'indifférence de l'intention du bénéficiaire
+
+&com-manoukian | C | Com., 26 nov. 2003, Manoukian | 2
+pb: Comment sanctionner la rupture déloyale des pourparlers sans contraindre à contracter ?
+1: Une liberté de rompre préservée
+1a: L'exclusion de la perte de chance de réaliser les gains | manoukian
+1b: Une solution fondée sur la causalité |
+2: Une déloyauté sanctionnée dans de justes limites
+2a: La réparation des frais engagés | a1112
+2b: La responsabilité limitée du tiers | manoukian
+m: Le plan suit la tension de l'arrêt : la liberté de ne pas contracter, puis la bonne foi. Il explique pourquoi la faute ne cause pas la perte des gains.
+b: DESEQ || Le I porte tout l'arrêt et le II ne contient qu'une remarque. || La portée considérable de l'arrêt || La perte de chance || Les frais || La réforme || Une date || Une note
+b: BANAL || Les deux parties juxtaposent des personnes sans thèse. || Les parties aux pourparlers || La société Manoukian || Les cédants || Le tiers || La société Les Complices || Ses dirigeants
+
+&com-baldus | C | Civ. 1re, 3 mai 2000, Baldus | 2,5
+pb: L'acheteur averti doit-il renoncer à sa bonne affaire au nom de la loyauté ?
+1: Le refus d'un devoir d'information sur la valeur
+1a: La cassation d'une condamnation pour dol | baldus
+1b: Le respect de l'autonomie de chaque partie |
+2: Une solution aujourd'hui consacrée
+2a: La loi de 2018 et l'article 1137 al. 3 | a1137
+2b: Le maintien de la bonne affaire à l'article 1112-1 | a1112-1
+m: Le plan part de la solution pour aller vers sa consécration, sans raconter les textes dans l'ordre.
+b: CHRONO || Le plan raconte des périodes au lieu de démontrer. || Avant l'arrêt || La loi de 1804 || Le XXe siècle || Après l'arrêt || La réforme de 2016 || La loi de 2018
+b: CONTRESENS || Le plan lit l'arrêt à l'envers, comme s'il imposait de dire la valeur. || Une obligation de révéler la valeur || Le devoir de l'acheteur averti || La nullité pour réticence || Un dol constitué || L'intention de l'acheteur || L'annulation de la vente
+
+&dis-silence | D | Le silence en droit des contrats | 3
+pb: Comment une absence de volonté exprimée peut-elle lier une partie sans ruiner le consentement ?
+1: Le silence, en principe, ne dit rien
+1a: L'exigence d'une volonté manifestée | guilloux
+1b: Le silence comme refus de l'engagement forcé | a1120
+2: Le silence, par exception, engage
+2a: Le silence éclairé par le contexte | bert
+2b: Le silence comme comportement fautif | a1137
+m: Le plan oppose le principe à ses exceptions et les unit par une idée : ce n'est jamais le silence seul qui oblige, c'est le contexte.
+b: DESCR || Les intitulés nomment des thèmes sans énoncer d'idée. || Le principe || Le texte || La jurisprudence || Les exceptions || La loi || Les usages
+b: RECIT || Le plan récite le cours sans répondre à la question posée. || L'offre || Sa définition || Ses caractères || L'acceptation || Ses formes || Ses effets
+
+&dis-bonnefoi | D | La bonne foi avant le contrat | 2
+pb: La bonne foi ne fait-elle que corriger la liberté de négocier, ou devient-elle une véritable obligation ?
+1: Un devoir de loyauté qui encadre la liberté
+1a: L'interdiction de la rupture déloyale | a1112, manoukian
+1b: Le respect de la confidentialité | a1112-2
+2: Un devoir de parler aux contours resserrés
+2a: Le devoir d'information consacré | a1112-1
+2b: Les limites de la valeur et du caractère déterminant | baldus, fastfood
+m: Le plan montre la progression de la bonne foi, de l'abstention à l'action, puis ses bornes récentes.
+b: NIVEAU || Le I est général et le II se réduit à un seul arrêt. || La bonne foi en droit civil || Sa définition || Ses fonctions || L'arrêt Manoukian || Les faits || La solution
+b: HORS || Le plan traite de la bonne foi dans l'exécution du contrat. || La bonne foi dans l'exécution || L'obligation de coopérer || L'obligation de loyauté || La sanction de l'exécution déloyale || La résolution || Les Maréchaux
+
+&dis-offre-promesse | D | La force de l'engagement avant le contrat | 3,4
+pb: Pourquoi l'offre et la promesse, deux engagements fermes, n'ont-elles pas la même force ?
+1: Un engagement unilatéral fragile : l'offre
+1a: L'obligation de maintenir l'offre | a1116
+1b: L'impossibilité de la vente forcée | gerstaecker
+2: Un engagement contractuel fort : la promesse
+2a: Un consentement déjà donné | revirement2021
+2b: La formation du contrat malgré la révocation | a1124
+m: Le plan fait ressortir le critère : la rencontre des volontés dans l'avant-contrat. C'est ce que dit le Rapport au Président.
+b: REDITE || Les deux parties reviennent à dire que l'offre oblige. || La force de l'offre || Le délai || La sanction || L'offre comme engagement || Son maintien || Sa rétractation
+b: RECIT || Le plan décrit les notions sans expliquer leur différence. || L'offre || Sa définition || Sa caducité || La promesse || Sa définition || Sa forme
+
+&dis-info-dol | D | Devoir d'information et réticence dolosive | 2,5
+pb: Comment s'articulent, depuis la réforme, les articles 1112-1 et 1137 ?
+1: Deux mécanismes distincts
+1a: Un devoir objectif de renseigner | a1112-1, fastfood
+1b: Une tromperie intentionnelle | a1137, socgen2005
+2: Des frontières qui se répondent
+2a: La réticence sans devoir d'information | sleeping
+2b: La valeur exclue des deux côtés | baldus
+m: C'est la question de la note du TD 3. Le plan distingue les fondements, puis montre où ils se rejoignent et où ils s'écartent.
+b: CHRONO || Le plan raconte l'avant et l'après réforme. || Avant 2016 || La jurisprudence || La doctrine || Après 2016 || L'ordonnance || La loi de 2018
+b: CONTRESENS || Le plan affirme que tout manquement à l'information est un dol. || L'identité des deux notions || Un même fondement || Une même sanction || La confusion des régimes || L'indifférence de l'intention || La nullité automatique
+
+&dis-erreur | D | L'erreur et la sécurité du contrat | 5
+pb: Jusqu'où protéger celui qui s'est trompé sans ruiner la confiance de l'autre ?
+1: Une protection réservée à l'erreur grave
+1a: Les qualités essentielles entrées dans le contrat | a1133, poussin
+1b: L'exclusion de l'erreur inexcusable et de l'aléa accepté | fragonard
+2: Une protection refusée à l'erreur ordinaire
+2a: L'indifférence du motif | a1135, malraux
+2b: L'indifférence de la valeur | a1136, working
+m: Le plan tient toute la matière sous une tension unique, et les intitulés énoncent chacun une idée.
+b: BANAL || Le plan se contente de lister les catégories du code. || Les erreurs de fait || L'erreur sur la prestation || L'erreur sur la personne || Les erreurs de droit || La notion || Le régime
+b: HORS || Le plan parle surtout du dol. || Le dol par action || Les manœuvres || Les mensonges || Le dol par omission || La réticence || Sa sanction
+
+&dis-prix | D | Le prix dans le contrat | 7
+pb: La détermination du prix est-elle encore une condition du contrat, ou seulement un objet de contrôle ?
+1: Une exigence maintenue en principe
+1a: Le prix, élément essentiel de la vente | a1583
+1b: L'exigence d'une prestation déterminable | a1163
+2: Un contrôle déplacé vers l'abus
+2a: La fixation unilatérale admise | ap1995, a1164
+2b: La sanction de l'abus plutôt que la nullité | a1165
+m: Le plan montre le déplacement du contrôle, de la formation vers l'exécution.
+b: CHRONO || Le plan découpe des époques au lieu de démontrer. || Le droit jusqu'en 1995 || 1804 || Les années 1970 || Le droit depuis 1995 || Les arrêts || La réforme
+b: DESEQ || Le I ne dit rien, et tout se joue dans le II. || Une définition || Le mot prix || Le mot contrat || L'ensemble du sujet || Le prix et le contrat-cadre || Le prix dans tous les autres contrats

@@ -1,0 +1,94 @@
+# Frise de la jurisprudence : remettre les étapes dans l'ordre, puis dire ce qui change.
+# %id | titre | chambres | équipe
+# p: ce que montre la frise
+# e: année | nom | ce qu'il dit, sans date | ce que ça change | fiche liée (facultatif)
+# q: question sur la frise | rang de la bonne étape, à partir de 1
+
+%promesse | La rétractation du promettant | 4 | c
+p: De la défaite de la promesse à sa pleine force.
+e: 1993 | Consorts Cruz | La levée d'option après rétractation exclut toute vente | La promesse vaut surtout des dommages et intérêts | cruz
+e: 2016 | Article 1124 al. 2 | La révocation n'empêche pas la formation du contrat promis | Le législateur renverse la solution pour l'avenir | a1124
+e: 2018 | Civ. 3e, 6 décembre | La solution ancienne est d'abord maintenue pour les promesses antérieures | La Cour attend encore | promesse2018
+e: 2021 | Civ. 3e, 23 juin | Le promettant s'oblige définitivement à vendre dès la promesse | La Cour abandonne Cruz pour le droit ancien aussi | revirement2021
+q: Quelle étape marque le revirement de la Cour de cassation ? | 4
+
+%pacte | La sanction du pacte de préférence | 4 | c
+p: Une sanction qui passe de l'argent à la substitution.
+e: 1959 | Duplessis de Grenadan | La prescription ne court pas tant qu'aucune vente n'est projetée | Le pacte peut durer très longtemps | duplessis
+e: 2001 | Priorité de reprise | Ni le prix ni le délai ne sont des conditions de validité | Le pacte reste souple | priorite
+e: 2006 | SCI Emeraude | La nullité et la substitution sont possibles si le tiers savait | La sanction en nature entre en droit positif | mixte2006
+e: 2016 | Article 1123 | Le code consacre cette solution et crée l'action interrogatoire | La loi organise le régime | a1123
+e: 2024 | Pacte perpétuel | Le pacte sans terme n'est pas nul, chacun peut y mettre fin | La durée trouve sa réponse | pactedurable
+q: Quelle étape admet pour la première fois la substitution ? | 3
+
+%prix | La détermination du prix | 7 | c
+p: Du prix fixé d'avance au contrôle de l'abus.
+e: 1994 | Alcatel | Le tarif du fournisseur rend le prix déterminable, sauf profit illégitime | La Cour assouplit l'exigence | alcatel
+e: 1995 | Arrêts de l'Assemblée plénière | L'indétermination n'annule pas le contrat-cadre, seul l'abus est sanctionné | L'article 1129 ancien ne s'applique plus au prix | ap1995
+e: 2016 | Article 1164 | La fixation unilatérale est admise dans le contrat-cadre | La jurisprudence entre dans le code | a1164
+q: Quelle étape abandonne l'exigence d'un prix déterminé pour le contrat-cadre ? | 2
+
+%bonnesmoeurs | Le recul des bonnes mœurs | 7 | c
+p: Une notion qui se vide de sa substance.
+e: 1999 | Donation et adultère | La libéralité liée à l'adultère n'est plus contraire aux bonnes mœurs | La jurisprudence se renverse | donation1999
+e: 2004 | Assemblée plénière | La solution vaut même pour une libéralité destinée à maintenir la relation | La question est tranchée | leg2004
+e: 2011 | Courtage matrimonial | Le contrat conclu par une personne mariée n'est pas nul | La logique gagne les contrats à titre onéreux | courtage
+e: 2016 | Article 1162 | Le code ne vise plus que l'ordre public | Les bonnes mœurs disparaissent du droit commun du contrat | a1162
+e: 2020 | Gleeden | Seul l'époux peut invoquer l'infidélité | La morale conjugale n'est plus opposable aux tiers | gleeden
+q: Quelle étape fait disparaître les bonnes mœurs du texte sur le contenu du contrat ? | 4
+
+%violence | De la contrainte à l'abus de dépendance | 6 | c
+p: La violence s'étend à la pression économique.
+e: 2000 | Garage incendié | La contrainte économique se rattache à la violence | Une nouvelle catégorie naît | garage
+e: 2002 | Kannas | Il faut l'exploitation abusive d'une situation de dépendance | Le critère se resserre | kannas
+e: 2016 | Article 1143 | L'abus de dépendance est une violence | La loi consacre la notion | a1143
+e: 2021 | Honoraires d'avocat | L'abus se juge à la dépendance et à l'avantage excessif | La Cour se rapproche du texte | honoraires2021
+e: 2026 | Bail rural des parents | La vulnérabilité connue peut constituer la dépendance | Le texte s'ouvre au-delà du lien économique | bailrural
+q: Quelle étape donne le premier critère d'exploitation abusive ? | 2
+
+%information | De l'information à la réticence | 5 | c
+p: Deux mécanismes qui se séparent et se répondent.
+e: 2000 | Baldus | L'acheteur ne doit pas dire la valeur | La valeur échappe à l'information | baldus
+e: 2005 | Stock-options | Manquer à l'information ne suffit pas à caractériser le dol | Il faut l'intention et l'erreur déterminante | socgen2005
+e: 2016 | Article 1112-1 | Le devoir d'information entre dans le code | Il devient un texte autonome | a1112-1
+e: 2018 | Article 1137 al. 3 | Taire son estimation de la valeur n'est pas un dol | La loi de ratification protège Baldus | a1137
+e: 2024 | Le Sleeping | Ne pas s'être renseigné n'excuse pas le dol | L'article 1139 s'applique pleinement | sleeping
+e: 2025 | Cession du fast-food | Le lien direct et l'importance déterminante sont cumulatifs | Le devoir d'information se resserre | fastfood
+q: Quelle étape ajoute que taire la valeur n'est pas un dol ? | 4
+
+%silence | Que vaut le silence ? | 3 | c
+p: Un principe ancien, ses exceptions, puis le code.
+e: 1870 | Guilloux | Le silence seul ne suffit pas à obliger | Le principe est posé | guilloux
+e: 1938 | Remise de loyers | Le silence vaut acceptation si l'offre est dans l'intérêt exclusif du destinataire | L'exception apparaît | bert
+e: 2016 | Article 1120 | Le code reprend le principe et quatre exceptions | La jurisprudence est codifiée | a1120
+q: Quelle étape crée l'exception de l'intérêt exclusif ? | 2
+
+%erreur | L'erreur et l'authenticité | 5 | c
+p: Le vendeur aussi peut se tromper, sauf s'il a accepté le risque.
+e: 1978 | Poussin | Le vendeur peut invoquer une erreur sur sa propre chose | L'erreur s'ouvre au vendeur | poussin
+e: 1987 | Fragonard | L'aléa accepté exclut l'erreur | L'incertitude entre dans le contrat | fragonard
+e: 2016 | Article 1133 | Le code reprend les deux solutions | La jurisprudence est consacrée | a1133
+q: Quelle étape écarte l'erreur quand l'aléa était accepté ? | 2
+
+%choses | La responsabilité du fait des choses | 9 | c
+p: De la chaudière de 1896 au gardien moderne.
+e: 1896 | Teffaine | Le propriétaire répond de sa chose sans faute à prouver | La Cour découvre un principe dans le code | teffaine
+e: 1930 | Jand'heur | Le gardien est présumé responsable, chose actionnée ou non | Le régime moderne est fixé | jandheur
+e: 1941 | Franck | La garde est l'usage, la direction et le contrôle | La notion de gardien est définie | franck
+q: Quelle étape fonde la présomption contre le gardien ? | 2
+
+%autrui | La responsabilité du fait d'autrui | 9 | c
+p: De la liste fermée à son ouverture, puis à l'immunité du préposé.
+e: 1984 | Fullenwarth | Un simple acte de l'enfant, cause directe, suffit | Plus besoin de faute de l'enfant | fullenwarth
+e: 1991 | Blieck | Répond d'autrui celui qui accepte d'organiser et de contrôler son mode de vie | La liste n'est plus limitative | blieck
+e: 1997 | Bertrand | Seules la force majeure ou la faute de la victime exonèrent les parents | La responsabilité devient de plein droit | bertrand
+e: 2000 | Costedoat | Le préposé dans sa mission n'engage pas sa responsabilité | L'immunité naît | costedoat
+e: 2001 | Cousin | L'infraction intentionnelle fait perdre l'immunité | Sa limite apparaît | cousin
+q: Quelle étape ouvre la responsabilité du fait d'autrui hors des cas du code ? | 2
+
+%rupture | Rompre sans le juge | 8 | c
+p: Du contrôle préalable du juge à la résolution par notification.
+e: 1804 | Article 1184 ancien | La résolution doit être demandée en justice | Le juge contrôle avant la rupture
+e: 1998 | Tocqueville | La gravité du comportement permet de rompre à ses risques et périls | La rupture unilatérale apparaît | tocqueville
+e: 2016 | Article 1226 | La résolution par notification entre dans le code | La loi organise la rupture | a1226
+q: Quelle étape admet la rupture unilatérale aux risques et périls du créancier ? | 2

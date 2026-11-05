@@ -41,9 +41,9 @@ export const DEFAUTS = {
   PRETEXTE: ['Arrêt prétexte', 'Le texte disparaît derrière le cours récité.'],
 };
 
-function parseArrets() {
+function parseArrets(fichiers = ['arrets-1.txt', 'arrets-2.txt', 'arrets-3.txt']) {
   const out = [];
-  for (const file of ['arrets-1.txt', 'arrets-2.txt', 'arrets-3.txt']) {
+  for (const file of fichiers) {
     let cur = null;
     for (const raw of D(file).split('\n')) {
       const l = raw.trim();
@@ -100,10 +100,10 @@ function parseJuges() {
   return out;
 }
 
-function parseSujets() {
+function parseSujets(fichier = 'sujets.txt') {
   const out = []; let cur = null;
   const titreIds = (v) => { const [t, ids = ''] = v.split('|').map((s) => s.trim()); return { t: typo(t), ids: ids ? ids.split(',').map((s) => s.trim()) : [] }; };
-  for (const raw of D('sujets.txt').split('\n')) {
+  for (const raw of D(fichier).split('\n')) {
     const l = raw.trim();
     if (!l || l.startsWith('#')) continue;
     if (l.startsWith('&')) {
@@ -126,8 +126,124 @@ function parseSujets() {
   return out;
 }
 
+// DROIT DES OBLIGATIONS -----------------------------------------------------------
+const lignes = (f) => D(f).split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#'));
+const cases = (l) => l.split('|').map((s) => s.trim());
+const paire = (l) => l.split('||').map((s) => typo(s.trim()));
+const listeZones = (s) => s.split(',').map(Number);
+const liens = (s) => s.split(',').map((x) => x.trim()).filter(Boolean);
+
+export const ZONES_OBLIG = [
+  { id: 1, titre: 'Le contrat et ses classifications', lieu: 'Sources, définition, grandes distinctions' },
+  { id: 2, titre: 'Les négociations', lieu: 'Bonne foi, information, confidentialité' },
+  { id: 3, titre: 'Offre et acceptation', lieu: 'Rencontre des volontés, silence, contrat en ligne' },
+  { id: 4, titre: 'Les avant-contrats', lieu: 'Pacte de préférence, promesses' },
+  { id: 5, titre: "L'erreur et le dol", lieu: 'Validité, vices du consentement' },
+  { id: 6, titre: 'Violence et capacité', lieu: 'Violence, abus de dépendance, incapacités' },
+  { id: 7, titre: 'Le contenu du contrat', lieu: 'Ordre public, prestation, prix' },
+  { id: 8, titre: 'Inexécution et sanctions', lieu: 'Exercices généraux, en attendant le cours', travaux: true },
+  { id: 9, titre: 'La responsabilité civile', lieu: 'Exercices généraux, en attendant le cours', travaux: true },
+].map((z) => ({ ...z, titre: typo(z.titre) }));
+
+const labelArticle = (n) => (/^1242-/.test(n) ? `Art. 1242 al. ${n.slice(5)}` : `Art. ${n}`);
+function parseArticles() {
+  return lignes('oblig/articles.txt').map((l) => {
+    const [num, zones, imp, titre, regle] = cases(l);
+    if (!regle) throw new Error('article incomplet : ' + l);
+    const z = listeZones(zones);
+    return { id: `a${num}`, num, nom: labelArticle(num), zones: z, imp: +imp, titre: typo(titre), regle: typo(regle), ap: Object.fromEntries(z.map((k) => [k, typo(regle)])), article: 1 };
+  });
+}
+
+function parseCas() {
+  const out = []; let cur = null; let etape = null;
+  for (const l of lignes('oblig/cas.txt')) {
+    if (l.startsWith('%')) {
+      const [id, titre, zones, eq, source] = cases(l.slice(1));
+      cur = { id, titre: typo(titre), zones: listeZones(zones), eq, source, etapes: [], liens: [] }; out.push(cur); continue;
+    }
+    const m = l.match(/^([a-z]): ?(.*)$/);
+    if (!m) throw new Error('cas : ' + l);
+    const [, k, v] = m;
+    if (k === 'c') cur.c = typo(v);
+    else if (k === 'v') cur.v = typo(v);
+    else if (k === 'a') cur.liens = liens(v);
+    else if (k === 's') {
+      const [label, q, t, w] = paire(v);
+      if (!w) throw new Error('étape incomplète : ' + l);
+      etape = { label, q, t, w, x: [] }; cur.etapes.push(etape);
+    } else if (k === 'x') {
+      const [t, w] = paire(v);
+      if (!w) throw new Error('mauvaise réponse sans explication : ' + l);
+      etape.x.push({ t, w });
+    } else throw new Error('cas : ' + l);
+  }
+  return out;
+}
+
+function parseQualifs() {
+  const out = []; let cur = null;
+  for (const l of lignes('oblig/qualif.txt')) {
+    if (l.startsWith('%')) { const [id, titre, zones] = cases(l.slice(1)); cur = { id, titre: typo(titre), zones: listeZones(zones), m: [] }; out.push(cur); continue; }
+    if (!l.startsWith('m:')) throw new Error('qualif : ' + l);
+    const [n, a, t, w] = cases(l.slice(2));
+    if (!w) throw new Error('qualif incomplète : ' + l);
+    cur.m.push({ n: typo(n), a: typo(a), t: typo(t), w: typo(w), carte: `a${a.match(/\d+(-\d+)?/)[0]}` });
+  }
+  return out;
+}
+
+function parseRemedes() {
+  const out = []; let cur = null;
+  for (const l of lignes('oblig/remedes.txt')) {
+    if (l.startsWith('%')) { const [id, zones, eq] = cases(l.slice(1)); cur = { id, zones: listeZones(zones), eq, dx: [], rx: [], liens: [] }; out.push(cur); continue; }
+    const m = l.match(/^(c|d|dx|r|rx|a): ?(.*)$/);
+    if (!m) throw new Error('remède : ' + l);
+    const [, k, v] = m;
+    if (k === 'a') cur.liens = liens(v);
+    else if (k === 'dx' || k === 'rx') { const [t, w] = paire(v); if (!w) throw new Error('explication manquante : ' + l); cur[k].push({ t, w }); } else cur[k] = typo(v);
+  }
+  return out;
+}
+
+function parseFrises() {
+  const out = []; let cur = null;
+  for (const l of lignes('oblig/frises.txt')) {
+    if (l.startsWith('%')) { const [id, titre, zones, eq] = cases(l.slice(1)); cur = { id, titre: typo(titre), zones: listeZones(zones), eq, e: [] }; out.push(cur); continue; }
+    const m = l.match(/^(p|e|q): ?(.*)$/);
+    if (!m) throw new Error('frise : ' + l);
+    const [, k, v] = m;
+    if (k === 'p') cur.p = typo(v);
+    else if (k === 'e') { const [an, n, t, ch, carte] = cases(v); cur.e.push({ an: +an, n: typo(n), t: typo(t), ch: typo(ch), carte: carte || null }); } else { const [q, r] = cases(v); cur.q = typo(q); cur.r = +r; }
+  }
+  return out;
+}
+
+function parseQuestions() {
+  return lignes('oblig/questions.txt').map((l) => {
+    const i = l.indexOf('|'); const j = l.indexOf('|', i + 1);
+    const [q, bonne, ...faux] = paire(l.slice(j + 1));
+    if (faux.length < 2) throw new Error('question incomplète : ' + l);
+    return { zones: listeZones(l.slice(0, i).trim()), n: +l.slice(i + 1, j).trim(), q, bonne, faux };
+  });
+}
+
+export function lireObligations() {
+  return {
+    matiere: 'oblig',
+    zones: ZONES_OBLIG,
+    arrets: parseArrets(['oblig/arrets.txt']),
+    articles: parseArticles(),
+    familles: [], juges: [],
+    cas: parseCas(), qualifs: parseQualifs(), remedes: parseRemedes(), frises: parseFrises(), questions: parseQuestions(),
+    sujets: parseSujets('oblig/sujets.txt'),
+    defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
+  };
+}
+
 export function lireContenu() {
   return {
+    matiere: 'admin',
     zones: ZONES,
     arrets: parseArrets(),
     familles: parseFamilles(),

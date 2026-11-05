@@ -12,6 +12,37 @@ export const RANGS = [
   { xp: 16000, nom: 'Vice-président du Conseil d’État' },
 ];
 
+// Chaque matière a sa carrière. La carrière générale additionne les deux.
+export const RANGS_OBLIG = [
+  { xp: 0, nom: 'Auditeur à la Cour de cassation' },
+  { xp: 300, nom: 'Conseiller référendaire' },
+  { xp: 900, nom: 'Avocat général référendaire' },
+  { xp: 2000, nom: 'Conseiller à la Cour de cassation' },
+  { xp: 4000, nom: 'Doyen de chambre' },
+  { xp: 7000, nom: 'Président de chambre' },
+  { xp: 11000, nom: 'Procureur général' },
+  { xp: 16000, nom: 'Premier président' },
+];
+export const RANGS_GENERAL = [
+  { xp: 0, nom: 'Étudiant' },
+  { xp: 600, nom: 'Licencié en droit' },
+  { xp: 1800, nom: 'Diplômé de master' },
+  { xp: 4000, nom: 'Docteur en droit' },
+  { xp: 8000, nom: 'Maître de conférences' },
+  { xp: 14000, nom: 'Professeur agrégé' },
+  { xp: 22000, nom: 'Doyen de la faculté' },
+];
+export const MATIERES = [
+  { id: 'admin', nom: 'Droit administratif', institution: 'Conseil d’État', rangs: RANGS },
+  { id: 'oblig', nom: 'Droit des obligations', institution: 'Cour de cassation', rangs: RANGS_OBLIG },
+];
+export const matiereDe = (id) => MATIERES.find((m) => m.id === id);
+
+// Pièces : au plus 2 par épreuve, soit 10 pour une séance de cinq minutes, et 30 par jour et par matière.
+export const PLAFOND_JOUR = 30;
+export const PIECES_EPREUVE = 2;
+export const PRIX_DUNK = { cinq: 100, infini: 300 };
+
 export const ETAPES_SERIE = [7, 30, 100];
 export const INTERVALLES = [0, 1, 2, 4, 9, 21, 45];
 export const TITRES_CARTE = ['Inconnu', 'Brouillon', 'Note', 'Conclusions', 'Délibéré', 'Grand arrêt'];
@@ -33,14 +64,22 @@ export const TROPHEES = [
   { id: 'juge10', nom: 'Dix décisions', txt: 'Juger dix affaires sans erreur' },
   { id: 'plan5', nom: 'Le bon œil', txt: 'Réussir cinq fois Le bon plan' },
   { id: 'archi5', nom: 'Maître d’œuvre', txt: 'Réussir cinq fois Architecte' },
-  { id: 'vp', nom: 'Vice-président', txt: 'Atteindre le dernier grade' },
+  { id: 'vp', nom: 'Vice-président', txt: 'Atteindre le dernier grade du Conseil d’État' },
+  { id: 'cas10', nom: 'Dix jugements', txt: 'Résoudre dix cas pratiques sans erreur' },
+  { id: 'frise5', nom: 'Le sens de l’histoire', txt: 'Réussir cinq frises sans erreur' },
+  { id: 'art30', nom: 'Code en poche', txt: 'Monter 30 articles au niveau Conclusions' },
+  { id: 'pp', nom: 'Premier président', txt: 'Atteindre le dernier grade de la Cour de cassation' },
+  { id: 'deux', nom: 'Deux matières', txt: 'Gagner des pièces dans les deux matières le même jour' },
+  { id: 'dunk5', nom: 'Premier dunk', txt: 'Réussir 5 paniers de suite' },
+  { id: 'dunk25', nom: 'Dans la raquette', txt: 'Réussir 25 paniers de suite' },
+  { id: 'doyen', nom: 'Doyen', txt: 'Atteindre le dernier grade de la carrière générale' },
 ];
 
 export const BOUTIQUE = [
   { id: 'sursis', nom: 'Sursis', prix: 60, txt: 'Protège ta série un jour sans jouer. Cinq au maximum.', max: 5 },
   { id: 'recusation', nom: 'Récusation', prix: 15, txt: 'Retire une mauvaise réponse d’une question.' },
   { id: 'indice', nom: 'Note du rapporteur', prix: 10, txt: 'Affiche un indice sur la question.' },
-  { id: 'prorogation', nom: 'Prorogation', prix: 10, txt: 'Ajoute 15 secondes en mode Paires.' },
+  { id: 'prorogation', nom: 'Prorogation', prix: 10, txt: 'Ajoute 15 secondes quand il faut relier.' },
   { id: 'passe', nom: 'Passe-droit', prix: 200, txt: 'Ouvre la prochaine chambre sans gagner l’audience.' },
 ];
 
@@ -76,9 +115,19 @@ export function jour(d = new Date()) {
   return Math.floor(Date.UTC(a, m - 1, j) / 864e5) + decalage;
 }
 
+// Les obligations ont leur propre progression ; l'administratif garde la sienne à la racine de l'état,
+// ce qui laisse intactes les progressions et les sauvegardes déjà faites.
+const matiereVierge = () => ({
+  xp: 0, arrets: {}, enCours: null, gains: { jour: null, n: 0 },
+  zones: { ouvertes: [1, 2], gagnees: [], parfaites: [] },
+});
+
 function etatInitial() {
   return {
     v: 1, cree: jour(), xp: 0, jetons: 30,
+    matiere: 'admin', equipe: 2, gains: { jour: null, n: 0 },
+    oblig: matiereVierge(),
+    dunk: { cinq: false, infini: false, record: 0, parties: 0, paniers: 0 },
     serie: { n: 0, dernier: null, record: 0 },
     jours: {}, rompue: null, coffres: {},
     arrets: {},
@@ -89,7 +138,7 @@ function etatInitial() {
     decors: ['aucun'], decor: 'aucun',
     enCours: null,
     trophees: {},
-    stats: { seances: 0, parfaites: 0, comboMax: 0, juge: 0, plan: 0, archi: 0 },
+    stats: { seances: 0, parfaites: 0, comboMax: 0, juge: 0, plan: 0, archi: 0, cas: 0, frise: 0 },
     reglages: { son: true, toutOuvert: false, effets: true, vibration: true, sonSilencieux: false },
     defi: { jour: null, fini: false },
     cloud: { code: null, dernier: null },
@@ -99,12 +148,17 @@ function etatInitial() {
 
 function fusion(base, x) {
   const o = { ...base, ...x };
-  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud']) o[k] = { ...base[k], ...(x[k] || {}) };
+  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud', 'gains', 'dunk']) o[k] = { ...base[k], ...(x[k] || {}) };
+  const ob = x.oblig || {};
+  o.oblig = { ...base.oblig, ...ob, gains: { ...base.oblig.gains, ...(ob.gains || {}) }, zones: { ...base.oblig.zones, ...(ob.zones || {}) } };
+  if (!['admin', 'oblig'].includes(o.matiere)) o.matiere = 'admin';
   return o;
 }
 
 export let etat = etatInitial();
 export let rembourse = 0;
+// La progression de la matière ouverte, ou de celle demandée.
+export const M = (m = etat.matiere) => (m === 'oblig' ? etat.oblig : etat);
 export const remplacerEtat = (e) => { etat = fusion(etatInitial(), e); migrer(); sauver(); };
 
 // Les anciennes tenues disparaissent : ce qu'elles ont coûté revient en jetons.
@@ -220,64 +274,105 @@ export function validerJour() {
 }
 
 // Grades.
-export function rang(xp = etat.xp) {
+function palier(liste, xp) {
   let i = 0;
-  RANGS.forEach((r, k) => { if (xp >= r.xp) i = k; });
-  const suivant = RANGS[i + 1];
-  return { i, nom: RANGS[i].nom, suivant, part: suivant ? (xp - RANGS[i].xp) / (suivant.xp - RANGS[i].xp) : 1 };
+  liste.forEach((r, k) => { if (xp >= r.xp) i = k; });
+  const suivant = liste[i + 1];
+  return { i, nom: liste[i].nom, suivant, xp, part: suivant ? (xp - liste[i].xp) / (suivant.xp - liste[i].xp) : 1 };
+}
+export const rang = (m = etat.matiere) => palier(matiereDe(m).rangs, M(m).xp);
+export const rangGeneral = () => palier(RANGS_GENERAL, etat.xp + etat.oblig.xp);
+
+// Pièces gagnées aujourd'hui dans une matière, et ce qu'il reste à gagner avant le plafond.
+export function gainsDuJour(m = etat.matiere) {
+  const g = M(m).gains;
+  return g.jour === jour() ? g.n : 0;
+}
+export function crediter(n, m = etat.matiere) {
+  const deja = gainsDuJour(m);
+  const accorde = Math.max(0, Math.min(n, PLAFOND_JOUR - deja));
+  M(m).gains = { jour: jour(), n: deja + accorde };
+  etat.jetons += accorde;
+  return accorde;
 }
 
 // Répétition espacée : chaque arrêt monte d'une boîte quand il est réussi, et redescend quand il est raté.
 export function noter(id, ok, confonduAvec = null) {
-  const a = etat.arrets[id] || (etat.arrets[id] = { b: 0, d: jour(), ok: 0, ko: 0, c: {} });
+  const fiches = M().arrets;
+  const a = fiches[id] || (fiches[id] = { b: 0, d: jour(), ok: 0, ko: 0, c: {} });
   if (ok) { a.ok++; a.b = Math.min(5, a.b + 1); } else { a.ko++; a.b = Math.max(a.b === 0 ? 0 : 1, a.b - 2); }
   a.d = jour() + (ok ? INTERVALLES[a.b] : 0);
   if (!ok && confonduAvec && confonduAvec !== id) a.c[confonduAvec] = (a.c[confonduAvec] || 0) + 1;
 }
-export const niveau = (id) => etat.arrets[id]?.b || 0;
+export const niveau = (id) => M().arrets[id]?.b || 0;
 
 // Arrêts à revoir aujourd'hui, les plus fragiles d'abord, puis les arrêts jamais vus.
 export function aRevoir(ix, zones) {
-  const j = jour();
+  const j = jour(); const fiches = M().arrets;
   const dansZones = (a) => a.zones.some((z) => zones.includes(z));
-  const dus = ix.arrets.filter((a) => dansZones(a) && etat.arrets[a.id] && etat.arrets[a.id].d <= j)
-    .sort((a, b) => etat.arrets[a.id].b - etat.arrets[b.id].b || (etat.arrets[b.id].ko - etat.arrets[a.id].ko));
-  const neufs = ix.arrets.filter((a) => dansZones(a) && !etat.arrets[a.id]).sort((a, b) => b.imp - a.imp);
+  const dus = ix.cartes.filter((a) => dansZones(a) && fiches[a.id] && fiches[a.id].d <= j)
+    .sort((a, b) => fiches[a.id].b - fiches[b.id].b || (fiches[b.id].ko - fiches[a.id].ko));
+  const neufs = ix.cartes.filter((a) => dansZones(a) && !fiches[a.id]).sort((a, b) => b.imp - a.imp);
   return [...dus, ...neufs].map((a) => a.id);
 }
 
-// Le bonus TD rejoint le parcours dès que la troisième chambre est ouverte.
+// Chapitres en travaux : ouverts dès le début, hors du défi du jour, le temps que le cours y arrive.
+// En administratif, le bonus TD rejoint le parcours dès que la troisième chambre est ouverte.
 export const zonesOuvertes = (ix) => {
   if (etat.reglages.toutOuvert) return ix.zones.map((z) => z.id);
-  const o = etat.zones.ouvertes;
-  return o.length >= 3 ? [...new Set([...o, 10])] : [...o];
+  const o = M().zones.ouvertes;
+  const libres = ix.zones.filter((z) => z.travaux).map((z) => z.id);
+  if (ix.matiere === 'admin' && o.length >= 3) libres.push(10);
+  return [...new Set([...o, ...libres])];
+};
+export const zonesDuJour = (ix) => {
+  const liste = zonesOuvertes(ix).filter((id) => !ix.zones.find((z) => z.id === id).travaux);
+  return liste.length ? liste : [ix.zones[0].id];
 };
 
-export function ouvrirSuivante() {
-  const o = etat.zones.ouvertes; const m = Math.max(...o);
-  if (m < 9) o.push(m + 1);
+// Dernière chambre du parcours, sans les chapitres en travaux ni le bonus.
+const derniereChambre = (ix) => Math.max(...ix.zones.filter((z) => !z.travaux && z.id !== 10).map((z) => z.id));
+export function ouvrirSuivante(ix) {
+  const o = M().zones.ouvertes; const m = Math.max(...o);
+  if (m < derniereChambre(ix)) o.push(m + 1);
   sauver(); return m + 1;
 }
+export const ouvrirApres = (ix, z) => { const o = M().zones.ouvertes; if (!o.includes(z + 1) && z < derniereChambre(ix)) o.push(z + 1); };
 
 export function evaluerTrophees(ix) {
   const t = etat.trophees; const nouveaux = [];
   const gagne = (id) => { if (!t[id]) { t[id] = jour(); nouveaux.push(TROPHEES.find((x) => x.id === id)); } };
-  const s = etat.stats; const vals = Object.values(etat.arrets);
+  const s = etat.stats;
   if (s.seances >= 1) gagne('premier');
   if (s.parfaites >= 1) gagne('sansfaute');
   if (s.comboMax >= 10) gagne('combo10');
   for (const e of ETAPES_SERIE) if (etat.serie.record >= e) gagne('serie' + e);
-  if (vals.filter((a) => a.b >= 3).length >= 10) gagne('carte10');
-  const grands = vals.filter((a) => a.b >= 5).length;
-  if (grands >= 10) gagne('grand10');
-  if (grands >= 50) gagne('grand50');
-  if (ix.familles.some((f) => f.m.every((m) => niveau(m.id) >= 4))) gagne('jumeaux');
-  if (etat.zones.gagnees.length >= 1) gagne('boss1');
-  if ((etat.zones.parfaites || []).length >= 1) gagne('bossParfait');
-  if ([1, 2, 3, 4, 5, 6, 7, 8, 9].every((z) => etat.zones.gagnees.includes(z))) gagne('bossTous');
+  if (ix.matiere === 'admin') {
+    const vals = Object.values(etat.arrets);
+    if (vals.filter((a) => a.b >= 3).length >= 10) gagne('carte10');
+    const grands = vals.filter((a) => a.b >= 5).length;
+    if (grands >= 10) gagne('grand10');
+    if (grands >= 50) gagne('grand50');
+    if (ix.familles.some((f) => f.m.every((m) => niveau(m.id) >= 4))) gagne('jumeaux');
+    if (etat.zones.gagnees.length >= 1) gagne('boss1');
+    if ((etat.zones.parfaites || []).length >= 1) gagne('bossParfait');
+    if ([1, 2, 3, 4, 5, 6, 7, 8, 9].every((z) => etat.zones.gagnees.includes(z))) gagne('bossTous');
+  } else {
+    const articles = Object.entries(etat.oblig.arrets).filter(([id, a]) => id.startsWith('a') && /^a\d/.test(id) && a.b >= 3);
+    if (articles.length >= 30) gagne('art30');
+    if (etat.oblig.zones.gagnees.length >= 1) gagne('boss1');
+    if (etat.oblig.zones.parfaites.length >= 1) gagne('bossParfait');
+  }
   if (s.juge >= 10) gagne('juge10');
   if (s.plan >= 5) gagne('plan5');
   if (s.archi >= 5) gagne('archi5');
-  if (rang().i === RANGS.length - 1) gagne('vp');
+  if (s.cas >= 10) gagne('cas10');
+  if (s.frise >= 5) gagne('frise5');
+  if (rang('admin').i === RANGS.length - 1) gagne('vp');
+  if (rang('oblig').i === RANGS_OBLIG.length - 1) gagne('pp');
+  if (rangGeneral().i === RANGS_GENERAL.length - 1) gagne('doyen');
+  if (etat.gains.jour === jour() && etat.gains.n > 0 && etat.oblig.gains.jour === jour() && etat.oblig.gains.n > 0) gagne('deux');
+  if (etat.dunk.record >= 5) gagne('dunk5');
+  if (etat.dunk.record >= 25) gagne('dunk25');
   return nouveaux;
 }

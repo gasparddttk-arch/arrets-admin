@@ -8,12 +8,12 @@ import { jumeaux, melange, CASES } from './engine.js';
 const NOM_CASE = { 1: 'I', '1a': 'A', '1b': 'B', 2: 'II', '2a': 'A', '2b': 'B' };
 const TYPE = { D: 'Dissertation', C: 'Commentaire' };
 // Repères réservés aux tests automatiques : rien n'apparaît dans l'appli normale.
-const repere = (v) => (window.__app ? String(v) : null);
+export const repere = (v) => (window.__app ? String(v) : null);
 
 // Bouton principal, toujours sous le pouce.
 export const continuer = (label, action, attrs = {}) => h('button', { class: 'cta', onClick: action, ...attrs }, label);
-const barrePied = (...b) => h('div', { class: 'pied' }, ...b);
-const fantome = (nom, label, action, attrs = {}) => h('button', { class: 'bouton-fantome', onClick: action, ...attrs }, icone(nom, 18), label);
+export const barrePied = (...b) => h('div', { class: 'pied' }, ...b);
+export const fantome = (nom, label, action, attrs = {}) => h('button', { class: 'bouton-fantome', onClick: action, ...attrs }, icone(nom, 18), label);
 
 function barreJokers(ctx, { recuser, indice, prolonger }) {
   if (ctx.boss) return null;
@@ -35,7 +35,7 @@ function barreJokers(ctx, { recuser, indice, prolonger }) {
 
 // Question à choix. Après la réponse, la bonne proposition et la tienne s'expliquent seules ;
 // les autres gardent leur explication, à déplier d'un geste.
-function qcm(zone, ctx, { question, options, pourquoiBon, indice, surtitre, avant, classe = '', dossier = false, frappe = false }) {
+export function qcm(zone, ctx, { question, options, pourquoiBon, indice, surtitre, avant, classe = '', dossier = false, frappe = false, sousQuestion = null }) {
   return new Promise((fini) => {
     let repondu = false;
     const ecran = h('div', { class: `ecran qcm ${classe}` });
@@ -89,7 +89,8 @@ function qcm(zone, ctx, { question, options, pourquoiBon, indice, surtitre, avan
       indice: indice ? () => { noteIndice.hidden = false; } : null,
     });
     const enonce = dossier
-      ? h('article', { class: 'dossier-carte' }, surtitre ? h('p', { class: 'dossier-titre' }, surtitre) : null, h('p', { class: 'dossier-texte' }, question), coup)
+      ? [h('article', { class: 'dossier-carte' }, surtitre ? h('p', { class: 'dossier-titre' }, surtitre) : null, h('p', { class: 'dossier-texte' }, question), coup),
+        sousQuestion ? h('h2', { class: 'question sous-dossier' }, sousQuestion) : null]
       : [surtitre ? h('p', { class: 'surtitre' }, surtitre) : null, avant, h('h2', { class: 'question' }, question)];
     ecran.append(...[h('div', { class: 'ecran-corps' }, enonce, noteIndice), jokers, liste].filter(Boolean));
     zone.replaceChildren(ecran);
@@ -112,7 +113,7 @@ export function revelation(a, ix, { zoneId } = {}) {
       h('ul', {}, jum.map((j) => h('li', {}, h('b', {}, `${ix.parId.get(j.id).court}, ${ix.parId.get(j.id).an}`), ' ', j.k)))) : null,
   );
 }
-const finEpreuve = (zone, ctx, res, ...contenu) => {
+export const finEpreuve = (zone, ctx, res, ...contenu) => {
   zone.replaceChildren(h('div', { class: 'ecran fin-epreuve' }, h('div', { class: 'ecran-corps' }, contenu), barrePied(continuer('Continuer', () => ctx.fin(res)))));
   window.scrollTo(0, 0);
 };
@@ -120,14 +121,18 @@ const finEpreuve = (zone, ctx, res, ...contenu) => {
 // PAIRES -------------------------------------------------------------------
 export function jouerPaires(zone, ctx, round, ix) {
   const g = round.grille; const lignes = g.lignes.map((l) => ({ ...l }));
-  const duree0 = g.variante === 'annee' ? 34 : 50;
+  const qualif = g.variante === 'qualif';
+  const duree0 = g.variante === 'annee' ? 34 : qualif ? 75 : 50;
   let restant = duree0; let nomVise = null; let texteVise = null; let finis = 0; let erreurs = 0; let arrete = false; let minuteur; let dernierTic = 99;
   const noms = melange(lignes, Math.random); const textes = melange(lignes, Math.random);
   const barre = h('div', { class: 'temps', role: 'timer', 'aria-label': 'Temps restant' }, h('i'));
   const consigne = g.variante === 'annee' ? 'Relie chaque arrêt à son année'
-    : g.variante === 'jumeaux' ? g.famille.titre : 'Relie chaque arrêt à son apport';
+    : g.variante === 'jumeaux' ? g.famille.titre : qualif ? 'Relie chaque fait à sa qualification' : 'Relie chaque arrêt à son apport';
+  // En obligations, la carte retournée donne le texte plutôt que la référence de l'arrêt.
+  const etiquette = (l) => (qualif ? `${l.nom}, ${l.a}` : `${ix.parId.get(l.id).court}, ${ix.parId.get(l.id).ref}`);
+  const fiche = (l) => (qualif ? l.carte : l.id);
 
-  const chipsNoms = noms.map((l) => { l.elN = h('button', { class: 'chip', 'data-id': repere(l.id), onClick: () => viserNom(l) }, l.nom); return l.elN; });
+  const chipsNoms = noms.map((l) => { l.elN = h('button', { class: `chip${Math.max(...l.nom.split(/\s+/).map((m) => m.length)) >= 12 ? ' mot-long' : ''}`, 'data-id': repere(l.id), onClick: () => viserNom(l) }, l.nom); return l.elN; });
   const cartes = textes.map((l) => { l.elT = h('button', { class: `carte-paire ${g.variante === 'annee' ? 'annee-carte' : ''}`, 'data-id': repere(l.id), onClick: () => viserTexte(l) }, l.t); return l.elT; });
 
   function viserNom(l) {
@@ -149,15 +154,15 @@ export function jouerPaires(zone, ctx, round, ix) {
     if (n === t) {
       n.fait = true; finis++;
       lien(n.elN, n.elT);
-      ctx.combo(true); ctx.noter(n.id, !n.rate);
+      ctx.combo(true); ctx.noter(fiche(n), !n.rate);
       n.elN.classList.remove('vise'); n.elN.classList.add('reussi'); n.elT.classList.add('reussi');
       n.elN.disabled = true; n.elT.disabled = true;
-      n.elT.prepend(h('span', { class: 'carte-nom' }, `${ix.parId.get(n.id).court}, ${ix.parId.get(n.id).ref}`));
+      n.elT.prepend(h('span', { class: 'carte-nom' }, etiquette(n)));
       nomVise = null;
       if (finis === lignes.length) terminer();
     } else {
       erreurs++; n.rate = true;
-      ctx.combo(false); ctx.noter(n.id, false, t.id);
+      ctx.combo(false); if (qualif) ctx.noter(fiche(n), false); else ctx.noter(n.id, false, t.id);
       t.elT.classList.add('secoue'); n.elN.classList.add('secoue');
       setTimeout(() => { t.elT.classList.remove('secoue'); n.elN.classList.remove('secoue'); }, 340);
       if (ctx.touche()) terminer();
@@ -174,15 +179,16 @@ export function jouerPaires(zone, ctx, round, ix) {
     arrete = true; clearInterval(minuteur);
     const manques = lignes.filter((l) => !l.fait);
     for (const l of manques) {
-      ctx.noter(l.id, false); l.elT.classList.add('manque');
-      l.elT.prepend(h('span', { class: 'carte-nom' }, `${ix.parId.get(l.id).court}, ${ix.parId.get(l.id).ref}`));
+      ctx.noter(fiche(l), false); l.elT.classList.add('manque');
+      l.elT.prepend(h('span', { class: 'carte-nom' }, etiquette(l)));
       l.elN.disabled = true; l.elT.disabled = true;
     }
     const score = Math.max(0, (finis - erreurs * 0.5) / lignes.length);
     const parfait = finis === lignes.length && !erreurs;
     ctx.gain(finis * 5 + (parfait ? 10 : 0), finis + (parfait ? 3 : 0));
     if (tempsEcoule) { toast('Temps écoulé.'); son('tic'); }
-    const piege = g.famille ? h('p', { class: 'piege' }, g.famille.p) : null;
+    const piege = qualif ? h('ul', { class: 'raisons' }, lignes.map((l) => h('li', {}, h('b', {}, l.nom), ' ', l.w)))
+      : g.famille ? h('p', { class: 'piege' }, g.famille.p) : null;
     zone.querySelector('.paires').append(...[piege, barrePied(continuer('Continuer', () => ctx.fin({ score, parfait })))].filter(Boolean));
   }
   const jokers = barreJokers(ctx, { prolonger: () => { restant = Math.min(duree0 + 15, restant + 15); barre.classList.remove('urgent'); dernierTic = 99; } });
@@ -282,7 +288,7 @@ export async function jouerPuzzle(zone, ctx, round, ix) {
 }
 
 // LE JUGE, C'EST TOI : on entre dans la salle d'audience ------------------------------
-function ouverture(ctx) {
+export function ouverture(ctx) {
   return new Promise((ok) => {
     let fini = false;
     const fin = () => { if (fini) return; fini = true; v.classList.add('fin'); setTimeout(() => { v.remove(); ok(); }, duree(240)); };
@@ -456,11 +462,18 @@ export async function jouerArchitecte(zone, ctx, round, ix) {
   ctx.fin({ score, parfait: ok });
 }
 
-export const JEUX = { paires: jouerPaires, puzzle: jouerPuzzle, juge: jouerJuge, plan: jouerPlan, architecte: jouerArchitecte };
+export const JEUX = { paires: jouerPaires, puzzle: jouerPuzzle, juge: jouerJuge, plan: jouerPlan, architecte: jouerArchitecte, qualif: jouerPaires };
 export const NOMS_MODES = {
   paires: ['Paires', 'Relier arrêts, apports et années, contre la montre'],
   puzzle: ['Puzzle d’arrêt', 'Reconstituer la fiche, puis trouver le problème de droit'],
   juge: ['Le juge, c’est toi', 'Trancher une affaire et motiver ta décision'],
   plan: ['Le bon plan', 'Choisir le meilleur plan et diagnostiquer les autres'],
   architecte: ['Architecte', 'Construire un plan et y placer les arrêts'],
+};
+export const NOMS_MODES_OBLIG = {
+  cas: ['Le juge du cas pratique', 'Suivre la méthode, étape par étape, jusqu’au jugement'],
+  qualif: ['Qualifier les faits', 'Relier des faits à la bonne notion, contre la montre'],
+  remede: ['Quel remède ?', 'Choisir la sanction, puis ce qui la justifie'],
+  frise: ['Frise de la jurisprudence', 'Remettre les étapes dans l’ordre et dire ce qui change'],
+  plan: ['Le bon plan', 'Choisir le meilleur plan et diagnostiquer les autres'],
 };

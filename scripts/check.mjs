@@ -1,6 +1,6 @@
 // Contrôle du contenu : références, champs obligatoires et règles anti-devinette.
-import { lireContenu } from './parse.mjs';
-import { indexer, creerRng, optionsProbleme, blocsPuzzle, casJuge, roundPlan, planOf, roundArchitecte, grillePaires, composerDefi, composerBoss } from '../app/js/engine.js';
+import { lireContenu, lireObligations } from './parse.mjs';
+import { indexer, creerRng, optionsProbleme, blocsPuzzle, casJuge, roundPlan, planOf, roundArchitecte, grillePaires, composerDefi, composerBoss, questionsDunk, tirerDunk } from '../app/js/engine.js';
 
 const c = indexer(lireContenu());
 const erreurs = []; const notes = [];
@@ -105,6 +105,72 @@ for (let i = 0; i < 600; i++) {
   if (noms.some((n) => /\(\d{4}\)/.test(n))) err(`année soufflée dans une grille : ${noms.join(', ')}`);
   if (new Set(noms).size !== noms.length) err(`nom répété dans une grille : ${noms.join(', ')}`);
   if (new Set(g.lignes.map((l) => l.an)).size !== noms.length) err('année répétée dans une grille');
+}
+
+// DROIT DES OBLIGATIONS -----------------------------------------------------------
+const ob = indexer(lireObligations());
+{
+  const notesO = []; const err2 = (m) => erreurs.push(`obligations : ${m}`);
+  const idsO = new Set(ob.cartes.map((a) => a.id));
+  if (idsO.size !== ob.cartes.length) err2('identifiants en double');
+  const lien = (id, ou) => { if (!idsO.has(id)) err2(`${ou} : fiche ${id} inconnue`); };
+  const zonesO = new Set(ob.zones.map((z) => z.id));
+  for (const a of ob.cartes) for (const z of a.zones) if (!zonesO.has(z)) err2(`${a.id} : chambre ${z}`);
+  for (const a of ob.arrets) for (const k of ['q', 's', 'po']) if (!a[k]) err2(`${a.id} : champ ${k} manquant`);
+  for (const c of ob.cas) {
+    if (c.etapes.length < 2) err2(`cas ${c.id} : trop peu d'étapes`);
+    if (!c.c || !c.v) err2(`cas ${c.id} : énoncé ou jugement manquant`);
+    for (const e of c.etapes) if (e.x.length < 2) err2(`cas ${c.id}, étape ${e.label} : deux mauvaises réponses attendues`);
+    c.liens.forEach((l) => lien(l, `cas ${c.id}`));
+  }
+  for (const r of ob.remedes) {
+    if (r.dx.length !== 2 || r.rx.length !== 2 || !r.d || !r.r || !r.c) err2(`remède ${r.id} incomplet`);
+    r.liens.forEach((l) => lien(l, `remède ${r.id}`));
+  }
+  for (const f of ob.frises) {
+    const ans = f.e.map((e) => e.an);
+    if (ans.some((a, i) => i && a <= ans[i - 1])) err2(`frise ${f.id} : années à revoir`);
+    if (!f.q || !(f.r >= 1 && f.r <= f.e.length)) err2(`frise ${f.id} : question`);
+    f.e.forEach((e) => { if (e.carte) lien(e.carte, `frise ${f.id}`); });
+  }
+  for (const q of ob.qualifs) {
+    if (new Set(q.m.map((m) => m.n)).size < 4) err2(`famille ${q.id} : moins de 4 notions`);
+    q.m.forEach((m) => lien(m.carte, `famille ${q.id}`));
+  }
+  for (const s of ob.sujets) {
+    for (const k of ['1a', '1b', '2a', '2b']) s.bon[k].ids.forEach((id) => lien(id, `sujet ${s.id}`));
+    if (s.mauvais.length !== 2) err2(`sujet ${s.id} : 2 mauvais plans attendus`);
+    for (const m of s.mauvais) if (!ob.defauts[m.code]) err2(`sujet ${s.id} : défaut ${m.code} inconnu`);
+  }
+  for (const q of ob.questions) if (q.faux.includes(q.bonne)) err2(`question en double : ${q.q}`);
+  // Chaque question d'exercice doit pouvoir se résoudre sans se fier à la longueur des réponses.
+  const statsO = (nom, opts, seuil) => {
+    const places = opts.map((o) => [...o].sort((a, b) => b.t.length - a.t.length).findIndex((x) => x.ok));
+    const k = opts[0].length; const long = places.filter((p) => p === 0).length / places.length; const court = places.filter((p) => p === k - 1).length / places.length;
+    notesO.push(`${nom} : la plus longue ${(long * 100).toFixed(0)} %, la plus courte ${(court * 100).toFixed(0)} % (hasard ${(100 / k).toFixed(0)} %), ${places.length} questions`);
+    if (long > seuil) err2(`${nom} : bonne réponse trop souvent la plus longue (${(long * 100).toFixed(0)} %)`);
+    if (court > seuil) err2(`${nom} : bonne réponse trop souvent la plus courte (${(court * 100).toFixed(0)} %)`);
+  };
+  statsO('Cas pratiques', ob.cas.flatMap((c) => c.etapes.map((e) => [{ t: e.t, ok: true }, ...e.x.map((x) => ({ t: x.t }))])), 0.46);
+  statsO('Remèdes', ob.remedes.map((r) => [{ t: r.d, ok: true }, ...r.dx.map((x) => ({ t: x.t }))]), 0.46);
+  statsO('Justifications', ob.remedes.map((r) => [{ t: r.r, ok: true }, ...r.rx.map((x) => ({ t: x.t }))]), 0.46);
+  statsO('Questions rapides', ob.questions.map((q) => [{ t: q.bonne, ok: true }, ...q.faux.map((t) => ({ t }))]), 0.46);
+  // Génération : ni plantage, ni question sans réponse, quelles que soient les chambres.
+  const rngO = creerRng(7);
+  for (let i = 0; i < 300; i++) {
+    const zs = ob.zones.map((z) => z.id).filter(() => rngO() > 0.5); if (!zs.length) zs.push(1);
+    for (const r of composerDefi(ob, zs, [], rngO)) if (!r?.type) err2('défi vide');
+    for (const z of zs) composerBoss(ob, z, rngO);
+    const q = questionsDunk(ob, zs, rngO); const deja = new Set();
+    for (let t = 0; t < 30; t++) {
+      const x = tirerDunk(q, t, new Set(), deja, rngO);
+      if (x.options.filter((o) => o.ok).length !== 1 || new Set(x.options.map((o) => o.t)).size !== x.options.length) err2(`question de dunk mal formée : ${x.q}`);
+    }
+  }
+  const ad = questionsDunk(c, c.zones.map((z) => z.id), rngO);
+  if (ad.length < 300) err2('trop peu de questions de dunk en administratif');
+  console.log(`\n${ob.arrets.length} arrêts, ${ob.articles.length} articles, ${ob.cas.length} cas, ${ob.qualifs.length} familles, ${ob.remedes.length} remèdes, ${ob.frises.length} frises, ${ob.sujets.length} sujets, ${ob.questions.length} questions`);
+  console.log(notesO.join('\n'));
 }
 
 if (erreurs.length) { console.error(`\n${erreurs.length} erreur(s) :\n- ` + [...new Set(erreurs)].slice(0, 60).join('\n- ')); process.exit(1); }
