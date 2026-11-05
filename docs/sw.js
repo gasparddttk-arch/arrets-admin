@@ -1,5 +1,5 @@
 // Service worker : tout le contenu est mis en cache à l'installation, pour jouer sans réseau.
-const VERSION = '278306f3b87c';
+const VERSION = '6a51265dca99';
 const FICHIERS = ["./","content.json","css/app.css","fonts/garamond-400.woff2","fonts/garamond-500.woff2","fonts/garamond-500i.woff2","fonts/garamond-600.woff2","fonts/garamond-700.woff2","fonts/garamond-700i.woff2","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable.png","img/canette.svg","js/cloud.js","js/config.js","js/dunk.js","js/engine.js","js/games.js","js/images.js","js/jeux-oblig.js","js/main.js","js/notif.js","js/sons.js","js/state.js","js/ui.js","js/visuels.js","manifest.webmanifest","oblig.json"];
 const CACHE = `arrets-${VERSION}`;
 
