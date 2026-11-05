@@ -645,7 +645,7 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .avis-travaux { display: flex; gap: 9px; align-items: flex-start; margin: 4px 0 12px; padding: 10px 12px; border-radius: 12px; font-size: 18px; line-height: 1.25; background: var(--carte-bas); box-shadow: inset 3px 0 0 var(--or-2), inset 0 0 0 1px var(--carte-bord); }
 .avis-travaux .ic { flex: none; margin-top: 2px; color: var(--titre-or); }
 .salle-compte.travaux { color: var(--titre-or); font-style: italic; }
-.badge-travaux { display: inline-flex; align-items: center; gap: 5px; padding: 1px 9px; border-radius: 999px; font-size: 15.500px; color: var(--titre-or); background: var(--carte-bas); box-shadow: inset 0 0 0 1px var(--carte-bord); }
+.badge-travaux { justify-self: start; display: inline-flex; align-items: center; gap: 5px; padding: 1px 9px; border-radius: 999px; font-size: 15.500px; color: var(--titre-or); background: var(--carte-bas); box-shadow: inset 0 0 0 1px var(--carte-bord); }
 .role-ligne[data-mode='cas'] { --m1: var(--m-juge-1); --m2: var(--m-juge-2); }
 .role-ligne[data-mode='qualif'] { --m1: var(--m-paires-1); --m2: var(--m-paires-2); }
 .role-ligne[data-mode='remede'] { --m1: var(--m-puzzle-1); --m2: var(--m-puzzle-2); }

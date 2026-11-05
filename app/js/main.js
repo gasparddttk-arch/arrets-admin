@@ -272,6 +272,9 @@ function lancer({ rounds, titre, type, zone, reprise }) {
     touche: () => false,
     nettoyage: (f) => S.nettoyer.push(f),
     async fin(res) {
+      // Un double appui sur Continuer ne doit pas sauter une épreuve.
+      if (finEnCours) return;
+      finEnCours = true;
       S.nettoyer.forEach((f) => f()); S.nettoyer = [];
       S.scores.push(res.score); if (res.parfait) S.parfaites++;
       // Deux pièces pour une épreuve réussie, une pour une épreuve à moitié réussie.
@@ -295,8 +298,8 @@ function lancer({ rounds, titre, type, zone, reprise }) {
     const r = S.rounds[S.i];
     // Le Juge a son propre lever de rideau : l'audience s'ouvre avec ses trois coups.
     if (r.type !== 'juge' && r.type !== 'cas') son(S.i === 0 ? 'lancement' : 'epreuve', { retard: retardEpreuve });
-    retardEpreuve = 0;
-    scene.className = 'scene'; decor.replaceChildren();
+    retardEpreuve = 0; finEnCours = false;
+    scene.className = 'scene'; scene.replaceChildren(); decor.replaceChildren();
     window.scrollTo(0, 0);
     Promise.resolve(TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
       console.error(e);
@@ -304,7 +307,7 @@ function lancer({ rounds, titre, type, zone, reprise }) {
     });
   }
 
-  let retardEpreuve = 0;
+  let retardEpreuve = 0; let finEnCours = false;
   function finir(reussi) { M().enCours = null; resultats(S, reussi); }
   montrer(decor, entete, scene);
   memoriser();

@@ -168,10 +168,12 @@ function accueil() {
 // Le mini-jeu, à part des épreuves : il se débloque en boutique.
 function blocDunk() {
   const d = etat.dunk;
-  const jouer = (mode) => lancerDunk({
-    ix, zones: zonesOuvertes(ix), dus: aRevoir(ix, zonesOuvertes(ix)).filter((id) => M().arrets[id]), mode, montrer,
-    nom: estRose() ? 'Canettes' : 'Jetons', sortir: () => aller('palais'),
-  });
+  // Les obligations puisent dans tout le cours, chapitres en travaux compris.
+  const jouer = (mode) => {
+    const zones = estOblig() ? ix.zones.map((z) => z.id) : zonesOuvertes(ix);
+    afficherOnglets(false);
+    lancerDunk({ ix, zones, dus: aRevoir(ix, zones).filter((id) => M().arrets[id]), mode, montrer, nom: estRose() ? 'Canettes' : 'Jetons', sortir: () => aller('palais') });
+  };
   const entete = h('span', { class: 'role-icone' }, icone('dunk', 28));
   if (!d.cinq) {
     return h('button', { class: 'role-ligne', 'data-mode': 'dunk', onClick: () => aller('boutique') },
@@ -270,6 +272,9 @@ function lancer({ rounds, titre, type, zone, reprise }) {
     touche: () => false,
     nettoyage: (f) => S.nettoyer.push(f),
     async fin(res) {
+      // Un double appui sur Continuer ne doit pas sauter une épreuve.
+      if (finEnCours) return;
+      finEnCours = true;
       S.nettoyer.forEach((f) => f()); S.nettoyer = [];
       S.scores.push(res.score); if (res.parfait) S.parfaites++;
       // Deux pièces pour une épreuve réussie, une pour une épreuve à moitié réussie.
@@ -293,8 +298,8 @@ function lancer({ rounds, titre, type, zone, reprise }) {
     const r = S.rounds[S.i];
     // Le Juge a son propre lever de rideau : l'audience s'ouvre avec ses trois coups.
     if (r.type !== 'juge' && r.type !== 'cas') son(S.i === 0 ? 'lancement' : 'epreuve', { retard: retardEpreuve });
-    retardEpreuve = 0;
-    scene.className = 'scene'; decor.replaceChildren();
+    retardEpreuve = 0; finEnCours = false;
+    scene.className = 'scene'; scene.replaceChildren(); decor.replaceChildren();
     window.scrollTo(0, 0);
     Promise.resolve(TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
       console.error(e);
@@ -302,7 +307,7 @@ function lancer({ rounds, titre, type, zone, reprise }) {
     });
   }
 
-  let retardEpreuve = 0;
+  let retardEpreuve = 0; let finEnCours = false;
   function finir(reussi) { M().enCours = null; resultats(S, reussi); }
   montrer(decor, entete, scene);
   memoriser();

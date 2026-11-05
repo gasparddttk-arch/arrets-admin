@@ -248,7 +248,7 @@ export function questionsDunk(ix, zones, rng = Math.random) {
   for (const a of articles) {
     const proches = articles.filter((b) => b !== a && b.zones.some((z) => a.zones.includes(z)));
     const voisins = melange(proches.length >= 3 ? proches : articles.filter((b) => b !== a), rng);
-    ajoute(1, `Que règle l'${a.nom.replace('Art.', 'article')} ?`, a.titre, voisins.map((b) => b.titre).filter((t) => t !== a.titre), a);
+    ajoute(1, `Que règle l’${a.nom.replace('Art.', 'article')} ?`, a.titre, voisins.map((b) => b.titre).filter((t) => t !== a.titre), a);
     ajoute(2, `Quel article ? ${a.titre}`, a.nom, voisins.map((b) => b.nom), a);
     ajoute(3, `Quel article ? ${a.regle}`, a.nom, voisins.map((b) => b.nom), a);
   }

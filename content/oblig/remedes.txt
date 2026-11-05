@@ -9,17 +9,17 @@
 c: Un propriétaire vend son local à un tiers sans proposer d'abord à son locataire, bénéficiaire d'un pacte de préférence. L'acheteur ignorait tout du pacte.
 d: Des dommages et intérêts contre le vendeur
 dx: La substitution du locataire à l'acheteur, aux mêmes conditions || Elle suppose que le tiers ait connu le pacte et l'intention de s'en prévaloir.
-dx: La nullité de la vente conclue avec le tiers || Même condition de double connaissance.
+dx: La nullité de la vente || Même condition de double connaissance.
 r: Le tiers de bonne foi garde son contrat.
 rx: Le pacte s'impose à tous dès sa signature, y compris à l'acheteur. || Le tiers n'y est pas partie, et la sanction en nature suppose sa mauvaise foi.
-rx: La vente au tiers est inexistante, faute de proposition au bénéficiaire. || Elle est conclue et produit ses effets.
+rx: La vente au tiers est inexistante. || Elle est conclue et produit ses effets.
 a: a1123, mixte2006
 
 %pacte-mauvaisefoi | 4 | 2
 c: Un associé cède ses parts à un tiers en violant un pacte de préférence. Le tiers savait que le bénéficiaire comptait l'exercer.
 d: La substitution du bénéficiaire au tiers
 dx: Des dommages et intérêts seulement, le tiers gardant le bien || Le bénéficiaire peut obtenir davantage.
-dx: L'exception d'inexécution contre le débiteur du pacte || Elle suppose un contrat dont le bénéficiaire suspendrait l'exécution.
+dx: L'exception d'inexécution || Elle suppose un contrat dont le bénéficiaire suspendrait l'exécution.
 r: Le tiers connaissait le pacte et l'intention de s'en prévaloir.
 rx: Le tiers a payé moins que ce qu'aurait offert le bénéficiaire. || Le prix ne joue aucun rôle ici.
 rx: Il suffit que le pacte ait été violé, quelle que soit l'attitude du tiers. || La substitution exige la mauvaise foi du tiers.
@@ -29,7 +29,7 @@ a: a1123, mixte2006
 c: En 2022, une promettante se rétracte pendant le délai d'option. Le bénéficiaire lève l'option dans le délai et veut l'immeuble.
 d: La réalisation forcée de la vente
 dx: Des dommages et intérêts seulement, pour rétractation fautive || C'était la solution de Cruz, abandonnée.
-dx: La nullité de la promesse, devenue sans objet || La promesse est valable.
+dx: La nullité de la promesse || La promesse est valable.
 r: La révocation n'empêche pas la formation du contrat promis.
 rx: L'obligation de la promettante n'est qu'une obligation de faire. || C'est l'analyse de 1993, que la Cour a abandonnée en 2021.
 rx: Une offre ne peut pas être retirée pendant le délai qu'elle a fixé. || Ce n'est pas une offre mais une promesse, qui a son propre texte.
@@ -38,7 +38,7 @@ a: a1124, cruz, revirement2021
 %offre-retiree | 3 | 2
 c: Un vendeur retire son offre, non encore acceptée, avant la fin du délai qu'il avait lui-même fixé. Le destinataire voulait l'accepter.
 d: Des dommages et intérêts, sans vente forcée
-dx: La vente forcée, puisque le délai n'était pas expiré || La rétractation empêche la conclusion du contrat.
+dx: La vente forcée || La rétractation empêche la conclusion du contrat.
 dx: Le remboursement des gains espérés de la vente || Le texte exclut les avantages attendus du contrat.
 r: La rétractation empêche le contrat et engage la responsabilité de son auteur.
 rx: Le contrat se forme malgré la rétractation, comme pour une promesse de vente. || Cette règle vaut pour la promesse, pas pour l'offre.
@@ -49,37 +49,37 @@ a: a1116, gerstaecker
 c: Une société rompt des pourparlers très avancés, de façon déloyale. L'autre partie a engagé des frais d'étude et espérait 2 millions d'euros de gains.
 d: Le remboursement des frais engagés
 dx: Les gains espérés, au titre de la perte de chance || Ils sont exclus par l'article 1112.
-dx: La conclusion forcée du contrat négocié || La liberté de ne pas contracter reste entière.
+dx: La conclusion forcée du contrat || La liberté de ne pas contracter reste entière.
 r: La faute tient aux circonstances de la rupture, non à la rupture.
 rx: La rupture est fautive en soi dès lors que les pourparlers sont avancés. || Rompre reste libre.
-rx: Le contrat était presque formé, ce qui vaut engagement de conclure. || Presque formé n'est pas formé.
+rx: Le contrat était presque formé. || Presque formé n'est pas formé.
 a: a1112, manoukian
 
 %info-oubli | 2,5 | 2
 c: Un vendeur oublie, sans intention de tromper, de signaler une information déterminante. L'acheteur subit un préjudice.
 d: Des dommages et intérêts
 dx: La nullité pour dol, avec restitution du prix || Le dol suppose l'intention de tromper.
-dx: Rien, puisqu'il a seulement oublié || L'oubli n'efface pas le manquement.
+dx: Rien du tout || L'oubli n'efface pas le manquement.
 r: Il y a manquement au devoir d'information, mais sans intention.
 rx: Tout manquement à l'information constitue un dol, même par oubli. || Com., 28 juin 2005 l'exclut : il faut l'intention et l'erreur déterminante.
-rx: L'information n'est due que si l'acheteur la réclame expressément. || Le devoir pèse sur celui qui connaît l'information.
+rx: L'information n'est due que sur demande. || Le devoir pèse sur celui qui connaît l'information.
 a: a1112-1, a1137, socgen2005
 
 %dol-garder | 5 | 2
 c: Trompée par un vendeur, une acheteuse aime finalement son bien, mais a payé trop cher. Elle veut le garder.
 d: Des dommages et intérêts, sans nullité
 dx: La nullité avec restitution réciproque du bien et du prix || Elle veut garder le bien.
-dx: La révision du prix par le juge, à la baisse || Le juge ne réécrit pas le prix : il répare un préjudice.
+dx: La révision du prix || Le juge ne réécrit pas le prix : il répare un préjudice.
 r: Le dol est aussi une faute, qui ouvre droit à réparation.
 rx: Le dol entraîne toujours la nullité du contrat, même si la victime s'y oppose. || La nullité n'est qu'une option de la victime.
-rx: Elle a droit à la perte de chance de ne pas avoir contracté du tout. || Parsys limite le préjudice à la perte de chance de meilleures conditions.
+rx: Elle a droit à la perte de chance de ne pas contracter. || Parsys limite le préjudice à la perte de chance de meilleures conditions.
 a: a1137, a1131, parsys
 
 %erreur-valeur | 5 | 2
 c: Un vendeur s'aperçoit, sans aucune tromperie, qu'il a cédé son fonds de commerce à un prix bien inférieur à sa valeur.
 d: Aucune action en nullité
 dx: La nullité pour erreur sur une qualité essentielle || L'erreur sur la valeur n'est pas une cause de nullité.
-dx: La nullité pour dol par réticence de l'acheteur || Personne ne l'a trompé.
+dx: La nullité pour dol || Personne ne l'a trompé.
 r: Une appréciation économique inexacte n'est pas une cause de nullité.
 rx: L'erreur sur la valeur vaut toujours nullité dès lors qu'elle est déterminante. || Seule l'erreur provoquée par un dol a cet effet.
 rx: Le vendeur est lésé, donc protégé par une action générale en rescision. || La lésion n'est pas une cause générale de nullité.
@@ -89,7 +89,7 @@ a: a1136, a1168, working
 c: Un homme signe une reconnaissance de dette sous la menace de révéler de faux documents à son employeur. Il agit dès que la menace cesse.
 d: La nullité relative et des dommages et intérêts
 dx: La nullité absolue, qui peut être demandée par tout intéressé || Les vices du consentement sont une cause de nullité relative.
-dx: La résolution de la reconnaissance de dette || Il n'y a pas d'inexécution.
+dx: La résolution || Il n'y a pas d'inexécution.
 r: Le consentement n'était pas libre, et le délai court depuis la fin de la violence.
 rx: Le délai court depuis la signature, et la nullité n'est plus possible après. || Pour la violence, il part du jour où elle a cessé.
 rx: Il devait porter plainte d'abord, faute de quoi l'action civile est irrecevable. || La nullité civile n'en dépend pas.
@@ -111,7 +111,7 @@ d: Des dommages et intérêts et, le cas échéant, la résolution
 dx: La nullité du contrat-cadre pour indétermination du prix || Le prix indéterminé n'annule pas le contrat-cadre.
 dx: La fixation du prix par le juge, à la place du franchiseur || Le texte prévoit réparation et résolution, pas la révision.
 r: Depuis 1995, seul l'abus se sanctionne.
-rx: Le contrat-cadre doit fixer le prix, sous peine de nullité. || Il peut prévoir une fixation unilatérale.
+rx: Le contrat-cadre doit fixer le prix. || Il peut prévoir une fixation unilatérale.
 rx: Le franchiseur n'a pas à se justifier, puisque la clause le lui permet. || Il doit motiver le montant en cas de contestation.
 a: a1164, ap1995
 
@@ -119,7 +119,7 @@ a: a1164, ap1995
 c: Un prestataire abandonne un chantier essentiel malgré une mise en demeure. Le client veut en finir sans attendre le juge.
 d: La résolution par notification
 dx: L'exécution forcée du chantier par ce même prestataire || Il ne veut plus de ce prestataire.
-dx: La nullité du contrat pour abandon du chantier || Le contrat est valable.
+dx: La nullité du contrat || Le contrat est valable.
 r: L'inexécution grave permet de résoudre par notification, à ses risques et périls.
 rx: Seul le juge peut mettre fin à un contrat, sauf clause résolutoire expresse. || Depuis Tocqueville, puis la réforme, ce n'est plus vrai.
 rx: Il suffit de ne plus répondre et de cesser de payer le prestataire. || Il faut une mise en demeure puis une notification motivée.
@@ -142,7 +142,7 @@ dx: La révision immédiate du prix par le juge || Le texte prévoit d'abord une
 dx: Cesser d'exécuter aussitôt, sans prévenir || Il doit continuer à exécuter pendant la renégociation.
 r: L'imprévision ouvre une renégociation, puis le juge.
 rx: Le juge ne peut jamais toucher au contrat, quelles que soient les circonstances. || C'était Canal de Craponne. L'article 1195 change la donne.
-rx: C'est un cas de force majeure, qui libère le fournisseur. || L'exécution reste possible, elle est seulement ruineuse.
+rx: C'est un cas de force majeure. || L'exécution reste possible, elle est seulement ruineuse.
 a: a1195, craponne
 
 %choix-regime | 9 | c
@@ -150,7 +150,7 @@ c: Une tuile tombe d'un toit sur un passant. Le propriétaire jure n'avoir commi
 d: Agir contre le gardien du toit
 dx: Prouver une faute du propriétaire || Inutile : le gardien répond sans faute.
 dx: Agir contre le fabricant de la tuile || Rien n'indique un défaut de fabrication.
-r: Le gardien répond sans faute.
+r: Le gardien répond sans qu'il faille prouver sa faute.
 rx: Il faut toujours prouver une faute, sauf texte spécial. || C'est le droit de 1804, pas celui d'après Teffaine et Jand'heur.
 rx: Une chose inerte n'engage personne, faute d'intervention de l'homme. || Jand'heur écarte toute distinction de ce type.
 a: a1242, jandheur
@@ -160,7 +160,7 @@ c: Le salarié d'une entreprise blesse un tiers dans l'exercice normal de sa mis
 d: Agir contre l'employeur
 dx: Agir contre le salarié || Il bénéficie de l'immunité de Costedoat.
 dx: Agir contre le client de l'entreprise || Il n'est pas le commettant.
-r: Le commettant répond de son préposé.
+r: Le commettant répond de son préposé, resté dans sa mission.
 rx: Le salarié répond toujours de ses actes, même dans sa mission. || Costedoat l'écarte, sauf infraction intentionnelle.
 rx: L'employeur s'exonère s'il prouve avoir bien surveillé. || Cet argument ne suffit pas.
 a: a1242-5, costedoat, cousin

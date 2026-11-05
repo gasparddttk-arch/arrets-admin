@@ -106,12 +106,12 @@ export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
       if (q.carte) noter(q.carte, o.ok);
       if (o.ok) { el.classList.add('juste'); reussi(performance.now() - t0 < total * 500); } else { el.classList.add('faux'); rate(q, el); }
     };
-    zoneQ.dataset.fini = '';
     delete zoneQ.dataset.fini;
-    zoneQ.replaceChildren(
+    zoneQ.replaceChildren(...[
       q.tag ? h('p', { class: 'badge-travaux' }, icone('travaux', 14), q.tag) : null,
       h('p', { class: 'dunk-enonce' }, q.q),
-      ...q.options.map((o, i) => { const b = h('button', { class: 'option', 'data-n': i, 'data-ok': repere(o.ok), onClick: () => repondre(o, b) }, h('span', { class: 'option-t' }, o.t)); return b; }));
+      ...q.options.map((o, i) => { const b = h('button', { class: 'option', 'data-n': i, 'data-ok': repere(o.ok), onClick: () => repondre(o, b) }, h('span', { class: 'option-t' }, o.t)); return b; }),
+    ].filter(Boolean));
     clearInterval(minuteur);
     minuteur = setInterval(() => {
       reste = total - (performance.now() - t0) / 1000;
