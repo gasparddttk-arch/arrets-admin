@@ -15,8 +15,9 @@ const polices = {
   'garamond-400.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-400-normal.woff2',
   'garamond-500.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-500-normal.woff2',
   'garamond-600.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-600-normal.woff2',
-  'garamond-400i.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-400-italic.woff2',
-  'bodoni-700.woff2': '@fontsource/bodoni-moda/files/bodoni-moda-latin-700-normal.woff2',
+  'garamond-700.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-700-normal.woff2',
+  'garamond-500i.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-500-italic.woff2',
+  'garamond-700i.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-700-italic.woff2',
 };
 for (const [nom, src] of Object.entries(polices)) cpSync(join('node_modules', src), join(SORTIE, 'fonts', nom));
 

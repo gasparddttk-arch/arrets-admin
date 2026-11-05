@@ -1,13 +1,19 @@
 // Les cinq modes de jeu. Chaque mode dessine son écran dans `zone` et appelle ctx.fin(resultat).
-import { h, icone, son, toast } from './ui.js';
+import { h, toast, duree, lien, effets } from './ui.js';
+import { icone, marteau, salleAudience } from './visuels.js';
+import { son, vibrer } from './sons.js';
 import { etat, sauver } from './state.js';
 import { jumeaux, melange, CASES } from './engine.js';
 
 const NOM_CASE = { 1: 'I', '1a': 'A', '1b': 'B', 2: 'II', '2a': 'A', '2b': 'B' };
+const TYPE = { D: 'Dissertation', C: 'Commentaire' };
+// Repères réservés aux tests automatiques : rien n'apparaît dans l'appli normale.
+const repere = (v) => (window.__app ? String(v) : null);
 
-// Bouton de confirmation placé dans la zone du pouce.
+// Bouton principal, toujours sous le pouce.
 export const continuer = (label, action, attrs = {}) => h('button', { class: 'cta', onClick: action, ...attrs }, label);
 const barrePied = (...b) => h('div', { class: 'pied' }, ...b);
+const fantome = (nom, label, action, attrs = {}) => h('button', { class: 'bouton-fantome', onClick: action, ...attrs }, icone(nom, 18), label);
 
 function barreJokers(ctx, { recuser, indice, prolonger }) {
   if (ctx.boss) return null;
@@ -16,7 +22,7 @@ function barreJokers(ctx, { recuser, indice, prolonger }) {
     if (!inv[id]) return;
     const b = h('button', { class: 'joker', 'aria-label': `${nom}, ${inv[id]} restants`, onClick: () => {
       if (!inv[id] || b.disabled) return;
-      inv[id]--; sauver(); son('jeton'); action(); b.disabled = true;
+      inv[id]--; sauver(); son('jeton'); vibrer(8); action(); b.disabled = true;
       const c = b.querySelector('b'); if (c) c.textContent = inv[id];
     } }, icone(id, 18), h('span', {}, nom), h('b', {}, inv[id]));
     items.push(b);
@@ -27,32 +33,53 @@ function barreJokers(ctx, { recuser, indice, prolonger }) {
   return items.length ? h('div', { class: 'jokers' }, items) : null;
 }
 
-// Question à choix : après la réponse, chaque proposition affiche sa justification.
-function qcm(zone, ctx, { question, options, pourquoiBon, indice, surtitre, id, apresRendu }) {
+// Question à choix. Après la réponse, la bonne proposition et la tienne s'expliquent seules ;
+// les autres gardent leur explication, à déplier d'un geste.
+function qcm(zone, ctx, { question, options, pourquoiBon, indice, surtitre, avant, classe = '', dossier = false, frappe = false }) {
   return new Promise((fini) => {
     let repondu = false;
-    const bloc = h('div', { class: 'qcm' });
+    const ecran = h('div', { class: `ecran qcm ${classe}` });
     const lignes = options.map((o) => {
-      const b = h('button', { class: 'option', 'data-ok': window.__app ? String(!!o.ok) : null, onClick: () => choisir(o, b) }, h('span', { class: 'option-t' }, o.t));
-      o.el = b; return b;
+      o.el = h('button', { class: 'option', 'data-ok': repere(!!o.ok), onClick: () => (repondu ? deplier(o) : choisir(o)) },
+        h('span', { class: 'option-marque', 'aria-hidden': 'true' }), h('span', { class: 'option-t' }, o.t));
+      return o.el;
     });
+    const liste = h('div', { class: 'options' }, lignes);
     const noteIndice = h('p', { class: 'indice', hidden: true }, indice || '');
-    function choisir(o, b) {
+    const coup = frappe ? marteau() : null;
+
+    function deplier(o) {
+      const w = o.el.querySelector('.option-w');
+      if (!w) return;
+      son('tap');
+      o.el.classList.toggle('deplie', w.classList.toggle('ferme') === false);
+    }
+    function conclure(o) {
+      ctx.combo(o.ok);
+      liste.classList.add('repondu');
+      for (const x of options) {
+        x.el.classList.add(x.ok ? 'juste' : 'faux');
+        x.el.querySelector('.option-marque').append(icone(x.ok ? 'juste' : 'faux', 15));
+        const txt = x.ok ? pourquoiBon : x.w;
+        if (!txt) { x.el.disabled = true; continue; }
+        const ouvert = x.ok || x === o;
+        x.el.append(h('span', { class: `option-w ${ouvert ? '' : 'ferme'}` }, txt));
+        if (!ouvert) x.el.append(h('span', { class: 'option-voir', 'aria-hidden': 'true' }, icone('chevron', 16)));
+      }
+      ecran.querySelector('.jokers')?.remove();
+      ecran.append(barrePied(continuer('Continuer', () => fini({ ok: o.ok, choix: o }))));
+      // La bonne réponse reste visible au-dessus du bouton, même sur un petit écran.
+      options.find((x) => x.ok)?.el.scrollIntoView({ block: 'nearest', behavior: effets() ? 'smooth' : 'auto' });
+    }
+    function choisir(o) {
       if (repondu) return;
       repondu = true;
-      ctx.combo(o.ok); son(o.ok ? 'ok' : 'ko');
-      b.classList.add('choisi');
-      for (const x of options) {
-        x.el.disabled = true;
-        x.el.classList.add(x.ok ? 'juste' : 'faux');
-        const txt = x.ok ? pourquoiBon : x.w;
-        if (txt) x.el.append(h('span', { class: 'option-w' }, txt));
-      }
-      bloc.querySelector('.jokers')?.remove();
-      const pied = barrePied(continuer('Continuer', () => fini({ ok: o.ok, choix: o })));
-      bloc.append(pied);
-      pied.querySelector('button').focus({ preventScroll: true });
-      pied.scrollIntoView({ block: 'end', behavior: 'smooth' });
+      o.el.classList.add('choisi');
+      if (frappe) {
+        coup.classList.add('frappe-marteau');
+        son('marteau'); vibrer(18);
+        setTimeout(() => conclure(o), duree(300));
+      } else conclure(o);
     }
     const jokers = barreJokers(ctx, {
       recuser: () => {
@@ -61,13 +88,12 @@ function qcm(zone, ctx, { question, options, pourquoiBon, indice, surtitre, id, 
       },
       indice: indice ? () => { noteIndice.hidden = false; } : null,
     });
-    bloc.append(
-      surtitre ? h('p', { class: 'surtitre' }, surtitre) : null,
-      h('h2', { class: question.length > 90 ? 'question longue' : 'question' }, question),
-      noteIndice, jokers, h('div', { class: 'options' }, lignes),
-    );
-    zone.replaceChildren(bloc);
-    apresRendu?.(bloc); void id;
+    const enonce = dossier
+      ? h('article', { class: 'dossier-carte' }, surtitre ? h('p', { class: 'dossier-titre' }, surtitre) : null, h('p', { class: 'dossier-texte' }, question), coup)
+      : [surtitre ? h('p', { class: 'surtitre' }, surtitre) : null, avant, h('h2', { class: 'question' }, question)];
+    ecran.append(...[h('div', { class: 'ecran-corps' }, enonce, noteIndice), jokers, liste].filter(Boolean));
+    zone.replaceChildren(ecran);
+    window.scrollTo(0, 0);
   });
 }
 
@@ -83,67 +109,84 @@ export function revelation(a, ix, { zoneId } = {}) {
     h('p', { class: 'histoire' }, a.h),
     jum.length ? h('div', { class: 'jumeaux' },
       h('h4', {}, 'À ne pas confondre avec'),
-      h('ul', {}, jum.map((j) => h('li', {}, h('b', {}, `${ix.parId.get(j.id).court} (${ix.parId.get(j.id).an})`), ' ', j.k)))) : null,
+      h('ul', {}, jum.map((j) => h('li', {}, h('b', {}, `${ix.parId.get(j.id).court}, ${ix.parId.get(j.id).an}`), ' ', j.k)))) : null,
   );
 }
+const finEpreuve = (zone, ctx, res, ...contenu) => {
+  zone.replaceChildren(h('div', { class: 'ecran fin-epreuve' }, h('div', { class: 'ecran-corps' }, contenu), barrePied(continuer('Continuer', () => ctx.fin(res)))));
+  window.scrollTo(0, 0);
+};
 
 // PAIRES -------------------------------------------------------------------
 export function jouerPaires(zone, ctx, round, ix) {
-  const g = round.grille; const lignes = g.lignes;
-  const duree = (g.variante === 'annee' ? 34 : 50);
-  let restant = duree; let actif = null; let finis = 0; let erreurs = 0; let arrete = false; let minuteur;
+  const g = round.grille; const lignes = g.lignes.map((l) => ({ ...l }));
+  const duree0 = g.variante === 'annee' ? 34 : 50;
+  let restant = duree0; let nomVise = null; let texteVise = null; let finis = 0; let erreurs = 0; let arrete = false; let minuteur; let dernierTic = 99;
   const noms = melange(lignes, Math.random); const textes = melange(lignes, Math.random);
   const barre = h('div', { class: 'temps', role: 'timer', 'aria-label': 'Temps restant' }, h('i'));
-  const consigne = g.variante === 'annee' ? 'Associe chaque arrêt à son année'
-    : g.variante === 'jumeaux' ? `Faux jumeaux : ${g.famille.titre}` : 'Associe chaque arrêt à son apport';
+  const consigne = g.variante === 'annee' ? 'Relie chaque arrêt à son année'
+    : g.variante === 'jumeaux' ? g.famille.titre : 'Relie chaque arrêt à son apport';
 
-  const chipsNoms = noms.map((l) => { const b = h('button', { class: 'chip', onClick: () => viser(l, b) }, l.nom); l.elN = b; return b; });
-  const cartes = textes.map((l) => { const b = h('button', { class: `carte-paire ${g.variante === 'annee' ? 'annee-carte' : ''}`, onClick: () => tenter(l, b) }, l.t); l.elT = b; return b; });
+  const chipsNoms = noms.map((l) => { l.elN = h('button', { class: 'chip', 'data-id': repere(l.id), onClick: () => viserNom(l) }, l.nom); return l.elN; });
+  const cartes = textes.map((l) => { l.elT = h('button', { class: `carte-paire ${g.variante === 'annee' ? 'annee-carte' : ''}`, 'data-id': repere(l.id), onClick: () => viserTexte(l) }, l.t); return l.elT; });
 
-  function viser(l, b) {
+  function viserNom(l) {
     if (arrete || l.fait) return;
     son('tap'); chipsNoms.forEach((c) => c.classList.remove('vise'));
-    actif = l; b.classList.add('vise');
+    nomVise = l; l.elN.classList.add('vise');
+    essayer();
   }
-  function tenter(l, b) {
+  function viserTexte(l) {
     if (arrete || l.fait) return;
-    if (!actif) { b.classList.add('secoue'); setTimeout(() => b.classList.remove('secoue'), 300); toast('Choisis d’abord un arrêt.'); return; }
-    if (l === actif) {
-      l.fait = true; finis++;
-      ctx.combo(true); son('ok'); ctx.noter(l.id, !l.rate);
-      l.elN.classList.add('reussi'); l.elN.classList.remove('vise'); b.classList.add('reussi');
-      l.elN.disabled = true; b.disabled = true;
-      b.prepend(h('span', { class: 'carte-nom' }, `${ix.parId.get(l.id).court}, ${ix.parId.get(l.id).ref}`));
-      actif = null;
+    son('tap'); cartes.forEach((c) => c.classList.remove('vise'));
+    texteVise = l; l.elT.classList.add('vise');
+    essayer();
+  }
+  function essayer() {
+    if (!nomVise || !texteVise) return;
+    const n = nomVise; const t = texteVise;
+    t.elT.classList.remove('vise'); texteVise = null;
+    if (n === t) {
+      n.fait = true; finis++;
+      lien(n.elN, n.elT);
+      ctx.combo(true); ctx.noter(n.id, !n.rate);
+      n.elN.classList.remove('vise'); n.elN.classList.add('reussi'); n.elT.classList.add('reussi');
+      n.elN.disabled = true; n.elT.disabled = true;
+      n.elT.prepend(h('span', { class: 'carte-nom' }, `${ix.parId.get(n.id).court}, ${ix.parId.get(n.id).ref}`));
+      nomVise = null;
       if (finis === lignes.length) terminer();
     } else {
-      erreurs++; actif.rate = true;
-      ctx.combo(false); son('ko'); ctx.noter(actif.id, false, l.id);
-      b.classList.add('secoue'); actif.elN.classList.add('secoue');
-      const a = actif.elN; setTimeout(() => { b.classList.remove('secoue'); a.classList.remove('secoue'); }, 340);
+      erreurs++; n.rate = true;
+      ctx.combo(false); ctx.noter(n.id, false, t.id);
+      t.elT.classList.add('secoue'); n.elN.classList.add('secoue');
+      setTimeout(() => { t.elT.classList.remove('secoue'); n.elN.classList.remove('secoue'); }, 340);
       if (ctx.touche()) terminer();
     }
   }
   function tick() {
-    restant -= 0.1; barre.firstChild.style.width = `${Math.max(0, restant / duree * 100)}%`;
+    restant -= 0.1; barre.firstChild.style.transform = `scaleX(${Math.max(0, restant / duree0)})`;
     if (restant <= 8) barre.classList.add('urgent');
+    if (restant <= 5 && restant > 0 && Math.ceil(restant) !== dernierTic) { dernierTic = Math.ceil(restant); son('tic'); }
     if (restant <= 0) terminer(true);
   }
   function terminer(tempsEcoule) {
     if (arrete) return;
     arrete = true; clearInterval(minuteur);
     const manques = lignes.filter((l) => !l.fait);
-    for (const l of manques) { ctx.noter(l.id, false); l.elT.classList.add('manque'); l.elT.prepend(h('span', { class: 'carte-nom' }, `${ix.parId.get(l.id).court}, ${ix.parId.get(l.id).ref}`)); l.elN.disabled = true; l.elT.disabled = true; }
+    for (const l of manques) {
+      ctx.noter(l.id, false); l.elT.classList.add('manque');
+      l.elT.prepend(h('span', { class: 'carte-nom' }, `${ix.parId.get(l.id).court}, ${ix.parId.get(l.id).ref}`));
+      l.elN.disabled = true; l.elT.disabled = true;
+    }
     const score = Math.max(0, (finis - erreurs * 0.5) / lignes.length);
     const parfait = finis === lignes.length && !erreurs;
     ctx.gain(finis * 5 + (parfait ? 10 : 0), finis + (parfait ? 3 : 0));
-    if (tempsEcoule) toast('Temps écoulé.');
+    if (tempsEcoule) { toast('Temps écoulé.'); son('tic'); }
     const piege = g.famille ? h('p', { class: 'piege' }, g.famille.p) : null;
-    zone.querySelector('.paires').append(piege, barrePied(continuer('Continuer', () => ctx.fin({ score, parfait }))));
-    zone.querySelector('.pied button').scrollIntoView({ block: 'end', behavior: 'smooth' });
+    zone.querySelector('.paires').append(...[piege, barrePied(continuer('Continuer', () => ctx.fin({ score, parfait })))].filter(Boolean));
   }
-  const jokers = barreJokers(ctx, { prolonger: () => { restant = Math.min(duree + 15, restant + 15); barre.classList.remove('urgent'); } });
-  zone.replaceChildren(h('div', { class: 'paires' },
+  const jokers = barreJokers(ctx, { prolonger: () => { restant = Math.min(duree0 + 15, restant + 15); barre.classList.remove('urgent'); dernierTic = 99; } });
+  zone.replaceChildren(h('div', { class: 'ecran paires' },
     h('h2', { class: 'question' }, consigne), barre, jokers,
     h('div', { class: 'chips' }, chipsNoms),
     h('div', { class: `cartes-paires ${g.variante === 'annee' ? 'grille-annees' : ''}` }, cartes)));
@@ -151,138 +194,183 @@ export function jouerPaires(zone, ctx, round, ix) {
   ctx.nettoyage(() => clearInterval(minuteur));
 }
 
-// PUZZLE -------------------------------------------------------------------
+// PUZZLE : un paquet de pièces à trier, une carte à la fois ------------------------
 export async function jouerPuzzle(zone, ctx, round, ix) {
   const a = ix.parId.get(round.id);
-  const place = {}; let idx = 0;
-  const blocs = round.blocs.map((b) => ({ ...b }));
+  const place = {};
+  let pile = round.blocs.map((b) => ({ ...b }));
+  let ecartees = [];
+  let anime = false;
+
   await new Promise((suite) => {
-    const rendre = () => {
-      const fente = round.slots.map((s, i) => {
-        const b = place[s.k];
-        return h('button', {
-          class: `fente ${i === idx && !b ? 'active' : ''} ${b ? 'pleine' : ''}`,
-          'aria-label': b ? `${s.l} rempli, toucher pour retirer` : `${s.l} vide`,
-          onClick: () => { if (b) delete place[s.k]; idx = i; rendre(); },
-        }, h('span', {}, s.l), b ? h('small', {}, `${b.t.slice(0, 48)}…`) : null);
-      });
-      const libres = blocs.filter((b) => !Object.values(place).includes(b));
-      const liste = libres.map((b) => h('button', { class: 'bloc', 'data-cle': window.__app && b.de === a.id ? b.k : null, onClick: () => {
-        son('tap');
-        place[round.slots[idx].k] = b;
-        const suivant = round.slots.findIndex((s) => !place[s.k]);
-        idx = suivant === -1 ? idx : suivant;
-        rendre();
-      } }, b.t));
-      const complet = round.slots.every((s) => place[s.k]);
-      zone.replaceChildren(h('div', { class: 'puzzle' },
-        h('h2', { class: 'question' }, `Pose la pièce «\u00a0${round.slots[idx].l}\u00a0»`),
-        h('p', { class: 'aide' }, 'Reconstitue l’arrêt. Certaines pièces viennent d’un autre arrêt.'),
-        h('div', { class: 'fentes' }, fente),
-        h('div', { class: 'blocs' }, liste),
-        complet ? barrePied(continuer('Vérifier', suite)) : null));
+    const envol = (classe, sonNom, apres) => {
+      if (anime) return;
+      anime = true;
+      son(sonNom); vibrer(8);
+      zone.querySelector('.carte-piece')?.classList.add(classe);
+      setTimeout(() => { anime = false; apres(); rendre(); }, duree(170));
     };
+    const poser = (k) => envol('vers-haut', 'carte', () => { const b = pile.shift(); if (place[k]) pile.push(place[k]); place[k] = b; });
+    const ecarter = () => envol('vers-bas', 'ecart', () => ecartees.push(pile.shift()));
+    const plusTard = () => envol('vers-cote', 'carte', () => pile.push(pile.shift()));
+    const retirer = (s) => { const b = place[s.k]; delete place[s.k]; pile.unshift(b); son('retour'); rendre(); };
+
+    function rendre() {
+      const complet = round.slots.every((s) => place[s.k]);
+      if (!complet && !pile.length) {
+        pile = ecartees; ecartees = [];
+        toast('Il manque des pièces : celles que tu as écartées reviennent.');
+      }
+      const mini = h('div', { class: 'fiche-mini' }, round.slots.map((s) => h('button', {
+        class: `mini ${place[s.k] ? 'pleine' : ''}`, disabled: !place[s.k],
+        'aria-label': place[s.k] ? `${s.l} rempli, toucher pour reprendre la pièce` : `${s.l} vide`,
+        onClick: () => retirer(s),
+      }, h('i', {}, place[s.k] ? icone('juste', 12) : null), s.l)));
+
+      if (complet) {
+        zone.replaceChildren(h('div', { class: 'ecran puzzle' }, mini,
+          h('h2', { class: 'question' }, 'Ta fiche est prête'),
+          h('p', { class: 'aide' }, 'Touche une pièce pour la reprendre.'),
+          h('div', { class: 'revue' }, round.slots.map((s) => h('button', { class: 'revue-ligne', onClick: () => retirer(s) }, h('b', {}, s.l), h('span', {}, place[s.k].t)))),
+          barrePied(continuer('Vérifier', suite))));
+        return;
+      }
+      const carte = pile[0];
+      zone.replaceChildren(h('div', { class: 'ecran puzzle' }, mini,
+        h('div', { class: `paquet ${pile.length > 1 ? 'epais' : ''}` }, h('div', { class: 'pile' },
+          h('article', { class: 'carte-piece', 'data-cle': repere(carte.de === a.id ? carte.k : 'piege') }, h('p', {}, carte.t)))),
+        h('div', { class: 'dock' },
+          h('p', { class: 'dock-titre' }, 'Où va cette pièce\u00a0?'),
+          h('div', { class: 'vers-grille' }, round.slots.map((s) => h('button', { class: `vers ${place[s.k] ? 'occupe' : ''}`, 'data-k': s.k, onClick: () => poser(s.k) }, s.l))),
+          h('div', { class: 'dock-bas' },
+            fantome('ecarter', 'Écarter', ecarter),
+            fantome('plusTard', 'Plus tard', plusTard, { disabled: pile.length < 2 })))));
+    }
     rendre();
+    window.scrollTo(0, 0);
   });
+
   let bons = 0;
   const lignes = round.slots.map((s) => {
     const b = place[s.k]; const ok = b.de === a.id && b.k === s.k;
     if (ok) bons++;
-    ctx.combo(ok);
+    ctx.combo(ok, true);
     const origine = !ok && b.de !== a.id ? ix.parId.get(b.de) : null;
     if (origine) ctx.noter(a.id, false, origine.id);
-    return h('div', { class: `verif ${ok ? 'juste' : 'faux'}` },
-      h('h4', {}, s.l), h('p', {}, b.t),
-      !ok ? h('p', { class: 'option-w' }, origine ? `Cette pièce vient de ${origine.court} (${origine.an}).` : 'Bonne affaire, mauvaise rubrique.') : null,
-      !ok ? h('p', { class: 'option-bon' }, a[s.k]) : null);
+    return h('details', { class: `verif ${ok ? 'juste' : 'faux'}`, open: !ok },
+      h('summary', {}, h('span', { class: 'option-marque' }, icone(ok ? 'juste' : 'faux', 15)), s.l, icone('chevron', 16)),
+      h('p', {}, b.t),
+      !ok ? h('p', { class: 'verif-pourquoi' }, origine ? `Cette pièce vient de ${origine.court}, ${origine.an}.` : 'Bonne affaire, mauvaise rubrique.') : null,
+      !ok ? h('p', { class: 'verif-bon' }, a[s.k]) : null);
   });
-  son(bons === 4 ? 'ok' : 'ko');
+  ctx.sonner(bons === 4);
   await new Promise((suite) => {
-    zone.replaceChildren(h('div', { class: 'puzzle' },
-      h('h2', { class: 'question' }, `${bons} pièce${bons > 1 ? 's' : ''} sur 4 en place`), lignes,
+    zone.replaceChildren(h('div', { class: 'ecran puzzle' },
+      h('h2', { class: 'question' }, `${bons} pièce${bons > 1 ? 's' : ''} sur 4 en place`),
+      h('div', { class: 'verifs' }, lignes),
       barrePied(continuer('Passer au problème de droit', suite))));
-    zone.scrollTop = 0; window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
   });
-  const r1 = await qcm(zone, ctx, { surtitre: 'Vu ces faits et cette solution', question: 'Quel était le problème de droit ?', options: round.problemes.map((o) => ({ ...o })), pourquoiBon: 'C’est la question que l’arrêt tranche.', indice: a.h.split('. ')[0] + '.' });
-  const r2 = await qcm(zone, ctx, { surtitre: 'Dernière pièce', question: 'De quel arrêt s’agit-il ?', options: round.noms.map((n) => ({ t: `${n.nom}, ${n.an}`, ok: n.id === a.id, id: n.id })), pourquoiBon: a.ap[a.zones[0]] });
+  const r1 = await qcm(zone, ctx, { surtitre: 'Vu ces faits et cette solution', question: 'Quel était le problème de droit\u00a0?', options: round.problemes.map((o) => ({ ...o })), pourquoiBon: 'C’est la question que l’arrêt tranche.', indice: `${a.h.split('. ')[0]}.` });
+  const r2 = await qcm(zone, ctx, { surtitre: 'Dernière pièce', question: 'De quel arrêt s’agit-il\u00a0?', options: round.noms.map((n) => ({ t: `${n.nom}, ${n.an}`, ok: n.id === a.id, id: n.id })), pourquoiBon: a.ap[a.zones[0]] });
   if (!r2.ok) ctx.noter(a.id, false, r2.choix.id);
   const ok = bons === 4 && r1.ok && r2.ok;
   ctx.noter(a.id, ok || (bons >= 3 && r2.ok));
   const score = (bons / 4) * 0.5 + (r1.ok ? 0.3 : 0) + (r2.ok ? 0.2 : 0);
   ctx.gain(Math.round(30 * score) + (ok ? 10 : 0), Math.round(6 * score) + (ok ? 2 : 0));
-  zone.replaceChildren(h('div', { class: 'fin-epreuve' }, revelation(a, ix), barrePied(continuer('Continuer', () => ctx.fin({ score, parfait: ok })))));
-  window.scrollTo(0, 0);
+  finEpreuve(zone, ctx, { score, parfait: ok }, revelation(a, ix));
 }
 
-// LE JUGE, C'EST TOI ---------------------------------------------------------
+// LE JUGE, C'EST TOI : on entre dans la salle d'audience ------------------------------
+function ouverture(ctx) {
+  return new Promise((ok) => {
+    let fini = false;
+    const fin = () => { if (fini) return; fini = true; v.classList.add('fin'); setTimeout(() => { v.remove(); ok(); }, duree(240)); };
+    const v = h('div', { class: 'ouverture', role: 'status', onClick: fin }, h('p', {}, 'L’audience est ouverte'));
+    document.body.append(v);
+    son('audience');
+    ctx.nettoyage(() => { fini = true; v.remove(); });
+    setTimeout(fin, duree(1350));
+  });
+}
+
 export async function jouerJuge(zone, ctx, round, ix) {
   const a = ix.parId.get(round.id);
-  const entete = (t) => h('div', { class: 'dossier' }, h('p', {}, t));
+  ctx.decor(salleAudience());
+  zone.classList.add('en-audience');
+  await ouverture(ctx);
   const r1 = await qcm(zone, ctx, {
-    surtitre: 'Le dossier', question: round.c, options: round.decisions.map((o) => ({ ...o })),
+    dossier: true, frappe: true, surtitre: 'Le dossier', question: round.c, options: round.decisions.map((o) => ({ ...o })),
     pourquoiBon: 'C’est ce que le juge a décidé.',
     indice: jumeaux(ix, a.id)[0]?.f.p,
   });
   const r2 = await qcm(zone, ctx, {
-    surtitre: 'Ta motivation', question: 'Pourquoi cette solution ?', options: round.raisons.map((o) => ({ ...o })),
+    surtitre: 'Ta motivation', question: 'Pourquoi cette solution\u00a0?', options: round.raisons.map((o) => ({ ...o })),
     pourquoiBon: 'C’est le raisonnement de l’arrêt.', indice: a.ap[a.zones[0]],
-    apresRendu: (b) => b.prepend(entete(round.decisions.find((d) => d.ok).t)),
+    avant: h('p', { class: 'rappel-decision' }, round.decisions.find((d) => d.ok).t),
   });
   const ok = r1.ok && r2.ok;
   ctx.noter(a.id, ok);
   if (ok) etat.stats.juge++;
   const score = (r1.ok ? 0.5 : 0) + (r2.ok ? 0.5 : 0);
   ctx.gain(Math.round(26 * score) + (ok ? 6 : 0), Math.round(5 * score) + (ok ? 2 : 0));
-  zone.replaceChildren(h('div', { class: 'fin-epreuve' },
-    h('p', { class: 'surtitre' }, ok ? 'Tu as jugé comme le Conseil.' : 'La vraie décision'),
-    revelation(a, ix), barrePied(continuer('Continuer', () => ctx.fin({ score, parfait: ok })))));
-  window.scrollTo(0, 0);
+  finEpreuve(zone, ctx, { score, parfait: ok }, h('p', { class: 'surtitre' }, ok ? 'Tu as jugé comme le juge.' : 'La vraie décision'), revelation(a, ix));
 }
 
-// LE BON PLAN ------------------------------------------------------------------
-const feuillePlan = (p, extra = {}) => h(extra.tag || 'div', { class: `feuille-plan ${extra.class || ''}`, ...extra.attrs },
-  h('p', { class: 'p1' }, h('b', {}, 'I. '), p[1]),
-  h('p', { class: 'p2' }, h('b', {}, 'A. '), p['1a']),
-  h('p', { class: 'p2' }, h('b', {}, 'B. '), p['1b']),
-  h('p', { class: 'p1' }, h('b', {}, 'II. '), p[2]),
-  h('p', { class: 'p2' }, h('b', {}, 'A. '), p['2a']),
-  h('p', { class: 'p2' }, h('b', {}, 'B. '), p['2b']));
-
-const TYPE = { D: 'Dissertation', C: 'Commentaire' };
+// LE BON PLAN : un plan par carte, à faire glisser -----------------------------------
+const feuillePlan = (p, classe = '', attrs = {}) => h('div', { class: `feuille-plan ${classe}`, ...attrs },
+  h('p', { class: 'p1' }, h('b', {}, 'I'), p[1]),
+  h('p', { class: 'p2' }, h('b', {}, 'A'), p['1a']),
+  h('p', { class: 'p2' }, h('b', {}, 'B'), p['1b']),
+  h('p', { class: 'p1' }, h('b', {}, 'II'), p[2]),
+  h('p', { class: 'p2' }, h('b', {}, 'A'), p['2a']),
+  h('p', { class: 'p2' }, h('b', {}, 'B'), p['2b']));
 
 export async function jouerPlan(zone, ctx, round) {
   const s = round.sujet;
   const choixPlan = await new Promise((suite) => {
     let fait = false;
-    const plans = round.plans.map((p) => {
-      const b = feuillePlan(p.plan, { tag: 'button', attrs: { 'data-ok': window.__app ? String(!!p.ok) : null, onClick: () => {
-        if (fait) return; fait = true;
-        ctx.combo(p.ok); son(p.ok ? 'ok' : 'ko');
-        b.classList.add('choisi');
-        round.plans.forEach((x) => { x.el.classList.add(x.ok ? 'juste' : 'faux'); x.el.disabled = true; });
-        zone.querySelector('.bonplan').append(
-          h('p', { class: `verdict ${p.ok ? 'juste' : 'faux'}` }, p.ok ? 'Bien vu. ' : 'Ce n’était pas le plus judicieux. ', s.m),
-          barrePied(continuer('Diagnostiquer les autres plans', () => suite(p))));
-        zone.querySelector('.pied button').scrollIntoView({ block: 'end', behavior: 'smooth' });
-      } } });
-      p.el = b; return b;
-    });
-    zone.replaceChildren(h('div', { class: 'bonplan' },
-      h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre),
-      h('p', { class: 'aide' }, s.pb),
-      plans));
+    const cartes = round.plans.map((p, i) => { p.el = feuillePlan(p.plan, 'plan-carte', { 'data-ok': repere(!!p.ok), 'aria-label': `Plan ${i + 1}` }); return p.el; });
+    const rail = h('div', { class: 'plans-rail' }, cartes);
+    const pas = () => cartes[1].offsetLeft - cartes[0].offsetLeft;
+    const index = () => Math.max(0, Math.min(cartes.length - 1, Math.round(rail.scrollLeft / pas())));
+    const allerA = (i) => { son('tap'); rail.scrollTo({ left: pas() * i, behavior: 'smooth' }); };
+    const points = h('div', { class: 'points' }, cartes.map((_, i) => h('button', { 'aria-label': `Voir le plan ${i + 1}`, onClick: () => allerA(i) }, h('i'))));
+    const bouton = continuer('Retenir le plan 1', () => retenir());
+    const pied = barrePied(bouton);
+    function maj() {
+      const k = index();
+      [...points.children].forEach((p, i) => p.classList.toggle('actif', i === k));
+      cartes.forEach((c, i) => c.classList.toggle('centree', i === k));
+      if (!fait) bouton.textContent = `Retenir le plan ${k + 1}`;
+    }
+    function retenir() {
+      if (fait) return;
+      fait = true;
+      const p = round.plans[index()];
+      ctx.combo(p.ok);
+      p.el.classList.add('choisi');
+      round.plans.forEach((x) => x.el.classList.add(x.ok ? 'juste' : 'faux'));
+      pied.replaceChildren(h('p', { class: `verdict ${p.ok ? 'juste' : 'faux'}` }, p.ok ? 'Bien vu. ' : 'Ce n’était pas le plus judicieux. ', s.m),
+        continuer('Diagnostiquer les plans', () => suite(p)));
+      if (!p.ok) rail.scrollTo({ left: pas() * round.plans.findIndex((x) => x.ok), behavior: 'smooth' });
+    }
+    rail.addEventListener('scroll', maj, { passive: true });
+    zone.replaceChildren(h('div', { class: 'ecran bonplan' },
+      h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre), h('p', { class: 'aide' }, s.pb)),
+      rail, points, pied));
+    maj();
     window.scrollTo(0, 0);
   });
   let diagBons = 0; let i = 0;
   for (const d of round.diagnostics) {
     i++;
     const r = await qcm(zone, ctx, {
-      surtitre: `Diagnostic ${i} sur ${round.diagnostics.length}`, question: 'Quel est le vrai défaut de ce plan ?',
-      options: d.options.map((o) => ({ t: o.l, ok: o.ok, w: o.t + ' Ce n’est pas le problème ici.' })), pourquoiBon: d.pourquoi,
-      apresRendu: (b) => b.insertBefore(feuillePlan(d.plan), b.querySelector('.options')),
+      classe: 'diagnostic', surtitre: `Diagnostic ${i} sur ${round.diagnostics.length}`, question: 'Quel est le vrai défaut de ce plan\u00a0?',
+      options: d.options.map((o) => ({ t: o.l, ok: o.ok, w: `${o.t} Ce n’est pas le problème ici.` })), pourquoiBon: d.pourquoi,
+      avant: feuillePlan(d.plan, 'plan-rappel'),
     });
     if (r.ok) diagBons++;
-    window.scrollTo(0, 0);
   }
   const ok = choixPlan.ok && diagBons === round.diagnostics.length;
   if (ok) etat.stats.plan++;
@@ -291,32 +379,41 @@ export async function jouerPlan(zone, ctx, round) {
   ctx.fin({ score, parfait: ok });
 }
 
-// ARCHITECTE -------------------------------------------------------------------
+// ARCHITECTE : le plan se construit sous les yeux, un intitulé à la fois -----------------
 export async function jouerArchitecte(zone, ctx, round, ix) {
-  const s = round.sujet; const place = {}; let idx = 0;
-  const titres = round.titres.map((t) => ({ ...t }));
+  const s = round.sujet; const place = {};
+  let pile = round.titres.map((t) => ({ ...t }));
+  let ecartes = [];
   await new Promise((suite) => {
-    const rendre = () => {
-      const lignes = CASES.map((c, i) => {
+    function rendre() {
+      const complet = CASES.every((c) => place[c]);
+      if (!complet && !pile.length) {
+        pile = ecartes; ecartes = [];
+        toast('Il manque des intitulés : ceux que tu as écartés reviennent.');
+      }
+      const tuile = pile[0];
+      const lignes = CASES.map((c) => {
         const t = place[c];
         return h('button', {
-          class: `case-plan ${c.length === 1 ? 'partie' : 'sous'} ${i === idx && !t ? 'active' : ''} ${t ? 'pleine' : ''}`,
-          onClick: () => { if (t) delete place[c]; idx = i; rendre(); },
-        }, h('b', {}, NOM_CASE[c]), t ? t.t : h('span', { class: 'vide' }, 'À construire'));
+          class: `case-plan ${c.length === 1 ? 'partie' : 'sous'} ${t ? 'pleine' : ''} ${tuile && !t ? 'cible' : ''}`, 'data-c': repere(c),
+          'aria-label': `${NOM_CASE[c]} : ${t ? t.t : 'vide'}`,
+          onClick: () => {
+            if (tuile) { pile.shift(); if (t) pile.push(t); place[c] = tuile; son('carte'); vibrer(8); } else if (t) { delete place[c]; pile.unshift(t); son('retour'); }
+            rendre();
+          },
+        }, h('b', {}, NOM_CASE[c]), t ? h('span', {}, t.t) : h('span', { class: 'vide' }, 'À construire'));
       });
-      const libres = titres.filter((t) => !Object.values(place).includes(t));
-      const complet = CASES.every((c) => place[c]);
-      zone.replaceChildren(h('div', { class: 'architecte' },
-        h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre),
-        h('div', { class: 'squelette' }, lignes),
-        !complet ? h('p', { class: 'aide' }, 'Certains intitulés sont de trop.') : null,
-        h('div', { class: 'tuiles' }, libres.map((t) => h('button', { class: 'tuile', 'data-case': window.__app ? (t.c || 'leurre') : null, onClick: () => {
-          son('tap'); place[CASES[idx]] = t;
-          const suivant = CASES.findIndex((c) => !place[c]); idx = suivant === -1 ? idx : suivant; rendre();
-        } }, t.t))),
-        complet ? barrePied(continuer('Comparer au plan modèle', suite)) : null));
-    };
+      const ecarter = () => { ecartes.push(pile.shift()); son('ecart'); vibrer(8); rendre(); };
+      const plusTard = () => { pile.push(pile.shift()); son('carte'); rendre(); };
+      zone.replaceChildren(h('div', { class: 'ecran architecte' },
+        h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre), h('div', { class: 'squelette' }, lignes)),
+        h('div', { class: 'dock' },
+          tuile ? h('article', { class: 'tuile', 'data-case': repere(tuile.c || 'leurre') }, tuile.t) : null,
+          tuile ? h('div', { class: 'dock-bas' }, fantome('ecarter', 'Écarter', ecarter), fantome('plusTard', 'Plus tard', plusTard, { disabled: pile.length < 2 })) : null,
+          complet ? barrePied(continuer('Comparer au plan modèle', suite)) : null)));
+    }
     rendre();
+    window.scrollTo(0, 0);
   });
   // A et B peuvent s'inverser au sein d'une partie : seul compte le bon rattachement.
   const bonneCase = (c) => {
@@ -326,13 +423,13 @@ export async function jouerArchitecte(zone, ctx, round, ix) {
     return t.c[0] === c[0] && t.c.length === 2;
   };
   const justes = CASES.filter(bonneCase).length;
-  ctx.combo(justes >= 5); son(justes >= 5 ? 'ok' : 'ko');
+  ctx.combo(justes >= 5);
   await new Promise((suite) => {
-    zone.replaceChildren(h('div', { class: 'architecte' },
+    zone.replaceChildren(h('div', { class: 'ecran architecte' },
       h('h2', { class: 'question' }, `${justes} intitulés sur 6 au bon endroit`),
-      h('div', { class: 'squelette' }, CASES.map((c) => h('div', { class: `case-plan ${c.length === 1 ? 'partie' : 'sous'} ${bonneCase(c) ? 'juste' : 'faux'}` }, h('b', {}, NOM_CASE[c]), place[c].t))),
-      h('h3', { class: 'titre-modele' }, 'Le plan modèle'),
-      feuillePlan({ 1: s.bon[1], '1a': s.bon['1a'].t, '1b': s.bon['1b'].t, 2: s.bon[2], '2a': s.bon['2a'].t, '2b': s.bon['2b'].t }),
+      h('div', { class: 'squelette' }, CASES.map((c) => h('div', { class: `case-plan ${c.length === 1 ? 'partie' : 'sous'} ${bonneCase(c) ? 'juste' : 'faux'}` }, h('b', {}, NOM_CASE[c]), h('span', {}, place[c].t)))),
+      h('details', { class: 'pli', open: justes < 6 }, h('summary', {}, 'Le plan modèle', icone('chevron', 16)),
+        feuillePlan({ 1: s.bon[1], '1a': s.bon['1a'].t, '1b': s.bon['1b'].t, 2: s.bon[2], '2a': s.bon['2a'].t, '2b': s.bon['2b'].t })),
       h('p', { class: 'verdict' }, s.m),
       barrePied(continuer(round.placements.length ? 'Placer les arrêts' : 'Continuer', suite))));
     window.scrollTo(0, 0);
@@ -344,8 +441,8 @@ export async function jouerArchitecte(zone, ctx, round, ix) {
     const z = a.zones.find((x) => s.zones.includes(x)) ?? a.zones[0];
     const r = await qcm(zone, ctx, {
       surtitre: `Arrêt ${i + 1} sur ${places.length}`,
-      question: `Où places-tu ${a.court} (${a.an}) ?`,
-      options: ['1a', '1b', '2a', '2b'].map((c) => ({ t: `${c[0] === '1' ? 'I' : 'II'}.${NOM_CASE[c]} ${s.bon[c].t}`, ok: c === p.c, w: null })),
+      question: `Où places-tu ${a.court}, ${a.an}\u00a0?`,
+      options: ['1a', '1b', '2a', '2b'].map((c) => ({ t: `${c[0] === '1' ? 'I' : 'II'}.${NOM_CASE[c]}  ${s.bon[c].t}`, ok: c === p.c, w: null })),
       pourquoiBon: a.ap[z],
     });
     ctx.noter(a.id, r.ok);

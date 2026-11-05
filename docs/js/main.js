@@ -1,13 +1,16 @@
 // Point d'entrée : écrans, séances, récompenses.
-import { h, icone, sceau, son, reveillerAudio, confettis, toast, petitSceau } from './ui.js';
+import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
+import { icone, sceau, petitSceau, laurier, mascotte, medaille } from './visuels.js';
+import { son, reveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import {
   etat, charger, sauver, jour, rang, RANGS, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
-  zonesOuvertes, ouvrirSuivante, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage,
+  zonesOuvertes, ouvrirSuivante, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage, rembourse,
 } from './state.js';
 import { indexer, composerDefi, composerBoss, tirerRound, jumeaux, melange } from './engine.js';
 import { JEUX, NOMS_MODES, continuer } from './games.js';
 import { activerRappel, etatRappel, testerNotification, estInstallee, abonnementActuel } from './notif.js';
 import { cloudActif, inscrireAbonnement, copierEnLigne, codeRecuperation, restaurerEnLigne } from './cloud.js';
+import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
 let ix = null;
 const racine = document.getElementById('app');
@@ -15,21 +18,30 @@ const onglets = document.getElementById('onglets');
 let ongletCourant = 'palais';
 
 const fmt = (n) => n.toLocaleString('fr-FR');
-const pluriel = (n, s, p = s + 's') => `${fmt(n)} ${n > 1 ? p : s}`;
+const pluriel = (n, s, p = s + 's') => `${fmt(n)} ${n > 1 ? p : s}`;
+const monnaie = (n) => pluriel(n, estRose() ? 'canette' : 'jeton');
 
 function montrer(...enfants) {
   racine.replaceChildren(...enfants.filter(Boolean));
   window.scrollTo(0, 0);
 }
 
-function appliquerTheme() { document.documentElement.dataset.theme = etat.theme; }
+function appliquerTheme() {
+  const r = document.documentElement;
+  r.dataset.theme = etat.theme;
+  r.dataset.effets = effets() ? 'oui' : 'non';
+  if (images.jeton) r.style.setProperty('--jeton-image', `url("${images.jeton}")`);
+  else r.style.removeProperty('--jeton-image');
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', etat.theme === 'rose' ? '#C2466E' : '#0C1A47');
+}
 
 function barreHaut() {
   const r = rang();
   return h('header', { class: 'haut' },
-    h('button', { class: 'haut-rang', onClick: () => aller('profil') }, h('span', {}, etat.insigne !== 'aucun' ? icone(etat.insigne, 17) : null, r.nom),
-      h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.round(r.part * 100)}%` }))),
-    h('button', { class: 'haut-jetons', onClick: () => aller('boutique'), 'aria-label': `${etat.jetons} jetons de présence` }, h('i', { class: 'jeton' }), fmt(etat.jetons)));
+    h('button', { class: 'haut-rang', onClick: () => aller('profil'), 'aria-label': `${r.nom}, voir le profil` },
+      h('span', { class: 'haut-ligne' }, h('span', { class: 'haut-nom' }, etat.insigne !== 'aucun' ? icone(etat.insigne, 16) : null, r.nom), laurier(36)),
+      h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${r.part.toFixed(3)})` }))),
+    h('button', { class: 'haut-jetons', onClick: () => aller('boutique'), 'aria-label': monnaie(etat.jetons) }, h('i', { class: 'jeton' }), fmt(etat.jetons)));
 }
 
 function afficherOnglets(vis) {
@@ -39,7 +51,7 @@ function afficherOnglets(vis) {
   onglets.replaceChildren(...defs.map(([id, l]) => h('button', {
     class: `onglet ${ongletCourant === id ? 'actif' : ''}`, 'aria-current': ongletCourant === id ? 'page' : null,
     onClick: () => { son('tap'); aller(id); },
-  }, icone(id === 'arrets' ? 'arrets' : id, 22), h('span', {}, l))));
+  }, icone(id, 23), h('span', {}, l))));
 }
 
 function aller(id, p) {
@@ -55,9 +67,19 @@ function semaine() {
   for (let d = j - 6; d <= j; d++) {
     const dow = new Date(d * 864e5).getUTCDay();
     const v = etat.jours[d];
-    cases.push(petitSceau(v === 1 ? 'tamponne' : v === 's' ? 'sursis' : v === 'f' ? 'sursis' : d === j ? 'aujourdhui' : '', lettres[dow]));
+    const classe = v === 1 ? 'tamponne' : v === 's' || v === 'f' ? 'sursis' : '';
+    cases.push(petitSceau(`${classe} ${d === j ? 'aujourdhui' : ''}`, lettres[dow]));
   }
   return h('div', { class: 'semaine', 'aria-label': 'Sept derniers jours' }, cases);
+}
+
+// Le centre de l'accueil : le sceau en bleu, le chat juge en rose.
+function figureSerie(s, fait) {
+  const etincelles = [1, 2, 3].map((i) => h('i', { class: `etincelle e${i}`, 'aria-hidden': 'true' }));
+  if (!estRose()) return h('div', { class: 'sceau-vivant' }, sceau(s.n, { taille: 158, eteint: !fait && s.n === 0 }), etincelles);
+  return h('div', { class: 'figure-rose' }, laurier(196),
+    images.mascotte ? h('img', { class: 'mascotte-perso', src: images.mascotte, alt: 'Ta mascotte' }) : mascotte(150),
+    h('span', { class: 'mini-sceau' }, sceau(s.n, { taille: 58, lauriers: false, eteint: !fait && s.n === 0 })), etincelles);
 }
 
 function accueil() {
@@ -68,11 +90,11 @@ function accueil() {
   const rompue = etat.rompue;
   const blocRupture = rompue ? h('div', { class: 'rupture' },
     h('p', {}, `Ta série de ${pluriel(rompue.n, 'jour')} est tombée. Un relevé de forclusion peut la rétablir jusqu’à demain soir.`),
-    h('button', { class: 'bouton-or', disabled: etat.jetons < prixForclusion(), onClick: () => { if (relever()) { son('sceau'); toast('Série rétablie.'); accueil(); } } },
-      `Rétablir pour ${prixForclusion()} jetons`)) : null;
+    h('button', { class: 'bouton-or', disabled: etat.jetons < prixForclusion(), onClick: () => { if (relever()) { son('sceau'); vibrer(20); toast('Série rétablie.'); accueil(); } } },
+      `Rétablir pour ${monnaie(prixForclusion())}`)) : null;
 
-  const lignes = Object.entries(NOMS_MODES).map(([m, [nom, txt]]) => h('button', { class: 'role-ligne', onClick: () => { son('tap'); lancerMode(m); } },
-    icone(m, 26), h('span', {}, h('b', {}, nom), h('small', {}, txt))));
+  const lignes = Object.entries(NOMS_MODES).map(([m, [nom, txt]], i) => h('button', { class: 'role-ligne', 'data-mode': m, style: `--d:${i * 2.2}s`, onClick: () => { son('tap'); lancerMode(m); } },
+    h('span', { class: 'role-icone' }, icone(m, 28)), h('span', { class: 'role-txt' }, h('b', {}, nom), h('small', {}, txt))));
 
   // Sur iPhone, Safari et l'icône de l'écran d'accueil ont chacun leur stockage.
   const aInstaller = /iPhone|iPad|iPod/.test(navigator.userAgent) && !estInstallee()
@@ -86,7 +108,7 @@ function accueil() {
     barreHaut(),
     aInstaller,
     h('section', { class: 'tribune', 'data-decor': etat.decor },
-      sceau(s.n, { taille: 148, eteint: !fait && s.n === 0 }),
+      figureSerie(s, fait),
       h('p', { class: 'serie-txt' }, s.n === 0 ? 'Aucune série en cours' : `${pluriel(s.n, 'jour')} de série`),
       h('p', { class: 'serie-sous' }, fait ? 'Séance du jour validée. Reviens demain.' : s.n ? 'Termine une séance aujourd’hui pour la garder.' : 'Termine une séance pour poser ton premier sceau.'),
       semaine(), blocRupture),
@@ -94,7 +116,7 @@ function accueil() {
       etat.enCours ? h('div', { class: 'reprise' },
         h('button', { class: 'bouton-or', onClick: () => lancer({ reprise: etat.enCours }) }, `Reprendre : ${etat.enCours.titre}, épreuve ${etat.enCours.i + 1} sur ${etat.enCours.rounds.length}`),
         h('button', { class: 'bouton-lien', onClick: () => { etat.enCours = null; sauver(); accueil(); } }, 'Abandonner cette séance')) : null,
-      h('button', { class: 'cta', onClick: lancerDefi }, 'Défi du jour'),
+      h('button', { class: 'cta brille', onClick: lancerDefi }, 'Défi du jour'),
       h('p', { class: 'cta-sous' }, dus ? `5 épreuves, ${pluriel(dus, 'arrêt')} à revoir` : '5 épreuves, environ 5 minutes'),
       h('button', { class: 'bouton-lien', onClick: lancerExpress }, 'Juste trois minutes')),
     h('section', { class: 'role' }, h('h2', {}, 'Rôle des épreuves'), lignes),
@@ -135,6 +157,7 @@ function lancer({ rounds, titre, type, zone, reprise }) {
   const compteur = h('div', { class: 'combo', 'aria-live': 'polite' });
   const vies = h('div', { class: 'vies' });
   const scene = h('main', { class: 'scene' });
+  const decor = h('div', { class: 'decor-seance', 'aria-hidden': 'true' });
   const quitter = h('button', { class: 'quitter', 'aria-label': 'Quitter la séance', onClick: () => demanderQuitter() }, icone('fermer', 22));
   const entete = h('header', { class: 'entete-seance' }, quitter, pips, S.vies !== null ? vies : compteur);
 
@@ -157,12 +180,20 @@ function lancer({ rounds, titre, type, zone, reprise }) {
 
   const ctx = {
     boss: type === 'boss',
-    combo(ok) {
+    combo(ok, muet = false) {
       S.combo = ok ? S.combo + 1 : 0;
       S.comboMax = Math.max(S.comboMax, S.combo);
-      if (S.combo === 5 || S.combo === 10) son('combo');
+      if (!muet) ctx.sonner(ok);
       majEntete();
     },
+    // Le son suit la série : chaque bonne réponse de suite monte d'une note.
+    sonner(ok) {
+      if (S.combo === 5 || S.combo === 10) son('combo', { niveau: S.combo });
+      else son(ok ? 'ok' : 'ko', { niveau: S.combo });
+      vibrer(ok ? 10 : [14, 50, 14]);
+      if (!ok && estRose()) bebew();
+    },
+    decor: (el) => decor.replaceChildren(el),
     noter(id, ok, conf) {
       noter(id, ok, conf);
       const t = S.touches.get(id) || { ok: 0, ko: 0 };
@@ -174,11 +205,15 @@ function lancer({ rounds, titre, type, zone, reprise }) {
     },
     touche: () => false,
     nettoyage: (f) => S.nettoyer.push(f),
-    fin(res) {
+    async fin(res) {
       S.nettoyer.forEach((f) => f()); S.nettoyer = [];
       S.scores.push(res.score); if (res.parfait) S.parfaites++;
       if (S.vies !== null && res.score < 0.6) S.vies--;
       S.i++;
+      if (res.parfait) {
+        majEntete();
+        if (estRose()) { son('slay'); vibrer([20, 60, 20]); await slayDiva(); } else son('parfait');
+      }
       if (S.vies === 0) return finir(false);
       if (S.i >= S.rounds.length) return finir(true);
       memoriser();
@@ -189,6 +224,7 @@ function lancer({ rounds, titre, type, zone, reprise }) {
   function suivant() {
     majEntete();
     const r = S.rounds[S.i];
+    scene.className = 'scene'; decor.replaceChildren();
     window.scrollTo(0, 0);
     Promise.resolve(JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
       console.error(e);
@@ -197,7 +233,7 @@ function lancer({ rounds, titre, type, zone, reprise }) {
   }
 
   function finir(reussi) { etat.enCours = null; resultats(S, reussi); }
-  montrer(entete, scene);
+  montrer(decor, entete, scene);
   memoriser();
   suivant();
 }
@@ -224,7 +260,7 @@ function resultats(S, reussi) {
         etat.jetons += 40;
       }
       if (S.vies === 3 && !etat.zones.parfaites.includes(S.zone)) etat.zones.parfaites.push(S.zone);
-      textBoss = premier ? 'Audience gagnée. La chambre suivante s’ouvre, et 40 jetons te reviennent.' : 'Audience gagnée une nouvelle fois.';
+      textBoss = premier ? `Audience gagnée. La chambre suivante s’ouvre, et ${monnaie(40)} te reviennent.` : 'Audience gagnée une nouvelle fois.';
     } else textBoss = 'Audience perdue. Révise cette chambre, puis réessaie.';
   }
   const v = reussi || S.type !== 'boss' ? validerJour() : { nouveau: false, n: etat.serie.n };
@@ -244,10 +280,10 @@ function resultats(S, reussi) {
     h('dl', { class: 'res-chiffres' },
       h('div', {}, h('dt', {}, 'Réussite'), h('dd', {}, `${pourcent} %`)),
       h('div', {}, h('dt', {}, 'Expérience'), h('dd', {}, `+${fmt(S.xp)}`)),
-      h('div', {}, h('dt', {}, 'Jetons'), h('dd', {}, `+${fmt(S.jetons + bonus)}`))),
-    v.coffre ? h('p', { class: 'res-coffre' }, `Coffre de série : ${v.etape ?? v.coffre.etape} jours tenus, ${v.coffre.jetons} jetons et ${pluriel(v.coffre.sursis, 'sursis', 'sursis')}.`) : null,
+      h('div', {}, h('dt', {}, estRose() ? 'Canettes' : 'Jetons'), h('dd', {}, `+${fmt(S.jetons + bonus)}`))),
+    v.coffre ? h('p', { class: 'res-coffre' }, `Coffre de série : ${v.etape ?? v.coffre.etape} jours tenus, ${monnaie(v.coffre.jetons)} et ${pluriel(v.coffre.sursis, 'sursis', 'sursis')}.`) : null,
     apres.i > avant.i ? h('div', { class: 'decret' }, h('p', {}, 'Par décret, tu es nommé'), h('strong', {}, apres.nom)) : null,
-    nouveaux.length ? h('ul', { class: 'res-trophees' }, nouveaux.map((t) => h('li', {}, h('b', {}, t.nom), ' ', t.txt))) : null,
+    nouveaux.length ? h('ul', { class: 'res-trophees' }, nouveaux.map((t) => h('li', {}, medaille(metalDe(t.id), true), h('span', {}, h('b', {}, t.nom), h('small', {}, t.txt))))) : null,
     aRevoirListe.length ? h('section', { class: 'res-revoir' }, h('h2', {}, 'À revoir'),
       h('ul', {}, aRevoirListe.slice(0, 6).map((a) => h('li', {}, h('button', { onClick: () => { afficherOnglets(true); ongletCourant = 'arrets'; fiche(a.id); } }, h('b', {}, a.court), ` ${a.an}`))))) : null,
     h('div', { class: 'pied' },
@@ -262,11 +298,12 @@ function resultats(S, reussi) {
     zoneSceau.append(s);
     s.classList.add('frappe');
     setTimeout(() => son('sceau'), 330);
-    if (apres.i > avant.i || parfaite || v.coffre) setTimeout(() => { confettis(); son('grade'); }, 700);
+    if (apres.i > avant.i || parfaite || v.coffre) setTimeout(() => { confettis(); son(v.coffre ? 'coffre' : 'grade'); }, 900);
   } else {
     zoneSceau.append(sceau(etat.serie.n, { taille: 96, lauriers: false, eteint: etat.serie.n === 0 }));
     if (apres.i > avant.i || parfaite) { confettis(); son('grade'); }
   }
+  if (S.type === 'boss' && reussi) setTimeout(() => son('deblocage'), 1300);
 }
 
 // CHAMBRES ------------------------------------------------------------------------
@@ -276,30 +313,49 @@ function progressionZone(z) {
   return { total: liste.length, acquis, part: acquis / liste.length };
 }
 
+// Le chemin du cours : les chambres alternent de part et d'autre d'un fil de lumière.
+const LARGEUR = 390; const PAS = 164; const DEPART = 66; const PREMIER_ECART = 216;
+const pointSalle = (i) => ({ x: i === 0 ? 195 : i % 2 ? 300 : 90, y: i === 0 ? DEPART : DEPART + PREMIER_ECART + (i - 1) * PAS });
+
 function carte() {
   const ouvertes = zonesOuvertes(ix);
-  const salles = ix.zones.map((z) => {
-    const p = progressionZone(z.id);
+  const enCours = (etat.reglages.toutOuvert ? ix.zones.find((z) => !etat.zones.gagnees.includes(z.id)) : [...ix.zones].reverse().find((z) => ouvertes.includes(z.id) && !etat.zones.gagnees.includes(z.id) && z.id !== 10))?.id;
+  const n = ix.zones.length;
+  const hauteur = pointSalle(n - 1).y + 110;
+  let troncons = ''; let comete = '';
+  for (let i = 0; i < n - 1; i++) {
+    const a = pointSalle(i); const b = pointSalle(i + 1); const dy = b.y - a.y;
+    const d = i === 0 ? `M${a.x} ${a.y}C${a.x + 165} ${a.y + 2},${b.x + 4} ${b.y - 118},${b.x} ${b.y}` : `M${a.x} ${a.y}C${a.x} ${a.y + dy * 0.62},${b.x} ${b.y - dy * 0.62},${b.x} ${b.y}`;
+    const parcouru = ouvertes.includes(ix.zones[i + 1].id);
+    troncons += `<path class="voie-halo ${parcouru ? '' : 'loin'}" d="${d}"/><path class="voie ${parcouru ? '' : 'loin'}" d="${d}"/>`;
+    if (ix.zones[i + 1].id === enCours) comete = `<circle class="comete" r="3.500"><animateMotion dur="4.600s" repeatCount="indefinite" calcMode="spline" keySplines=".4 0 .6 1" keyTimes="0;1" path="${d}"/></circle>`;
+  }
+  const salles = ix.zones.map((z, i) => {
+    const p = progressionZone(z.id); const pt = pointSalle(i);
     const ouvert = ouvertes.includes(z.id); const gagne = etat.zones.gagnees.includes(z.id);
-    return h('li', { class: `salle ${ouvert ? '' : 'fermee'} ${gagne ? 'gagnee' : ''}` },
+    const cote = i === 0 ? 'dessous' : i % 2 ? 'gauche' : 'droite';
+    const marque = !ouvert ? h('span', { class: 'salle-marque' }, icone('cadenas', 30))
+      : z.id === enCours ? h('span', { class: 'salle-marque' }, String(z.id))
+        : h('span', { class: 'salle-marque' }, laurier(92), gagne ? icone('juste', 30) : h('span', {}, z.id === 10 ? '+' : String(z.id)));
+    return h('li', { class: `salle ${cote} ${ouvert ? 'ouverte' : 'fermee'} ${gagne ? 'gagnee' : ''} ${z.id === enCours ? 'courante' : ''}`, style: `left:${(pt.x / LARGEUR) * 100}%;top:${pt.y}px` },
       h('button', { onClick: () => { son('tap'); if (ouvert) chambre(z.id); else chambreFermee(z); }, 'aria-label': `${z.titre}, ${p.acquis} arrêts acquis sur ${p.total}${ouvert ? '' : ', fermée'}` },
-        h('span', { class: 'salle-marque' }, ouvert ? (gagne ? '✓' : z.id === 10 ? '+' : z.id) : icone('cadenas', 18)),
-        h('span', { class: 'salle-txt' }, h('b', {}, z.titre), h('small', {}, z.lieu),
-          h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.round(p.part * 100)}%` }))),
-        h('span', { class: 'salle-compte' }, `${p.acquis}/${p.total}`)));
+        marque,
+        h('span', { class: 'salle-txt' }, h('b', {}, z.titre), ouvert ? h('span', { class: 'salle-compte' }, `${p.acquis}/${p.total}`) : null)));
   });
-  montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, 'Les chambres'),
-    h('p', { class: 'page-sous' }, 'Chaque chambre suit ton cours. Gagne son audience solennelle pour ouvrir la suivante, ou ouvre tout dans ton profil.'),
-    h('ol', { class: 'enfilade' }, salles)));
+  const plan = h('div', { class: 'parcours', style: `height:${hauteur}px` },
+    h('div', { html: `<svg class="voies" viewBox="0 0 ${LARGEUR} ${hauteur}" preserveAspectRatio="none" aria-hidden="true">${troncons}${effets() ? comete : ''}</svg>` }),
+    h('ol', {}, salles));
+  montrer(barreHaut(), h('section', { class: 'page page-chambres' }, h('h1', {}, 'Les chambres'),
+    h('p', { class: 'page-sous' }, 'Progression dans l’ordre juridictionnel'), plan));
 }
 
 function chambreFermee(z) {
   const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite' },
     h('p', {}, `« ${z.titre} » s’ouvre quand tu gagnes l’audience précédente.`),
     h('div', { class: 'boite-actions' },
-      etat.inv.passe > 0 ? h('button', { class: 'bouton-or', onClick: () => { etat.inv.passe--; const n = ouvrirSuivante(); voile.remove(); toast(`Chambre ${n} ouverte.`); carte(); } }, `Utiliser un passe-droit (${etat.inv.passe})`)
+      etat.inv.passe > 0 ? h('button', { class: 'bouton-or', onClick: () => { etat.inv.passe--; const n = ouvrirSuivante(); voile.remove(); son('deblocage'); toast(`Chambre ${n} ouverte.`); carte(); } }, `Utiliser un passe-droit (${etat.inv.passe})`)
         : h('button', { class: 'bouton-or', onClick: () => { voile.remove(); aller('boutique'); } }, 'Voir la boutique'),
-      h('button', { class: 'bouton-lien sombre', onClick: () => voile.remove() }, 'Fermer'))));
+      h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Fermer'))));
   document.body.append(voile);
 }
 
@@ -311,6 +367,15 @@ function reviserZone(z) {
   lancer({ type: 'zone', titre: 'Révision', zone: z, rounds: ['paires', types.find((t) => t !== 'paires'), 'paires'].map((t) => tirerRound(ix, t, [z], dus, Math.random, deja)) });
 }
 
+const ICONES_NIVEAU = [null, 'note', 'crayon', 'plume', 'balance', 'laurier'];
+const niveauTag = (b) => h('span', { class: 'niveau', 'aria-label': TITRES_CARTE[b] }, TITRES_CARTE[b]);
+const carteArret = (a) => {
+  const b = niveau(a.id);
+  return h('li', {}, h('button', { class: `carte-arret n${b}`, onClick: () => fiche(a.id) },
+    h('span', { class: 'carte-an' }, a.an), h('i', { class: 'losange', 'aria-hidden': 'true' }), h('b', {}, a.court),
+    h('span', { class: 'carte-bas' }, niveauTag(b), ICONES_NIVEAU[b] ? icone(ICONES_NIVEAU[b], 20) : null)));
+};
+
 function chambre(zid) {
   const z = ix.zones.find((x) => x.id === zid);
   const p = progressionZone(zid);
@@ -321,30 +386,25 @@ function chambre(zid) {
       h('div', { class: 'actions gauche' },
         h('button', { class: 'cta', onClick: () => reviserZone(zid) }, 'Réviser cette chambre'),
         zid !== 10 ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(zid) }, etat.zones.gagnees.includes(zid) ? 'Rejouer l’audience solennelle' : 'Audience solennelle : 6 épreuves, 3 vies, sans joker') : null),
-      h('ul', { class: 'liste-arrets' }, liste.map(ligneArret))));
+      h('ul', { class: 'grille-cartes' }, liste.map(carteArret))));
 }
-
-const etoiles = (b) => h('span', { class: 'niveau', 'aria-label': TITRES_CARTE[b] }, TITRES_CARTE[b]);
-const ligneArret = (a) => h('li', {}, h('button', { class: `ligne-arret n${niveau(a.id)}`, onClick: () => fiche(a.id) },
-  h('span', { class: 'an' }, a.an), h('span', { class: 'nm' }, a.court), etoiles(niveau(a.id))));
 
 // ARRÊTS ----------------------------------------------------------------------------
 let filtre = { texte: '', zone: 0 };
 function collection() {
   const champ = h('input', { type: 'search', class: 'recherche', placeholder: 'Chercher un arrêt ou une année', value: filtre.texte, 'aria-label': 'Chercher un arrêt', onInput: (e) => { filtre.texte = e.target.value; rendre(); } });
-  const zonesBtns = [{ id: 0, titre: 'Tous' }, ...ix.zones].map((z) => h('button', { class: `filtre ${filtre.zone === z.id ? 'actif' : ''}`, onClick: () => { filtre.zone = z.id; collection(); } }, z.id ? `${z.id === 10 ? 'Bonus' : z.id}` : 'Tous'));
+  const zonesBtns = [{ id: 0, titre: 'Tous' }, ...ix.zones].map((z) => h('button', { class: `filtre ${filtre.zone === z.id ? 'actif' : ''}`, onClick: () => { son('tap'); filtre.zone = z.id; collection(); } }, z.id ? `${z.id === 10 ? 'Bonus' : z.id}` : 'Tous'));
   const grille = h('ul', { class: 'grille-cartes' });
-  const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const norm = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   function rendre() {
     const q = norm(filtre.texte);
     const res = ix.arrets.filter((a) => (!filtre.zone || a.zones.includes(filtre.zone)) && (!q || norm(`${a.nom} ${a.an} ${Object.values(a.ap).join(' ')}`).includes(q))).sort((a, b) => a.an - b.an);
-    grille.replaceChildren(...(res.length ? res.map((a) => h('li', {}, h('button', { class: `carte-arret n${niveau(a.id)}`, onClick: () => fiche(a.id) },
-      h('span', { class: 'carte-an' }, a.an), h('b', {}, a.court), etoiles(niveau(a.id))))) : [h('li', { class: 'vide' }, 'Aucun arrêt ne correspond à cette recherche.')]));
+    grille.replaceChildren(...(res.length ? res.map(carteArret) : [h('li', { class: 'vide' }, 'Aucun arrêt ne correspond à cette recherche.')]));
   }
   const acquis = Object.values(etat.arrets).filter((a) => a.b >= 5).length;
   montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, 'Les arrêts'),
     h('p', { class: 'page-sous' }, `${pluriel(acquis, 'grand arrêt')} sur ${ix.arrets.length}. Chaque carte monte de niveau quand tu réussis.`),
-    champ, h('div', { class: 'filtres' }, zonesBtns), grille));
+    h('label', { class: 'cherche' }, icone('loupe', 22), champ), h('div', { class: 'filtres' }, zonesBtns), grille));
   rendre();
 }
 
@@ -354,7 +414,7 @@ function fiche(id) {
   const champs = a.nf ? [['Ce qu’il faut retenir', a.s], ['Portée', a.po]] : [['Faits', a.f], ['Procédure', a.pr], ['Problème de droit', a.q], ['Solution', a.s], ['Portée', a.po]];
   const jum = jumeaux(ix, id);
   montrer(
-    h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller(ongletCourant) }, icone('retour', 22)), etoiles(niveau(id))),
+    h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller(ongletCourant) }, icone('retour', 22)), niveauTag(niveau(id))),
     h('article', { class: 'fiche' },
       h('div', { class: 'revelation-tete' }, h('span', { class: 'annee' }, a.an), h('div', {}, h('h1', {}, a.court), h('p', { class: 'ref' }, a.ref))),
       Object.entries(a.ap).map(([, t]) => h('p', { class: 'apport' }, t)).filter((_, i, l) => l.findIndex((x) => x.textContent === _.textContent) === i),
@@ -362,50 +422,91 @@ function fiche(id) {
       a.nf ? h('p', { class: 'note-nf' }, 'Faits de l’espèce non vérifiés : cette fiche s’en tient à la règle du cours.') : null,
       h('h2', {}, 'La fiche'),
       champs.map(([l, t]) => h('div', { class: 'rubrique' }, h('h3', {}, l), h('p', {}, t))),
-      conf.length ? h('div', { class: 'confusions' }, h('h2', {}, 'Tu le confonds avec'), h('ul', {}, conf.map(([c, n]) => h('li', {}, h('button', { onClick: () => fiche(c) }, ix.parId.get(c).nom), ` ${n} fois`)))) : null,
-      jum.length ? h('div', { class: 'jumeaux' }, h('h2', {}, 'Ses faux jumeaux'), h('ul', {}, jum.map((j) => h('li', {}, h('button', { onClick: () => fiche(j.id) }, `${ix.parId.get(j.id).court} (${ix.parId.get(j.id).an})`), ' ', j.k)))) : null,
+      conf.length ? h('div', { class: 'confusions' }, h('h2', {}, 'Tu le confonds avec'), h('ul', {}, conf.map(([c, n]) => h('li', {}, h('button', { onClick: () => fiche(c) }, ix.parId.get(c).court), ` ${n} fois`)))) : null,
+      jum.length ? h('div', { class: 'jumeaux' }, h('h2', {}, 'Ses faux jumeaux'), h('ul', {}, jum.map((j) => h('li', {}, h('button', { onClick: () => fiche(j.id) }, `${ix.parId.get(j.id).court}, ${ix.parId.get(j.id).an}`), ' ', j.k)))) : null,
     ));
 }
 
 // BOUTIQUE ---------------------------------------------------------------------------
 function acheter(item) {
-  if (etat.jetons < item.prix) return toast('Pas assez de jetons.');
+  if (etat.jetons < item.prix) return toast(`Pas assez de ${estRose() ? 'canettes' : 'jetons'}.`);
   if (item.max && etat.inv[item.id] >= item.max) return toast(`${item.max} au maximum.`);
   etat.jetons -= item.prix; etat.inv[item.id] = (etat.inv[item.id] || 0) + 1;
-  sauver(); son('jeton'); boutique();
+  sauver(); son('jeton'); vibrer(10); boutique();
 }
+const boutonPrix = (prix, action, label) => h('button', { class: 'prix', disabled: etat.jetons < prix, onClick: action, 'aria-label': label }, h('i', { class: 'jeton' }), prix);
+
 function boutique() {
   const objets = BOUTIQUE.map((b) => h('li', { class: 'article' },
-    icone(b.id, 26),
     h('div', {}, h('b', {}, b.nom), h('p', {}, b.txt), h('small', {}, `En stock : ${etat.inv[b.id] || 0}`)),
-    h('button', { class: 'prix', disabled: etat.jetons < b.prix, onClick: () => acheter(b), 'aria-label': `Acheter ${b.nom} pour ${b.prix} jetons` }, h('i', { class: 'jeton' }), b.prix)));
+    boutonPrix(b.prix, () => acheter(b), `Acheter ${b.nom} pour ${monnaie(b.prix)}`)));
   const themes = THEMES.map((t) => {
     const a = etat.themes.includes(t.id); const actif = etat.theme === t.id;
-    return h('li', { class: `article theme-${t.id}` },
-      h('span', { class: 'pastille' }),
+    const porter = () => { etat.theme = t.id; appliquerTheme(); sauver(); son('deblocage'); vibrer(12); aller('boutique'); };
+    return h('li', { class: `article tenue theme-${t.id}` },
+      h('span', { class: `apercu apercu-${t.id}`, 'aria-hidden': 'true' }),
       h('div', {}, h('b', {}, t.nom), h('p', {}, t.txt)),
-      a ? h('button', { class: `prix ${actif ? 'actif' : ''}`, disabled: actif, onClick: () => { etat.theme = t.id; appliquerTheme(); sauver(); boutique(); } }, actif ? 'Porté' : 'Porter')
-        : h('button', { class: 'prix', disabled: etat.jetons < t.prix, onClick: () => { etat.jetons -= t.prix; etat.themes.push(t.id); etat.theme = t.id; appliquerTheme(); sauver(); son('jeton'); boutique(); } }, h('i', { class: 'jeton' }), t.prix));
+      a ? h('button', { class: `prix ${actif ? 'actif' : ''}`, disabled: actif, onClick: porter }, actif ? 'Portée' : 'Porter')
+        : boutonPrix(t.prix, () => { etat.jetons -= t.prix; etat.themes.push(t.id); porter(); }, `Acheter la tenue ${t.nom} pour ${monnaie(t.prix)}`));
   });
   const collectionObjets = (liste, cle, cleListe, visuel) => liste.map((t) => {
     const a = etat[cleListe].includes(t.id); const actif = etat[cle] === t.id;
     return h('li', { class: 'article' }, visuel(t), h('div', {}, h('b', {}, t.nom), h('p', {}, t.txt)),
-      a ? h('button', { class: `prix ${actif ? 'actif' : ''}`, disabled: actif, onClick: () => { etat[cle] = t.id; sauver(); boutique(); } }, actif ? 'Choisi' : 'Choisir')
-        : h('button', { class: 'prix', disabled: etat.jetons < t.prix, onClick: () => { etat.jetons -= t.prix; etat[cleListe].push(t.id); etat[cle] = t.id; sauver(); son('jeton'); boutique(); } }, h('i', { class: 'jeton' }), t.prix));
+      a ? h('button', { class: `prix ${actif ? 'actif' : ''}`, disabled: actif, onClick: () => { etat[cle] = t.id; sauver(); son('tap'); boutique(); } }, actif ? 'Choisi' : 'Choisir')
+        : boutonPrix(t.prix, () => { etat.jetons -= t.prix; etat[cleListe].push(t.id); etat[cle] = t.id; sauver(); son('jeton'); boutique(); }, `Acheter ${t.nom} pour ${monnaie(t.prix)}`));
   });
   const insignes = collectionObjets(INSIGNES, 'insigne', 'insignes', (t) => (t.id === 'aucun' ? h('span', { class: 'pastille vide-p' }) : icone(t.id, 26)));
   const decors = collectionObjets(DECORS, 'decor', 'decors', (t) => h('span', { class: `pastille decor-${t.id}` }));
   montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, 'La boutique'),
-    h('p', { class: 'page-sous' }, 'Tes jetons de présence se gagnent en finissant des épreuves.'),
+    h('p', { class: 'page-sous' }, estRose() ? 'Tes canettes de Ratio se gagnent en finissant des épreuves.' : 'Tes jetons de présence se gagnent en finissant des épreuves.'),
     h('ul', { class: 'articles' }, objets), h('h2', {}, 'Tenues'), h('ul', { class: 'articles' }, themes),
     h('h2', {}, 'Insignes'), h('ul', { class: 'articles' }, insignes),
     h('h2', {}, 'Décors du Palais'), h('ul', { class: 'articles' }, decors)));
 }
 
 // PROFIL -----------------------------------------------------------------------------
+const metalDe = (id) => {
+  if (['bossTous', 'vp', 'grand50', 'serie100'].includes(id)) return 'or';
+  if (['bossParfait', 'jumeaux', 'grand10', 'serie30', 'boss1'].includes(id)) return 'cire';
+  if (['sansfaute', 'combo10', 'serie7', 'carte10'].includes(id)) return 'cuivre';
+  return 'argent';
+};
+
+function montrerTrophee(t, gagne) {
+  son('tap');
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite boite-trophee' },
+    medaille(metalDe(t.id), gagne), h('h3', {}, t.nom), h('p', {}, gagne ? `Gagné : ${t.txt.toLowerCase()}.` : `À gagner : ${t.txt.toLowerCase()}.`),
+    h('div', { class: 'boite-actions' }, h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Fermer'))));
+  document.body.append(voile);
+}
+
+const interrupteur = (label, cle, apres) => h('label', { class: 'reglage' }, h('span', {}, label),
+  h('input', { type: 'checkbox', role: 'switch', checked: etat.reglages[cle], onChange: (e) => { etat.reglages[cle] = e.target.checked; sauver(); son('tap'); apres?.(); } }));
+
+// Images personnelles : elles remplacent le chat juge et la canette, sur ce téléphone seulement.
+function blocImages() {
+  const ligne = (type, nom, aide, visuel) => {
+    const entree = h('input', { type: 'file', accept: 'image/*', class: 'cache-fichier', 'aria-label': `Choisir ${nom}`, onChange: async (e) => {
+      const f = e.target.files?.[0]; if (!f) return;
+      try { await enregistrerImage(type, await preparerImage(f, type)); appliquerTheme(); son('deblocage'); toast('Image enregistrée sur ce téléphone.'); profil(); } catch (err) { toast(err.message); }
+    } });
+    return h('div', { class: 'ligne-image', 'data-type': type },
+      h('span', { class: 'image-apercu' }, images[type] ? h('img', { src: images[type], alt: '' }) : visuel()),
+      h('div', {}, h('b', {}, nom), h('small', {}, aide)),
+      h('div', { class: 'image-actions' },
+        h('button', { class: 'bouton-fantome', onClick: () => entree.click() }, icone('image', 18), 'Choisir'),
+        images[type] ? h('button', { class: 'bouton-lien', onClick: async () => { await retirerImage(type); appliquerTheme(); profil(); } }, 'Retirer') : null),
+      entree);
+  };
+  return h('div', { class: 'images-perso' },
+    h('p', { class: 'aide-claire' }, 'Ces images restent sur ce téléphone. Elles ne sont ni publiées ni copiées en ligne.'),
+    ligne('mascotte', 'Mascotte', 'Remplace le chat juge à l’accueil', () => mascotte(44)),
+    ligne('jeton', 'Jetons', 'Remplace la canette partout', () => h('img', { src: 'img/canette.svg', alt: '' })));
+}
+
 function profil() {
   const r = rang(); const vals = Object.values(etat.arrets);
-  const stats = [['Séances', etat.stats.seances], ['Record de série', etat.serie.record], ['Sans faute', etat.stats.parfaites], ['Meilleur enchaînement', etat.stats.comboMax], ['Arrêts vus', vals.length], ['Grands arrêts', vals.filter((a) => a.b >= 5).length]];
+  const stats = [['Séances', etat.stats.seances], ['Record de série', etat.serie.record], ['Sans faute', etat.stats.parfaites], ['Grands arrêts', vals.filter((a) => a.b >= 5).length], ['Meilleur enchaînement', etat.stats.comboMax], ['Arrêts vus', vals.length]];
   const blocRappel = h('div', { class: 'rappel' });
   async function rendreRappel(code) {
     const e = await etatRappel();
@@ -416,7 +517,7 @@ function profil() {
     if (e === 'refuse') { blocRappel.replaceChildren(h('p', {}, 'Les notifications sont bloquées. Autorise-les dans Réglages, Notifications, Arrêts.')); return; }
     if (cloudActif()) {
       const liste = [];
-      if (e === 'actif') liste.push(h('p', {}, 'Rappel activé sur ce téléphone, chaque jour vers 9 h.'), h('button', { class: 'bouton-lien sombre', onClick: async () => { await testerNotification(); toast('Notification envoyée.'); } }, 'Tester sur ce téléphone'));
+      if (e === 'actif') liste.push(h('p', {}, 'Rappel activé sur ce téléphone, chaque jour vers 9 h.'), h('button', { class: 'bouton-lien', onClick: async () => { await testerNotification(); toast('Notification envoyée.'); } }, 'Tester sur ce téléphone'));
       else liste.push(h('button', { class: 'bouton-or', onClick: async () => { try { await inscrireAbonnement(JSON.parse(await activerRappel())); toast('Rappel activé.'); rendreRappel(); } catch (err) { toast(err.message); } } }, 'Activer le rappel de 9 h'));
       blocRappel.replaceChildren(...liste);
       return;
@@ -428,22 +529,30 @@ function profil() {
         h('button', { class: 'bouton-or', onClick: async () => { await navigator.clipboard.writeText(code); toast('Code copié.'); } }, 'Copier le code'));
     }
     liste.push(h('button', { class: 'bouton-or', onClick: async () => { try { rendreRappel(await activerRappel()); } catch (err) { toast(err.message); } } }, e === 'actif' ? 'Afficher le code du rappel' : 'Activer le rappel de 9 h'));
-    if (e === 'actif') liste.push(h('button', { class: 'bouton-lien sombre', onClick: async () => { await testerNotification(); toast('Notification envoyée.'); } }, 'Tester sur ce téléphone'));
+    if (e === 'actif') liste.push(h('button', { class: 'bouton-lien', onClick: async () => { await testerNotification(); toast('Notification envoyée.'); } }, 'Tester sur ce téléphone'));
     blocRappel.replaceChildren(...liste);
   }
   const champSauvegarde = h('textarea', { class: 'code', rows: 3, placeholder: 'Colle ici un code de sauvegarde', 'aria-label': 'Code de sauvegarde' });
-  montrer(barreHaut(), h('section', { class: 'page' },
+  const pct = Math.round(r.part * 100);
+  montrer(barreHaut(), h('section', { class: 'page page-profil' },
+    h('div', { class: 'profil-tete' }, laurier(116)),
     h('h1', {}, r.nom),
-    h('p', { class: 'page-sous' }, r.suivant ? `${fmt(etat.xp)} points. Encore ${fmt(r.suivant.xp - etat.xp)} pour devenir ${r.suivant.nom}.` : 'Dernier grade atteint.'),
-    h('span', { class: 'jauge grande', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.round(r.part * 100)}%` })),
-    h('ol', { class: 'carriere' }, RANGS.map((x, i) => h('li', { class: i <= r.i ? 'atteint' : '' }, x.nom))),
+    h('div', { class: 'xp', role: 'img', 'aria-label': `${pct} % du grade suivant` }, h('span', {}, 'XP'), h('span', { class: 'xp-rail' }, h('i', { style: `width:${Math.max(pct, 3)}%` }))),
+    h('p', { class: 'page-sous xp-txt' }, r.suivant ? `${fmt(etat.xp)} points. Encore ${fmt(r.suivant.xp - etat.xp)} pour devenir ${r.suivant.nom}.` : 'Dernier grade atteint.'),
+    h('ol', { class: 'carriere' }, RANGS.map((x, i) => h('li', { class: `${i <= r.i ? 'atteint' : ''} ${i === r.i ? 'actuel' : ''}`, style: `--i:${i}` }, x.nom))),
     h('dl', { class: 'stats' }, stats.map(([l, v]) => h('div', {}, h('dt', {}, l), h('dd', {}, fmt(v))))),
     h('h2', {}, 'Trophées'),
-    h('ul', { class: 'trophees' }, TROPHEES.map((t) => h('li', { class: etat.trophees[t.id] ? 'gagne' : '' }, h('b', {}, t.nom), h('small', {}, t.txt)))),
+    h('ul', { class: 'trophees' }, TROPHEES.map((t) => { const g = !!etat.trophees[t.id]; return h('li', {}, h('button', { 'aria-label': `${t.nom}, ${g ? 'gagné' : 'à gagner'}`, onClick: () => montrerTrophee(t, g) }, medaille(metalDe(t.id), g))); })),
     h('h2', {}, 'Rappel quotidien'), blocRappel,
+    etat.themes.includes('rose') ? [h('h2', {}, 'Images de la tenue rose'), blocImages()] : null,
     h('h2', {}, 'Réglages'),
-    h('label', { class: 'reglage' }, h('span', {}, 'Sons'), h('input', { type: 'checkbox', checked: etat.reglages.son, onChange: (e) => { etat.reglages.son = e.target.checked; sauver(); } })),
-    h('label', { class: 'reglage' }, h('span', {}, 'Ouvrir toutes les chambres'), h('input', { type: 'checkbox', checked: etat.reglages.toutOuvert, onChange: (e) => { etat.reglages.toutOuvert = e.target.checked; sauver(); } })),
+    h('div', { class: 'reglages' },
+      interrupteur('Sons', 'son'),
+      interrupteur('Sons même en mode silencieux', 'sonSilencieux', appliquerSession),
+      interrupteur('Effets visuels', 'effets', appliquerTheme),
+      interrupteur('Retour tactile', 'vibration', () => vibrer(16)),
+      interrupteur('Ouvrir toutes les chambres', 'toutOuvert')),
+    h('button', { class: 'bouton-fantome ecouter', onClick: () => son('grade') }, icone('son', 18), 'Écouter la signature sonore'),
     h('h2', {}, 'Sauvegarde'),
     cloudActif() ? blocCloud() : null,
     h('p', { class: 'aide-claire' }, cloudActif() ? 'Copie manuelle, si tu préfères garder ton propre code.' : 'Ta progression reste sur ce téléphone. Garde une copie de ce code avant de changer d’appareil ou de supprimer l’appli.'),
@@ -480,17 +589,31 @@ function bandeauMiseAJour(reg) {
   document.body.append(h('button', { class: 'maj', onClick: () => { reg.waiting?.postMessage('activer'); } }, 'Nouvelle version disponible : recharger'));
 }
 
+// Un téléphone qui peine garde la fluidité : les effets d'ambiance s'arrêtent d'eux-mêmes.
+function surveillerFluidite() {
+  if (!effets()) return;
+  const t0 = performance.now(); let n = 0;
+  requestAnimationFrame(function pas(t) {
+    n++;
+    if (t - t0 < 1600) { requestAnimationFrame(pas); return; }
+    if (!document.hidden && n / ((t - t0) / 1000) < 34 && document.documentElement.dataset.effets === 'oui') document.documentElement.dataset.effets = 'leger';
+  });
+}
+
 async function demarrer() {
   const params = new URLSearchParams(location.search);
   if (params.has('decalage')) fixerDecalage(+params.get('decalage'));
-  const [contenu] = await Promise.all([fetch('content.json').then((r) => r.json()), charger()]);
+  const [contenu] = await Promise.all([fetch('content.json').then((r) => r.json()), charger().then(chargerImages)]);
   ix = indexer(contenu);
   appliquerTheme();
-  document.addEventListener('pointerdown', reveillerAudio, { passive: true });
+  appliquerSession();
+  for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click']) document.addEventListener(ev, reveillerAudio, { passive: true });
   const evenement = verifierSerie();
   aller('palais');
+  if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
-  if (params.has('test')) window.__app = { etat: () => etat, ix, aller, lancerDefi };
+  if (params.has('test')) window.__app = { etat: () => etat, ix, aller, lancerDefi, rendreSon, NOMS_SONS, appliquerTheme };
+  setTimeout(surveillerFluidite, 1200);
 
   if ('serviceWorker' in navigator) {
     try {

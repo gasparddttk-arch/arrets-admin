@@ -44,12 +44,12 @@ export const BOUTIQUE = [
   { id: 'passe', nom: 'Passe-droit', prix: 200, txt: 'Ouvre la prochaine chambre sans gagner l’audience.' },
 ];
 
+// Chaque tenue change l'habillage de toute l'appli. Une nouvelle tenue s'ajoute ici et dans le CSS.
 export const THEMES = [
-  { id: 'palais', nom: 'Soie bleue', prix: 0, txt: 'L’habit du Conseil d’État' },
-  { id: 'tapis', nom: 'Tapis vert', prix: 150, txt: 'La table de délibéré' },
-  { id: 'robe', nom: 'Robe noire', prix: 150, txt: 'Le prétoire' },
-  { id: 'pourpre', nom: 'Pourpre', prix: 300, txt: 'L’audience solennelle' },
+  { id: 'palais', nom: 'Bleu', prix: 0, txt: 'Le bleu du Palais, l’or et la cire' },
+  { id: 'rose', nom: 'Rose', prix: 200, txt: 'Le chat juge, les canettes de Ratio, et Slay Diva' },
 ];
+const ANCIENNES_TENUES = { tapis: 150, robe: 150, pourpre: 300 };
 
 export const INSIGNES = [
   { id: 'aucun', nom: 'Sans insigne', prix: 0, txt: 'La sobriété de l’auditeur' },
@@ -90,7 +90,7 @@ function etatInitial() {
     enCours: null,
     trophees: {},
     stats: { seances: 0, parfaites: 0, comboMax: 0, juge: 0, plan: 0, archi: 0 },
-    reglages: { son: true, toutOuvert: false },
+    reglages: { son: true, toutOuvert: false, effets: true, vibration: true, sonSilencieux: false },
     defi: { jour: null, fini: false },
     cloud: { code: null, dernier: null },
   };
@@ -103,7 +103,20 @@ function fusion(base, x) {
 }
 
 export let etat = etatInitial();
-export const remplacerEtat = (e) => { etat = fusion(etatInitial(), e); sauver(); };
+export let rembourse = 0;
+export const remplacerEtat = (e) => { etat = fusion(etatInitial(), e); migrer(); sauver(); };
+
+// Les anciennes tenues disparaissent : ce qu'elles ont coûté revient en jetons.
+export function migrer() {
+  if ((etat.m || 0) >= 2) return 0;
+  let rendu = 0;
+  for (const t of etat.themes) rendu += ANCIENNES_TENUES[t] || 0;
+  etat.themes = etat.themes.filter((t) => !ANCIENNES_TENUES[t]);
+  if (!etat.themes.includes(etat.theme)) etat.theme = 'palais';
+  etat.jetons += rendu;
+  etat.m = 2;
+  return rendu;
+}
 
 // Copie de secours dans IndexedDB, utilisée si localStorage revient vide.
 function idb() {
@@ -128,6 +141,7 @@ export async function charger() {
   try { brut = localStorage.getItem(CLE); } catch { /* stockage indisponible */ }
   if (!brut) brut = await lireSecours();
   if (brut) { try { etat = fusion(etatInitial(), JSON.parse(brut)); } catch { etat = etatInitial(); } }
+  if ((etat.m || 0) < 2) { rembourse = migrer(); if (brut) sauver(); }
   try { await navigator.storage?.persist?.(); } catch { /* facultatif */ }
   return etat;
 }
@@ -136,6 +150,23 @@ export function sauver() {
   const brut = JSON.stringify(etat);
   try { localStorage.setItem(CLE, brut); } catch { /* stockage plein ou bloqué */ }
   ecrireSecours(brut);
+}
+
+// Les images personnelles restent sur le téléphone : elles n'entrent ni dans l'état ni dans les sauvegardes.
+export async function lireImage(cle) {
+  try {
+    const db = await idb();
+    return await new Promise((ok) => { const r = db.transaction('kv').objectStore('kv').get(cle); r.onsuccess = () => { db.close(); ok(r.result || null); }; r.onerror = () => { db.close(); ok(null); }; });
+  } catch { return null; }
+}
+export async function ecrireImage(cle, val) {
+  const db = await idb();
+  await new Promise((ok, ko) => {
+    const t = db.transaction('kv', 'readwrite');
+    if (val === null) t.objectStore('kv').delete(cle); else t.objectStore('kv').put(val, cle);
+    t.oncomplete = ok; t.onerror = () => ko(t.error);
+  });
+  db.close();
 }
 
 export const exporter = () => btoa(unescape(encodeURIComponent(JSON.stringify(etat))));

@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="fr" data-theme="palais">
+<html lang="fr" data-theme="palais" data-effets="oui">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Arrêts</title>
   <meta name="description" content="Réviser les arrêts de droit administratif, en jouant.">
-  <meta name="theme-color" content="#0E1B45">
+  <meta name="theme-color" content="#0C1A47">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,11 +13,36 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
-  <link rel="preload" href="fonts/garamond-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/bodoni-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/garamond-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/garamond-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
+  <svg class="defs" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="gCire" cx=".36" cy=".28" r=".85">
+        <stop offset="0" style="stop-color:var(--cire-1)"/><stop offset=".5" style="stop-color:var(--cire-2)"/><stop offset="1" style="stop-color:var(--cire-3)"/>
+      </radialGradient>
+      <radialGradient id="gEteint" cx=".36" cy=".28" r=".85">
+        <stop offset="0" style="stop-color:var(--eteint-1)"/><stop offset="1" style="stop-color:var(--eteint-2)"/>
+      </radialGradient>
+      <linearGradient id="gOr" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" style="stop-color:var(--feuille-1)"/><stop offset=".55" style="stop-color:var(--feuille-2)"/><stop offset="1" style="stop-color:var(--feuille-3)"/>
+      </linearGradient>
+      <linearGradient id="gMur" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" style="stop-color:var(--mur-1)"/><stop offset="1" style="stop-color:var(--mur-2)"/>
+      </linearGradient>
+      <linearGradient id="gBanc" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" style="stop-color:var(--banc-1)"/><stop offset="1" style="stop-color:var(--banc-2)"/>
+      </linearGradient>
+      <linearGradient id="gFourrure" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#F0B071"/><stop offset="1" stop-color="#DE9050"/>
+      </linearGradient>
+      <linearGradient id="gRobe" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#5A2340"/><stop offset="1" stop-color="#34112A"/>
+      </linearGradient>
+    </defs>
+  </svg>
   <div id="app"></div>
   <nav id="onglets" aria-label="Navigation principale" hidden></nav>
   <noscript>Cette appli a besoin de JavaScript.</noscript>

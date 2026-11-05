@@ -9,32 +9,38 @@ const log = (...a) => console.log(...a);
 
 async function etat(p) { return p.evaluate(() => JSON.parse(JSON.stringify(window.__app.etat()))); }
 
+// Aucun texte technique ne doit jamais apparaître à l'écran.
+async function textePropre(p) {
+  const tache = await p.evaluate(() => (document.body.innerText.match(/\b(null|undefined|NaN)\b|\[object/) || [null])[0]);
+  assert.equal(tache, null, `Texte technique affiché : ${tache}`);
+}
+
+// Touche un élément pour de vrai ; s'il vient de disparaître, on passe.
+async function toucher(e) { try { await e.click({ timeout: 900 }); return true; } catch { return false; } }
+
 // Joue jusqu'à l'écran de résultats, en touchant ce qui est disponible.
-async function jouer(p, { capture = false, bonnes = false } = {}) {
+async function jouer(p, { capture = false } = {}) {
   const vus = new Set();
-  for (let n = 0; n < 900; n++) {
+  for (let n = 0; n < 1500; n++) {
+    await textePropre(p);
     if (await p.$('.resultats')) return;
     if (capture) {
       const nom = await p.evaluate(() => (['.paires', '.puzzle', '.qcm', '.bonplan', '.architecte', '.fin-epreuve'].find((s) => document.querySelector(s)) || '').slice(1));
       if (nom && !vus.has(nom)) { vus.add(nom); await p.screenshot({ path: `${CAP}${capture}-${nom}.png` }); }
     }
     const pied = await p.$('.pied button');
-    if (pied) { await pied.click(); await p.waitForTimeout(15); continue; }
-    if (bonnes) {
-      const c = await p.$('.option:not([disabled])');
-      if (c) { await p.evaluate(() => { const o = [...document.querySelectorAll('.option:not([disabled])')]; o[0]?.click(); }); await p.waitForTimeout(10); continue; }
-    }
-    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.bloc', '.tuile', 'button.feuille-plan:not([disabled])'];
+    if (pied) { await toucher(pied); await p.waitForTimeout(15); continue; }
+    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)'];
     let fait = false;
     for (const s of sel) {
       const e = await p.$(s);
       if (!e) continue;
-      await e.click();
-      if (s.startsWith('.chip')) {
+      fait = await toucher(e);
+      if (fait && s.startsWith('.chip')) {
         const cartes = await p.$$('.carte-paire:not([disabled])');
-        for (const c of cartes) { await c.click(); await p.waitForTimeout(5); if (await p.evaluate(() => !document.querySelector('.chip.vise'))) break; }
+        for (const c of cartes) { await toucher(c); await p.waitForTimeout(5); if (await p.evaluate(() => !document.querySelector('.chip.vise'))) break; }
       }
-      fait = true; break;
+      break;
     }
     if (!fait) await p.waitForTimeout(60);
   }
@@ -43,35 +49,29 @@ async function jouer(p, { capture = false, bonnes = false } = {}) {
 
 // Joue en donnant les bonnes réponses, grâce aux repères du mode test.
 async function jouerParfait(p) {
-  for (let n = 0; n < 900; n++) {
+  for (let n = 0; n < 2500; n++) {
+    await textePropre(p);
     if (await p.$('.resultats')) return;
     const fait = await p.evaluate(() => {
       const clic = (e) => { e.click(); return true; };
+      const rail = document.querySelector('.plans-rail'); const bon = document.querySelector('.plan-carte[data-ok="true"]');
+      if (rail && bon && !document.querySelector('.plan-carte.juste') && !bon.classList.contains('centree')) { rail.scrollLeft = bon.offsetLeft - rail.firstChild.offsetLeft; return false; }
       const pied = document.querySelector('.pied button'); if (pied) return clic(pied);
       const chip = document.querySelector('.chip:not([disabled]):not(.reussi)');
       if (chip) {
         if (!chip.classList.contains('vise')) chip.click();
-        const nom = chip.textContent; const st = window.__app; const a = st.ix.arrets.find((x) => x.nom === nom);
-        const cible = [...document.querySelectorAll('.carte-paire:not([disabled])')].find((c) => {
-          const t = c.textContent; if (t === String(a.an)) return true;
-          if (Object.values(a.ap).includes(t)) return true;
-          return st.ix.familles.some((f) => f.m.some((m) => m.id === a.id && m.k === t));
-        });
-        if (cible) return clic(cible);
-        return false;
+        const cible = document.querySelector(`.carte-paire[data-id="${chip.dataset.id}"]:not([disabled])`);
+        return cible ? clic(cible) : false;
       }
       const opt = document.querySelector('.option[data-ok="true"]:not([disabled])'); if (opt) return clic(opt);
-      const fente = document.querySelector('.fente.active span');
-      if (fente) { const k = { Faits: 'f', 'Procédure': 'pr', Solution: 's', 'Portée': 'po' }[fente.textContent]; const b = document.querySelector(`.bloc[data-cle="${k}"]`); if (b) return clic(b); }
-      const plan = document.querySelector('button.feuille-plan[data-ok="true"]:not([disabled])'); if (plan) return clic(plan);
-      const active = document.querySelector('.case-plan.active');
-      if (active) {
-        const ordre = [...document.querySelectorAll('.case-plan')].indexOf(active); const c = ['1', '1a', '1b', '2', '2a', '2b'][ordre];
-        const t = document.querySelector(`.tuile[data-case="${c}"]`); if (t) return clic(t);
-      }
+      const ecarter = document.querySelector('.dock-bas .bouton-fantome');
+      const piece = document.querySelector('.carte-piece');
+      if (piece) return piece.dataset.cle === 'piege' ? clic(ecarter) : clic(document.querySelector(`.vers[data-k="${piece.dataset.cle}"]`));
+      const tuile = document.querySelector('.tuile');
+      if (tuile) return tuile.dataset.case === 'leurre' ? clic(ecarter) : clic(document.querySelector(`.case-plan[data-c="${tuile.dataset.case}"]`));
       return false;
     });
-    if (!fait) await p.waitForTimeout(30); else await p.waitForTimeout(6);
+    await p.waitForTimeout(fait ? 8 : 30);
   }
   throw new Error('Partie parfaite non terminée');
 }
@@ -186,9 +186,15 @@ async function debordement(p, nom) {
   await p.evaluate(() => { window.__app.etat().jetons = 500; window.__app.aller('boutique'); });
   await p.locator('.article', { hasText: 'Note du rapporteur' }).locator('button').click();
   assert.equal((await etat(p)).inv.indice, avant + 1, 'achat');
-  await p.locator('.theme-tapis button').click();
-  assert.equal(await p.evaluate(() => document.documentElement.dataset.theme), 'tapis');
-  await p.screenshot({ path: CAP + 'theme-tapis.png' });
+  const avantRose = (await etat(p)).jetons;
+  await p.locator('.theme-rose button').click();
+  assert.equal(await p.evaluate(() => document.documentElement.dataset.theme), 'rose');
+  assert.equal((await etat(p)).jetons, avantRose - 200, 'la tenue rose coûte 200 jetons');
+  await p.screenshot({ path: CAP + 'theme-rose.png' });
+  await p.locator('.theme-palais button').click();
+  assert.equal(await p.evaluate(() => document.documentElement.dataset.theme), 'palais');
+  await p.locator('.theme-rose button').click();
+  assert.equal((await etat(p)).jetons, avantRose - 200, 'changer de tenue est gratuit');
   await p.locator('.theme-palais button').click();
   await p.evaluate(() => { window.__app.etat().jetons = 900; window.__app.aller('boutique'); });
   await p.locator('.article', { hasText: 'Les colonnes' }).locator('button').click();
@@ -296,7 +302,71 @@ async function debordement(p, nom) {
   await maj.close(); s2.close(); fs.rmSync(copie, { recursive: true, force: true });
   log('mise à jour ok');
 
-  // 11. Copie en ligne et rappel, service simulé.
+  // 11. Anciennes tenues : retirées et remboursées, une seule fois.
+  const vieux = await b.newContext({ ...devices['iPhone 13'] });
+  await vieux.addInitScript(() => { if (!localStorage.getItem('arrets-admin.v1')) localStorage.setItem('arrets-admin.v1', JSON.stringify({ v: 1, xp: 40, jetons: 10, themes: ['palais', 'tapis', 'pourpre'], theme: 'tapis', serie: { n: 4, dernier: null, record: 4 } })); });
+  const vp = await vieux.newPage(); vp.on('pageerror', (x) => erreurs.push(x.message));
+  await vp.goto(URLB + '?test'); await vp.waitForSelector('.toast');
+  let ev = await etat(vp);
+  assert.deepEqual([ev.theme, ev.themes, ev.jetons, ev.xp], ['palais', ['palais'], 460, 40], 'tenues remboursées, progression intacte');
+  await vp.reload(); await vp.waitForSelector('.tribune');
+  assert.equal((await etat(vp)).jetons, 460, 'remboursement unique');
+  await vieux.close();
+  log('anciennes tenues ok');
+
+  // 12. Tenue rose : Slay Diva, Pas du tout Bebew, images personnelles, effets.
+  const rose = await b.newContext({ ...devices['iPhone 13'] });
+  const r = await rose.newPage(); r.on('pageerror', (x) => erreurs.push(x.message));
+  await r.goto(URLB + '?test'); await r.waitForSelector('.tribune');
+  await r.tap('.role-ligne[data-mode="paires"]'); await r.waitForSelector('.chip');
+  await r.evaluate(() => document.querySelectorAll('.chip')[0].click());
+  await r.evaluate(() => { const c = document.querySelector('.chip.vise'); [...document.querySelectorAll('.carte-paire')].find((x) => x.dataset.id !== c.dataset.id).click(); });
+  assert.equal(await r.locator('.bebew').count(), 0, 'pas de message rose en tenue bleue');
+  await r.tap('.quitter'); await r.tap('.boite .bouton-or'); await r.waitForSelector('.tribune');
+  await r.evaluate(() => { const e = window.__app.etat(); e.jetons = 200; window.__app.aller('boutique'); });
+  await r.locator('.theme-rose button').click();
+  await r.evaluate(() => window.__app.aller('palais'));
+  assert(await r.locator('.figure-rose .mascotte').count(), 'chat juge à l’accueil');
+  await r.screenshot({ path: CAP + 'rose-accueil.png' }); await debordement(r, 'accueil rose');
+  await r.tap('.role-ligne[data-mode="paires"]'); await r.waitForSelector('.chip');
+  await r.evaluate(() => document.querySelectorAll('.chip')[0].click());
+  await r.evaluate(() => { const c = document.querySelector('.chip.vise'); [...document.querySelectorAll('.carte-paire')].find((x) => x.dataset.id !== c.dataset.id).click(); });
+  assert.equal(await r.textContent('.bebew'), 'Pas du tout Bebew', 'message d’erreur en tenue rose');
+  await r.tap('.quitter'); await r.tap('.boite .bouton-or'); await r.waitForSelector('.tribune');
+  await r.tap('.role-ligne[data-mode="paires"]');
+  await r.evaluate(() => { const o = new MutationObserver(() => { if (document.querySelector('.slay')) window.__slay = true; }); o.observe(document.body, { childList: true }); });
+  await jouerParfait(r);
+  assert(await r.evaluate(() => window.__slay), 'Slay Diva après une épreuve à 100 %');
+  await r.tap('text=Retour au Palais');
+  await r.evaluate(() => window.__app.aller('profil'));
+  const fauxPng = await r.evaluate(() => { const c = document.createElement('canvas'); c.width = 300; c.height = 300; const g = c.getContext('2d'); g.fillStyle = '#FFD0DC'; g.fillRect(0, 0, 300, 300); g.fillStyle = '#123456'; g.beginPath(); g.arc(150, 150, 80, 0, 7); g.fill(); return c.toDataURL('image/png').split(',')[1]; });
+  await r.locator('.ligne-image[data-type="mascotte"] input[type=file]').setInputFiles({ name: 'moi.png', mimeType: 'image/png', buffer: Buffer.from(fauxPng, 'base64') });
+  await r.waitForSelector('.ligne-image[data-type="mascotte"] img');
+  await r.locator('.ligne-image[data-type="jeton"] input[type=file]').setInputFiles({ name: 'jeton.png', mimeType: 'image/png', buffer: Buffer.from(fauxPng, 'base64') });
+  await r.waitForFunction(() => document.documentElement.style.getPropertyValue('--jeton-image').startsWith('url('));
+  await r.evaluate(() => window.__app.aller('palais'));
+  await r.waitForSelector('.mascotte-perso');
+  const img = await r.evaluate(async () => { const i = document.querySelector('.mascotte-perso'); await i.decode(); const c = document.createElement('canvas'); c.width = i.naturalWidth; c.height = i.naturalHeight; const g = c.getContext('2d'); g.drawImage(i, 0, 0); return { l: i.naturalWidth, h: i.naturalHeight, coin: g.getImageData(1, 1, 1, 1).data[3], centre: g.getImageData(i.naturalWidth / 2, i.naturalHeight / 2, 1, 1).data[3] }; });
+  assert(img.l <= 170 && img.h <= 170, `image recadrée sur le sujet (${img.l}x${img.h})`);
+  assert.equal(img.centre, 255, 'le sujet reste opaque'); assert(img.coin < 10, 'le fond uni devient transparent');
+  assert(!(await r.evaluate(() => JSON.stringify(window.__app.etat()))).includes('data:image'), 'image absente de la progression');
+  await r.reload(); await r.waitForSelector('.mascotte-perso');
+  log('tenue rose ok');
+  await r.evaluate(() => window.__app.aller('profil'));
+  await r.locator('.reglage', { hasText: 'Effets visuels' }).locator('input').click();
+  assert.equal(await r.evaluate(() => document.documentElement.dataset.effets), 'non', 'effets coupés');
+  await rose.close();
+
+  // 13. Sons : aucun ne sature, aucun n'est muet, en bleu comme en rose.
+  const sn = await b.newContext({ ...devices['iPhone 13'] });
+  const sp = await sn.newPage(); await sp.goto(URLB + '?test'); await sp.waitForSelector('.tribune');
+  const niveaux = await sp.evaluate(async () => { const o = []; for (const nom of window.__app.NOMS_SONS) for (const rose of [false, true]) o.push(await window.__app.rendreSon(nom, { niveau: 3 }, rose)); return o; });
+  for (const n of niveaux) { assert(n.pic > 0.02 && n.pic < 1, `niveau de ${n.nom} : ${n.pic}`); assert(n.fin < 3.4, `longueur de ${n.nom} : ${n.fin}`); }
+  fs.writeFileSync(CAP + 'sons.json', JSON.stringify(niveaux, null, 1));
+  await sn.close();
+  log('sons ok :', niveaux.length, 'rendus');
+
+  // 14. Copie en ligne et rappel, service simulé.
   const nuage = await b.newContext({ ...devices['iPhone 13'] });
   const base = new Map(); const rpc = [];
   await nuage.route('**/rest/v1/rpc/**', async (r) => {
