@@ -1,7 +1,7 @@
 {
-  "name": "Arrêts, droit administratif",
+  "name": "Arrêts, droit administratif et obligations",
   "short_name": "Arrêts",
-  "description": "Réviser les arrêts de droit administratif, en jouant.",
+  "description": "Réviser le droit administratif et le droit des obligations, en jouant.",
   "lang": "fr",
   "start_url": "./",
   "scope": "./",

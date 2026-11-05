@@ -420,6 +420,7 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .paires .jokers { margin-top: 0; }
 .chips { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: auto 0 14px; }
 .chip { display: grid; place-items: center; text-align: center; padding: 7px 10px; min-height: 58px; font-weight: 700; font-size: 19px; line-height: 1.12; border-radius: 13px; background: linear-gradient(180deg, var(--m-paires-1), var(--m-paires-2)); color: var(--m-texte); box-shadow: 0 4px 9px var(--ombre), inset 0 1px 0 rgba(255, 255, 255, .25); transition: transform .08s; overflow-wrap: anywhere; }
+.chip.mot-long { font-size: min(19px, 4.6vw); padding-inline: 6px; }
 .chip:active { transform: scale(.97); }
 .chip.vise { background: linear-gradient(180deg, var(--or-1), var(--or-2) 60%, var(--or-3)); color: var(--or-texte); box-shadow: 0 0 16px var(--or-2); }
 .chip.reussi { opacity: .3; box-shadow: none; }

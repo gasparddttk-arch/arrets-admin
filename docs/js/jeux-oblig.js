@@ -33,7 +33,7 @@ export async function jouerCas(zone, ctx, round, ix) {
   if (ok) etat.stats.cas++;
   ctx.gain(Math.round(34 * score) + (ok ? 8 : 0));
   finEpreuve(zone, ctx, { score, parfait: ok },
-    h('p', { class: 'surtitre' }, ok ? 'Jugement sans faute.' : `${bons} étapes sur ${n} réussies.`),
+    h('p', { class: 'surtitre' }, ok ? 'Jugement sans faute.' : bons === 0 ? `Aucune étape sur ${n} réussie.` : `${bons} étape${bons > 1 ? 's' : ''} sur ${n} réussie${bons > 1 ? 's' : ''}.`),
     h('article', { class: 'revelation jugement' },
       h('h3', {}, 'Le jugement à retenir'), h('p', { class: 'apport' }, x.v),
       x.liens.length ? h('p', { class: 'ref' }, noms(ix, x.liens)) : null));
@@ -92,7 +92,7 @@ export async function jouerFrise(zone, ctx, round) {
   await new Promise((suite) => {
     zone.replaceChildren(h('div', { class: 'ecran frise' },
       h('p', { class: 'surtitre' }, round.p),
-      h('h2', { class: 'question' }, `${justes} étape${justes > 1 ? 's' : ''} sur ${n} à leur place`),
+      h('h2', { class: 'question' }, justes === 0 ? `Aucune étape sur ${n} à sa place` : justes === 1 ? `1 étape sur ${n} à sa place` : `${justes} étapes sur ${n} à leur place`),
       h('ol', { class: 'frise-vraie' }, ordre.map((e) => h('li', { class: place[e.rang]?.rang === e.rang ? 'juste' : 'faux' },
         h('span', { class: 'frise-an' }, e.an), h('span', {}, h('b', {}, e.n), h('small', {}, e.ch))))),
       barrePied(continuer('Dernière question', suite))));

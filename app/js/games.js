@@ -132,7 +132,7 @@ export function jouerPaires(zone, ctx, round, ix) {
   const etiquette = (l) => (qualif ? `${l.nom}, ${l.a}` : `${ix.parId.get(l.id).court}, ${ix.parId.get(l.id).ref}`);
   const fiche = (l) => (qualif ? l.carte : l.id);
 
-  const chipsNoms = noms.map((l) => { l.elN = h('button', { class: 'chip', 'data-id': repere(l.id), onClick: () => viserNom(l) }, l.nom); return l.elN; });
+  const chipsNoms = noms.map((l) => { l.elN = h('button', { class: `chip${Math.max(...l.nom.split(/\s+/).map((m) => m.length)) >= 12 ? ' mot-long' : ''}`, 'data-id': repere(l.id), onClick: () => viserNom(l) }, l.nom); return l.elN; });
   const cartes = textes.map((l) => { l.elT = h('button', { class: `carte-paire ${g.variante === 'annee' ? 'annee-carte' : ''}`, 'data-id': repere(l.id), onClick: () => viserTexte(l) }, l.t); return l.elT; });
 
   function viserNom(l) {
