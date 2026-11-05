@@ -47,6 +47,21 @@ export async function copierEnLigne() {
   } catch { return false; } finally { enCours = false; }
 }
 
+// Un cadeau vise un seul téléphone, par son code. Son identifiant empêche de le recevoir deux fois.
+export async function recevoirCadeaux() {
+  if (!cloudActif() || !etat.cloud.code || navigator.onLine === false) return 0;
+  try {
+    const liste = await appel('lire_cadeaux', { code: etat.cloud.code });
+    const nouveaux = (Array.isArray(liste) ? liste : []).filter((c) => !etat.cadeaux.includes(c.id));
+    if (!nouveaux.length) return 0;
+    let total = 0;
+    for (const c of nouveaux) { total += c.jetons; etat.cadeaux.push(c.id); }
+    etat.jetons += total;
+    sauver();
+    return total;
+  } catch { return 0; }
+}
+
 export async function restaurerEnLigne(saisi) {
   const code = normaliser(saisi);
   const brut = await appel('lire_sauvegarde', { code });

@@ -113,6 +113,27 @@ const SONS = {
   tap(b, t, _o, rose) {
     if (rose) pince(b, 2349.32, t, 0.09, 0.05, 0.2); else bois(b, 1650, t, 0.09, 0.035, 0.12);
   },
+  // Début de séance : une montée franche, jamais confondue avec un simple bouton.
+  lancement(b, t, _o, rose) {
+    const k = ton(rose);
+    bruit(b, t, 0.34, 0.14, 'bandpass', 300, 3600, 1, 0.4);
+    const g = env(b, t, 0.3, 0.012, 0.42); osc(b, 'sine', 73.42, t, t + 0.42, g, 146.83); sortir(b, g, 0.5);
+    SIGNATURE.forEach((f, i) => pince(b, f * k, t + 0.1 + i * 0.075, 0.42, 0.17, 0.6));
+    cloche(b, 1760 * k, t + 0.4, 0.9, 0.09);
+    if (rose) scintille(b, t + 0.4, 5);
+  },
+  // Épreuve suivante : une page tournée, deux notes.
+  epreuve(b, t, _o, rose) {
+    const k = ton(rose);
+    bruit(b, t, 0.13, 0.14, 'bandpass', 700, 3200, 1.1, 0.25);
+    pince(b, 880 * k, t + 0.09, 0.26, 0.16, 0.5); pince(b, 1174.66 * k, t + 0.17, 0.4, 0.17, 0.6);
+  },
+  // Épreuve validée, sans être parfaite : un coup de tampon et une note qui se pose.
+  valide(b, t, _o, rose) {
+    const k = ton(rose);
+    bois(b, 340, t, 0.34, 0.09, 0.4);
+    cloche(b, 880 * k, t + 0.07, 0.8, 0.1); cloche(b, 1318.51 * k, t + 0.16, 0.9, 0.1);
+  },
   carte(b, t) { bruit(b, t, 0.11, 0.13, 'bandpass', 800, 3000, 1.2, 0.2); bois(b, 720, t + 0.07, 0.12, 0.05, 0.2); },
   retour(b, t) { bruit(b, t, 0.1, 0.17, 'bandpass', 2600, 700, 1.2, 0.15); },
   ecart(b, t) { bruit(b, t, 0.14, 0.11, 'bandpass', 1500, 320, 0.9, 0.2); bois(b, 300, t + 0.1, 0.13, 0.06, 0.2); },
@@ -201,7 +222,7 @@ export function son(nom, o = {}) {
   if (!ctx) return;
   try {
     if (ctx.state !== 'running') ctx.resume();
-    SONS[nom]?.(bus, ctx.currentTime + 0.006, o, estRose());
+    SONS[nom]?.(bus, ctx.currentTime + 0.006 + (o.retard || 0), o, estRose());
   } catch { /* le son reste facultatif */ }
 }
 

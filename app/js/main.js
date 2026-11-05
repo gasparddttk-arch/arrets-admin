@@ -9,7 +9,7 @@ import {
 import { indexer, composerDefi, composerBoss, tirerRound, jumeaux, melange } from './engine.js';
 import { JEUX, NOMS_MODES, continuer } from './games.js';
 import { activerRappel, etatRappel, testerNotification, estInstallee, abonnementActuel } from './notif.js';
-import { cloudActif, inscrireAbonnement, copierEnLigne, codeRecuperation, restaurerEnLigne } from './cloud.js';
+import { cloudActif, inscrireAbonnement, copierEnLigne, codeRecuperation, restaurerEnLigne, recevoirCadeaux } from './cloud.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
 let ix = null;
@@ -93,7 +93,7 @@ function accueil() {
     h('button', { class: 'bouton-or', disabled: etat.jetons < prixForclusion(), onClick: () => { if (relever()) { son('sceau'); vibrer(20); toast('Série rétablie.'); accueil(); } } },
       `Rétablir pour ${monnaie(prixForclusion())}`)) : null;
 
-  const lignes = Object.entries(NOMS_MODES).map(([m, [nom, txt]], i) => h('button', { class: 'role-ligne', 'data-mode': m, style: `--d:${i * 2.2}s`, onClick: () => { son('tap'); lancerMode(m); } },
+  const lignes = Object.entries(NOMS_MODES).map(([m, [nom, txt]], i) => h('button', { class: 'role-ligne', 'data-mode': m, style: `--d:${i * 2.2}s`, onClick: () => lancerMode(m) },
     h('span', { class: 'role-icone' }, icone(m, 28)), h('span', { class: 'role-txt' }, h('b', {}, nom), h('small', {}, txt))));
 
   // Sur iPhone, Safari et l'icône de l'écran d'accueil ont chacun leur stockage.
@@ -210,10 +210,11 @@ function lancer({ rounds, titre, type, zone, reprise }) {
       S.scores.push(res.score); if (res.parfait) S.parfaites++;
       if (S.vies !== null && res.score < 0.6) S.vies--;
       S.i++;
+      const derniere = S.i >= S.rounds.length || S.vies === 0;
       if (res.parfait) {
         majEntete();
-        if (estRose()) { son('slay'); vibrer([20, 60, 20]); await slayDiva(); } else son('parfait');
-      }
+        if (estRose()) { son('slay'); vibrer([20, 60, 20]); await slayDiva(); } else { son('parfait'); retardEpreuve = 0.7; }
+      } else if (!derniere) { son('valide'); retardEpreuve = 0.55; }
       if (S.vies === 0) return finir(false);
       if (S.i >= S.rounds.length) return finir(true);
       memoriser();
@@ -224,6 +225,9 @@ function lancer({ rounds, titre, type, zone, reprise }) {
   function suivant() {
     majEntete();
     const r = S.rounds[S.i];
+    // Le Juge a son propre lever de rideau : l'audience s'ouvre avec ses trois coups.
+    if (r.type !== 'juge') son(S.i === 0 ? 'lancement' : 'epreuve', { retard: retardEpreuve });
+    retardEpreuve = 0;
     scene.className = 'scene'; decor.replaceChildren();
     window.scrollTo(0, 0);
     Promise.resolve(JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
@@ -232,6 +236,7 @@ function lancer({ rounds, titre, type, zone, reprise }) {
     });
   }
 
+  let retardEpreuve = 0;
   function finir(reussi) { etat.enCours = null; resultats(S, reussi); }
   montrer(decor, entete, scene);
   memoriser();
@@ -301,7 +306,7 @@ function resultats(S, reussi) {
     if (apres.i > avant.i || parfaite || v.coffre) setTimeout(() => { confettis(); son(v.coffre ? 'coffre' : 'grade'); }, 900);
   } else {
     zoneSceau.append(sceau(etat.serie.n, { taille: 96, lauriers: false, eteint: etat.serie.n === 0 }));
-    if (apres.i > avant.i || parfaite) { confettis(); son('grade'); }
+    if (apres.i > avant.i || parfaite) { confettis(); son('grade'); } else son(reussi ? 'valide' : 'ko');
   }
   if (S.type === 'boss' && reussi) setTimeout(() => son('deblocage'), 1300);
 }
@@ -628,6 +633,11 @@ async function demarrer() {
         abonnementActuel().then((s) => s && inscrireAbonnement(s)).catch(() => {});
         copierEnLigne();
         window.addEventListener('online', copierEnLigne);
+        recevoirCadeaux().then((n) => {
+          if (!n) return;
+          if (document.querySelector('.tribune')) accueil();
+          toast(`${monnaie(n)} offerts, ils sont dans ta réserve.`);
+        });
       }
       navigator.serviceWorker.addEventListener('controllerchange', () => { if (!recharge && document.querySelector('.maj')) { recharge = true; location.reload(); } });
     } catch (e) { console.warn('Service worker indisponible', e); }

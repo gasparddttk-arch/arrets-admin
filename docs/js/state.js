@@ -93,6 +93,7 @@ function etatInitial() {
     reglages: { son: true, toutOuvert: false, effets: true, vibration: true, sonSilencieux: false },
     defi: { jour: null, fini: false },
     cloud: { code: null, dernier: null },
+    cadeaux: [],
   };
 }
 

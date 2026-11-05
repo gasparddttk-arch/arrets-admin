@@ -372,6 +372,7 @@ async function debordement(p, nom) {
   await nuage.route('**/rest/v1/rpc/**', async (r) => {
     const nom = r.request().url().split('/').pop(); const c = r.request().postDataJSON(); rpc.push(nom);
     if (nom === 'ecrire_sauvegarde') base.set(c.code, c.donnees);
+    if (nom === 'lire_cadeaux') return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(base.has(c.code) ? [{ id: 'essai', jetons: 200 }] : []) });
     return r.fulfill({ status: 200, contentType: 'application/json', body: nom === 'lire_sauvegarde' ? JSON.stringify(base.get(c.code) ?? null) : 'null' });
   });
   const n = await nuage.newPage(); n.on('pageerror', (x) => erreurs.push(x.message));
@@ -383,6 +384,11 @@ async function debordement(p, nom) {
   assert(base.has(avantC.cloud.code), 'copie envoyée');
   assert.match(avantC.cloud.code, /^([A-Z2-9]{6}-){3}[A-Z2-9]{6}$/, 'format du code');
   assert(!JSON.parse(base.get(avantC.cloud.code)).enCours, 'pas de séance dans la copie');
+  const avantCadeau = (await etat(n)).jetons;
+  await n.waitForTimeout(300);
+  await n.reload(); await n.waitForFunction((j) => window.__app.etat().jetons >= j + 200, avantCadeau, { timeout: 8000 });
+  await n.waitForTimeout(400); await n.reload(); await n.waitForSelector('.tribune'); await n.waitForTimeout(800);
+  assert.equal((await etat(n)).jetons, avantCadeau + 200, 'cadeau reçu une seule fois');
   const autre = await nuage.browser().newContext({ ...devices['iPhone 13'] });
   await autre.route('**/rest/v1/rpc/**', (r) => { const c = r.request().postDataJSON(); return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(base.get(c.code) ?? null) }); });
   const m2 = await autre.newPage(); await m2.goto(URLB + '?test&cloud'); await m2.waitForSelector('.tribune');
