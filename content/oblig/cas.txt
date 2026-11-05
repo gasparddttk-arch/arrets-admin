@@ -11,9 +11,9 @@ c: Michel, gravement malade, offre à son voisin Victor de lui vendre son appart
 s: Méthode || Par quelle question commences-tu ? || Le contrat s'est-il formé ? || Avant de parler de validité ou d'exécution, il faut un contrat. Tout se joue sur la rencontre de l'offre et de l'acceptation.
 x: Le contrat est-il valable ? || La validité suppose un contrat formé. Ce point n'est pas encore acquis.
 x: Le contrat a-t-il été exécuté ? || Il n'y a rien à exécuter tant qu'on ignore si la vente existe.
-s: Qualifier || Que vaut la proposition de Michel ? || Une offre, ferme et précise, assortie d'un délai || Elle vise un bien et des conditions déterminés, et Michel veut être lié. Art. 1114.
-x: Une simple invitation à négocier || Rien ne reste à négocier : les éléments essentiels sont fixés.
-x: Une promesse unilatérale de vente || La promesse est un contrat. Ici, Victor n'a rien accepté.
+s: Qualifier || Que vaut la proposition de Michel ? || Une offre ferme et précise || Elle vise un bien et des conditions déterminés, et Michel veut être lié. Art. 1114.
+x: Une simple invitation à négocier le prix || Rien ne reste à négocier : les éléments essentiels sont fixés.
+x: Une promesse unilatérale de vendre l'appartement || La promesse est un contrat. Ici, Victor n'a rien accepté.
 s: Règle || Que devient une offre au décès de son auteur ? || Elle est caduque, même si un délai courait || Art. 1117 al. 2. Le Rapport au Président précise que la caducité joue en toute hypothèse, peu important le délai.
 x: Elle passe aux héritiers jusqu'à la fin du délai || C'est la solution que la réforme a écartée.
 x: Elle tient grâce à l'article 1116 || Ce texte interdit à l'auteur de se rétracter. Il ne dit rien du décès.
@@ -34,32 +34,32 @@ x: Un simple pourparler || Rien ne reste à discuter sur l'essentiel.
 s: Le fait clé || Quel fait décide de tout ? || Le courrier est-il déjà parvenu au couple ? || Tant qu'elle n'est pas parvenue à son destinataire, l'offre se rétracte librement. Art. 1115.
 x: Le prix proposé par l'antiquaire || Une meilleure affaire n'est pas une raison de droit.
 x: La valeur réelle des fauteuils || L'offre ne dépend pas de la valeur.
-s: Règle || Le courrier est arrivé, sans délai fixé. Fernand peut-il se rétracter librement ? || Non : il doit la maintenir pendant un délai raisonnable || Art. 1116 al. 1.
-x: Oui, puisqu'il n'a fixé aucun délai || Sans délai fixé, la loi impose un délai raisonnable.
-x: Non, il est lié pour toujours || L'offre finit par tomber à l'issue d'un délai raisonnable. Art. 1117.
-s: Sanction || Il se rétracte quand même, dans ce délai. Que risque-t-il ? || Des dommages et intérêts, mais pas d'achat forcé || La rétractation empêche le contrat et engage sa responsabilité extracontractuelle. Art. 1116 al. 2 et 3, Civ. 3e, 25 juin 2026.
-x: Il doit acheter les fauteuils || La loi écarte la conclusion forcée. Seule une acceptation antérieure formerait le contrat.
-x: Rien du tout || La rétractation fautive engage sa responsabilité.
-s: Trancher || Peut-il être contraint d'acheter ? || Non, sauf si le couple a accepté avant sa rétractation || Si l'acceptation parvient d'abord à Fernand, le contrat est conclu. Art. 1121.
-x: Oui, dès que le courrier est reçu || La réception de l'offre ne forme pas le contrat.
-x: Jamais, même après une acceptation || L'acceptation forme le contrat : il est alors trop tard.
+s: Règle || Le courrier est arrivé, sans délai fixé. Fernand peut-il se rétracter librement ? || Non : il doit la maintenir un délai raisonnable || Art. 1116 al. 1.
+x: Oui, puisqu'il n'a fixé aucun délai dans son courrier || Sans délai fixé, la loi impose un délai raisonnable.
+x: Non, il est lié pour toujours tant qu'on n'a pas répondu || L'offre finit par tomber à l'issue d'un délai raisonnable. Art. 1117.
+s: Sanction || Il se rétracte quand même, dans ce délai. Que risque-t-il ? || Des dommages et intérêts, pas un achat forcé || La rétractation empêche le contrat et engage sa responsabilité extracontractuelle. Art. 1116 al. 2 et 3, Civ. 3e, 25 juin 2026.
+x: Il doit acheter les fauteuils au prix de son offre || La loi écarte la conclusion forcée. Seule une acceptation antérieure formerait le contrat.
+x: Rien du tout, puisqu'aucun contrat n'a été conclu || La rétractation fautive engage sa responsabilité.
+s: Trancher || Peut-il être contraint d'acheter ? || Non, sauf acceptation avant sa rétractation || Si l'acceptation parvient d'abord à Fernand, le contrat est conclu. Art. 1121.
+x: Oui, dès que le courrier est arrivé chez le couple || La réception de l'offre ne forme pas le contrat.
+x: Jamais, même si le couple a déjà accepté son offre || L'acceptation forme le contrat : il est alors trop tard.
 v: Fernand peut retirer librement son offre tant qu'elle n'est pas parvenue au couple (art. 1115). Après, il doit la maintenir un délai raisonnable (art. 1116). S'il la retire quand même avant toute acceptation, il n'y a pas de vente : il doit seulement réparer le préjudice, sans compenser les avantages attendus du contrat.
 a: a1114, a1115, a1116, a1121, gerstaecker
 
 %jean | La villa et le complexe immobilier | 2 | 2 | TD 1
 c: Jean achète 2 500 000 euros une villa près de Saint-Germain-en-Laye, pour son standing et son environnement. Quatre mois plus tard, il apprend qu'un immense complexe sera construit à 300 mètres, gâchant sa vue et sa quiétude. Persuadé que le vendeur était au courant, il demande des dommages et intérêts.
-s: Méthode || Sur quel terrain se place Jean ? || Le manquement au devoir d'information avant le contrat || Il veut garder sa villa et être indemnisé d'un silence précontractuel. Art. 1112-1.
-x: L'inexécution de la vente || Le vendeur a livré la villa. Le reproche date d'avant le contrat.
-x: La rupture abusive des pourparlers || Les négociations ont abouti : le contrat existe.
-s: Conditions || Que doit réunir le devoir d'information ? || Une information connue du vendeur, ignorée légitimement de Jean, liée directement au contrat et déterminante || Art. 1112-1. Lien direct et importance déterminante sont cumulatifs : Com., 14 mai 2025.
-x: Toute information utile à l'acheteur || Le texte est plus étroit : le lien avec le contrat ne suffit pas.
-x: Une information liée à la valeur du bien || Le devoir ne porte justement pas sur l'estimation de la valeur.
+s: Méthode || Sur quel terrain se place Jean ? || Le devoir d'information avant le contrat || Il veut garder sa villa et être indemnisé d'un silence précontractuel. Art. 1112-1.
+x: L'inexécution de la vente par le vendeur de la villa || Le vendeur a livré la villa. Le reproche date d'avant le contrat.
+x: La rupture abusive des pourparlers par le vendeur || Les négociations ont abouti : le contrat existe.
+s: Conditions || Que doit réunir le devoir d'information ? || Une information connue, légitimement ignorée, directement liée au contrat et déterminante || Art. 1112-1. Lien direct et importance déterminante sont cumulatifs : Com., 14 mai 2025.
+x: Toute information utile à l'acheteur, dès lors que le vendeur pouvait raisonnablement la connaître || Le texte est plus étroit : le lien avec le contrat ne suffit pas.
+x: Une information sur la valeur du bien, que le vendeur connaissait et qu'il a choisi de taire || Le devoir ne porte justement pas sur l'estimation de la valeur.
 s: Preuve || Qui doit prouver quoi ? || Jean prouve que l'information lui était due, le vendeur qu'il l'a fournie || Art. 1112-1 al. 4.
-x: Le vendeur doit prouver qu'il ne savait rien || C'est à Jean d'établir que le vendeur connaissait l'information.
-x: Le notaire doit prouver l'information || Le texte vise les parties au contrat.
+x: Le vendeur doit prouver qu'il ne savait rien du projet de complexe immobilier || C'est à Jean d'établir que le vendeur connaissait l'information.
+x: Le notaire doit prouver que l'information a bien circulé entre les parties || Le texte vise les parties au contrat.
 s: Appliquer || Quel est le point faible de Jean ? || Prouver que le vendeur savait et que la vue était déterminante || Il n'est que « persuadé » que le vendeur savait. Civ. 3e, 27 nov. 2025 : ce qu'on n'a pas demandé ni stipulé est difficile à présenter comme déterminant.
-x: Le prix de la villa || Le prix élevé ne change pas les conditions du devoir.
-x: Le délai de quatre mois || Il agit vite : ce n'est pas son problème.
+x: Justifier le prix de la villa par rapport aux biens du quartier || Le prix élevé ne change pas les conditions du devoir.
+x: Expliquer pourquoi il a attendu quatre mois avant de réagir || Il agit vite : ce n'est pas son problème.
 s: Trancher || S'il prouve tout cela, qu'obtient-il ? || Des dommages et intérêts, le plus souvent pour perte de chance || La responsabilité est extracontractuelle, et le préjudice est souvent la perte de chance de contracter à de meilleures conditions. Si le silence était intentionnel, il peut aussi invoquer le dol.
 x: L'interdiction du complexe immobilier || Le vendeur n'a aucun pouvoir sur ce chantier.
 x: Le remboursement intégral du prix sans annulation || Sans annulation, il garde la villa : on répare seulement son préjudice.
@@ -88,16 +88,16 @@ a: a1112, a1112-2, a1104, a1240, manoukian
 
 %hector | Le chef et la SCI Berlioz | 4 | 2 | TD 2
 c: La SCI Hector loue un restaurant au chef Thierry M., qui bénéficie d'un pacte de préférence. En 2018, elle vend le local 4 millions d'euros à la SCI Berlioz sans respecter le pacte. Convaincu que la SCI Berlioz connaissait le pacte et son intention de s'en prévaloir, Thierry M. agit vite pour lui être substitué. Huit ans plus tard, le tribunal va statuer.
-s: Qualifier || Quel est le problème de droit ? || À quelles conditions le bénéficiaire d'un pacte violé peut-il prendre la place du tiers ? || La vente au tiers existe, et le bénéficiaire veut une sanction en nature.
-x: La SCI Hector pouvait-elle vendre ? || Le pacte n'interdit pas de vendre : il oblige à proposer d'abord au bénéficiaire.
-x: Le bail survit-il à la vente ? || C'est acquis par l'article 1743 et cela ne règle pas la substitution.
+s: Qualifier || Quel est le problème de droit ? || Le bénéficiaire d'un pacte violé peut-il prendre la place du tiers ? || La vente au tiers existe, et le bénéficiaire veut une sanction en nature.
+x: La SCI Hector pouvait-elle vendre le local sans l'accord de son locataire ? || Le pacte n'interdit pas de vendre : il oblige à proposer d'abord au bénéficiaire.
+x: Le bail survit-il à la vente conclue au profit de la SCI Berlioz ? || C'est acquis par l'article 1743 et cela ne règle pas la substitution.
 s: Règle || Que doit établir Thierry M. ? || Que le tiers connaissait le pacte et son intention de s'en prévaloir || Art. 1123 al. 2, qui consacre la chambre mixte de 2006. La double connaissance s'apprécie au moment de la vente.
-x: Que le pacte a été publié || La publication aide, mais la Cour exige la connaissance de l'intention.
-x: Que la SCI Berlioz a acheté trop cher || Le prix est indifférent.
+x: Que le pacte a été publié, ce qui le rend opposable à tous || La publication aide, mais la Cour exige la connaissance de l'intention.
+x: Que la SCI Berlioz a payé un prix inférieur à la valeur du local || Le prix est indifférent.
 s: Appliquer || Si la preuve échoue, que lui reste-t-il ? || Des dommages et intérêts contre la SCI Hector || La violation du pacte engage toujours son débiteur. Art. 1123 al. 2, première phrase.
-x: Rien du tout || Le bénéficiaire peut toujours obtenir réparation.
-x: La nullité malgré tout || La nullité suppose la même double connaissance.
-s: Conséquences || S'il gagne, que se passe-t-il concrètement ? || Il remplace la SCI Berlioz dans la vente, aux conditions de celle-ci || Il devient propriétaire contre un prix de 4 millions d'euros, celui de 2018. Reste à régler les restitutions, notamment les loyers versés depuis.
+x: Rien du tout, puisque la vente au tiers reste valable || Le bénéficiaire peut toujours obtenir réparation.
+x: La nullité de la vente, même si le tiers était de bonne foi || La nullité suppose la même double connaissance.
+s: Conséquences || S'il gagne, que se passe-t-il concrètement ? || Il remplace la SCI Berlioz, aux conditions de la vente || Il devient propriétaire contre un prix de 4 millions d'euros, celui de 2018. Reste à régler les restitutions, notamment les loyers versés depuis.
 x: Il rachète le bien au prix du marché d'aujourd'hui || La substitution reprend les conditions du contrat conclu.
 x: Il redevient locataire avec un loyer réduit || La substitution porte sur la vente, pas sur le bail.
 v: Le juge ne peut substituer Thierry M. à la SCI Berlioz que s'il prouve que celle-ci connaissait, en achetant, le pacte et son intention de s'en prévaloir (art. 1123 al. 2 ; Ch. mixte, 26 mai 2006). Il prendrait alors sa place aux conditions de 2018. À défaut, il n'obtiendrait que des dommages et intérêts de la SCI Hector.
@@ -105,18 +105,18 @@ a: a1123, mixte2006
 
 %lambert | L'infirmier mal équipé | 5 | 2 | TD 3
 c: Monsieur Lambert se lance comme infirmier libéral en milieu rural. Il achète à une société spécialisée des appareils médicaux très onéreux. Le matériel, en parfait état de marche, se révèle totalement inadapté à son volume d'activité et à ses interventions.
-s: Méthode || Quel terrain choisis-tu ? || La validité : son consentement a-t-il été vicié ? || Le matériel fonctionne, donc le contrat est bien exécuté. Le reproche vise sa décision d'acheter.
-x: L'inexécution par le vendeur || L'appareil vendu est livré et marche.
-x: La capacité de Monsieur Lambert || Rien ne remet en cause sa capacité.
+s: Méthode || Quel terrain choisis-tu ? || La validité : son consentement est-il vicié ? || Le matériel fonctionne, donc le contrat est bien exécuté. Le reproche vise sa décision d'acheter.
+x: L'inexécution : le vendeur n'a pas livré ce qui était dû || L'appareil vendu est livré et marche.
+x: La capacité : Monsieur Lambert pouvait-il s'engager ? || Rien ne remet en cause sa capacité.
 s: Qualifier || Sur quoi porte son erreur ? || Sur ses besoins, donc sur un motif || Les appareils ont les qualités attendues : il s'est trompé sur leur utilité pour lui.
 x: Sur une qualité essentielle de la prestation || Le matériel n'a aucun défaut.
 x: Sur la valeur || Il ne se plaint pas d'avoir payé trop cher, mais d'avoir acheté ce qui ne lui sert pas.
-s: Règle || Que dit le code de l'erreur sur le motif ? || Elle ne vaut pas nullité, sauf si les parties en ont fait expressément un élément déterminant || Art. 1135 al. 1. Même connu du vendeur, le motif doit être stipulé : Civ. 1re, 13 févr. 2001.
-x: Elle vaut nullité si le vendeur la connaissait || La connaissance ne suffit pas.
-x: Elle vaut toujours nullité || Ce serait ruiner la sécurité juridique.
-s: Trancher || Son erreur remet-elle en cause le contrat ? || Non, sauf stipulation expresse de ce motif || Il lui reste à chercher si le vendeur spécialisé lui devait une information sur l'adaptation du matériel, ce qui mène à la responsabilité.
-x: Oui, la vente est nulle || Le motif n'a pas été stipulé.
-x: Oui, si l'erreur est excusable || L'excusabilité ne change rien : l'erreur ne porte pas sur une qualité essentielle.
+s: Règle || Que dit le code de l'erreur sur le motif ? || Elle ne vaut pas nullité, sauf stipulation expresse || Art. 1135 al. 1. Même connu du vendeur, le motif doit être stipulé : Civ. 1re, 13 févr. 2001.
+x: Elle vaut nullité dès lors que le vendeur connaissait le motif || La connaissance ne suffit pas.
+x: Elle vaut toujours nullité si le motif a été déterminant pour lui || Ce serait ruiner la sécurité juridique.
+s: Trancher || Son erreur remet-elle en cause le contrat ? || Non, sauf stipulation expresse du motif || Il lui reste à chercher si le vendeur spécialisé lui devait une information sur l'adaptation du matériel, ce qui mène à la responsabilité.
+x: Oui, la vente est nulle, car il s'est trompé de bonne foi || Le motif n'a pas été stipulé.
+x: Oui, si l'erreur est excusable pour un jeune professionnel || L'excusabilité ne change rien : l'erreur ne porte pas sur une qualité essentielle.
 v: Monsieur Lambert s'est trompé sur l'utilité du matériel, non sur ses qualités. Cette erreur sur un motif n'est pas une cause de nullité, faute de stipulation expresse (art. 1135). Il peut seulement rechercher si le vendeur a manqué à un devoir d'information (art. 1112-1).
 a: a1135, a1132, a1112-1, malraux
 
@@ -134,23 +134,23 @@ x: Il a raison : il fallait stipuler la valeur || Le texte n'exige pas cette sti
 s: Délai || Un an s'est écoulé. Est-ce un obstacle ? || Non : le délai court du jour de la découverte || Art. 1144.
 x: Oui : le délai court depuis la vente || Pour le dol, il part de la découverte.
 x: Oui : il fallait agir dans les trente jours || Aucun délai de ce type ne s'applique.
-s: Trancher || Quelles sont ses chances ? || Excellentes : nullité relative, et dommages et intérêts possibles || Le dol est à la fois vice du consentement et faute. Art. 1131 et 1240.
-x: Il n'obtient que des dommages et intérêts || Il peut demander la nullité.
-x: Il n'obtient rien || Tous les éléments du dol sont réunis.
+s: Trancher || Quelles sont ses chances ? || Excellentes : nullité relative, et réparation possible || Le dol est à la fois vice du consentement et faute. Art. 1131 et 1240.
+x: Moyennes : il n'obtient que des dommages et intérêts || Il peut demander la nullité.
+x: Faibles : un collectionneur aurait dû voir la tromperie || Tous les éléments du dol sont réunis.
 v: La fausse attestation est un dol par manœuvres (art. 1137 al. 1). L'erreur qui en résulte est toujours excusable et vaut nullité même si elle porte sur la valeur (art. 1139). Le délai court depuis la découverte (art. 1144). La nullité relative sera prononcée (art. 1131), avec une possible réparation.
 a: a1137, a1139, a1144, a1131, a1136, sleeping
 
 %sacha | La promesse au comptoir | 1 | 2 | Création
 c: Sacha gagne une forte somme grâce à un ticket joué sur les conseils de Léa. Devant témoins, il lui écrit : « Je m'engage à te reverser la moitié, tu le mérites. » Le lendemain, il refuse.
-s: Méthode || Y a-t-il un contrat entre eux ? || Non : Sacha s'engage seul, sans accord négocié || On n'est pas face à un échange de volontés sur un contrat, mais devant une promesse isolée.
-x: Oui : un contrat de vente || Aucune chose ni aucun prix.
-x: Oui : un contrat de travail || Léa n'a aucun lien de subordination.
+s: Méthode || Y a-t-il un contrat entre eux ? || Non : Sacha s'engage seul || On n'est pas face à un échange de volontés sur un contrat, mais devant une promesse isolée.
+x: Oui : un contrat de vente du ticket, conclu devant témoins || Aucune chose ni aucun prix.
+x: Oui : un contrat de travail rémunérant les conseils de Léa || Léa n'a aucun lien de subordination.
 s: Qualifier || Qu'est-ce que son écrit ? || La promesse d'exécuter un devoir de conscience || Art. 1100 al. 2. Un acte juridique unilatéral peut créer une obligation.
-x: Une simple pensée sans effet || Le code reconnaît cet engagement.
-x: Une donation parfaite || Rien n'a été remis et aucune forme n'est respectée.
-s: Trancher || Sacha peut-il revenir dessus ? || Non : l'obligation naturelle est devenue civile || Civ. 1re, 10 oct. 1995.
-x: Oui : personne ne s'oblige seul || La jurisprudence, puis l'article 1100, disent le contraire.
-x: Oui : il suffit de changer d'avis || Une obligation ne se défait pas ainsi.
+x: Une simple pensée, sans aucun effet de droit || Le code reconnaît cet engagement.
+x: Une donation parfaite, sans besoin de forme || Rien n'a été remis et aucune forme n'est respectée.
+s: Trancher || Sacha peut-il revenir dessus ? || Non : l'obligation est devenue civile || Civ. 1re, 10 oct. 1995.
+x: Oui : personne ne peut s'obliger seul, sans contrat || La jurisprudence, puis l'article 1100, disent le contraire.
+x: Oui : il suffit de changer d'avis avant tout paiement || Une obligation ne se défait pas ainsi.
 v: La promesse d'exécuter un devoir de conscience crée une obligation (art. 1100 al. 2 ; Civ. 1re, 10 oct. 1995). Sacha doit verser la moitié promise.
 a: a1100, a1100-1, naturelle
 
@@ -160,11 +160,11 @@ s: Qualifier || Que vaut la réponse de Tom ? || Une acceptation non conforme, d
 x: Une acceptation, le prix étant presque le même || L'acceptation doit reprendre les termes de l'offre.
 x: Une rétractation d'Inès || Tom ne peut pas rétracter l'offre d'Inès.
 s: Appliquer || Inès a-t-elle accepté les 1 800 euros en se taisant ? || Non : le silence ne vaut pas acceptation || Art. 1120.
-x: Oui : elle aurait dû refuser || Elle n'a aucun devoir de répondre.
-x: Oui : les usages l'imposent || Aucun usage n'est invoqué.
-s: Trancher || La seconde réponse de Tom forme-t-elle une vente ? || Non : sa contre-proposition a fait tomber l'offre de 2 000 euros || En proposant 1 800 euros, Tom a refusé l'offre d'Inès. Il ne peut plus l'accepter, sauf nouvelle offre de sa part.
-x: Oui : l'offre courait toujours || Tom l'avait refusée en proposant un autre prix.
-x: Oui : Paul doit rendre la moto || Paul a régulièrement acheté.
+x: Oui : elle aurait dû refuser si elle n'était pas d'accord || Elle n'a aucun devoir de répondre.
+x: Oui : les usages de la vente l'imposent entre particuliers || Aucun usage n'est invoqué.
+s: Trancher || La seconde réponse de Tom forme-t-elle une vente ? || Non : sa contre-proposition a fait tomber l'offre || En proposant 1 800 euros, Tom a refusé l'offre d'Inès. Il ne peut plus l'accepter, sauf nouvelle offre de sa part.
+x: Oui : l'offre de 2 000 euros courait toujours à ce moment || Tom l'avait refusée en proposant un autre prix.
+x: Oui : Paul doit rendre la moto, car Tom était le premier || Paul a régulièrement acheté.
 v: La réponse de Tom était une offre nouvelle (art. 1118 al. 3), restée sans acceptation (art. 1120). La vente à Paul est valable et Tom n'a aucun droit.
 a: a1118, a1120, a1114
 
@@ -187,20 +187,20 @@ c: Nora commande des enceintes sur un site. Elle clique une seule fois, sans éc
 s: Qualifier || Quelle règle vise cette situation ? || Le double clic de l'article 1127-2 || Le client doit pouvoir vérifier sa commande et son prix total, et corriger ses erreurs, avant de confirmer.
 x: Le délai de rétractation de l'article 1122 || Ce texte ne fixe pas la procédure de commande en ligne.
 x: La lésion || La difficulté ne vient pas du déséquilibre du prix.
-s: Trancher || Le contrat est-il valablement conclu ? || Non : la procédure de vérification n'a pas été respectée || Le texte subordonne la validité à cette possibilité.
-x: Oui : elle a cliqué || Un seul clic ne suffit pas.
-x: Oui, mais pour une seule enceinte || Le juge ne réécrit pas la commande.
+s: Trancher || Le contrat est-il valablement conclu ? || Non : la vérification n'a pas été possible || Le texte subordonne la validité à cette possibilité.
+x: Oui : elle a cliqué, ce qui exprime son consentement || Un seul clic ne suffit pas.
+x: Oui, mais seulement pour une enceinte, la quantité voulue || Le juge ne réécrit pas la commande.
 v: Faute de récapitulatif et de confirmation, le contrat n'est pas valablement conclu (art. 1127-2). Nora ne doit pas le prix.
 a: a1127-2, a1127-1
 
 %promesse | La promesse rétractée | 4 | 2 | Création
 c: Le 1er février 2024, Paul promet par acte notarié à Julie de lui vendre sa maison, Julie ayant jusqu'au 1er juin pour décider. Le 1er mars, Paul lui écrit qu'il ne vend plus. Le 1er mai, Julie lève l'option et exige la vente.
 s: Qualifier || Quel est cet acte ? || Une promesse unilatérale de vente || Paul a déjà consenti, seul manque le consentement de Julie. Art. 1124 al. 1.
-x: Une offre de vente || L'offre est un acte unilatéral. Julie a accepté une option, c'est un contrat.
-x: Un pacte de préférence || Paul a consenti à la vente : il ne donne pas qu'une priorité.
-s: Règle || Quel droit s'applique ? || L'article 1124 al. 2, car la promesse date d'après 2016 || La révocation n'empêche pas la formation du contrat promis.
-x: La jurisprudence Cruz || Elle a été abandonnée et ne visait que l'ancien droit.
-x: L'article 1116 sur l'offre || La promesse a son propre régime.
+x: Une offre de vente assortie d'un délai || L'offre est un acte unilatéral. Julie a accepté une option, c'est un contrat.
+x: Un pacte de préférence sur la maison || Paul a consenti à la vente : il ne donne pas qu'une priorité.
+s: Règle || Quel droit s'applique ? || L'article 1124 al. 2 || La révocation n'empêche pas la formation du contrat promis.
+x: La jurisprudence Cruz, propre aux ventes d'immeubles || Elle a été abandonnée et ne visait que l'ancien droit.
+x: L'article 1116 sur l'offre, qui vise toute rétractation || La promesse a son propre régime.
 s: Trancher || Julie peut-elle exiger la vente ? || Oui : la vente est formée par la levée d'option || Elle peut en demander la réalisation forcée.
 x: Non : elle n'a droit qu'à des dommages et intérêts || C'était l'effet de Cruz. C'est fini.
 x: Non : Paul a changé d'avis avant la levée || Son consentement était définitif.
@@ -223,15 +223,15 @@ a: a1124, a1123
 
 %compromis | Le compromis signé | 4 | 2 | Création
 c: Marc et Sonia signent un compromis pour la vente d'un appartement à 300 000 euros, sans condition. L'acte notarié doit suivre sous deux mois. Marc reçoit une meilleure offre et refuse de signer chez le notaire.
-s: Qualifier || Quel est cet acte ? || Une promesse synallagmatique de vente || Chacun s'engage : l'un à vendre, l'autre à acheter.
-x: Une promesse unilatérale || Sonia ne s'est pas réservé d'option.
-x: Une simple offre || Il y a déjà accord des deux parties.
-s: Règle || Que vaut ce compromis ? || Il vaut vente, puisqu'il y a accord sur la chose et le prix || Art. 1589 al. 1.
-x: Il ne vaut rien sans notaire || La réitération n'est pas, par principe, une condition de la vente.
-x: Il ne vaut qu'une obligation de négocier || La chose et le prix sont fixés.
-s: Le piège || Quand en irait-il autrement ? || Si les parties avaient fait de l'acte authentique un élément de leur consentement || Civ. 3e, 20 déc. 1994 et 19 juin 2012. Rien de tel ici.
-x: Si le délai de deux mois était dépassé || Le retard ne détruit pas l'accord.
-x: Si Marc recevait une meilleure offre || Une meilleure offre ne délie pas du contrat.
+s: Qualifier || Quel est cet acte ? || Une promesse synallagmatique || Chacun s'engage : l'un à vendre, l'autre à acheter.
+x: Une promesse unilatérale de vente || Sonia ne s'est pas réservé d'option.
+x: Une simple offre, encore à accepter || Il y a déjà accord des deux parties.
+s: Règle || Que vaut ce compromis ? || Il vaut vente : chose et prix sont fixés || Art. 1589 al. 1.
+x: Il ne vaut rien tant que le notaire n'a pas reçu l'acte || La réitération n'est pas, par principe, une condition de la vente.
+x: Il ne vaut qu'une obligation de négocier de bonne foi || La chose et le prix sont fixés.
+s: Le piège || Quand en irait-il autrement ? || Si l'acte authentique était un élément de leur consentement || Civ. 3e, 20 déc. 1994 et 19 juin 2012. Rien de tel ici.
+x: Si le délai de deux mois prévu pour signer était dépassé || Le retard ne détruit pas l'accord.
+x: Si Marc recevait entre-temps une offre bien meilleure || Une meilleure offre ne délie pas du contrat.
 s: Trancher || Quel est ton jugement ? || Sonia peut exiger la réalisation forcée de la vente || Le jugement peut valoir vente.
 x: Sonia n'a droit qu'à des dommages et intérêts || Elle peut aussi exiger l'exécution.
 x: Marc est libre, il n'a rien signé chez le notaire || Il a signé le compromis.
@@ -241,11 +241,11 @@ a: a1589, a1583, reiteration1994, reiteration2012
 %grenier | Le tableau du grenier | 5 | 2 | Création
 c: Élise vend 800 euros un tableau trouvé au grenier, présenté par un expert comme une copie sans valeur. L'acheteur le fait ensuite expertiser : c'est l'œuvre d'un maître, estimée à 400 000 euros. Élise veut annuler.
 s: Qualifier || Sur quoi porte son erreur ? || Sur une qualité essentielle : l'authenticité || Elle a vendu en croyant certaine l'absence d'authenticité.
-x: Sur la valeur seulement || L'erreur sur la valeur résulte ici d'une erreur sur l'authenticité.
-x: Sur la personne de l'acheteur || L'identité de l'acheteur n'est pas en cause.
-s: Le piège || L'acheteur soutient qu'on ne peut pas se tromper sur sa propre prestation. A-t-il raison ? || Non : l'erreur peut porter sur la prestation de l'une ou l'autre partie || Art. 1133 al. 2, Poussin.
-x: Oui : seul l'acheteur peut se tromper || C'est justement ce que Poussin écarte.
-x: Oui : le vendeur connaît toujours sa chose || Le droit n'en présume rien.
+x: Sur la valeur seulement, comme dans toute mauvaise affaire || L'erreur sur la valeur résulte ici d'une erreur sur l'authenticité.
+x: Sur la personne de l'acheteur, plus avisé qu'elle || L'identité de l'acheteur n'est pas en cause.
+s: Le piège || L'acheteur soutient qu'on ne peut pas se tromper sur sa propre prestation. A-t-il raison ? || Non : l'erreur peut porter sur sa propre prestation || Art. 1133 al. 2, Poussin.
+x: Oui : seul l'acheteur peut se tromper sur ce qu'il reçoit || C'est justement ce que Poussin écarte.
+x: Oui : le vendeur est réputé connaître ce qu'il vend || Le droit n'en présume rien.
 s: Distinguer || Quelle différence avec Fragonard ? || Il n'y a pas ici d'aléa accepté || Dans Fragonard, le tableau était vendu comme « attribué à ». Ici, on l'a présenté comme une simple copie.
 x: Fragonard concernait un tableau plus ancien || L'âge est sans effet.
 x: Aucune : la solution serait la même || L'aléa accepté aurait exclu l'erreur. Art. 1133 al. 3.
@@ -261,11 +261,11 @@ s: Qualifier || Quelle erreur invoque-t-il ? || Une erreur sur un simple motif |
 x: Une erreur sur une qualité essentielle || Rien ne cloche dans l'appartement.
 x: Une erreur sur la valeur || Il ne parle pas du prix.
 s: Règle || Le vendeur connaissait ce motif. Cela suffit-il ? || Non : il faut en avoir fait expressément un élément déterminant || Art. 1135 al. 1, et Civ. 1re, 13 févr. 2001.
-x: Oui : c'est entré dans le champ contractuel || La simple connaissance ne suffit pas.
-x: Oui, si Karim est de bonne foi || La bonne foi ne remplace pas la stipulation.
+x: Oui : il est entré dans le champ contractuel par cette connaissance || La simple connaissance ne suffit pas.
+x: Oui, si Karim prouve sa bonne foi et la réalité de son projet || La bonne foi ne remplace pas la stipulation.
 s: Trancher || Quel conseil aurait dû lui donner son notaire ? || Stipuler une condition liée à la mutation || C'est le moyen d'intégrer le motif au contrat.
-x: Acheter en son nom propre || Cela ne change rien.
-x: Payer comptant || Sans lien avec le motif.
+x: Acheter en son nom propre plutôt que par une société || Cela ne change rien.
+x: Payer comptant pour éviter toute condition de prêt || Sans lien avec le motif.
 v: L'erreur sur le motif, non stipulée, n'est pas une cause de nullité (art. 1135 al. 1). Karim reste propriétaire.
 a: a1135, malraux
 
@@ -288,12 +288,12 @@ c: Le gérant d'une boutique surprend Lina, sa salariée, en train de voler dans
 s: Qualifier || Quel vice est en cause ? || La violence || La crainte d'un mal considérable a contraint Lina. Art. 1140.
 x: Le dol || Personne ne l'a trompée.
 x: L'erreur || Elle sait très bien ce qu'elle fait.
-s: Règle || Porter plainte est pourtant un droit. Que dit le code ? || La menace d'une voie de droit n'est pas une violence, sauf si elle est détournée de son but || Art. 1141.
-x: Toute menace de plainte est une violence || C'est l'exercice d'un droit par principe.
-x: Une menace légale n'est jamais une violence || L'exception du détournement existe.
-s: Appliquer || Pourquoi y a-t-il ici détournement ? || La plainte sert à obtenir un avantage sans rapport avec le vol || Elle n'a rien à voir avec la vente d'une maison à moitié prix, qui est un avantage excessif.
-x: Parce que le vol était minime || Ce n'est pas le critère.
-x: Parce que Lina est salariée || Le statut ne suffit pas.
+s: Règle || Porter plainte est pourtant un droit. Que dit le code ? || Elle n'est pas une violence, sauf détournement de son but || Art. 1141.
+x: Toute menace de plainte est une violence, dès qu'elle fait peur || C'est l'exercice d'un droit par principe.
+x: Une menace légale n'est jamais une violence, quel que soit son but || L'exception du détournement existe.
+s: Appliquer || Pourquoi y a-t-il ici détournement ? || La plainte sert à obtenir une maison, sans rapport avec le vol || Elle n'a rien à voir avec la vente d'une maison à moitié prix, qui est un avantage excessif.
+x: Le vol était minime par rapport à la valeur de la maison || Ce n'est pas le critère.
+x: Lina est salariée et ne peut donc jamais refuser quoi que ce soit || Le statut ne suffit pas.
 s: Trancher || Quel est ton jugement ? || Nullité relative de la vente || Le délai ne court qu'à partir du jour où la violence a cessé. Art. 1144.
 x: La vente est valable, Lina a choisi || Son consentement n'était pas libre.
 x: Le prix est simplement réajusté || La sanction est la nullité.
@@ -305,15 +305,15 @@ c: Depuis dix ans, une PME réalise 90 % de son chiffre d'affaires avec un grand
 s: Qualifier || Quelle notion vises-tu ? || L'abus de dépendance || C'est une forme de violence. Art. 1143.
 x: La lésion || Le simple déséquilibre n'est pas une cause de nullité. Art. 1168.
 x: La force majeure || Elle concerne l'exécution, pas le consentement.
-s: Règle || Quelles conditions réunir ? || Dépendance à l'égard de l'autre, abus et avantage manifestement excessif || Le texte exige ces trois éléments, et le lien de cause entre l'abus et l'engagement.
-x: Un simple prix bas || L'avantage excessif ne suffit pas seul.
-x: Une menace physique || Le texte vise une contrainte, pas forcément physique.
-s: Appliquer || Quel est l'élément le mieux établi ici ? || La dépendance à l'égard du groupe, qui préexiste au contrat || 90 % du chiffre d'affaires avec un seul client depuis dix ans.
-x: Un état de santé fragile || Il s'agit d'une société.
-x: Une erreur sur le prix || La PME sait ce qu'elle signe.
+s: Règle || Quelles conditions réunir ? || Dépendance, abus et avantage manifestement excessif || Le texte exige ces trois éléments, et le lien de cause entre l'abus et l'engagement.
+x: Une menace physique ou morale, quel que soit le prix convenu || Le texte vise l'abus d'une dépendance, pas une menace classique.
+x: Un prix très bas, même en l'absence de toute dépendance || L'avantage excessif ne suffit pas seul.
+s: Appliquer || Quel est l'élément le mieux établi ici ? || La dépendance à l'égard du groupe || 90 % du chiffre d'affaires avec un seul client depuis dix ans.
+x: Une vulnérabilité liée à l'état de santé du dirigeant || Il s'agit d'une société et d'un lien économique.
+x: Une erreur de la PME dans le calcul de ses coûts || La PME sait ce qu'elle signe.
 s: Trancher || Quelle sanction demande la PME ? || La nullité relative, et des dommages et intérêts || Comme pour le dol, la violence est à la fois vice et faute.
-x: La révision judiciaire du tarif || Le texte ne prévoit pas de révision.
-x: La résolution pour inexécution || Le tarif a été respecté.
+x: La révision judiciaire du tarif à un niveau équitable || Le texte ne prévoit pas de révision.
+x: La résolution du contrat pour inexécution du groupe || Le tarif a été respecté.
 v: Le groupe a abusé de la dépendance de la PME pour lui imposer un avantage manifestement excessif (art. 1143). La PME peut obtenir la nullité relative du contrat et réparation.
 a: a1143, a1140, a1168, kannas, honoraires2021
 
@@ -322,26 +322,26 @@ c: Théo, 15 ans, achète seul un scooter de 3 000 euros avec ses économies, sa
 s: Méthode || Que vérifies-tu en premier ? || La capacité de Théo || Ton cours le conseille : avant les vices, regarde la capacité, car si elle manque, l'analyse s'arrête là.
 x: Le dol du vendeur || Rien ne le suggère, et on commence par la capacité.
 x: L'exécution de la vente || Le scooter a été livré, mais la validité passe d'abord.
-s: Règle || Un mineur non émancipé peut-il contracter ? || Non, sauf actes courants à des conditions normales || Art. 1146 et 1148.
+s: Règle || Un mineur non émancipé peut-il contracter ? || Non, sauf actes courants || Art. 1146 et 1148.
 x: Oui, s'il paie avec ses propres fonds || Le paiement ne donne pas la capacité.
 x: Jamais, même pour acheter un pain || Les actes courants restent permis.
 s: Appliquer || Cet achat est-il un acte courant ? || Non, vu son montant et son usage || Un scooter à 3 000 euros dépasse ce qu'autorise l'usage pour un adolescent de 15 ans.
 x: Oui : tous les adolescents en ont un || L'argument ne suffit pas à en faire un acte courant.
 x: Oui : il avait les fonds || Le critère n'est pas la solvabilité.
-s: Trancher || Le vendeur peut-il sauver la vente ? || Seulement s'il prouve que l'acte était utile, sans lésion, ou a profité à Théo || Art. 1151 al. 1.
-x: Oui, car il était de bonne foi || La bonne foi ne suffit pas.
-x: Non, jamais || Le texte lui ouvre cette défense.
+s: Trancher || Le vendeur peut-il sauver la vente ? || Seulement en prouvant l'utilité sans lésion, ou le profit pour Théo || Art. 1151 al. 1.
+x: Oui, car il ignorait l'âge de Théo et il était de bonne foi || La bonne foi ne suffit pas.
+x: Non, jamais : un mineur peut toujours faire annuler ses actes || Le texte lui ouvre cette défense.
 v: L'achat dépasse les actes courants : le contrat est nul de nullité relative (art. 1147). Le vendeur ne l'évite qu'en prouvant son utilité sans lésion ou son profit pour Théo (art. 1151).
 a: a1145, a1146, a1147, a1148, a1151
 
 %catalogue | Le tarif de la franchise | 7 | 2 | Création
 c: Un contrat-cadre prévoit que le prix des livraisons sera celui du catalogue du franchiseur. Le franchisé conteste une hausse de 40 % et demande la nullité du contrat pour prix indéterminé.
-s: Qualifier || De quel contrat s'agit-il ? || Un contrat-cadre, suivi de contrats d'application || Art. 1111.
-x: Une vente isolée || Le contrat organise des livraisons futures.
-x: Un prêt || Il n'y a aucun prêt.
-s: Règle || La fixation unilatérale du prix est-elle admise ? || Oui, si le contrat le prévoit, à charge de motiver en cas de contestation || Art. 1164 al. 1.
-x: Non, le prix doit toujours être fixé d'avance || C'était l'ancien droit, abandonné en 1995.
-x: Oui, sans jamais avoir à se justifier || La motivation est obligatoire si le prix est contesté.
+s: Qualifier || De quel contrat s'agit-il ? || Un contrat-cadre et ses contrats d'application || Art. 1111.
+x: Une vente unique à livraisons échelonnées dans le temps || Le contrat organise des ventes futures, chacune avec son prix.
+x: Un contrat de prêt remboursé en marchandises || Il n'y a aucun prêt.
+s: Règle || La fixation unilatérale du prix est-elle admise ? || Oui, si le contrat le prévoit, et il faudra motiver || Art. 1164 al. 1.
+x: Non, le prix doit toujours être fixé d'avance dans le contrat || C'était l'ancien droit, abandonné en 1995.
+x: Oui, et le franchiseur n'a jamais à se justifier sur le montant || La motivation est obligatoire si le prix est contesté.
 s: Le piège || Le franchisé a-t-il choisi la bonne demande ? || Non : l'abus n'entraîne pas la nullité || Art. 1164 al. 2 : dommages et intérêts et, le cas échéant, résolution.
 x: Oui : la nullité est de droit || Depuis 1995, l'indétermination ne fait plus tomber le contrat-cadre.
 x: Oui, si le prix a doublé || La nullité n'est pas la sanction.
@@ -351,14 +351,14 @@ a: a1164, a1111, ap1995, alcatel
 %architecte | La note de l'architecte | 7 | 2 | Création
 c: Une architecte réalise les plans d'une extension, sans prix fixé d'avance. À la fin, elle réclame 25 000 euros. Le client refuse, estimant le montant excessif et le contrat nul faute de prix.
 s: Qualifier || Quel type de contrat ? || Un contrat de prestation de service || C'est le domaine de l'article 1165.
-x: Une vente || Aucune chose n'est vendue.
-x: Un contrat-cadre || Il n'y a pas de contrats d'application.
-s: Règle || Sans accord sur le prix, le contrat est-il nul ? || Non : le créancier peut fixer le prix, à charge de le motiver || Art. 1165.
-x: Oui : le prix est un élément essentiel || Ce n'est pas le cas pour une prestation de service.
-x: Non, et le juge fixe toujours le prix || Le texte confie le prix au créancier, le juge intervenant en cas d'abus.
-s: Trancher || Quel recours pour le client ? || Agir pour abus : dommages et intérêts et, le cas échéant, résolution || Art. 1165 al. 2.
-x: Refuser tout paiement || Le contrat est valable.
-x: Demander la nullité pour lésion || La lésion n'est pas une cause de nullité. Art. 1168.
+x: Une vente d'œuvre de l'esprit à prix différé || Aucune chose n'est vendue.
+x: Un contrat-cadre suivi de commandes || Il n'y a pas de contrats d'application.
+s: Règle || Sans accord sur le prix, le contrat est-il nul ? || Non : le créancier peut fixer le prix, et le motive || Art. 1165.
+x: Oui : le prix est un élément essentiel de tout contrat || Ce n'est pas le cas pour une prestation de service.
+x: Non, et le juge fixe toujours le prix à la place des parties || Le texte confie le prix au créancier, le juge intervenant en cas d'abus.
+s: Trancher || Quel recours pour le client ? || Agir pour abus dans la fixation du prix || Art. 1165 al. 2.
+x: Refuser tout paiement, puisqu'aucun prix n'a été convenu || Le contrat est valable.
+x: Demander la nullité du contrat pour lésion du client || La lésion n'est pas une cause de nullité. Art. 1168.
 v: Le contrat est valable sans prix fixé d'avance. L'architecte fixe le prix et le motive (art. 1165). En cas d'abus, le client peut demander réparation et, le cas échéant, la résolution.
 a: a1165, a1163, a1168
 
@@ -367,9 +367,9 @@ c: Un homme marié souscrit un abonnement à un service de rencontres. Il refuse
 s: Règle || Quel texte fixe la licéité du contrat ? || L'article 1162 || Le contrat ne peut déroger à l'ordre public, ni par ses stipulations, ni par son but.
 x: L'article 1128, seul || Il pose la condition, mais le contenu licite se lit à l'article 1162.
 x: L'article 1134 || Il traite de l'erreur sur la personne.
-s: Qualifier || Que dit la jurisprudence récente ? || Les bonnes mœurs reculent nettement, surtout en matière conjugale || Ass. plén., 29 oct. 2004, Civ. 1re, 4 nov. 2011 et Gleeden.
-x: L'adultère annule tout contrat qui s'y rapporte || Cette solution appartient au passé.
-x: Les bonnes mœurs ont une place croissante || Le mouvement va dans l'autre sens.
+s: Qualifier || Que dit la jurisprudence récente ? || Les bonnes mœurs reculent nettement || Ass. plén., 29 oct. 2004, Civ. 1re, 4 nov. 2011 et Gleeden.
+x: L'adultère annule tout contrat qui s'y rapporte de près ou de loin || Cette solution appartient au passé.
+x: Les bonnes mœurs ont une place croissante depuis vingt ans || Le mouvement va dans l'autre sens.
 s: Trancher || Quel est ton jugement ? || Le contrat est valable, il doit payer || Civ. 1re, 4 nov. 2011 : être marié ne rend pas le contrat de courtage illicite.
 x: Le contrat est nul, il ne doit rien || C'est le contraire.
 x: Le contrat est nul, mais il paie quand même || Une nullité aurait écarté le paiement.
@@ -378,17 +378,17 @@ a: a1162, a6, courtage, gleeden, leg2004
 
 %cuisine | La cuisine inachevée | 8 | c | Général
 c: Lou commande une cuisine sur mesure à 15 000 euros, dont la moitié payée d'avance. L'artisan pose les meubles hauts, puis ne revient plus depuis deux mois. Il ne répond pas aux appels. Lou se demande quoi faire.
-s: Méthode || Où est le problème ? || Dans l'exécution : il y a inexécution || Le contrat est formé et valable. La question est celle des sanctions.
-x: Dans la formation || Rien ne l'atteint.
-x: Dans la validité || Aucun vice n'est invoqué.
+s: Méthode || Où est le problème ? || Dans l'exécution du contrat || Le contrat est formé et valable. La question est celle des sanctions.
+x: Dans la formation : l'accord n'était pas complet || Rien ne l'atteint.
+x: Dans la validité : le consentement de Lou est vicié || Aucun vice n'est invoqué.
 s: Règle || Quel texte donne la liste des sanctions ? || L'article 1217 || Il énumère les sanctions, qui peuvent se cumuler si elles sont compatibles.
 x: L'article 1240 || Il vise la responsabilité extracontractuelle.
 x: L'article 1195 || Il traite de l'imprévision.
 s: Appliquer || Quel premier geste s'impose ? || La mise en demeure || Elle ouvre la plupart des sanctions : exécution forcée, remplacement, résolution par notification, réduction du prix.
 x: Assigner immédiatement en nullité || Le contrat est valable.
 x: Ne rien faire et ne pas payer || Le solde peut être retenu, mais il faut aussi mettre l'artisan en demeure.
-s: Trancher || Lou veut en finir et faire appel à un autre. Que fait-elle ? || Elle résout le contrat par notification, à ses risques et périls || Art. 1226, après mise en demeure, si l'inexécution est suffisamment grave.
-x: Elle demande la nullité pour dol || Rien n'indique une tromperie.
+s: Trancher || Lou veut en finir et faire appel à un autre. Que fait-elle ? || Elle résout le contrat par notification || Art. 1226, après mise en demeure, si l'inexécution est suffisamment grave.
+x: Elle demande la nullité du contrat pour dol de l'artisan || Rien n'indique une tromperie.
 x: Elle attend que le juge intervienne de lui-même || Il faut agir.
 v: L'artisan n'exécute plus. Après mise en demeure, Lou peut refuser de payer le solde (art. 1219), faire finir le travail (art. 1222) ou résoudre le contrat par notification (art. 1226), et demander réparation (art. 1231-1).
 a: a1217, a1219, a1222, a1224, a1226, a1231-1, tocqueville
@@ -398,12 +398,12 @@ c: Une société confie à un transporteur express un dossier de candidature à 
 s: Qualifier || Quelle est l'obligation essentielle du transporteur ? || Livrer dans le délai promis || La rapidité est l'objet même du service.
 x: Livrer un jour ou l'autre || Ce n'est pas ce qui a été acheté.
 x: Garder le pli en bon état || C'est accessoire ici.
-s: Règle || Que risque la clause de 30 euros ? || Elle est réputée non écrite si elle vide l'obligation essentielle de sa substance || Art. 1170, héritier de Chronopost.
-x: Elle s'applique toujours || Toute clause n'échappe pas au contrôle.
-x: Elle annule tout le contrat || La sanction ne vise que la clause.
-s: Distinguer || Toute limitation est-elle donc interdite ? || Non : seule tombe celle qui prive l'obligation de sa substance || Faurecia II.
-x: Oui : on ne peut pas limiter sa responsabilité || La limitation reste possible.
-x: Oui, entre professionnels || C'est l'inverse.
+s: Règle || Que risque la clause de 30 euros ? || Elle tombe si elle vide l'obligation essentielle || Art. 1170, héritier de Chronopost.
+x: Elle s'applique toujours, car les parties l'ont acceptée || Toute clause n'échappe pas au contrôle.
+x: Elle entraîne la nullité de tout le contrat de transport || La sanction ne vise que la clause.
+s: Distinguer || Toute limitation est-elle donc interdite ? || Non : seule tombe celle qui vide l'obligation || Faurecia II.
+x: Oui : on ne peut jamais limiter sa responsabilité || La limitation reste possible.
+x: Oui, surtout entre professionnels avertis || C'est l'inverse.
 v: La clause de 30 euros contredit l'engagement de livrer à temps : elle est réputée non écrite (art. 1170 ; Chronopost), sauf à montrer qu'elle ne vide pas l'obligation de sa substance (Faurecia II).
 a: a1231-1, a1231-3, chronopost, faurecia
 
@@ -416,11 +416,11 @@ s: Règle || Quel texte s'applique ? || L'article 1242 al. 1 || Le gardien répo
 x: L'article 1240 seul || Il obligerait la victime à prouver une faute.
 x: L'article 1245 || Il vise le producteur.
 s: Qualifier || Qui est gardien ? || Celle qui a l'usage, la direction et le contrôle du pot || Franck.
-x: Le fabricant du pot || Il ne l'a plus en main.
-x: Le propriétaire de l'immeuble || Il n'a pas la maîtrise de ce pot.
-s: Trancher || Son absence de faute l'exonère-t-elle ? || Non : seule une cause étrangère imprévisible et irrésistible le ferait || Jand'heur. Un coup de vent ordinaire ne suffit pas.
-x: Oui : sans faute, pas de responsabilité || Le gardien répond sans faute.
-x: Oui, si elle est assurée || L'assurance ne joue pas sur la responsabilité.
+x: Le fabricant du pot, qui a conçu sa forme instable || Il ne l'a plus en main.
+x: Le propriétaire de l'immeuble, qui répond de ses balcons || Il n'a pas la maîtrise de ce pot.
+s: Trancher || Son absence de faute l'exonère-t-elle ? || Non : seule une cause étrangère le ferait || Jand'heur. Un coup de vent ordinaire ne suffit pas.
+x: Oui : sans faute prouvée, il n'y a pas de responsabilité || Le gardien répond sans faute.
+x: Oui, si elle prouve qu'elle est bien assurée pour ce risque || L'assurance ne joue pas sur la responsabilité.
 v: Mme Roux, gardienne du pot, est présumée responsable (art. 1242 al. 1 ; Jand'heur ; Franck). Le vent ordinaire n'est pas une cause étrangère.
 a: a1242, jandheur, franck, teffaine
 
@@ -429,12 +429,12 @@ c: Léo, 11 ans, renverse une passante à vélo, sans aucune faute apparente. Il
 s: Règle || Quel texte vise les parents ? || L'article 1242 al. 4 || Ils répondent de leurs enfants mineurs habitant avec eux.
 x: L'article 1240 || Il faudrait prouver leur faute.
 x: L'article 1242 al. 5 || Il vise les commettants.
-s: Qualifier || Faut-il une faute de Léo ? || Non, un simple acte, cause directe du dommage, suffit || Fullenwarth et Levert.
-x: Oui, une faute prouvée || Le droit l'a abandonnée.
-x: Oui, s'il a plus de 13 ans || L'âge n'entre pas ici.
-s: Trancher || Leur bonne éducation les exonère-t-elle ? || Non : seules la force majeure ou la faute de la victime le font || Bertrand.
-x: Oui : ils ont bien surveillé || Depuis Bertrand, cet argument ne vaut plus.
-x: Oui, si Léo a présenté ses excuses || Sans effet.
+s: Qualifier || Faut-il une faute de Léo ? || Non, un simple acte suffit || Fullenwarth et Levert.
+x: Oui, une faute de l'enfant doit être prouvée par la victime || Le droit l'a abandonnée.
+x: Oui, mais seulement s'il a plus de 13 ans || L'âge n'entre pas ici.
+s: Trancher || Leur bonne éducation les exonère-t-elle ? || Non, seules la force majeure ou la faute de la victime le font || Bertrand.
+x: Oui : une bonne éducation prouve qu'ils n'ont commis aucune faute || Depuis Bertrand, cet argument ne vaut plus.
+x: Non, sauf si Léo a présenté ses excuses à la passante || Sans effet.
 v: Les parents sont responsables de plein droit de l'acte de leur fils (art. 1242 al. 4 ; Fullenwarth ; Bertrand ; Levert). Seules la force majeure ou la faute de la victime les exonéreraient.
 a: a1242-4, fullenwarth, bertrand, levert
 
@@ -443,12 +443,12 @@ c: Un livreur salarié, en tournée pour son employeur, lâche un carton lourd d
 s: Règle || Qui répond du dommage ? || L'employeur, comme commettant || Art. 1242 al. 5.
 x: Le client de la livraison || Il n'est pas le commettant.
 x: La mairie || Sans rapport.
-s: Qualifier || Le livreur peut-il être poursuivi ? || Non s'il reste dans les limites de sa mission || Costedoat.
-x: Oui, toujours || L'immunité existe depuis 2000.
-x: Non, jamais || Elle connaît des limites.
-s: Distinguer || Quand perdrait-il cette protection ? || S'il était condamné pour une infraction pénale intentionnelle || Cousin, même si l'infraction est commise sur ordre. Ici, les blessures sont involontaires.
-x: Dès qu'il commet une faute || La faute simple ne suffit pas.
-x: S'il n'a pas de permis valide uniquement || Le critère de Cousin est l'infraction intentionnelle.
+s: Qualifier || Le livreur peut-il être poursuivi ? || Non s'il reste dans sa mission || Costedoat.
+x: Oui, car chacun répond toujours de sa propre faute || L'immunité existe depuis 2000.
+x: Non, jamais, quoi qu'il ait commis pendant son travail || Elle connaît des limites.
+s: Distinguer || Quand perdrait-il cette protection ? || S'il commet une infraction intentionnelle || Cousin, même si l'infraction est commise sur ordre. Ici, les blessures sont involontaires.
+x: Dès qu'il commet la moindre faute pendant sa tournée || La faute simple ne suffit pas.
+x: S'il n'a pas reçu d'ordre précis de son employeur || Le critère de Cousin est l'infraction intentionnelle.
 v: L'employeur répond du dommage causé par son préposé (art. 1242 al. 5). Le livreur, resté dans sa mission, n'engage pas sa responsabilité personnelle (Costedoat), sauf infraction intentionnelle (Cousin).
 a: a1242-5, costedoat, cousin
 
@@ -461,7 +461,7 @@ s: Règle || Faut-il un contrat avec le producteur ? || Non : il répond qu'il s
 x: Oui : il doit avoir acheté directement || Le régime s'en passe.
 x: Oui, sauf pour un produit neuf || Pas de telle distinction.
 s: Trancher || Que doit prouver la victime ? || Le dommage, le défaut et le lien entre les deux || Art. 1245-8. Elle n'a pas à prouver de faute.
-x: La faute du fabricant || Ce régime ne l'exige pas.
-x: Le prix payé || Sans rapport.
+x: La faute du fabricant et la date de fabrication || Ce régime n'exige pas de faute.
+x: Le prix payé et la facture remise par le revendeur || Sans rapport avec la responsabilité.
 v: Le producteur répond du défaut de son produit, même sans contrat avec la victime (art. 1245). Celle-ci prouve le dommage, le défaut et le lien de causalité.
 a: a1245, a1242

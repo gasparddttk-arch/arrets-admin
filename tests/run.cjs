@@ -30,7 +30,7 @@ async function jouer(p, { capture = false } = {}) {
     }
     const pied = await p.$('.pied button');
     if (pied) { await toucher(pied); await p.waitForTimeout(15); continue; }
-    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)'];
+    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)', 'button.case-frise:not(.pleine)'];
     let fait = false;
     for (const s of sel) {
       const e = await p.$(s);
@@ -64,6 +64,8 @@ async function jouerParfait(p) {
         return cible ? clic(cible) : false;
       }
       const opt = document.querySelector('.option[data-ok="true"]:not([disabled])'); if (opt) return clic(opt);
+      const etape = document.querySelector('.tuile-frise');
+      if (etape) return clic(document.querySelector(`.case-frise[data-i="${etape.dataset.rang}"]`));
       const ecarter = document.querySelector('.dock-bas .bouton-fantome');
       const piece = document.querySelector('.carte-piece');
       if (piece) return piece.dataset.cle === 'piege' ? clic(ecarter) : clic(document.querySelector(`.vers[data-k="${piece.dataset.cle}"]`));

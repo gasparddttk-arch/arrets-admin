@@ -1,9 +1,9 @@
 // Dunk shot : un mini-jeu à part. Chaque bonne réponse envoie le ballon dans le panier suivant,
 // et la première erreur ou le temps écoulé met fin à la partie.
-import { h, svg, confettis, duree, effets, toast } from './ui.js';
+import { h, svg, confettis, duree } from './ui.js';
 import { icone } from './visuels.js';
 import { son, vibrer } from './sons.js';
-import { etat, sauver, noter, crediter, M, gainsDuJour, PLAFOND_JOUR } from './state.js';
+import { etat, sauver, noter, crediter, M, PLAFOND_JOUR } from './state.js';
 import { questionsDunk, tirerDunk } from './engine.js';
 import { repere } from './games.js';
 
@@ -131,7 +131,7 @@ export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
     const record = tir > d.record;
     if (record) d.record = tir;
     d.parties++; d.paniers += tir;
-    const prevu = Math.floor(tir / 5) + (gagne && mode === 'cinq' ? 0 : 0);
+    const prevu = Math.floor(tir / 5);
     const obtenu = crediter(prevu);
     M().xp += tir * 3;
     sauver();
@@ -149,7 +149,6 @@ export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
       h('div', { class: 'pied' },
         h('button', { class: 'cta', onClick: () => lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) }, 'Rejouer'),
         h('button', { class: 'bouton-lien', onClick: sortir }, 'Retour au Palais'))));
-    void toast; void gainsDuJour; void effets;
   }
 
   montrer(h('header', { class: 'entete-seance dunk-entete' }, quitter, h('div', { class: 'dunk-compte' }, score, sous)),

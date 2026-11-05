@@ -6,35 +6,35 @@
 1 | 1 | Comment appelle-t-on l'obligation vue du côté du débiteur ? || La dette || La créance || La sûreté
 1 | 1 | Le droit de créance est un droit... || personnel || réel || extrapatrimonial
 1 | 2 | L'obligation de résultat engage le débiteur... || si le résultat promis n'est pas atteint || seulement en cas de faute prouvée || jamais sans mise en demeure
-1 | 2 | L'obligation de moyens oblige à... || tout mettre en œuvre pour atteindre le but || atteindre le but promis || garantir le résultat
+1 | 2 | L'obligation de moyens oblige à... || tout mettre en œuvre pour atteindre le but || atteindre le but promis, quoi qu'il arrive || garantir le résultat, sauf force majeure
 1 | 2 | Qui a dit : « qui dit contractuel dit juste » ? || Alfred Fouillée || Henri Lacordaire || Jean Carbonnier
-1 | 2 | Les trois principes de l'autonomie de la volonté ? || Liberté, force obligatoire, effet relatif || Égalité, liberté, sécurité || Offre, acceptation, cause
+1 | 2 | Les trois principes de l'autonomie de la volonté ? || Liberté, force obligatoire, effet relatif || Égalité, liberté, sécurité juridique || Offre, acceptation, cause du contrat
 1 | 3 | Le prêt à intérêt, formé par la remise des fonds, est... || unilatéral et à titre onéreux || synallagmatique et à titre gratuit || réel et à titre gratuit
 1 | 3 | Pourquoi la lésion ne vise-t-elle pas les contrats aléatoires ? || L'aléa chasse la lésion || Ils sont tous gratuits || Ils échappent au juge
-1 | 2 | La donation avec charge reste un contrat... || à titre gratuit || aléatoire || réel
+1 | 2 | La donation avec charge reste un contrat... || à titre gratuit || à titre onéreux || à titre aléatoire
 2 | 1 | Par principe, la rupture des pourparlers est... || libre || interdite || toujours fautive
 2 | 1 | Quelle responsabilité joue pour une faute dans les pourparlers ? || Extracontractuelle || Contractuelle || Pénale
-2 | 2 | Le devoir d'information est-il d'ordre public ? || Oui, on ne peut ni le limiter ni l'exclure || Non, une clause peut l'écarter || Seulement entre professionnels
+2 | 2 | Le devoir d'information est-il d'ordre public ? || Oui, on ne peut ni le limiter ni l'exclure || Non, une clause peut toujours l'écarter || Seulement entre deux professionnels
 2 | 2 | Qui prouve qu'une information était due ? || Celui qui s'en prévaut || Celui qui devait la donner || Le notaire
 2 | 2 | La violation d'une clause de confidentialité engage une responsabilité... || contractuelle || délictuelle || pénale uniquement
 2 | 3 | Le lien direct avec le contrat et le caractère déterminant sont... || cumulatifs || alternatifs || indifférents
-2 | 3 | Qu'exclut l'article 1112 al. 2 de la réparation ? || Les avantages attendus et la perte de chance de les obtenir || Les frais de négociation || Les frais d'études préalables
+2 | 3 | Qu'exclut l'article 1112 al. 2 de la réparation ? || Les avantages attendus et la perte de chance || Les frais engagés pour la négociation || Le coût des études préalables réalisées
 3 | 1 | Les deux caractères de l'offre ? || Précise et ferme || Écrite et datée || Motivée et notariée
-3 | 1 | Le contrat est conclu quand... || l'acceptation parvient à l'offrant || l'acceptation est envoyée || le prix est payé
+3 | 1 | Le contrat est conclu quand... || l'acceptation parvient à l'offrant || l'acceptation est envoyée par son auteur || le prix a été entièrement payé
 3 | 1 | Le code emploie-t-il encore le mot pollicitation ? || Non, il parle d'offre || Oui, à l'article 1114 || Oui, pour le public
 3 | 2 | Quelle théorie retient le code pour la formation du contrat ? || La réception || L'émission || La déclaration
-3 | 2 | Une offre à personne indéterminée est-elle une offre ? || Oui, si elle est précise et ferme || Non, jamais || Seulement si elle est écrite
-3 | 2 | Une annonce pour trouver une nounou est plutôt... || une invitation à négocier || une offre ferme || une promesse
+3 | 2 | Une offre à personne indéterminée est-elle une offre ? || Oui, si elle est précise et ferme || Non, elle n'est qu'une publicité || Seulement si elle est écrite et datée
+3 | 2 | Une annonce pour trouver une nounou est plutôt... || une invitation à négocier || une offre ferme, car elle est précise || une promesse unilatérale d'embauche
 3 | 2 | Le délai de réflexion est le délai avant lequel... || on ne peut pas accepter || on peut se rétracter || on doit payer
 3 | 3 | La rétractation d'une offre dans le délai oblige-t-elle à compenser les avantages attendus ? || Non, le texte l'exclut || Oui, en totalité || Oui, pour moitié
-3 | 3 | Quelle loi a ajouté le décès du destinataire à l'article 1117 ? || La loi de ratification de 2018 || L'ordonnance de 2016 || La loi de 2008
+3 | 3 | Quelle loi a ajouté le décès du destinataire à l'article 1117 ? || La loi de ratification de 2018 || L'ordonnance du 10 février 2016 || La loi pour la confiance dans l'économie numérique
 3 | 2 | L'acceptation peut-elle être rétractée ? || Oui, si la rétractation arrive avant elle || Non, jamais || Oui, tant que le prix n'est pas payé
-4 | 1 | Dans le pacte de préférence, le débiteur promet-il de vendre ? || Non, seulement de proposer d'abord || Oui, à un prix fixé || Oui, dans l'année
+4 | 1 | Dans le pacte de préférence, le débiteur promet-il de vendre ? || Non, seulement de proposer d'abord || Oui, à un prix fixé dès le pacte || Oui, dans le délai prévu au pacte
 4 | 1 | La levée d'option vient de qui ? || Du bénéficiaire || Du promettant || Du notaire
 4 | 2 | Le pacte de préférence doit-il fixer un prix ? || Non || Oui, à peine de nullité || Oui, s'il porte sur un immeuble
 4 | 2 | Dans la promesse unilatérale, le promettant a déjà... || donné son consentement || seulement promis d'y réfléchir || payé une indemnité
 4 | 2 | Le tiers de l'article 1124 al. 3 doit connaître... || l'existence de la promesse || aussi l'intention du bénéficiaire || le prix exact
-4 | 3 | L'action interrogatoire de l'article 1123 permet au tiers... || de demander au bénéficiaire s'il compte se prévaloir du pacte || d'annuler le pacte || de racheter le bien
+4 | 3 | L'action interrogatoire de l'article 1123 permet au tiers... || de demander au bénéficiaire ses intentions || d'annuler le pacte sans passer par le juge || de racheter le bien au bénéficiaire du pacte
 4 | 3 | Si la condition suspensive défaille, la promesse est... || caduque || nulle pour dol || résolue aux torts du vendeur
 4 | 3 | Que devient l'indemnité d'immobilisation si le bénéficiaire renonce ? || Elle reste au promettant || Elle lui est rendue || Elle part au Trésor
 5 | 1 | Combien de vices du consentement ? || Trois || Deux || Cinq
@@ -42,14 +42,14 @@
 5 | 1 | Combien de conditions de validité depuis 2016 ? || Trois || Quatre || Cinq
 5 | 2 | Quelles notions le contenu du contrat a-t-il remplacées ? || L'objet et la cause || L'offre et l'acceptation || Le dol et la violence
 5 | 2 | Quand part le délai de l'action pour erreur ? || À sa découverte || À la signature || À la mise en demeure
-5 | 2 | L'erreur obstacle porte sur... || la nature du contrat ou son objet || la valeur || le motif
+5 | 2 | L'erreur obstacle porte sur... || la nature ou l'objet du contrat || la seule valeur de la prestation || le motif personnel du contractant
 5 | 2 | L'erreur de droit peut-elle vicier le consentement ? || Oui || Non, nul n'est censé ignorer la loi || Seulement entre professionnels
 5 | 3 | Le dol d'un représentant vicie-t-il le contrat ? || Oui || Non, il vient d'un tiers || Seulement s'il est de connivence
 5 | 3 | L'erreur inexcusable peut-elle être retenue en cas de dol ? || L'erreur provoquée est toujours excusable || Non, jamais || Seulement pour un consommateur
 5 | 3 | Le dol est à la fois... || un vice et une faute || un vice et un délit pénal seulement || une erreur et une lésion
 6 | 1 | La violence porte sur... || la liberté du consentement || l'exactitude du consentement || la capacité
 6 | 2 | La violence d'un tiers vicie-t-elle le contrat ? || Oui || Non, seulement celle du contractant || Seulement s'il est de connivence
-6 | 2 | Le délai de l'action pour violence court depuis... || le jour où elle a cessé || la signature || sa découverte
+6 | 2 | Le délai de l'action pour violence court depuis... || le jour où elle a cessé || la signature du contrat || sa découverte par la victime
 6 | 3 | Qu'a ajouté 2018 à l'article 1143 ? || Les mots « à son égard » || L'adjectif « économique » || La nullité absolue
 6 | 3 | Selon l'arrêt du 4 juin 2026, faut-il des actes de menace ? || Non, ce n'est pas nécessaire || Oui, toujours || Oui, s'il s'agit d'un bail
 6 | 2 | L'incapacité de contracter entraîne une nullité... || relative || absolue || partielle
@@ -57,26 +57,26 @@
 6 | 3 | Pourquoi ton cours conseille-t-il de traiter la capacité avant les vices ? || Si elle manque, l'analyse s'arrête là || Le code la cite en premier || Elle est d'ordre public absolu
 7 | 1 | Le contenu du contrat doit être... || licite et certain || juste et équilibré || écrit et daté
 7 | 2 | Une prestation peut-elle être future ? || Oui || Non, jamais || Seulement pour les immeubles
-7 | 2 | La chose future est-elle toujours admise ? || Non, le pacte sur succession future est interdit || Oui, sans exception || Non, jamais
+7 | 2 | La chose future est-elle toujours admise ? || Non, le pacte sur succession future est interdit || Oui, sans aucune exception dans le code || Non, elle est interdite dans tous les contrats
 7 | 2 | L'ordre public économique peut-il imposer des choses ? || Oui, pas seulement interdire || Non, il ne fait qu'interdire || Il n'existe plus
 7 | 2 | L'impossibilité qui annule la prestation est... || objective : personne ne peut la faire || subjective : le débiteur seul ne peut pas || future et incertaine
-7 | 3 | Les bonnes mœurs figurent-elles à l'article 1162 ? || Non, le texte vise l'ordre public || Oui, en premier || Oui, à l'alinéa 2
-7 | 3 | La détermination de l'objet concerne-t-elle sa qualité ? || Non, l'article 1166 règle la qualité || Oui, à peine de nullité || Seulement pour les immeubles
+7 | 3 | Les bonnes mœurs figurent-elles à l'article 1162 ? || Non, le texte vise l'ordre public || Oui, à côté de l'ordre public || Oui, à l'alinéa 2 du texte
+7 | 3 | La détermination de l'objet concerne-t-elle sa qualité ? || Non, l'article 1166 règle la qualité || Oui, à peine de nullité du contrat || Seulement pour les ventes d'immeubles
 7 | 3 | Le prix unilatéral du contrat-cadre doit être... || prévu par le contrat || accepté à chaque commande || validé par le juge
 8 | 1 | La sanction qui fait disparaître le contrat pour inexécution ? || La résolution || La nullité || La caducité
-8 | 1 | Refuser d'exécuter parce que l'autre n'exécute pas s'appelle... || l'exception d'inexécution || la résolution || la compensation
-8 | 2 | La force majeure suppose un événement... || imprévisible et irrésistible || simplement difficile || prévu au contrat
-8 | 2 | La clause pénale peut-elle être révisée ? || Oui, si elle est manifestement excessive ou dérisoire || Non, jamais || Seulement à la baisse
+8 | 1 | Refuser d'exécuter parce que l'autre n'exécute pas s'appelle... || l'exception d'inexécution || la résolution unilatérale || la compensation légale
+8 | 2 | La force majeure suppose un événement... || imprévisible et irrésistible || simplement difficile à surmonter || prévu par une clause du contrat
+8 | 2 | La clause pénale peut-elle être révisée ? || Oui, si elle est manifestement excessive ou dérisoire || Non, jamais : elle tient lieu de loi aux parties || Seulement à la baisse, si elle est excessive
 8 | 2 | Le débiteur répond en principe... || des dommages prévisibles || de tous les dommages || des seuls dommages corporels
 8 | 3 | Quelle faute écarte la limite du dommage prévisible ? || La faute lourde ou dolosive || La faute légère || La faute inexcusable de la victime
-8 | 3 | L'exécution forcée est écartée si... || elle est impossible ou manifestement disproportionnée || elle coûte cher au débiteur || le créancier a mis en demeure
+8 | 3 | L'exécution forcée est écartée si... || elle est impossible ou manifestement disproportionnée || elle coûte cher au débiteur, même sans disproportion || le créancier a déjà mis le débiteur en demeure
 8 | 3 | Quel arrêt a longtemps interdit au juge de réviser le contrat ? || Canal de Craponne || Chronopost || Tocqueville
-9 | 1 | Les trois conditions de la responsabilité ? || Un fait générateur, un dommage, un lien de causalité || Une faute, un contrat, un juge || Un dommage, une assurance, une plainte
+9 | 1 | Les trois conditions de la responsabilité ? || Un fait générateur, un dommage, un lien de causalité || Une faute, un contrat et une décision du juge || Un dommage, une assurance et une plainte déposée
 9 | 1 | Quel texte pose la responsabilité pour faute ? || L'article 1240 || L'article 1103 || L'article 1231-1
-9 | 2 | Le gardien est celui qui a... || l'usage, la direction et le contrôle || la propriété || l'assurance
+9 | 2 | Le gardien est celui qui a... || l'usage, la direction et le contrôle || la propriété de la chose, même sans la détenir || l'assurance qui couvre la chose
 9 | 2 | Quelle responsabilité pour un dommage né d'un contrat ? || Contractuelle || Extracontractuelle || Pénale
 9 | 2 | Les parents s'exonèrent par... || la force majeure ou la faute de la victime || la preuve d'une bonne éducation || l'absence de faute de l'enfant
-9 | 2 | Le préposé dans sa mission est-il responsable envers le tiers ? || Non, sauf infraction intentionnelle || Oui, toujours || Oui, avec l'employeur
+9 | 2 | Le préposé dans sa mission est-il responsable envers le tiers ? || Non, sauf infraction intentionnelle || Oui, comme tout auteur d'une faute || Oui, solidairement avec l'employeur
 9 | 3 | Quel arrêt a admis la responsabilité générale du fait d'autrui ? || Blieck || Teffaine || Franck
 9 | 3 | Qui répond du produit défectueux ? || Le producteur || Le seul vendeur final || L'assureur de la victime
 9 | 3 | Quelle ancienne numérotation correspond à l'article 1240 ? || L'article 1382 || L'article 1134 || L'article 1147
