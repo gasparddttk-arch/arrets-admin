@@ -164,9 +164,9 @@ po: Application directe des articles 1137 et 1139.
 ap: Sans demande de nullité, seule la perte de chance de meilleures conditions est réparée
 q: Quel préjudice répare-t-on quand la victime du dol garde le contrat ?
 s: La perte de chance de contracter à des conditions plus avantageuses, et non celle de ne pas avoir contracté.
-po: La victime choisit entre nullité et dommages et intérêts, mais son choix borne le préjudice réparable.
+po: La victime peut demander la nullité et des dommages et intérêts, ou les seuls dommages et intérêts. Si elle garde le contrat, ce choix borne le préjudice réparable.
 
-@voiedroit | Menace d'une voie de droit | Civ. 3e, 17 janv. 1984 | Cass. | 1984 | 2 | 6
+@voiedroit | Menace d'une voie de droit | Civ. 3e, 17 janv. 1984, n° 82-15.753 | Cass. | 1984 | 2 | 6
 ap: Annoncer qu'on exercera son droit n'est pas, en soi, une violence
 q: La menace d'agir en justice vicie-t-elle le consentement ?
 s: Non, c'est l'exercice d'un droit, sauf détournement.
@@ -195,9 +195,9 @@ po: La Cour se met en phase avec les textes nouveaux, sans y être tenue pour ce
 
 @bailrural | Bail rural des parents | Civ. 3e, 4 juin 2026, n° 24-15.070 | Cass. | 2026 | 3 | 6
 ap: L'état de dépendance peut naître d'une vulnérabilité connue du cocontractant
-f: Des parents âgés et diminués consentent à leur fils un bail rural sur 72 hectares pour un loyer dérisoire. Le bail est annulé.
+f: Des parents âgés et diminués consentent à leur fils un bail rural sur 72 hectares, pour un loyer très inférieur aux références réglementaires. Le bail est annulé.
 q: L'article 1143 exige-t-il une dépendance préexistante et des actes de menace ?
-s: Non. La dépendance peut résulter d'une vulnérabilité connue, et il n'est pas nécessaire d'établir des actes positifs de menace ou d'oppression.
+s: Non. La dépendance peut résulter d'une vulnérabilité connue, et il n'est pas nécessaire d'établir des actes positifs de menace ou de pressions.
 po: L'arrêt ouvre largement le texte, malgré les mots « à son égard » ajoutés en 2018. Ton cours le juge peu satisfaisant.
 
 @ourbody | Our Body | Civ. 1re, 29 oct. 2014, n° 13-19.729 | Cass. | 2014 | 2 | 7
@@ -293,7 +293,7 @@ po: La Cour découvre dans l'ancien article 1384 al. 1 un principe que les réda
 
 @jandheur | Jand'heur | Ch. réun., 13 févr. 1930 | Cass. | 1930 | 3 | 9
 ap: La présomption pèse sur le gardien, sans distinguer selon que la chose est actionnée ou non
-f: Une fillette est renversée par un camion. L'assureur soutient qu'il faut prouver une faute, puisque la chose était conduite par l'homme.
+f: Une fillette est renversée par le camion d'un magasin. La cour d'appel exige la preuve d'une faute, puisque le camion était conduit par l'homme.
 q: La responsabilité du fait des choses suppose-t-elle un vice de la chose ou la preuve d'une faute ?
 s: Non. Le gardien est présumé responsable. Il ne s'exonère que par un cas fortuit, une force majeure ou une cause étrangère.
 po: L'arrêt fonde le régime moderne du fait des choses.
@@ -306,7 +306,7 @@ s: Non. Privé de l'usage, de la direction et du contrôle, il a perdu la garde.
 po: La définition de la garde vaut toujours.
 
 @blieck | Blieck | Ass. plén., 29 mars 1991, n° 89-15.231 | Cass. | 1991 | 3 | 9
-ap: Un principe général de responsabilité du fait d'autrui existe
+ap: Hors des cas du code, celui qui organise et contrôle à titre permanent le mode de vie d'autrui répond de ses actes
 f: Un handicapé mental placé dans un centre met le feu à une forêt. Le centre avait accepté d'organiser et de contrôler son mode de vie.
 q: Peut-on être responsable d'autrui hors des cas énumérés par le code ?
 s: Oui. Le centre, qui a accepté d'organiser et de contrôler à titre permanent le mode de vie de la personne, doit répondre de ses actes.
@@ -343,4 +343,4 @@ ap: Le préposé condamné pour une infraction intentionnelle répond de son act
 f: Un comptable commet, sur ordre, une escroquerie aux subventions.
 q: Le préposé reste-t-il à l'abri quand il commet intentionnellement une infraction ?
 s: Non. Condamné pénalement pour une infraction intentionnelle, même commise sur ordre, il engage sa responsabilité civile.
-po: L'immunité de Costedoat trouve sa limite.
+po: L'immunité de Costedoat trouve sa limite. La chambre criminelle l'écarte aussi pour la faute qualifiée d'un préposé délégataire (Crim., 28 mars 2006).

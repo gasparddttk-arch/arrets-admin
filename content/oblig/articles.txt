@@ -13,7 +13,7 @@
 1107 | 1 | 2 | Onéreux ou gratuit | Le contrat est à titre onéreux si chacun reçoit un avantage en contrepartie de celui qu'il procure, à titre gratuit si l'un procure un avantage sans contrepartie.
 1108 | 1 | 2 | Commutatif ou aléatoire | Le contrat est commutatif si les avantages sont regardés comme équivalents, aléatoire si les parties font dépendre gains et pertes d'un événement incertain.
 1109 | 1 | 2 | Consensuel, solennel, réel | Le contrat est consensuel s'il se forme par le seul échange des consentements, solennel si sa validité exige des formes, réel si sa formation exige la remise d'une chose.
-1110 | 1 | 2 | Gré à gré ou adhésion | Le contrat de gré à gré a des stipulations négociables. Le contrat d'adhésion a des conditions générales soustraites à la négociation et fixées à l'avance par une partie.
+1110 | 1 | 2 | Gré à gré ou adhésion | Le contrat de gré à gré a des stipulations négociables. Le contrat d'adhésion comporte un ensemble de clauses non négociables, déterminées à l'avance par une partie.
 1111 | 1,7 | 2 | Contrat-cadre | Le contrat-cadre fixe les caractéristiques générales des relations futures. Des contrats d'application en précisent les modalités d'exécution.
 1111-1 | 1 | 1 | Exécution instantanée ou successive | Le contrat à exécution instantanée s'exécute en une prestation unique, le contrat à exécution successive en plusieurs prestations échelonnées.
 
@@ -76,13 +76,13 @@
 1217 | 8 | 3 | Tableau des sanctions | Face à l'inexécution, le créancier peut refuser d'exécuter, poursuivre l'exécution forcée, réduire le prix, provoquer la résolution, demander réparation.
 1218 | 8 | 3 | Force majeure | Il y a force majeure quand un événement échappant au contrôle du débiteur, imprévisible et irrésistible, empêche l'exécution.
 1219 | 8 | 3 | Exception d'inexécution | Une partie peut refuser d'exécuter son obligation si l'autre n'exécute pas la sienne et si cette inexécution est suffisamment grave.
-1220 | 8 | 2 | Exception pour risque | Une partie peut suspendre son exécution s'il est manifeste que l'autre n'exécutera pas à l'échéance, avec des conséquences suffisamment graves. Elle le notifie sans délai.
+1220 | 8 | 2 | Exception pour risque | Une partie peut suspendre son exécution s'il est manifeste que l'autre n'exécutera pas à l'échéance, avec des conséquences suffisamment graves. Elle le notifie dans les meilleurs délais.
 1221 | 8 | 3 | Exécution forcée en nature | Le créancier peut, après mise en demeure, poursuivre l'exécution en nature, sauf impossibilité ou disproportion manifeste entre son coût pour le débiteur de bonne foi et son intérêt pour lui.
 1222 | 8 | 2 | Remplacement | Après mise en demeure, le créancier peut faire exécuter lui-même l'obligation, dans un délai et à un coût raisonnables, et en demander le remboursement.
-1223 | 8 | 2 | Réduction du prix | Après mise en demeure, le créancier peut accepter une exécution imparfaite et réduire proportionnellement le prix.
+1223 | 8 | 2 | Réduction du prix | En cas d'exécution imparfaite, le créancier qui n'a pas encore payé peut, après mise en demeure, notifier sa décision de réduire proportionnellement le prix. S'il a déjà payé, il demande la réduction au juge, à défaut d'accord.
 1224 | 8 | 3 | Résolution | La résolution résulte d'une clause résolutoire, d'une notification du créancier en cas d'inexécution suffisamment grave, ou d'une décision de justice.
 1226 | 8 | 2 | Résolution par notification | Le créancier peut, à ses risques et périls, résoudre le contrat par notification, après une mise en demeure restée vaine, sauf urgence.
-1229 | 8 | 2 | Effets de la résolution | La résolution met fin au contrat. Les restitutions dépendent de l'utilité que les prestations échangées ont trouvée dans l'exécution complète du contrat.
+1229 | 8 | 2 | Effets de la résolution | La résolution met fin au contrat. Si les prestations n'étaient utiles que par l'exécution complète, tout se restitue. Si elles ont été utiles au fur et à mesure, rien ne se restitue pour la période déjà exécutée.
 1170 | 8 | 2 | Obligation essentielle | Toute clause qui prive de sa substance l'obligation essentielle du débiteur est réputée non écrite.
 1231-1 | 8 | 3 | Dommages et intérêts | Le débiteur est condamné à des dommages et intérêts pour l'inexécution ou le retard, sauf force majeure.
 1231-3 | 8 | 2 | Dommage prévisible | Le débiteur ne répond que des dommages prévus ou prévisibles à la conclusion du contrat, sauf faute lourde ou dolosive.

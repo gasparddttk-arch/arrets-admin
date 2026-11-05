@@ -78,17 +78,17 @@ e: 1941 | Franck | La garde est l'usage, la direction et le contrôle | La notio
 q: Quelle étape fonde la présomption contre le gardien ? | 2
 
 %autrui | La responsabilité du fait d'autrui | 9 | c
-p: De la liste fermée au principe général, puis à l'immunité du préposé.
+p: De la liste fermée à son ouverture, puis à l'immunité du préposé.
 e: 1984 | Fullenwarth | Un simple acte de l'enfant, cause directe, suffit | Plus besoin de faute de l'enfant | fullenwarth
-e: 1991 | Blieck | Il existe une responsabilité générale du fait d'autrui | La liste n'est plus limitative | blieck
+e: 1991 | Blieck | Répond d'autrui celui qui accepte d'organiser et de contrôler son mode de vie | La liste n'est plus limitative | blieck
 e: 1997 | Bertrand | Seules la force majeure ou la faute de la victime exonèrent les parents | La responsabilité devient de plein droit | bertrand
 e: 2000 | Costedoat | Le préposé dans sa mission n'engage pas sa responsabilité | L'immunité naît | costedoat
 e: 2001 | Cousin | L'infraction intentionnelle fait perdre l'immunité | Sa limite apparaît | cousin
-q: Quelle étape crée un principe général de responsabilité du fait d'autrui ? | 2
+q: Quelle étape ouvre la responsabilité du fait d'autrui hors des cas du code ? | 2
 
 %rupture | Rompre sans le juge | 8 | c
 p: Du contrôle préalable du juge à la résolution par notification.
-e: 1876 | Canal de Craponne | Le juge ne peut pas modifier le contrat | La force obligatoire est absolue | craponne
+e: 1804 | Article 1184 ancien | La résolution doit être demandée en justice | Le juge contrôle avant la rupture
 e: 1998 | Tocqueville | La gravité du comportement permet de rompre à ses risques et périls | La rupture unilatérale apparaît | tocqueville
 e: 2016 | Article 1226 | La résolution par notification entre dans le code | La loi organise la rupture | a1226
 q: Quelle étape admet la rupture unilatérale aux risques et périls du créancier ? | 2

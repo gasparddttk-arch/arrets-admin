@@ -10,7 +10,7 @@ m: Contrat commutatif | art. 1108 | Un libraire vend un livre 20 euros, un prix 
 m: Contrat réel | art. 1109 | Un voisin prête sa tondeuse : le contrat n'existe qu'une fois l'outil remis. | La formation suppose la remise de la chose.
 m: Contrat solennel | art. 1109 | Un parent fait une donation devant notaire, seule forme qui la rend valable. | La validité dépend d'une forme fixée par la loi.
 m: Contrat consensuel | art. 1109 | Deux amis se mettent d'accord oralement sur la vente d'un vélo. | Le seul échange des consentements suffit.
-m: Contrat d'adhésion | art. 1110 | Un client accepte en bloc les conditions générales imposées par son opérateur. | Les conditions sont soustraites à la négociation.
+m: Contrat d'adhésion | art. 1110 | Un client accepte en bloc le contrat type imposé par son opérateur. | Il comporte un ensemble de clauses non négociables.
 m: Contrat-cadre | art. 1111 | Une enseigne fixe avec un fournisseur les règles de toutes leurs commandes à venir. | Il organise des contrats d'application futurs.
 
 %actes | Acte, fait ou contrat ? | 1
@@ -93,15 +93,15 @@ m: Prix du prestataire | art. 1165 | Un plombier fixe son prix après l'interven
 %sanctions | Quelle sanction d'inexécution ? | 8
 m: Exception d'inexécution | art. 1219 | Le locataire d'un logement inhabitable suspend le paiement du loyer. | Il refuse d'exécuter face à une inexécution grave.
 m: Exécution forcée en nature | art. 1221 | Un acheteur exige que le vendeur livre enfin le bien payé. | Il veut la prestation elle-même.
-m: Réduction du prix | art. 1223 | Un client garde un travail imparfait et paie moins cher. | Il accepte une exécution imparfaite.
+m: Réduction du prix | art. 1223 | Après mise en demeure, un client garde un travail imparfait et notifie qu'il paiera moins cher. | Il réduit le prix en proportion.
 m: Résolution | art. 1224 | Une entreprise met fin au contrat après des manquements graves et répétés. | Le contrat disparaît pour inexécution suffisamment grave.
 m: Remplacement | art. 1222 | Après mise en demeure, un client fait finir le chantier par un autre artisan. | Il fait exécuter l'obligation à la place du débiteur.
 m: Force majeure | art. 1218 | Une crue imprévisible emporte la marchandise avant la livraison. | L'événement est imprévisible, irrésistible et étranger au débiteur.
 
 %regimes | Quelle responsabilité ? | 9
 m: Responsabilité contractuelle | art. 1231-1 | Un artisan ne livre pas la table commandée. | Le dommage naît de l'inexécution d'un contrat.
-m: Responsabilité pour faute | art. 1240 | Un chasseur tire sans regarder et blesse un randonneur. | Un fait fautif cause le dommage.
-m: Fait des choses | art. 1242 | Une tuile tombe d'un toit sur une voiture en stationnement. | Le gardien répond de sa chose.
+m: Responsabilité pour faute | art. 1241 | Un chasseur tire sans regarder et blesse un randonneur. | Un fait fautif cause le dommage.
+m: Fait des choses | art. 1242 | Une échelle mal calée bascule sur une voiture en stationnement. | Le gardien répond de sa chose.
 m: Fait d'autrui, parents | art. 1242 | Un enfant de 8 ans casse le pare-brise d'un voisin avec un ballon. | Les parents répondent de leur enfant mineur vivant avec eux.
-m: Fait d'autrui, commettant | art. 1242 | Un salarié blesse un client pendant sa mission. | Le commettant répond de son préposé.
+m: Fait d'autrui, commettant | art. 1242 | Un salarié blesse un passant pendant sa mission. | Le commettant répond de son préposé.
 m: Produit défectueux | art. 1245 | Une batterie neuve explose dans un téléphone, à cause d'un défaut de fabrication. | Le producteur répond du défaut.

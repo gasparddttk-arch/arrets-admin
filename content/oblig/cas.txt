@@ -52,7 +52,7 @@ s: Méthode || Sur quel terrain se place Jean ? || Le devoir d'information avant
 x: L'inexécution de la vente par le vendeur de la villa || Le vendeur a livré la villa. Le reproche date d'avant le contrat.
 x: La rupture abusive des pourparlers par le vendeur || Les négociations ont abouti : le contrat existe.
 s: Conditions || Que doit réunir le devoir d'information ? || Une information connue, légitimement ignorée, directement liée au contrat et déterminante || Art. 1112-1. Lien direct et importance déterminante sont cumulatifs : Com., 14 mai 2025.
-x: Toute information utile à l'acheteur, dès lors que le vendeur pouvait raisonnablement la connaître || Le texte est plus étroit : le lien avec le contrat ne suffit pas.
+x: Toute information utile à l'acheteur, dès lors que le vendeur pouvait raisonnablement la connaître || Le texte est plus étroit : il faut une connaissance réelle et une information déterminante.
 x: Une information sur la valeur du bien, que le vendeur connaissait et qu'il a choisi de taire || Le devoir ne porte justement pas sur l'estimation de la valeur.
 s: Preuve || Qui doit prouver quoi ? || Jean prouve que l'information lui était due, le vendeur qu'il l'a fournie || Art. 1112-1 al. 4.
 x: Le vendeur doit prouver qu'il ne savait rien du projet de complexe immobilier || C'est à Jean d'établir que le vendeur connaissait l'information.
@@ -71,9 +71,9 @@ c: La société Axobi négocie la cession du contrôle d'une société de lait a
 s: Méthode || À quel stade se situe l'affaire ? || Avant tout contrat, dans les négociations || Aucun accord ferme n'existe : on raisonne sur l'article 1112 et la responsabilité extracontractuelle.
 x: Dans l'exécution du contrat de cession || Le contrat n'a jamais été conclu.
 x: Dans une promesse unilatérale || Rien ne montre qu'Axobi ait consenti à la cession.
-s: Qualifier || Rompre était-il fautif en soi ? || Non : la rupture est libre, seules ses circonstances peuvent être fautives || Art. 1112 al. 1. Ici, la déloyauté tient à des pourparlers avancés et à des négociations parallèles secrètes.
+s: Qualifier || Rompre était-il fautif en soi ? || Non : la rupture est libre, seules ses circonstances peuvent être fautives || Art. 1112 al. 1. Négocier en parallèle n'est pas fautif en soi (TD 1, doc. 4). La déloyauté tient ici à une rupture soudaine, après avoir laissé croire à une conclusion imminente.
 x: Oui : toute rupture de pourparlers est fautive || Ce serait nier la liberté de ne pas contracter.
-x: Non : rien n'interdit de négocier en secret, quelles que soient les circonstances || La bonne foi s'impose, et l'entretien d'une fausse confiance est fautif.
+x: Non : rien n'interdit de négocier en secret, quelles que soient les circonstances || La formule va trop loin : négocier en parallèle est permis, sauf clause d'exclusivité, mais entretenir une fausse confiance est fautif.
 s: Préjudice || Que peut obtenir Ficoba pour la rupture ? || Ses frais de négociation, pas les gains espérés || Art. 1112 al. 2 et Manoukian : ni les avantages attendus, ni la perte de chance de les obtenir.
 x: Tous les gains que l'opération aurait rapportés || Le texte l'exclut expressément.
 x: La perte de chance de réaliser ces gains || La réforme l'exclut aussi, dans le sillage de Manoukian.
@@ -109,16 +109,16 @@ s: Méthode || Quel terrain choisis-tu ? || La validité : son consentement est-
 x: L'inexécution : le vendeur n'a pas livré ce qui était dû || L'appareil vendu est livré et marche.
 x: La capacité : Monsieur Lambert pouvait-il s'engager ? || Rien ne remet en cause sa capacité.
 s: Qualifier || Sur quoi porte son erreur ? || Sur ses besoins, donc sur un motif || Les appareils ont les qualités attendues : il s'est trompé sur leur utilité pour lui.
-x: Sur une qualité essentielle de la prestation || Le matériel n'a aucun défaut.
+x: Sur une qualité essentielle de la prestation || Rien n'indique que l'adaptation à son activité ait été convenue.
 x: Sur la valeur || Il ne se plaint pas d'avoir payé trop cher, mais d'avoir acheté ce qui ne lui sert pas.
 s: Règle || Que dit le code de l'erreur sur le motif ? || Elle ne vaut pas nullité, sauf stipulation expresse || Art. 1135 al. 1. Même connu du vendeur, le motif doit être stipulé : Civ. 1re, 13 févr. 2001.
 x: Elle vaut nullité dès lors que le vendeur connaissait le motif || La connaissance ne suffit pas.
 x: Elle vaut toujours nullité si le motif a été déterminant pour lui || Ce serait ruiner la sécurité juridique.
-s: Trancher || Son erreur remet-elle en cause le contrat ? || Non, sauf stipulation expresse du motif || Il lui reste à chercher si le vendeur spécialisé lui devait une information sur l'adaptation du matériel, ce qui mène à la responsabilité.
+s: Trancher || Son erreur remet-elle en cause le contrat ? || Non, sauf stipulation expresse du motif || Il lui reste à chercher si le vendeur spécialisé lui devait une information sur l'adaptation du matériel, ce qui mène à la responsabilité, et à la nullité si le silence était intentionnel (art. 1137 et 1139).
 x: Oui, la vente est nulle, car il s'est trompé de bonne foi || Le motif n'a pas été stipulé.
 x: Oui, si l'erreur est excusable pour un jeune professionnel || L'excusabilité ne change rien : l'erreur ne porte pas sur une qualité essentielle.
-v: Monsieur Lambert s'est trompé sur l'utilité du matériel, non sur ses qualités. Cette erreur sur un motif n'est pas une cause de nullité, faute de stipulation expresse (art. 1135). Il peut seulement rechercher si le vendeur a manqué à un devoir d'information (art. 1112-1).
-a: a1135, a1132, a1112-1, malraux
+v: Monsieur Lambert s'est trompé sur l'utilité du matériel, non sur ses qualités. Cette erreur sur un motif n'est pas une cause de nullité, faute de stipulation expresse (art. 1135). Il peut encore rechercher si le vendeur a manqué à un devoir d'information (art. 1112-1). La nullité reviendrait si ce silence était un dol (art. 1139).
+a: a1135, a1132, a1139, a1112-1, malraux
 
 %richard | La Fiat 500 de 1969 | 5 | 2 | TD 3
 c: Monsieur Richard, grand collectionneur, achète une Fiat 500 de 1969. Le prix est fixé sur une attestation d'expert remise par le vendeur, qui l'évalue à 45 000 euros. Un an plus tard, il découvre que l'attestation est un faux fabriqué par le vendeur. La voiture ne valait pas le tiers du prix, ce que tout connaisseur aurait dû voir. Il demande la nullité.
@@ -155,18 +155,18 @@ v: La promesse d'exécuter un devoir de conscience crée une obligation (art. 11
 a: a1100, a1100-1, naturelle
 
 %moto | La moto et la contre-proposition | 3 | 2 | Création
-c: Inès écrit à Tom : « Je te vends ma moto 2 000 euros. » Tom répond : « D'accord, mais à 1 800. » Inès ne répond pas et vend la moto à Paul. Tom se ravise et écrit : « Finalement, j'accepte à 2 000. »
+c: Inès écrit à Tom : « Je te vends ma moto 2 000 euros, réponds-moi sous trois jours. » Tom répond aussitôt : « D'accord, mais à 1 800. » Inès ne répond pas et vend la moto à Paul. Une semaine plus tard, Tom se ravise et écrit : « Finalement, j'accepte à 2 000. »
 s: Qualifier || Que vaut la réponse de Tom ? || Une acceptation non conforme, donc une offre nouvelle || Art. 1118 al. 3.
 x: Une acceptation, le prix étant presque le même || L'acceptation doit reprendre les termes de l'offre.
 x: Une rétractation d'Inès || Tom ne peut pas rétracter l'offre d'Inès.
 s: Appliquer || Inès a-t-elle accepté les 1 800 euros en se taisant ? || Non : le silence ne vaut pas acceptation || Art. 1120.
 x: Oui : elle aurait dû refuser si elle n'était pas d'accord || Elle n'a aucun devoir de répondre.
 x: Oui : les usages de la vente l'imposent entre particuliers || Aucun usage n'est invoqué.
-s: Trancher || La seconde réponse de Tom forme-t-elle une vente ? || Non : sa contre-proposition a fait tomber l'offre || En proposant 1 800 euros, Tom a refusé l'offre d'Inès. Il ne peut plus l'accepter, sauf nouvelle offre de sa part.
-x: Oui : l'offre de 2 000 euros courait toujours à ce moment || Tom l'avait refusée en proposant un autre prix.
+s: Trancher || La seconde réponse de Tom forme-t-elle une vente ? || Non : l'offre de 2 000 euros n'existe plus || Le délai de trois jours est expiré (art. 1117 al. 1). Sa réponse vaut au plus offre nouvelle, qu'Inès n'a pas acceptée.
+x: Oui : l'offre de 2 000 euros courait toujours à ce moment || Elle était caduque depuis la fin du délai.
 x: Oui : Paul doit rendre la moto, car Tom était le premier || Paul a régulièrement acheté.
-v: La réponse de Tom était une offre nouvelle (art. 1118 al. 3), restée sans acceptation (art. 1120). La vente à Paul est valable et Tom n'a aucun droit.
-a: a1118, a1120, a1114
+v: La réponse de Tom était une offre nouvelle (art. 1118 al. 3), restée sans acceptation (art. 1120). L'offre d'Inès est ensuite devenue caduque (art. 1117). La vente à Paul est valable et Tom n'a aucun droit.
+a: a1118, a1120, a1114, a1117
 
 %fournisseur | Le fournisseur silencieux | 3 | 2 | Création
 c: Depuis cinq ans, le café Le Zinc commande chaque mois du café à un torréfacteur qui livre sans jamais répondre. En mars, Le Zinc commande comme d'habitude. Le torréfacteur ne répond pas, ne livre pas et prétend qu'aucun contrat n'existe.
@@ -390,7 +390,7 @@ x: Ne rien faire et ne pas payer || Le solde peut être retenu, mais il faut aus
 s: Trancher || Lou veut en finir et faire appel à un autre. Que fait-elle ? || Elle résout le contrat par notification || Art. 1226, après mise en demeure, si l'inexécution est suffisamment grave.
 x: Elle demande la nullité du contrat pour dol de l'artisan || Rien n'indique une tromperie.
 x: Elle attend que le juge intervienne de lui-même || Il faut agir.
-v: L'artisan n'exécute plus. Après mise en demeure, Lou peut refuser de payer le solde (art. 1219), faire finir le travail (art. 1222) ou résoudre le contrat par notification (art. 1226), et demander réparation (art. 1231-1).
+v: L'artisan n'exécute plus. Lou peut déjà refuser de payer le solde (art. 1219). Après mise en demeure, elle peut faire finir le travail (art. 1222) ou résoudre le contrat par notification (art. 1226), et demander réparation (art. 1231-1).
 a: a1217, a1219, a1222, a1224, a1226, a1231-1, tocqueville
 
 %colis | Le colis en retard | 8 | c | Général
@@ -404,8 +404,8 @@ x: Elle entraîne la nullité de tout le contrat de transport || La sanction ne 
 s: Distinguer || Toute limitation est-elle donc interdite ? || Non : seule tombe celle qui vide l'obligation || Faurecia II.
 x: Oui : on ne peut jamais limiter sa responsabilité || La limitation reste possible.
 x: Oui, surtout entre professionnels avertis || C'est l'inverse.
-v: La clause de 30 euros contredit l'engagement de livrer à temps : elle est réputée non écrite (art. 1170 ; Chronopost), sauf à montrer qu'elle ne vide pas l'obligation de sa substance (Faurecia II).
-a: a1231-1, a1231-3, chronopost, faurecia
+v: La clause de 30 euros contredit l'engagement de livrer à temps : elle est réputée non écrite (art. 1170 ; Chronopost), sauf à montrer qu'elle ne vide pas l'obligation de sa substance (Faurecia II). Clause écartée, le plafond du contrat type de messagerie prend le relais, sauf faute lourde (Ch. mixte, 22 avr. 2005).
+a: a1170, a1231-1, a1231-3, chronopost, faurecia
 
 %pot | Le pot de fleurs | 9 | c | Général
 c: Un pot de fleurs tombe du balcon de Mme Roux, posé là en équilibre, et blesse un passant. Elle soutient n'avoir commis aucune faute, le vent ayant soufflé.

@@ -98,7 +98,7 @@ a: a1140, a1131, a1144
 %incapable | 6 | 2
 c: Un majeur sous tutelle vend seul son véhicule. Son tuteur veut agir, mais l'acheteur montre que la vente, à un juste prix, a permis de payer ses frais de soins.
 d: Le maintien de l'acte
-dx: La nullité automatique de la vente, sans discussion || L'article 1151 ouvre une défense à l'autre partie.
+dx: La nullité automatique de la vente, sans discussion || L'article 1150 réserve l'article 1151, qui ouvre une défense à l'autre partie.
 dx: La nullité absolue, ouverte à tout intéressé || L'incapacité est une cause de nullité relative.
 r: L'acte a été utile, sans lésion, et a profité à la personne protégée.
 rx: La bonne foi de l'acheteur suffit à écarter toute action du tuteur. || Le texte ne retient pas ce critère.
@@ -126,13 +126,13 @@ rx: Il suffit de ne plus répondre et de cesser de payer le prestataire. || Il f
 a: a1224, a1226, tocqueville
 
 %inexecution-partielle | 8 | c
-c: Un peintre a bien travaillé, mais il reste deux pièces mal finies. Le client garde le résultat et veut payer moins.
+c: Un peintre a bien travaillé, mais il reste deux pièces mal finies. Le client, qui n'a encore rien payé, garde le résultat et veut payer moins.
 d: La réduction proportionnelle du prix
 dx: La résolution du contrat pour les deux pièces restantes || L'inexécution n'est pas assez grave pour faire tomber le contrat.
 dx: L'exécution forcée de tout le chantier || Il préfère garder ce qui est fait et payer moins.
-r: Il accepte une exécution imparfaite et réduit le prix en proportion.
+r: Après mise en demeure, il notifie sa décision de réduire le prix en proportion.
 rx: Il peut retenir tout le prix tant que le résultat n'est pas parfait. || Ce serait disproportionné au manquement.
-rx: Le juge doit d'abord fixer le rabais, à la demande du client. || La réduction se fait d'abord par notification.
+rx: Le juge doit d'abord fixer le rabais, à la demande du client. || Le client qui n'a pas payé peut notifier lui-même la réduction, sans attendre le juge.
 a: a1223, a1217
 
 %imprevision | 8 | c
@@ -146,10 +146,10 @@ rx: C'est un cas de force majeure. || L'exécution reste possible, elle est seul
 a: a1195, craponne
 
 %choix-regime | 9 | c
-c: Une tuile tombe d'un toit sur un passant. Le propriétaire jure n'avoir commis aucune faute.
-d: Agir contre le gardien du toit
+c: Une échelle mal calée bascule sur un passant. Son propriétaire jure n'avoir commis aucune faute.
+d: Agir contre le gardien de l'échelle
 dx: Prouver une faute du propriétaire || Inutile : le gardien répond sans faute.
-dx: Agir contre le fabricant de la tuile || Rien n'indique un défaut de fabrication.
+dx: Agir contre le fabricant de l'échelle || Rien n'indique un défaut de fabrication.
 r: Le gardien répond sans qu'il faille prouver sa faute.
 rx: Il faut toujours prouver une faute, sauf texte spécial. || C'est le droit de 1804, pas celui d'après Teffaine et Jand'heur.
 rx: Une chose inerte n'engage personne, faute d'intervention de l'homme. || Jand'heur écarte toute distinction de ce type.

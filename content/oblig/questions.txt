@@ -45,7 +45,7 @@
 5 | 2 | L'erreur obstacle porte sur... || la nature ou l'objet du contrat || la seule valeur de la prestation || le motif personnel du contractant
 5 | 2 | L'erreur de droit peut-elle vicier le consentement ? || Oui || Non, nul n'est censé ignorer la loi || Seulement entre professionnels
 5 | 3 | Le dol d'un représentant vicie-t-il le contrat ? || Oui || Non, il vient d'un tiers || Seulement s'il est de connivence
-5 | 3 | L'erreur inexcusable peut-elle être retenue en cas de dol ? || L'erreur provoquée est toujours excusable || Non, jamais || Seulement pour un consommateur
+5 | 3 | L'erreur inexcusable peut-elle être retenue en cas de dol ? || Non, l'erreur provoquée est toujours excusable || Oui, si la victime est un professionnel || Seulement si la victime est un consommateur
 5 | 3 | Le dol est à la fois... || un vice et une faute || un vice et un délit pénal seulement || une erreur et une lésion
 6 | 1 | La violence porte sur... || la liberté du consentement || l'exactitude du consentement || la capacité
 6 | 2 | La violence d'un tiers vicie-t-elle le contrat ? || Oui || Non, seulement celle du contractant || Seulement s'il est de connivence
@@ -77,6 +77,6 @@
 9 | 2 | Quelle responsabilité pour un dommage né d'un contrat ? || Contractuelle || Extracontractuelle || Pénale
 9 | 2 | Les parents s'exonèrent par... || la force majeure ou la faute de la victime || la preuve d'une bonne éducation || l'absence de faute de l'enfant
 9 | 2 | Le préposé dans sa mission est-il responsable envers le tiers ? || Non, sauf infraction intentionnelle || Oui, comme tout auteur d'une faute || Oui, solidairement avec l'employeur
-9 | 3 | Quel arrêt a admis la responsabilité générale du fait d'autrui ? || Blieck || Teffaine || Franck
+9 | 3 | Quel arrêt a ouvert la responsabilité du fait d'autrui hors des cas du code ? || Blieck || Teffaine || Franck
 9 | 3 | Qui répond du produit défectueux ? || Le producteur || Le seul vendeur final || L'assureur de la victime
 9 | 3 | Quelle ancienne numérotation correspond à l'article 1240 ? || L'article 1382 || L'article 1134 || L'article 1147
