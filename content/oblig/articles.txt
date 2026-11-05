@@ -83,6 +83,7 @@
 1224 | 8 | 3 | Résolution | La résolution résulte d'une clause résolutoire, d'une notification du créancier en cas d'inexécution suffisamment grave, ou d'une décision de justice.
 1226 | 8 | 2 | Résolution par notification | Le créancier peut, à ses risques et périls, résoudre le contrat par notification, après une mise en demeure restée vaine, sauf urgence.
 1229 | 8 | 2 | Effets de la résolution | La résolution met fin au contrat. Les restitutions dépendent de l'utilité que les prestations échangées ont trouvée dans l'exécution complète du contrat.
+1170 | 8 | 2 | Obligation essentielle | Toute clause qui prive de sa substance l'obligation essentielle du débiteur est réputée non écrite.
 1231-1 | 8 | 3 | Dommages et intérêts | Le débiteur est condamné à des dommages et intérêts pour l'inexécution ou le retard, sauf force majeure.
 1231-3 | 8 | 2 | Dommage prévisible | Le débiteur ne répond que des dommages prévus ou prévisibles à la conclusion du contrat, sauf faute lourde ou dolosive.
 1231-5 | 8 | 2 | Clause pénale | Le juge peut modérer ou augmenter la pénalité convenue si elle est manifestement excessive ou dérisoire.
