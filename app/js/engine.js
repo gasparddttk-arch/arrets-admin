@@ -1,5 +1,6 @@
 // Logique pure, sans DOM : tirage, distracteurs, composition des séances.
 // Utilisée par l'appli et par les contrôles automatiques.
+const dansZones = (zones) => (x) => x.zones.some((z) => zones.includes(z));
 
 export function creerRng(seed = Date.now()) {
   let s = seed >>> 0;
@@ -8,16 +9,24 @@ export function creerRng(seed = Date.now()) {
 export const melange = (a, rng = Math.random) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
 export const choix = (a, rng = Math.random) => a[Math.floor(rng() * a.length)];
 
-export function indexer(c) {
+export function indexer(c, equipe = 2) {
   // « Meyet (1992) » : le nom court évite d'écrire l'année deux fois, ou de la souffler.
   for (const a of c.arrets) a.court = a.nom.replace(/\s*\(\d{4}\)$/, '');
-  const parId = new Map(c.arrets.map((a) => [a.id, a]));
+  const articles = c.articles || [];
+  for (const a of articles) a.court = a.nom;
+  const cartes = [...c.arrets, ...articles];
+  const parId = new Map(cartes.map((a) => [a.id, a]));
+  const familles = c.familles || [];
   const famillesDe = new Map();
-  for (const f of c.familles) for (const m of f.m) {
+  for (const f of familles) for (const m of f.m) {
     if (!famillesDe.has(m.id)) famillesDe.set(m.id, []);
     famillesDe.get(m.id).push(f);
   }
-  return { ...c, parId, famillesDe };
+  // Une équipe ne voit que le contenu commun et le sien.
+  const garde = (x) => !x.eq || x.eq === 'c' || x.eq === String(equipe);
+  return { ...c, matiere: c.matiere || 'admin', familles, juges: c.juges || [], articles, cartes, parId, famillesDe,
+    cas: (c.cas || []).filter(garde), remedes: (c.remedes || []).filter(garde), frises: (c.frises || []).filter(garde),
+    qualifs: c.qualifs || [], questions: c.questions || [] };
 }
 
 // Faux jumeaux : les arrêts qui partagent une famille.
@@ -169,7 +178,99 @@ export const dispo = (ix, zones) => ({
   sujets: ix.sujets.filter((s) => s.zones.some((z) => zones.includes(z))),
 });
 
+// DROIT DES OBLIGATIONS -----------------------------------------------------------
+// Qualifier les faits : quatre faits, quatre notions différentes de la même famille.
+export function grilleQualif(f, rng = Math.random, taille = 4) {
+  const vues = new Set(); const lignes = [];
+  for (const m of melange(f.m, rng)) {
+    if (vues.has(m.n) || lignes.length === taille) continue;
+    vues.add(m.n); lignes.push({ id: `q${lignes.length}`, nom: m.n, t: m.t, a: m.a, w: m.w, carte: m.carte });
+  }
+  return { variante: 'qualif', titre: f.titre, lignes };
+}
+
+export function roundRemede(x, rng = Math.random) {
+  return {
+    id: x.id, c: x.c, liens: x.liens,
+    decisions: melange([{ t: x.d, ok: true }, ...x.dx.map((o) => ({ ...o, ok: false }))], rng),
+    raisons: melange([{ t: x.r, ok: true }, ...x.rx.map((o) => ({ ...o, ok: false }))], rng),
+  };
+}
+
+export function roundFrise(x, rng = Math.random) {
+  const etapes = x.e.map((e, i) => ({ ...e, rang: i }));
+  const bonne = etapes[x.r - 1];
+  return {
+    id: x.id, titre: x.titre, p: x.p, q: x.q,
+    etapes: melange(etapes, rng),
+    options: melange(etapes.map((e) => ({ t: e.n, ok: e === bonne, w: e.ch })), rng),
+    pourquoiBon: bonne.ch,
+  };
+}
+
+function tirerOblig(ix, type, zones, rng, deja) {
+  const dans = dansZones(zones);
+  const listes = { qualif: ix.qualifs.filter(dans), cas: ix.cas.filter(dans), remede: ix.remedes.filter(dans), frise: ix.frises.filter(dans), plan: ix.sujets.filter(dans) };
+  const t = listes[type]?.length ? type : ['qualif', 'cas', 'remede', 'frise', 'plan'].find((k) => listes[k].length);
+  const frais = listes[t].filter((x) => !deja.has(x.id));
+  const pris = choix(frais.length ? frais : listes[t], rng);
+  deja.add(pris.id);
+  switch (t) {
+    case 'qualif': return { type: t, grille: grilleQualif(pris, rng) };
+    case 'cas': return { type: t, id: pris.id };
+    case 'remede': return { type: t, ...roundRemede(pris, rng) };
+    case 'frise': return { type: t, ...roundFrise(pris, rng) };
+    default: return { type: 'plan', ...roundPlan(ix, pris, rng) };
+  }
+}
+
+// DUNK SHOT ------------------------------------------------------------------------
+// Une liste de questions rapides pour les chambres ouvertes. n : niveau de difficulté, de 1 à 3.
+export function questionsDunk(ix, zones, rng = Math.random) {
+  const dans = dansZones(zones);
+  const travaux = new Set(ix.zones.filter((z) => z.travaux).map((z) => z.id));
+  const tag = (x) => (x.zones.every((z) => travaux.has(z)) ? 'En travaux' : null);
+  const out = [];
+  const ajoute = (n, q, bonne, faux, x) => { if (faux.length >= 2) out.push({ n, q, bonne, faux: faux.slice(0, 3), carte: x.id, tag: tag(x) }); };
+  const arrets = ix.arrets.filter(dans);
+  const apport = (a) => a.ap[a.zones.find((z) => zones.includes(z)) ?? a.zones[0]] || Object.values(a.ap)[0];
+  for (const a of arrets) {
+    const proches = arrets.filter((b) => b !== a && b.zones.some((z) => a.zones.includes(z)));
+    const voisins = proches.length >= 3 ? proches : arrets.filter((b) => b !== a);
+    const au = melange(voisins, rng);
+    ajoute(1, `Quel arrêt a dit : ${apport(a).charAt(0).toLowerCase()}${apport(a).slice(1)} ?`, a.court, [...new Set(au.map((b) => b.court))].filter((c) => c !== a.court), a);
+    const refs = prochesEnLongueur(apport(a), voisins.map((b) => ({ t: apport(b) })).filter((p) => p.t !== apport(a)), 3, rng).map((p) => p.t);
+    ajoute(2, `Que retenir de ${a.court} (${a.an}) ?`, apport(a), refs, a);
+    const annees = [...new Set(au.map((b) => b.an))].filter((v) => v !== a.an);
+    ajoute(3, `En quelle année : ${a.court} ?`, String(a.an), annees.map(String), a);
+  }
+  const articles = ix.articles.filter(dans);
+  for (const a of articles) {
+    const proches = articles.filter((b) => b !== a && b.zones.some((z) => a.zones.includes(z)));
+    const voisins = melange(proches.length >= 3 ? proches : articles.filter((b) => b !== a), rng);
+    ajoute(1, `Que règle l'${a.nom.replace('Art.', 'article')} ?`, a.titre, voisins.map((b) => b.titre).filter((t) => t !== a.titre), a);
+    ajoute(2, `Quel article ? ${a.titre}`, a.nom, voisins.map((b) => b.nom), a);
+    ajoute(3, `Quel article ? ${a.regle}`, a.nom, voisins.map((b) => b.nom), a);
+  }
+  for (const x of ix.questions.filter(dans)) out.push({ n: x.n, q: x.q, bonne: x.bonne, faux: x.faux, carte: null, tag: tag(x) });
+  return melange(out, rng);
+}
+
+// La question suivante : le niveau monte avec les paniers, les fiches à revoir passent devant.
+export function tirerDunk(liste, tir, dus, deja, rng = Math.random) {
+  const plafond = tir < 5 ? 1 : tir < 12 ? 2 : 3;
+  const plancher = tir < 12 ? 1 : 2;
+  const pool = liste.filter((x) => x.n <= plafond && x.n >= plancher);
+  const frais = pool.filter((x) => !deja.has(x));
+  const base = frais.length ? frais : (pool.length ? pool : liste);
+  const du = base.filter((x) => x.carte && dus.has(x.carte));
+  const q = choix(du.length ? du : base, rng);
+  deja.add(q);
+  return { ...q, options: melange([{ t: q.bonne, ok: true }, ...q.faux.map((t) => ({ t, ok: false }))], rng) };
+}
+
 export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new Set()) {
+  if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, rng, deja);
   const d = dispo(ix, zones);
   const prendre = (liste) => {
     const frais = liste.filter((x) => !deja.has(x.id));
@@ -195,6 +296,10 @@ export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new S
 
 export function composerDefi(ix, zones, dus, rng = Math.random) {
   const deja = new Set();
+  if (ix.matiere === 'oblig') {
+    const milieu = melange(['cas', choix(['remede', 'frise'], rng), choix(['remede', 'frise', 'plan'], rng)], rng);
+    return ['qualif', ...milieu, 'qualif'].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
+  }
   const ordre = melange(['puzzle', 'juge', choix(['plan', 'architecte'], rng)], rng);
   return ['paires', ...ordre, 'paires'].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
 }
@@ -202,6 +307,7 @@ export function composerDefi(ix, zones, dus, rng = Math.random) {
 // Audience solennelle : les cinq modes, plus une épreuve au hasard.
 export function composerBoss(ix, zone, rng = Math.random) {
   const deja = new Set();
+  if (ix.matiere === 'oblig') return melange(['qualif', 'cas', 'remede', 'frise', 'plan', 'cas'], rng).map((t) => tirerRound(ix, t, [zone], [], rng, deja));
   const types = melange(['paires', 'puzzle', 'juge', 'plan', 'architecte', choix(['puzzle', 'juge'], rng)], rng);
   return types.map((t) => tirerRound(ix, t, [zone], [], rng, deja));
 }

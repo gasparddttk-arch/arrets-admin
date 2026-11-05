@@ -134,6 +134,23 @@ const SONS = {
     bois(b, 340, t, 0.34, 0.09, 0.4);
     cloche(b, 880 * k, t + 0.07, 0.8, 0.1); cloche(b, 1318.51 * k, t + 0.16, 0.9, 0.1);
   },
+  // Dunk shot : le filet qui claque, et le ballon qui rebondit sur l'arceau.
+  panier(b, t, { niveau = 0 }, rose) {
+    const k = ton(rose); const i = Math.min(niveau, GAMME.length - 2);
+    bruit(b, t, 0.16, 0.2, 'highpass', 2400, 5200, 0.8, 0.3);
+    pince(b, GAMME[i] * k, t + 0.04, 0.3, 0.2); pince(b, GAMME[i + 1] * 1.5 * k, t + 0.1, 0.42, 0.17);
+  },
+  dunk(b, t, _o, rose) {
+    const k = ton(rose);
+    bois(b, 140, t, 0.6, 0.14, 0.8);
+    bruit(b, t + 0.02, 0.3, 0.2, 'highpass', 1800, 6000, 0.8, 0.5);
+    SIGNATURE.forEach((f, i) => cloche(b, f * k, t + 0.08 + i * 0.07, 1, 0.11));
+    if (rose) scintille(b, t + 0.3, 6);
+  },
+  rebond(b, t) {
+    bois(b, 520, t, 0.3, 0.1, 0.4);
+    [0.18, 0.33, 0.44].forEach((d, i) => bois(b, 180, t + d, 0.24 - i * 0.06, 0.08, 0.2));
+  },
   carte(b, t) { bruit(b, t, 0.11, 0.13, 'bandpass', 800, 3000, 1.2, 0.2); bois(b, 720, t + 0.07, 0.12, 0.05, 0.2); },
   retour(b, t) { bruit(b, t, 0.1, 0.17, 'bandpass', 2600, 700, 1.2, 0.15); },
   ecart(b, t) { bruit(b, t, 0.14, 0.11, 'bandpass', 1500, 320, 0.9, 0.2); bois(b, 300, t + 0.1, 0.13, 0.06, 0.2); },
