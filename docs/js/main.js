@@ -956,6 +956,7 @@ function confirmerDeconnexion() {
 }
 
 // CONNEXION ---------------------------------------------------------------------------
+const EMAIL_ACTIF = false;
 function ecranConnexion(erreur) {
   afficherOnglets(false);
   const email = h('input', { class: 'code', type: 'email', inputmode: 'email', autocomplete: 'email', placeholder: 'ton.adresse@email.fr', 'aria-label': 'Adresse email' });
@@ -977,8 +978,8 @@ function ecranConnexion(erreur) {
     h('p', { class: 'connexion-sous' }, 'Connecte-toi pour retrouver ta progression sur tous tes appareils.'),
     erreur ? h('p', { class: 'connexion-erreur', role: 'alert' }, erreur) : null,
     h('button', { class: 'bouton-or connexion-google', onClick: () => { if (navigator.onLine === false) return toast('Il faut du réseau pour se connecter.'); connexionGoogle(); } }, logoG(), 'Continuer avec Google'),
-    h('p', { class: 'connexion-ou' }, 'ou'),
-    email, envoyer, etape2,
+    // Le code par email attend un service d'envoi (SMTP) : ?email l'affiche pour les tests.
+    EMAIL_ACTIF || new URLSearchParams(location.search).has('email') ? [h('p', { class: 'connexion-ou' }, 'ou'), email, envoyer, etape2] : null,
     h('p', { class: 'aide-claire connexion-note' }, etat.stats.seances ? 'La progression déjà sur ce téléphone sera rattachée à ton compte.' : 'Un compte se crée à la première connexion.')));
 }
 function logoG() {

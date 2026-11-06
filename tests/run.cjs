@@ -916,7 +916,7 @@ async function debordement(p, nom) {
   });
   const t1 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' }); await simuler(t1);
   const k1 = await t1.newPage(); k1.on('pageerror', (x) => erreurs.push(x.message));
-  await k1.goto(URLB + '?test&compte'); await k1.waitForSelector('.connexion');
+  await k1.goto(URLB + '?test&compte&email'); await k1.waitForSelector('.connexion');
   assert.equal(await k1.$('.tribune'), null, 'rien sans connexion');
   await k1.screenshot({ path: CAP + 'connexion.png' }); await debordement(k1, 'connexion');
   await k1.fill('.connexion input[type="email"]', 'Test@Exemple.fr'); await k1.locator('text=Recevoir un code par email').click();
