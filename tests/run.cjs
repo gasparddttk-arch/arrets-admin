@@ -28,7 +28,8 @@ async function jouer(p, { capture = false } = {}) {
       const nom = await p.evaluate(() => (['.paires', '.puzzle', '.qcm', '.bonplan', '.architecte', '.fin-epreuve'].find((s) => document.querySelector(s)) || '').slice(1));
       if (nom && !vus.has(nom)) { vus.add(nom); await p.screenshot({ path: `${CAP}${capture}-${nom}.png` }); }
     }
-    const pied = await p.$('.pied button');
+    // Dans la séance seulement : le pied des résultats ramènerait au Palais avant que le test ne les voie.
+    const pied = await p.$('.scene .pied button');
     if (pied) { await toucher(pied); await p.waitForTimeout(15); continue; }
     const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)', 'button.case-frise:not(.pleine)'];
     let fait = false;
@@ -56,7 +57,7 @@ async function jouerParfait(p) {
       const clic = (e) => { e.click(); return true; };
       const rail = document.querySelector('.plans-rail'); const bon = document.querySelector('.plan-carte[data-ok="true"]');
       if (rail && bon && !document.querySelector('.plan-carte.juste') && !bon.classList.contains('centree')) { rail.scrollLeft = bon.offsetLeft - rail.firstChild.offsetLeft; return false; }
-      const pied = document.querySelector('.pied button'); if (pied) return clic(pied);
+      const pied = document.querySelector('.scene .pied button'); if (pied) return clic(pied);
       const chip = document.querySelector('.chip:not([disabled]):not(.reussi)');
       if (chip) {
         if (!chip.classList.contains('vise')) chip.click();
@@ -154,7 +155,7 @@ async function debordement(p, nom) {
   // 2. Chaque mode, seul, plusieurs fois, pour couvrir le contenu.
   for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte']) {
     for (let i = 0; i < 3; i++) {
-      await p.locator('.role-ligne', { hasText: m }).click();
+      await p.evaluate(() => window.__app.aller('role')); await p.locator('.role-ligne', { hasText: m }).click();
       await jouer(p, { capture: i === 0 ? 'mode-' + m.slice(0, 4).replace(/\W/g, '') : false });
       await debordement(p, m);
       await p.tap('text=Retour au Palais');
@@ -233,7 +234,7 @@ async function debordement(p, nom) {
   e = await etat(p); const n0 = e.serie.n;
   await p.goto(URLB + '?test&decalage=1'); await p.waitForSelector('.tribune');
   assert.equal((await etat(p)).serie.n, n0, 'le lendemain, la série tient');
-  await p.tap('text=Juste trois minutes'); await jouer(p);
+  await p.evaluate(() => window.__app.aller('role')); await p.tap('.role-ligne[data-mode="express"]'); await jouer(p);
   assert.equal((await etat(p)).serie.n, n0 + 1, 'série prolongée');
   await p.tap('text=Retour au Palais');
   const sursis = (await etat(p)).inv.sursis;
@@ -246,7 +247,7 @@ async function debordement(p, nom) {
   e = await etat(p); assert.equal(e.serie.n, 0, 'série rompue'); assert(e.rompue);
   await p.locator('.rupture button').click();
   e = await etat(p); assert.equal(e.serie.n, n0 + 1, 'série rétablie');
-  await p.tap('text=Juste trois minutes'); await jouer(p);
+  await p.evaluate(() => window.__app.aller('role')); await p.tap('.role-ligne[data-mode="express"]'); await jouer(p);
   assert.equal((await etat(p)).serie.n, n0 + 2, 'série prolongée après relevé');
   log('série ok');
 
@@ -287,7 +288,7 @@ async function debordement(p, nom) {
   m.on('pageerror', (x) => erreurs.push(x.message));
   await m.goto(URL2 + '?test'); await m.waitForSelector('.tribune');
   await m.evaluate(() => navigator.serviceWorker.ready); await m.waitForTimeout(500);
-  await m.tap('text=Juste trois minutes'); await jouer(m); await m.tap('text=Retour au Palais');
+  await m.evaluate(() => window.__app.aller('role')); await m.tap('.role-ligne[data-mode="express"]'); await jouer(m); await m.tap('text=Retour au Palais');
   const avantMaj = await etat(m);
   assert.equal(avantMaj.serie.n, 1, 'une séance jouée avant la mise à jour');
   const fsw = path.join(copie, 'sw.js');
@@ -322,7 +323,7 @@ async function debordement(p, nom) {
   const rose = await b.newContext({ ...devices['iPhone 13'] });
   const r = await rose.newPage(); r.on('pageerror', (x) => erreurs.push(x.message));
   await r.goto(URLB + '?test'); await r.waitForSelector('.tribune');
-  await r.tap('.role-ligne[data-mode="paires"]'); await r.waitForSelector('.chip');
+  await r.evaluate(() => window.__app.aller('role')); await r.tap('.role-ligne[data-mode="paires"]'); await r.waitForSelector('.chip');
   await r.evaluate(() => document.querySelectorAll('.chip')[0].click());
   await r.evaluate(() => { const c = document.querySelector('.chip.vise'); [...document.querySelectorAll('.carte-paire')].find((x) => x.dataset.id !== c.dataset.id).click(); });
   assert.equal(await r.locator('.bebew').count(), 0, 'pas de message rose en tenue bleue');
@@ -333,12 +334,12 @@ async function debordement(p, nom) {
   assert(await r.locator('.figure-chouette .chouette').count(), 'chouette à l’accueil');
   assert(await r.locator('.figure-chouette img[src$="debout-livre.webp"]').count(), 'livre rose en tenue rose');
   await r.screenshot({ path: CAP + 'rose-accueil.png' }); await debordement(r, 'accueil rose');
-  await r.tap('.role-ligne[data-mode="paires"]'); await r.waitForSelector('.chip');
+  await r.evaluate(() => window.__app.aller('role')); await r.tap('.role-ligne[data-mode="paires"]'); await r.waitForSelector('.chip');
   await r.evaluate(() => document.querySelectorAll('.chip')[0].click());
   await r.evaluate(() => { const c = document.querySelector('.chip.vise'); [...document.querySelectorAll('.carte-paire')].find((x) => x.dataset.id !== c.dataset.id).click(); });
   assert.equal(await r.textContent('.bebew'), 'Pas du tout Bebew', 'message d’erreur en tenue rose');
   await r.tap('.quitter'); await r.tap('.boite .bouton-or'); await r.waitForSelector('.tribune');
-  await r.tap('.role-ligne[data-mode="paires"]');
+  await r.evaluate(() => window.__app.aller('role')); await r.tap('.role-ligne[data-mode="paires"]');
   await r.evaluate(() => { const o = new MutationObserver(() => { if (document.querySelector('.slay')) window.__slay = true; }); o.observe(document.body, { childList: true }); });
   await jouerParfait(r);
   assert(await r.evaluate(() => window.__slay), 'Slay Diva après une épreuve à 100 %');
@@ -382,7 +383,7 @@ async function debordement(p, nom) {
   });
   const n = await nuage.newPage(); n.on('pageerror', (x) => erreurs.push(x.message));
   await n.goto(URLB + '?test&cloud'); await n.waitForSelector('.tribune');
-  await n.tap('text=Juste trois minutes'); await jouer(n);
+  await n.evaluate(() => window.__app.aller('role')); await n.tap('.role-ligne[data-mode="express"]'); await jouer(n);
   await n.waitForFunction(() => window.__app?.etat().serie.n === 1 && window.__app.etat().cloud.dernier !== null, null, { timeout: 8000 });
   const avantC = await etat(n);
   for (let i = 0; i < 40 && !(base.has(avantC.cloud.code) && JSON.parse(base.get(avantC.cloud.code)).xp === avantC.xp); i++) await n.waitForTimeout(100);
@@ -416,7 +417,7 @@ async function debordement(p, nom) {
   await o.locator('.porte-oblig').click(); await o.waitForSelector('.tribune');
   assert.equal((await etat(o)).matiere, 'oblig', 'matière choisie');
   for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan']) {
-    await o.locator(`.role-ligne[data-mode="${m}"]`).click();
+    await o.evaluate(() => window.__app.aller('role')); await o.locator(`.role-ligne[data-mode="${m}"]`).click();
     await jouerParfait(o);
     await debordement(o, `résultats ${m}`);
     await o.tap('text=Retour au Palais');
@@ -434,7 +435,7 @@ async function debordement(p, nom) {
   await o.tap('text=Retour au Palais');
   await o.tap('.bouton-matiere'); await o.waitForSelector('.portes');
   await o.locator('.porte-admin').click(); await o.waitForSelector('.tribune');
-  await o.tap('text=Juste trois minutes'); await jouerParfait(o);
+  await o.evaluate(() => window.__app.aller('role')); await o.tap('.role-ligne[data-mode="express"]'); await jouerParfait(o);
   oe = await etat(o);
   assert.equal(oe.gains.n, 6, 'plafond propre à l’administratif'); assert(oe.xp > 0, 'points en administratif');
   assert(oe.trophees.deux, 'trophée des deux matières');
@@ -456,14 +457,14 @@ async function debordement(p, nom) {
     await o.evaluate((v) => [...document.querySelectorAll('.dunk-question .option')].find((x) => x.dataset.ok === String(v)).click(), ok);
     await o.waitForTimeout(20);
   };
-  await o.locator('.dunk-choix button').first().click();
+  await o.evaluate(() => window.__app.aller('role')); await o.locator('.dunk-choix button').first().click();
   for (let i = 0; i < 5; i++) await panier(true);
   await o.waitForSelector('.dunk-fin');
   await debordement(o, 'fin de dunk');
   oe = await etat(o);
   assert.equal(oe.dunk.record, 5, 'record de cinq paniers'); assert(oe.trophees.dunk5 === undefined || oe.trophees.dunk5, 'trophée possible');
   await o.tap('text=Retour au Palais');
-  await o.locator('.dunk-choix button').last().click();
+  await o.evaluate(() => window.__app.aller('role')); await o.locator('.dunk-choix button').last().click();
   for (let i = 0; i < 7; i++) await panier(true);
   await panier(false);
   await o.waitForSelector('.dunk-question .pied button'); await o.locator('.dunk-question .pied button').click();
@@ -482,7 +483,7 @@ async function debordement(p, nom) {
   const q2 = await po.newPage(); q2.on('pageerror', (x) => erreurs.push(x.message));
   await q2.goto(URLB + '?test&matiere=oblig'); await q2.waitForSelector('.tribune');
   for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan']) {
-    await q2.locator(`.role-ligne[data-mode="${m}"]`).click();
+    await q2.evaluate(() => window.__app.aller('role')); await q2.locator(`.role-ligne[data-mode="${m}"]`).click();
     await jouer(q2, { capture: 'oblig-petit' });
     await debordement(q2, `petit ${m}`);
     await q2.tap('text=Retour au Palais');
@@ -503,7 +504,7 @@ async function debordement(p, nom) {
   for (const [matiere, modes] of [['admin', ['paires', 'puzzle', 'juge', 'plan', 'architecte']], ['oblig', ['cas', 'qualif', 'remede', 'frise', 'plan']]]) {
     await c.evaluate((m) => window.__app.ouvrirMatiere(m), matiere); await c.waitForSelector('.tribune');
     for (const m of modes) {
-      await c.locator(`.role-ligne[data-mode="${m}"]`).click();
+      await c.evaluate(() => window.__app.aller('role')); await c.locator(`.role-ligne[data-mode="${m}"]`).click();
       await c.waitForSelector('.palais-portes .chouette', { state: 'attached' });
       poses[m] = await c.getAttribute('.palais-portes .chouette', 'data-pose');
       await c.waitForSelector('.quitter'); await c.waitForSelector('.palais-portes', { state: 'detached' });
@@ -553,7 +554,7 @@ async function debordement(p, nom) {
   await c.locator('.porte-admin').click(); await c.waitForSelector('.figure-chouette .acc-laurier');
   // Effets coupés : ni portes ni réaction.
   await c.evaluate(() => { window.__app.etat().reglages.effets = false; window.__app.appliquerTheme(); window.__app.aller('palais'); });
-  await c.locator('.role-ligne[data-mode="paires"]').click(); await c.waitForSelector('.chip');
+  await c.evaluate(() => window.__app.aller('role')); await c.locator('.role-ligne[data-mode="paires"]').click(); await c.waitForSelector('.chip');
   assert.equal(await c.locator('.palais-portes').count(), 0, 'pas de portes sans effets');
   await c.tap('.quitter'); await c.tap('.boite .bouton-or'); await c.waitForSelector('.tribune');
   await c.evaluate(() => { window.__app.etat().reglages.effets = true; window.__app.appliquerTheme(); window.__app.aller('palais'); });
@@ -565,7 +566,7 @@ async function debordement(p, nom) {
   await c.evaluate(() => window.__app.aller('palais'));
   await c.waitForSelector('.figure-chouette .mascotte-perso');
   assert.equal(await c.locator('.figure-chouette [data-pose]').count(), 0, 'image personnelle à l’accueil');
-  await c.locator('.role-ligne[data-mode="paires"]').click();
+  await c.evaluate(() => window.__app.aller('role')); await c.locator('.role-ligne[data-mode="paires"]').click();
   await c.waitForSelector('.palais-portes .mascotte-perso', { state: 'attached' });
   await c.waitForSelector('.quitter'); await c.waitForSelector('.palais-portes', { state: 'detached' });
   await c.tap('.quitter'); await c.tap('.boite .bouton-or'); await c.waitForSelector('.tribune');
@@ -706,7 +707,7 @@ async function debordement(p, nom) {
   await k.waitForSelector('.figure-chouette [data-skin="goumin"].saute');
   await k.screenshot({ path: CAP + 'skin-palais.png' });
   // Ailleurs, la chouette normale reste en place.
-  await k.locator('.role-ligne[data-mode="paires"]').click();
+  await k.evaluate(() => window.__app.aller('role')); await k.locator('.role-ligne[data-mode="paires"]').click();
   await k.waitForSelector('.palais-portes [data-pose]', { state: 'attached' });
   assert.equal(await k.locator('.palais-portes [data-skin]').count(), 0, 'pas de skin dans les portes');
   await k.waitForSelector('.quitter'); await k.waitForSelector('.palais-portes', { state: 'detached' });
@@ -778,6 +779,28 @@ async function debordement(p, nom) {
   assert.equal(await v.locator('.danse').count(), 0, 'mouvements réduits : pas d’alternance');
   await av.close();
   log('skins ok');
+
+  // Le Palais garde trois entrées : le Défi, Vers l'examen et Le rôle.
+  const pa = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const u = await pa.newPage(); u.on('pageerror', (x) => erreurs.push(x.message));
+  await u.goto(URLB + '?test&choix'); await u.waitForSelector('.portes');
+  await u.locator('.porte-oblig').click(); await u.waitForSelector('.tribune');
+  assert.equal(await u.locator('.cta').count(), 1, 'un seul Défi');
+  assert.equal(await u.locator('.role-ligne').count(), 2, 'deux entrées sous le Défi');
+  await u.locator('.tribune .figure-chouette').waitFor();
+  await u.locator('.role-ligne[data-mode="vers-role"]').click();
+  assert.equal(await u.locator('.role-ligne').count(), 7, 'trois minutes, cinq exercices et Dunk');
+  await u.screenshot({ path: CAP + 'palais-role.png' }); await debordement(u, 'le rôle');
+  await u.locator('.bouton-matiere').click(); await u.waitForSelector('.tribune');
+  await u.locator('.role-ligne[data-mode="vers-examen"]').click();
+  assert.equal(await u.locator('.role-ligne').count(), 3, 'trois niveaux');
+  await u.screenshot({ path: CAP + 'palais-examen.png' }); await debordement(u, 'vers l’examen');
+  await u.locator('.role-ligne[data-mode="niveau-3"]').click();
+  await u.waitForSelector('.quitter'); await u.waitForSelector('.palais-portes', { state: 'detached' });
+  await u.locator('.quitter').click(); await u.locator('.boite .bouton-or').click(); await u.waitForSelector('.tribune');
+  await u.screenshot({ path: CAP + 'palais-entrees.png', fullPage: true });
+  await pa.close();
+  log('palais ok');
 
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }

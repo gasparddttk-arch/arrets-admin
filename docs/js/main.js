@@ -119,9 +119,9 @@ function afficherOnglets(vis) {
 }
 
 function aller(id, p) {
-  ongletCourant = id;
+  ongletCourant = id === 'role' || id === 'examen' ? 'palais' : id;
   afficherOnglets(true);
-  ({ palais: accueil, carte, arrets: collection, boutique, profil }[id])(p);
+  ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen }[id])(p);
 }
 
 // PALAIS -----------------------------------------------------------------------
@@ -181,9 +181,6 @@ function accueil() {
     h('button', { class: 'bouton-or', disabled: etat.jetons < prixForclusion(), onClick: () => { if (relever()) { son('sceau'); vibrer(20); toast('Série rétablie.'); accueil(); } } },
       `Rétablir pour ${monnaie(prixForclusion())}`)) : null;
 
-  const lignes = Object.entries(nomsModes()).map(([m, [nom, txt]], i) => h('button', { class: 'role-ligne', 'data-mode': m, style: `--d:${i * 2.2}s`, onClick: () => lancerMode(m) },
-    h('span', { class: 'role-icone' }, icone(m, 28)), h('span', { class: 'role-txt' }, h('b', {}, nom), h('small', {}, txt))));
-
   // Sur iPhone, Safari et l'icône de l'écran d'accueil ont chacun leur stockage.
   const aInstaller = /iPhone|iPad|iPod/.test(navigator.userAgent) && !estInstallee()
     ? h('section', { class: 'installer' },
@@ -208,9 +205,43 @@ function accueil() {
         h('button', { class: 'bouton-lien', onClick: () => { M().enCours = null; sauver(); accueil(); } }, 'Abandonner cette séance')) : null,
       h('button', { class: 'cta brille', onClick: lancerDefi }, 'Défi du jour'),
       h('p', { class: 'cta-sous' }, dus ? `5 épreuves, ${pluriel(dus, estOblig() ? 'fiche' : 'arrêt')} à revoir` : '5 épreuves, environ 5 minutes'),
-      h('button', { class: 'bouton-lien', onClick: lancerExpress }, 'Juste trois minutes')),
-    h('section', { class: 'role' }, h('h2', {}, 'Rôle des épreuves'), lignes, blocDunk()),
+      ),
+    h('section', { class: 'role' },
+      ligneEntree('vers-examen', 'balance', 'Vers l’examen', 'Trois niveaux, si tu veux te tester', () => aller('examen'), 0),
+      ligneEntree('vers-role', 'plan', 'Le rôle', 'Choisis ton exercice', () => aller('role'), 2.2)),
   );
+}
+
+const ligneEntree = (mode, ic, nom, txt, action, d) => h('button', { class: 'role-ligne', 'data-mode': mode, style: `--d:${d}s`, onClick: action },
+  h('span', { class: 'role-icone' }, icone(ic, 28)), h('span', { class: 'role-txt' }, h('b', {}, nom), h('small', {}, txt)));
+const retourPalais = () => h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); aller('palais'); } }, icone('retour', 18), 'Retour au Palais');
+
+// Le rôle : la liste des exercices, à part du Palais.
+function ecranRole() {
+  const lignes = Object.entries(nomsModes()).map(([m, [nom, txt]], i) => ligneEntree(m, m, nom, txt, () => lancerMode(m), i * 2.2));
+  montrer(barreHaut(), retourPalais(), h('section', { class: 'role' }, h('h1', {}, 'Le rôle'),
+    h('p', { class: 'page-sous' }, 'Choisis ton exercice.'),
+    ligneEntree('express', 'prorogation', 'Trois minutes', 'Trois épreuves rapides', lancerExpress, 0),
+    lignes, blocDunk()));
+}
+
+// Vers l'examen : un enchaînement facultatif, sans rappel ni compte à rebours.
+const NIVEAUX_EXAMEN = [
+  { nom: 'Niveau 1', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'paires'] },
+  { nom: 'Niveau 2', txt: 'Quatre épreuves sur les cas et les plans', oblig: ['cas', 'remede', 'cas', 'plan'], admin: ['puzzle', 'juge', 'plan', 'juge'] },
+  { nom: 'Niveau 3', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['cas', 'plan', 'cas', 'frise', 'cas', 'plan'], admin: ['juge', 'architecte', 'puzzle', 'plan', 'juge', 'architecte'] },
+];
+function lancerExamen(i) {
+  const n = NIVEAUX_EXAMEN[i];
+  const zones = estOblig() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix);
+  const dus = aRevoir(ix, zones); const deja = new Set();
+  const types = estOblig() ? n.oblig : n.admin;
+  lancer({ type: 'examen', titre: `Vers l’examen, ${n.nom.toLowerCase()}`, rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
+}
+function ecranExamen() {
+  montrer(barreHaut(), retourPalais(), h('section', { class: 'role' }, h('h1', {}, 'Vers l’examen'),
+    h('p', { class: 'page-sous' }, 'Quand tu as envie de te tester. Plus le niveau monte, plus ça se corse.'),
+    NIVEAUX_EXAMEN.map((n, i) => ligneEntree(`niveau-${i + 1}`, 'balance', n.nom, n.txt, () => lancerExamen(i), i * 2.2))));
 }
 
 // Le mini-jeu, à part des épreuves : il se débloque en boutique.
