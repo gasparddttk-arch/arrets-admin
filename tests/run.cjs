@@ -7,6 +7,11 @@ const PORT = 8124; const URLB = `http://localhost:${PORT}/`;
 const CAP = 'tests/captures/';
 const log = (...a) => console.log(...a);
 
+// Le bon plan et l'architecte demandent d'abord le type de sujet.
+async function ouvrirMode(p, m, genre = 'hasard') {
+  await p.locator(`.role-ligne[data-mode="${m}"]`).click();
+  if (m === 'plan' || m === 'architecte') await p.locator(`.boite-genre [data-genre="${genre}"]`).click();
+}
 async function etat(p) { return p.evaluate(() => JSON.parse(JSON.stringify(window.__app.etat()))); }
 
 // Aucun texte technique ne doit jamais apparaître à l'écran.
@@ -159,6 +164,7 @@ async function debordement(p, nom) {
   for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte']) {
     for (let i = 0; i < 3; i++) {
       await p.evaluate(() => window.__app.aller('role')); await p.locator('.role-ligne', { hasText: m }).click();
+      if (await p.locator('.boite-genre').count()) await p.locator(`.boite-genre [data-genre="${['C', 'D', 'hasard'][i]}"]`).click();
       await jouer(p, { capture: i === 0 ? 'mode-' + m.slice(0, 4).replace(/\W/g, '') : false });
       await debordement(p, m);
       await p.tap('text=Retour au Palais');
@@ -420,7 +426,7 @@ async function debordement(p, nom) {
   await o.locator('.porte-oblig').click(); await o.waitForSelector('.tribune');
   assert.equal((await etat(o)).matiere, 'oblig', 'matière choisie');
   for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan']) {
-    await o.evaluate(() => window.__app.aller('role')); await o.locator(`.role-ligne[data-mode="${m}"]`).click();
+    await o.evaluate(() => window.__app.aller('role')); await ouvrirMode(o, m);
     await jouerParfait(o);
     await debordement(o, `résultats ${m}`);
     await o.tap('text=Retour au Palais');
@@ -484,7 +490,7 @@ async function debordement(p, nom) {
   const q2 = await po.newPage(); q2.on('pageerror', (x) => erreurs.push(x.message));
   await q2.goto(URLB + '?test&matiere=oblig'); await q2.waitForSelector('.tribune');
   for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan']) {
-    await q2.evaluate(() => window.__app.aller('role')); await q2.locator(`.role-ligne[data-mode="${m}"]`).click();
+    await q2.evaluate(() => window.__app.aller('role')); await ouvrirMode(q2, m);
     await jouer(q2, { capture: 'oblig-petit' });
     await debordement(q2, `petit ${m}`);
     await q2.tap('text=Retour au Palais');
@@ -505,7 +511,7 @@ async function debordement(p, nom) {
   for (const [matiere, modes] of [['admin', ['paires', 'puzzle', 'juge', 'plan', 'architecte']], ['oblig', ['cas', 'qualif', 'remede', 'frise', 'plan']]]) {
     await c.evaluate((m) => window.__app.ouvrirMatiere(m), matiere); await c.waitForSelector('.tribune');
     for (const m of modes) {
-      await c.evaluate(() => window.__app.aller('role')); await c.locator(`.role-ligne[data-mode="${m}"]`).click();
+      await c.evaluate(() => window.__app.aller('role')); await ouvrirMode(c, m);
       await c.waitForSelector('.palais-portes .chouette', { state: 'attached' });
       poses[m] = await c.getAttribute('.palais-portes .chouette', 'data-pose');
       await c.waitForSelector('.quitter'); await c.waitForSelector('.palais-portes', { state: 'detached' });
@@ -877,7 +883,7 @@ async function debordement(p, nom) {
   await y.goto(URLB + '?test&choix'); await y.waitForSelector('.portes');
   await y.locator('.porte-oblig').click(); await y.waitForSelector('.tribune');
   await y.evaluate(() => { const ix = window.__app.ix; ix.sujets = ix.sujets.filter((x) => x.type === 'C'); window.__app.aller('role'); });
-  await y.locator('.role-ligne[data-mode="plan"]').click();
+  await ouvrirMode(y, 'plan', 'C');
   await y.waitForSelector('.ecran.commentaire'); await y.waitForSelector('.palais-portes', { state: 'detached' });
   assert(await y.locator('.ecran.commentaire .bandeau-arret').evaluate((d) => d.open), 'arrêt ouvert à la lecture');
   assert.match(await y.locator('.bandeau-arret summary').innerText(), /\d{4}/, 'date de l’arrêt dans le bandeau');
@@ -903,6 +909,20 @@ async function debordement(p, nom) {
   const vues = [...etapes];
   assert.equal(vues.filter((x) => x.startsWith('Justifie')).length, 1, 'une partie à justifier');
   assert.equal(vues.filter((x) => x.startsWith('Diagnostic')).length, 1, 'un seul diagnostic');
+  // En droit administratif, le type de sujet se choisit, et le commentaire porte son arrêt.
+  const ya = await cm.newPage(); ya.on('pageerror', (x) => erreurs.push(x.message));
+  await ya.goto(URLB + '?test'); await ya.waitForSelector('.tribune');
+  await ya.evaluate(() => window.__app.ouvrirMatiere('admin')); await ya.waitForSelector('.tribune');
+  for (const [m, g] of [['plan', 'C'], ['architecte', 'C'], ['plan', 'D']]) {
+    await ya.evaluate(() => window.__app.aller('role')); await ouvrirMode(ya, m, g);
+    await ya.waitForSelector('.quitter'); await ya.waitForSelector('.palais-portes', { state: 'detached' });
+    const titre = await ya.locator('.scene .question, .question').first().innerText();
+    const bandeau = await ya.$('.bandeau-arret');
+    if (g === 'C') { assert(bandeau, `bandeau de l’arrêt en ${m} administratif`); assert.match(await ya.locator('.bandeau-arret summary').innerText(), /\d{4}/); }
+    else assert(!bandeau && !/^(CE|TC|CC)\b/.test(titre), `dissertation demandée : ${titre}`);
+    await ya.screenshot({ path: CAP + `admin-${m}-${g}.png` });
+    await ya.tap('.quitter'); await ya.tap('.boite .bouton-or'); await ya.waitForSelector('.tribune');
+  }
   await cm.close();
   log('commentaire ok');
 

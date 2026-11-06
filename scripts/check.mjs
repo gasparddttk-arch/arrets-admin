@@ -5,6 +5,7 @@ import { indexer, creerRng, optionsProbleme, blocsPuzzle, casJuge, roundPlan, pl
 const c = indexer(lireContenu());
 const erreurs = []; const notes = [];
 const err = (m) => erreurs.push(m);
+for (const s of c.sujets) verifierArret(s, err);
 const ids = new Set(c.arrets.map((a) => a.id));
 if (ids.size !== c.arrets.length) err('identifiants en double');
 
@@ -137,17 +138,7 @@ function controlerObligations(ob, equipe) {
     q.m.forEach((m) => lien(m.carte, `famille ${q.id}`));
   }
   for (const s of ob.sujets) {
-    if (s.type === 'C' && !s.arret) err2(`${s.id} : commentaire sans arrêt`);
-    if (s.arret) {
-      const texte = s.arret.txt.join(' ');
-      if (!s.arret.date || !s.arret.ref || !s.arret.res) err2(`${s.id} : date, référence ou résumé manquant`);
-      for (const [c, j] of Object.entries(s.arret.just)) {
-        if (!s.bon[c]) err2(`${s.id} : partie ${c} inconnue`);
-        for (const p of [j.bon, ...j.faux]) if (!texte.includes(p)) err2(`${s.id} : citation absente du texte : ${p}`);
-        if (new Set([j.bon, ...j.faux]).size !== 3) err2(`${s.id} : phrases identiques en ${c}`);
-      }
-      if (Object.keys(s.arret.just).length < 2) err2(`${s.id} : moins de deux parties à justifier`);
-    }
+    verifierArret(s, err2);
     for (const k of ['1a', '1b', '2a', '2b']) s.bon[k].ids.forEach((id) => lien(id, `sujet ${s.id}`));
     if (s.mauvais.length !== 2) err2(`sujet ${s.id} : 2 mauvais plans attendus`);
     for (const m of s.mauvais) if (!ob.defauts[m.code]) err2(`sujet ${s.id} : défaut ${m.code} inconnu`);
@@ -201,3 +192,17 @@ if (questionsDunk(c, c.zones.map((z) => z.id), Math.random).length < 300) erreur
 
 if (erreurs.length) { console.error(`\n${erreurs.length} erreur(s) :\n- ` + [...new Set(erreurs)].slice(0, 60).join('\n- ')); process.exit(1); }
 console.log('\nContenu valide.');
+
+// Un commentaire doit porter son arrêt, et chaque phrase à justifier doit en être tirée mot pour mot.
+function verifierArret(s, e) {
+  if (s.type === 'C' && !s.arret) e(`${s.id} : commentaire sans arrêt`);
+  if (!s.arret) return;
+  const texte = s.arret.txt.join(' ');
+  if (!s.arret.date || !s.arret.ref || !s.arret.res) e(`${s.id} : date, référence ou résumé manquant`);
+  for (const [c, j] of Object.entries(s.arret.just)) {
+    if (!s.bon[c]) e(`${s.id} : partie ${c} inconnue`);
+    for (const p of [j.bon, ...j.faux]) if (!texte.includes(p)) e(`${s.id} : citation absente du texte : ${p}`);
+    if (new Set([j.bon, ...j.faux]).size !== 3) e(`${s.id} : phrases identiques en ${c}`);
+  }
+  if (Object.keys(s.arret.just).length < 2) e(`${s.id} : moins de deux parties à justifier`);
+}

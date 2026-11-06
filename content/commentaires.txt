@@ -1,0 +1,170 @@
+# Les commentaires d'arrêt du droit administratif : version courte et phrases à justifier.
+# &id du sujet
+# date: date de la décision    ref: juridiction et numéro    source: origine du texte
+# res: résumé des faits et de la procédure, rédigé pour l'appli
+# t: extrait cité mot pour mot, vérifié sur la source
+# j: partie || bonne phrase || leurre || leurre || pourquoi
+
+&c-blanco
+date: 8 février 1873
+ref: TC, n° 00012
+source: ArianeWeb, Conseil d'État
+res: En novembre 1871, à Bordeaux, une fillette est renversée et blessée par un wagonnet que poussent des employés de la manufacture des tabacs. Son père assigne l'État devant le tribunal civil et lui réclame 40 000 francs. Le préfet de la Gironde élève le conflit, et le Tribunal des conflits doit dire quel juge est compétent.
+t: ne peut être régie par les principes qui sont établis dans le Code civil
+t: Que cette responsabilité n'est ni générale, ni absolue
+t: qu'elle a ses règles spéciales qui varient suivant les besoins du service
+t: la nécessité de concilier les droits de l'Etat avec les droits privés
+t: l'autorité administrative est seule compétente pour en connaître
+t: L'arrêté de conflit en date du 22 juillet 1872 est confirmé
+j: 1a || ne peut être régie par les principes qui sont établis dans le Code civil || l'autorité administrative est seule compétente pour en connaître || L'arrêté de conflit en date du 22 juillet 1872 est confirmé || Le Tribunal écarte d'abord le Code civil : la responsabilité de l'État n'obéit pas aux règles faites pour les rapports entre particuliers.
+j: 1b || Que cette responsabilité n'est ni générale, ni absolue || ne peut être régie par les principes qui sont établis dans le Code civil || l'autorité administrative est seule compétente pour en connaître || La responsabilité existe, mais elle est limitée : c'est le sens même de « ni générale, ni absolue ».
+j: 2a || l'autorité administrative est seule compétente pour en connaître || la nécessité de concilier les droits de l'Etat avec les droits privés || Que cette responsabilité n'est ni générale, ni absolue || Parce que le fond relève de règles spéciales, la compétence revient au juge administratif : le juge suit le droit applicable.
+j: 2b || qu'elle a ses règles spéciales qui varient suivant les besoins du service || L'arrêté de conflit en date du 22 juillet 1872 est confirmé || ne peut être régie par les principes qui sont établis dans le Code civil || Les règles varient selon les besoins du service : le service public devient le critère du raisonnement.
+
+&c-lamotte
+date: 17 février 1950
+ref: CE, Ass., n° 86949
+source: ArianeWeb, Conseil d'État
+res: Le préfet de l'Ain concède à plusieurs reprises le domaine de Sauberthier, propriété de Mme Lamotte, à un tiers, et le Conseil d'État annule les premières concessions. La loi du 23 mai 1943 interdit alors tout recours contre l'octroi d'une concession. Un nouvel arrêté de 1944 est pourtant attaqué, et le Conseil d'État doit dire si cette loi ferme la porte du recours pour excès de pouvoir.
+t: L'octroi de la concession ne peut faire l'objet d'aucun recours administratif ou judiciaire
+t: a pour effet de supprimer le recours qui avait été ouvert au propriétaire
+t: elle n'a pas exclu le recours pour excès de pouvoir devant le Conseil d'Etat contre l'acte de concession
+t: recours qui est ouvert même sans texte contre tout acte administratif
+t: a pour effet d'assurer, conformément aux principes généraux du droit, le respect de la légalité
+t: il est entaché de détournement de pouvoir
+j: 1a || elle n'a pas exclu le recours pour excès de pouvoir devant le Conseil d'Etat contre l'acte de concession || L'octroi de la concession ne peut faire l'objet d'aucun recours administratif ou judiciaire || il est entaché de détournement de pouvoir || Le Conseil d'État lit « aucun recours » de façon restrictive : le recours pour excès de pouvoir n'est pas visé.
+j: 1b || a pour effet de supprimer le recours qui avait été ouvert au propriétaire || recours qui est ouvert même sans texte contre tout acte administratif || il est entaché de détournement de pouvoir || Le juge applique la loi pour le reste : il ne la contrôle pas, il en limite seulement la portée.
+j: 2a || recours qui est ouvert même sans texte contre tout acte administratif || L'octroi de la concession ne peut faire l'objet d'aucun recours administratif ou judiciaire || a pour effet de supprimer le recours qui avait été ouvert au propriétaire || Le recours existe sans texte : le Conseil d'État en fait un droit qui n'a pas besoin d'être prévu.
+j: 2b || a pour effet d'assurer, conformément aux principes généraux du droit, le respect de la légalité || elle n'a pas exclu le recours pour excès de pouvoir devant le Conseil d'Etat contre l'acte de concession || il est entaché de détournement de pouvoir || Le recours repose sur les principes généraux du droit : c'est ce qui lui permet de résister à une loi qui ne l'écarte pas expressément.
+
+&c-rubin
+date: 2 mars 1962
+ref: CE, Ass., n° 55049 et 55055
+source: ArianeWeb, Conseil d'État
+res: Le 23 avril 1961, après le putsch d'Alger, le Président de la République met en œuvre l'article 16 de la Constitution. Une décision du 3 mai 1961 crée un tribunal militaire. Des officiers renvoyés devant ce tribunal en demandent l'annulation pour excès de pouvoir.
+t: a mis en application l'article 16 de la Constitution du 4 octobre 1958
+t: présente le caractère d'un acte de gouvernement
+t: dont il n'appartient au Conseil d'Etat ni d'apprécier la légalité, ni de contrôler la durée d'application
+t: créer ainsi un ordre de juridiction au sens de l'article 34 précité
+t: présente le caractère d'un acte législatif dont il n'appartient pas au juge administratif de connaître
+t: sont rejetées comme portées devant une juridiction incompétente pour en connaître
+j: 1a || présente le caractère d'un acte de gouvernement || présente le caractère d'un acte législatif dont il n'appartient pas au juge administratif de connaître || sont rejetées comme portées devant une juridiction incompétente pour en connaître || La décision de recourir à l'article 16 est qualifiée d'acte de gouvernement : elle échappe à tout juge.
+j: 1b || dont il n'appartient au Conseil d'Etat ni d'apprécier la légalité, ni de contrôler la durée d'application || a mis en application l'article 16 de la Constitution du 4 octobre 1958 || créer ainsi un ordre de juridiction au sens de l'article 34 précité || Le juge refuse aussi de contrôler la durée des pleins pouvoirs : c'est la limite la plus nette de son contrôle.
+j: 2a || créer ainsi un ordre de juridiction au sens de l'article 34 précité || présente le caractère d'un acte de gouvernement || a mis en application l'article 16 de la Constitution du 4 octobre 1958 || Les mesures prises sont classées selon leur matière : créer une juridiction relève de l'article 34, donc de la loi.
+j: 2b || présente le caractère d'un acte législatif dont il n'appartient pas au juge administratif de connaître || dont il n'appartient au Conseil d'Etat ni d'apprécier la légalité, ni de contrôler la durée d'application || sont rejetées comme portées devant une juridiction incompétente pour en connaître || Le critère est matériel : une mesure du domaine de la loi est législative, une mesure du domaine réglementaire reste contrôlable.
+
+&c-nicolo
+date: 20 octobre 1989
+ref: CE, Ass., n° 108243
+source: ArianeWeb, Conseil d'État
+res: M. Nicolo demande l'annulation des élections européennes du 18 juin 1989. Il soutient que les électeurs des départements et territoires d'outre-mer ne pouvaient pas y participer, au regard de l'article 227-1 du traité de Rome. Il faut donc confronter la loi électorale du 7 juillet 1977 au traité, qui lui est antérieur.
+t: Vu la Constitution, notamment son article 55 ;
+t: ne sont pas incompatibles avec les stipulations claires de l'article 227-1 précité du traité de Rome
+t: les départements et territoires d'outre-mer font partie intégrante de la République française
+t: le territoire de la République forme une circonscription unique
+t: sa requête doit être rejetée
+j: 1b || Vu la Constitution, notamment son article 55 ; || le territoire de la République forme une circonscription unique || sa requête doit être rejetée || Le revirement ne s'explique pas : il tient dans ce visa de l'article 55, seul indice du fondement retenu.
+j: 2a || ne sont pas incompatibles avec les stipulations claires de l'article 227-1 précité du traité de Rome || les départements et territoires d'outre-mer font partie intégrante de la République française || sa requête doit être rejetée || Le juge confronte une loi postérieure au traité : il exerce le contrôle de conventionnalité qu'il refusait jusque-là.
+
+&c-cohn-bendit
+date: 22 décembre 1978
+ref: CE, Ass., n° 11604
+source: ArianeWeb, Conseil d'État
+res: Expulsé en 1968, M. Cohn-Bendit demande en 1976 que la mesure soit levée, ce que le ministre de l'Intérieur refuse. Le tribunal administratif de Paris saisit la Cour de justice d'une question sur une directive de 1964. Le ministre fait appel de ce jugement.
+t: ces autorités restent seules compétentes pour décider de la forme à donner à l'exécution des directives
+t: les directives ne sauraient être invoquées par les ressortissants de ces Etats
+t: à défaut de toute contestation sur la légalité des mesures réglementaires prises par le gouvernement français
+t: Le jugement du Tribunal administratif de Paris en date du 21 décembre 1977 est annulé.
+j: 1a || ces autorités restent seules compétentes pour décider de la forme à donner à l'exécution des directives || à défaut de toute contestation sur la légalité des mesures réglementaires prises par le gouvernement français || Le jugement du Tribunal administratif de Paris en date du 21 décembre 1977 est annulé. || Le Conseil d'État lit le traité à la lettre : la directive laisse aux États la forme et les moyens.
+j: 1b || Le jugement du Tribunal administratif de Paris en date du 21 décembre 1977 est annulé. || ces autorités restent seules compétentes pour décider de la forme à donner à l'exécution des directives || les directives ne sauraient être invoquées par les ressortissants de ces Etats || En annulant le renvoi à la Cour de justice, il tranche seul : c'est l'acte clair opposé à l'arrêt Van Duyn.
+j: 2a || à défaut de toute contestation sur la légalité des mesures réglementaires prises par le gouvernement français || les directives ne sauraient être invoquées par les ressortissants de ces Etats || ces autorités restent seules compétentes pour décider de la forme à donner à l'exécution des directives || La porte reste ouverte : on peut contester les mesures réglementaires de transposition.
+
+&c-perreux
+date: 30 octobre 2009
+ref: CE, Ass., n° 298348
+source: Légifrance
+res: Mme Perreux, magistrate, conteste le refus de la nommer à un poste et y voit une discrimination liée à son engagement syndical. Elle invoque une directive de 2000 sur la charge de la preuve, que la France n'a pas transposée à temps. Elle se heurte à la jurisprudence Cohn-Bendit.
+t: revêt, en outre, en vertu de l'article 88-1 de la Constitution, le caractère d'une obligation constitutionnelle
+t: tout justiciable peut se prévaloir, à l'appui d'un recours dirigé contre un acte administratif non réglementaire
+t: soumettre au juge des éléments de fait susceptibles de faire présumer une atteinte à ce dernier principe
+t: il incombe au défendeur de produire tous ceux permettant d'établir
+t: la requête de Mme A ne peut qu'être rejetée
+j: 1a || tout justiciable peut se prévaloir, à l'appui d'un recours dirigé contre un acte administratif non réglementaire || la requête de Mme A ne peut qu'être rejetée || il incombe au défendeur de produire tous ceux permettant d'établir || Un acte non réglementaire peut désormais être attaqué sur le fondement d'une directive : c'est l'abandon de Cohn-Bendit.
+j: 2b || soumettre au juge des éléments de fait susceptibles de faire présumer une atteinte à ce dernier principe || revêt, en outre, en vertu de l'article 88-1 de la Constitution, le caractère d'une obligation constitutionnelle || tout justiciable peut se prévaloir, à l'appui d'un recours dirigé contre un acte administratif non réglementaire || Sans appliquer la directive, le juge aménage lui-même la preuve : la requérante n'a qu'à faire présumer la discrimination.
+
+&c-gisti-fapil
+date: 11 avril 2012
+ref: CE, Ass., n° 322326
+source: Revue générale du droit et Légifrance
+res: Un décret de 2008 réserve le droit au logement opposable des étrangers à certains titres de séjour. Le GISTI et la FAPIL en demandent l'annulation. Ils invoquent notamment la convention n° 97 de l'Organisation internationale du travail, et le Conseil d'État doit dire si elle a un effet direct.
+t: n'a pas pour objet exclusif de régir les relations entre Etats
+t: ne requiert l'intervention d'aucun acte complémentaire pour produire des effets
+t: la seule circonstance que la stipulation désigne les Etats parties comme sujets de l'obligation
+t: les stipulations précitées peuvent utilement être invoquées à l'encontre du décret attaqué
+t: ne prendra effet qu'à compter du 1er octobre 2012
+j: 1a || ne requiert l'intervention d'aucun acte complémentaire pour produire des effets || la seule circonstance que la stipulation désigne les Etats parties comme sujets de l'obligation || ne prendra effet qu'à compter du 1er octobre 2012 || Second critère négatif : la stipulation se suffit à elle-même. Le premier tient aux relations entre États.
+j: 1b || la seule circonstance que la stipulation désigne les Etats parties comme sujets de l'obligation || n'a pas pour objet exclusif de régir les relations entre Etats || les stipulations précitées peuvent utilement être invoquées à l'encontre du décret attaqué || Le juge écarte l'argument de pure forme : désigner les États comme débiteurs ne suffit pas à exclure l'effet direct.
+j: 2a || les stipulations précitées peuvent utilement être invoquées à l'encontre du décret attaqué || ne requiert l'intervention d'aucun acte complémentaire pour produire des effets || ne prendra effet qu'à compter du 1er octobre 2012 || Appliqués à la convention de 1949, les critères la rendent invocable contre le décret.
+j: 2b || ne prendra effet qu'à compter du 1er octobre 2012 || les stipulations précitées peuvent utilement être invoquées à l'encontre du décret attaqué || n'a pas pour objet exclusif de régir les relations entre Etats || L'annulation est différée, pour laisser au pouvoir réglementaire le temps de réécrire le texte.
+
+&c-kpmg
+date: 24 mars 2006
+ref: CE, Ass., n° 288460
+source: Revue générale du droit
+res: Un décret du 16 novembre 2005 approuve un code de déontologie des commissaires aux comptes, applicable aussitôt. Plusieurs cabinets, dont KPMG, en demandent l'annulation. Le texte ne prévoit rien pour les mandats déjà en cours.
+t: pour des motifs de sécurité juridique
+t: sont contraires au principe de sécurité juridique
+t: les mesures transitoires qu'implique, s'il y a lieu, une réglementation nouvelle
+t: une atteinte excessive à des situations contractuelles en cours
+t: est annulé en tant qu'il ne prévoit pas de mesures transitoires
+j: 1a || pour des motifs de sécurité juridique || est annulé en tant qu'il ne prévoit pas de mesures transitoires || une atteinte excessive à des situations contractuelles en cours || La sécurité juridique devient un motif qui s'impose à l'autorité réglementaire.
+j: 1b || sont contraires au principe de sécurité juridique || les mesures transitoires qu'implique, s'il y a lieu, une réglementation nouvelle || est annulé en tant qu'il ne prévoit pas de mesures transitoires || Le Conseil d'État parle d'un principe : il le consacre comme principe général, sans le rattacher au droit de l'Union.
+j: 2a || les mesures transitoires qu'implique, s'il y a lieu, une réglementation nouvelle || pour des motifs de sécurité juridique || sont contraires au principe de sécurité juridique || L'obligation est concrète : prévoir des mesures transitoires, « s'il y a lieu ».
+j: 2b || est annulé en tant qu'il ne prévoit pas de mesures transitoires || une atteinte excessive à des situations contractuelles en cours || pour des motifs de sécurité juridique || L'annulation est partielle : le code tient, sauf en ce qu'il oublie les mandats en cours.
+
+&c-arcelor
+date: 8 février 2007
+ref: CE, Ass., n° 287110
+source: Revue générale du droit
+res: Un décret de 2004 transpose une directive sur les quotas d'émission de gaz à effet de serre et l'applique à la sidérurgie. Des sociétés du groupe Arcelor en demandent l'abrogation, refusée implicitement. Elles invoquent des principes constitutionnels, dont l'égalité.
+t: la suprématie ainsi conférée aux engagements internationaux ne saurait s'imposer, dans l'ordre interne,
+t: aux principes et dispositions à valeur constitutionnelle
+t: dont découle une obligation constitutionnelle de transposition des directives
+t: de rechercher s'il existe une règle ou un principe général du droit communautaire
+t: de saisir la Cour de justice des Communautés européennes d'une question préjudicielle
+t: Il est sursis à statuer sur la requête
+j: 1a || dont découle une obligation constitutionnelle de transposition des directives || de saisir la Cour de justice des Communautés européennes d'une question préjudicielle || Il est sursis à statuer sur la requête || L'article 88-1 fonde l'obligation de transposer : c'est elle qui oblige à repenser le contrôle du décret.
+j: 1b || aux principes et dispositions à valeur constitutionnelle || dont découle une obligation constitutionnelle de transposition des directives || de rechercher s'il existe une règle ou un principe général du droit communautaire || La suprématie des traités s'arrête devant la Constitution : elle reste au sommet dans l'ordre interne.
+j: 2a || de rechercher s'il existe une règle ou un principe général du droit communautaire || aux principes et dispositions à valeur constitutionnelle || Il est sursis à statuer sur la requête || Le juge cherche un équivalent européen du principe invoqué : c'est le mécanisme de translation.
+j: 2b || de saisir la Cour de justice des Communautés européennes d'une question préjudicielle || de rechercher s'il existe une règle ou un principe général du droit communautaire || dont découle une obligation constitutionnelle de transposition des directives || En cas de difficulté sérieuse, il interroge la Cour de justice : le dialogue des juges est organisé.
+
+&c-conseil-concurrence
+date: 23 janvier 1987
+ref: CC, n° 86-224 DC
+source: Revue générale du droit
+res: Une loi transfère au juge judiciaire le contentieux des décisions du Conseil de la concurrence, autorité administrative. Des parlementaires saisissent le Conseil constitutionnel. Ils invoquent la séparation des autorités administratives et judiciaires et les droits de la défense.
+t: n'ont pas en elles-mêmes valeur constitutionnelle
+t: principes fondamentaux reconnus par les lois de la République
+t: l'annulation ou la réformation des décisions prises, dans l'exercice des prérogatives de puissance publique
+t: dans l'intérêt d'une bonne administration de la justice
+t: constitue une garantie essentielle des droits de la défense
+t: la loi doit, dans son ensemble, être regardée comme non conforme à la Constitution
+j: 1a || n'ont pas en elles-mêmes valeur constitutionnelle || principes fondamentaux reconnus par les lois de la République || la loi doit, dans son ensemble, être regardée comme non conforme à la Constitution || Les lois de 1790 et de l'an III n'ont pas valeur constitutionnelle : le Conseil cherche ailleurs le fondement.
+j: 1b || l'annulation ou la réformation des décisions prises, dans l'exercice des prérogatives de puissance publique || dans l'intérêt d'une bonne administration de la justice || constitue une garantie essentielle des droits de la défense || Le noyau protégé est précis : annuler ou réformer les décisions de puissance publique.
+j: 2a || dans l'intérêt d'une bonne administration de la justice || n'ont pas en elles-mêmes valeur constitutionnelle || l'annulation ou la réformation des décisions prises, dans l'exercice des prérogatives de puissance publique || Le noyau peut être aménagé : le législateur peut unifier le contentieux au profit du juge judiciaire.
+j: 2b || constitue une garantie essentielle des droits de la défense || dans l'intérêt d'une bonne administration de la justice || principes fondamentaux reconnus par les lois de la République || La loi tombe non sur la compétence, mais faute de sursis à exécution devant le juge judiciaire.
+
+&c-air-france
+date: 15 octobre 2021
+ref: CC, n° 2021-940 QPC
+source: Revue générale du droit
+res: Le code de l'entrée et du séjour des étrangers impose au transporteur de ramener l'étranger refoulé à la frontière, en transposant une directive de 2001. Air France, sanctionnée d'une amende, pose une question prioritaire de constitutionnalité. Elle soutient notamment que l'État délègue ainsi la force publique à une personne privée.
+t: n'est pas compétent pour contrôler la conformité à la Constitution de dispositions législatives
+t: est inhérent à l'identité constitutionnelle de la France
+t: Il en résulte l'interdiction de déléguer à des personnes privées des compétences de police administrative générale
+t: de telles mesures relevant des seules compétences des autorités de police
+t: Par conséquent, les dispositions contestées doivent être déclarées conformes à la Constitution.
+j: 1a || n'est pas compétent pour contrôler la conformité à la Constitution de dispositions législatives || Par conséquent, les dispositions contestées doivent être déclarées conformes à la Constitution. || de telles mesures relevant des seules compétences des autorités de police || Le principe est l'incompétence : une loi qui transpose une directive n'est pas contrôlée.
+j: 1b || est inhérent à l'identité constitutionnelle de la France || n'est pas compétent pour contrôler la conformité à la Constitution de dispositions législatives || de telles mesures relevant des seules compétences des autorités de police || Seule exception : un principe inhérent à l'identité constitutionnelle de la France.
+j: 2a || Il en résulte l'interdiction de déléguer à des personnes privées des compétences de police administrative générale || est inhérent à l'identité constitutionnelle de la France || Par conséquent, les dispositions contestées doivent être déclarées conformes à la Constitution. || Pour la première fois, un principe d'identité est reconnu : la force publique ne se délègue pas.
+j: 2b || Par conséquent, les dispositions contestées doivent être déclarées conformes à la Constitution. || Il en résulte l'interdiction de déléguer à des personnes privées des compétences de police administrative générale || n'est pas compétent pour contrôler la conformité à la Constitution de dispositions législatives || Le transporteur n'exerce aucune contrainte : la loi est conforme, et le conflit avec le droit de l'Union est évité.

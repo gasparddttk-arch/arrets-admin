@@ -871,3 +871,6 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .bandeau-texte small { display: block; margin-top: 10px; font-size: 15px; line-height: 1.2; }
 .bandeau-resume { margin: 0; }
 .corrige-plan blockquote { margin: 3px 0 0; font-style: italic; font-size: 18px; line-height: 1.22; }
+.boite-genre { text-align: center; }
+.boite-genre h2 { font-weight: 700; font-size: 28px; line-height: 1.1; color: var(--titre-or); }
+.boite-genre p { margin-top: 4px; }

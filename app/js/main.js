@@ -218,7 +218,7 @@ const retourPalais = () => h('button', { class: 'bouton-matiere', onClick: () =>
 
 // Le rôle : la liste des exercices, à part du Palais.
 function ecranRole() {
-  const lignes = Object.entries(nomsModes()).map(([m, [nom, txt]], i) => ligneEntree(m, m, nom, txt, () => lancerMode(m), i * 2.2));
+  const lignes = Object.entries(nomsModes()).map(([m, [nom, txt]], i) => ligneEntree(m, m, nom, txt, () => (m === 'plan' || m === 'architecte' ? choixGenre(m) : lancerMode(m)), i * 2.2));
   montrer(barreHaut(), retourPalais(), h('section', { class: 'role' }, h('h1', {}, 'Le rôle'),
     h('p', { class: 'page-sous' }, 'Choisis ton exercice.'),
     ligneEntree('express', 'prorogation', 'Trois minutes', 'Trois épreuves rapides', lancerExpress, 0),
@@ -276,13 +276,31 @@ function lancerExpress() {
   const types = estOblig() ? ['qualif', 'remede', 'qualif'] : ['paires', 'puzzle', 'paires'];
   lancer({ type: 'express', titre: 'Trois minutes', rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
 }
-function lancerMode(m) {
+// Le bon plan et l'architecte : commentaire d'arrêt, dissertation ou au hasard.
+const GENRES = [['C', 'Commentaire d’arrêt'], ['D', 'Dissertation'], [null, 'Au hasard']];
+function choixGenre(m) {
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite boite-genre', role: 'dialog', 'aria-label': 'Type de sujet' },
+    h('h2', {}, nomsModes()[m][0]), h('p', {}, 'Sur quel type de sujet ?'),
+    h('div', { class: 'boite-actions' },
+      GENRES.map(([g, nom]) => h('button', { class: g ? 'bouton-or' : 'bouton-fantome', 'data-genre': g || 'hasard', onClick: () => { voile.remove(); lancerMode(m, g); } }, nom)),
+      h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Fermer'))));
+  document.body.append(voile);
+}
+function lancerMode(m, genre = null) {
   // En obligations, un exercice choisi puise dans tout le cours : les chambres rythment le défi et les audiences.
-  const zones = estOblig() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix);
+  let zones = estOblig() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix);
+  let source = ix;
+  if (genre) {
+    // Un type choisi puise dans toutes les chambres ouvertes, pour toujours trouver un sujet.
+    const ouvertes = estOblig() ? zones : zonesOuvertes(ix);
+    const sujets = ix.sujets.filter((s) => s.type === genre && s.zones.some((z) => ouvertes.includes(z)));
+    if (sujets.length) { source = { ...ix, sujets }; zones = ouvertes; }
+  }
   const dus = aRevoir(ix, zones);
   const n = m === 'paires' || m === 'qualif' ? 3 : 2;
   const deja = new Set();
-  lancer({ type: 'mode', mode: m, titre: nomsModes()[m][0], rounds: Array.from({ length: n }, () => tirerRound(ix, m, zones, dus, Math.random, deja)) });
+  const titre = nomsModes()[m][0] + (genre && source !== ix ? (genre === 'C' ? ', commentaire' : ', dissertation') : '');
+  lancer({ type: 'mode', mode: m, titre, rounds: Array.from({ length: n }, () => tirerRound(source, m, zones, dus, Math.random, deja)) });
 }
 
 // SÉANCE ------------------------------------------------------------------------

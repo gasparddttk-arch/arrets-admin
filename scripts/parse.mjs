@@ -112,10 +112,10 @@ function parseJuges() {
 }
 
 // Les arrêts à lire pendant un commentaire, communs aux deux équipes.
-const avecArret = (sujets) => { const c = parseCommentaires(); return sujets.map((s) => (c[s.id] ? { ...s, arret: c[s.id] } : s)); };
-function parseCommentaires() {
+const avecArret = (sujets, fichier = 'oblig/commentaires.txt') => { const c = parseCommentaires(fichier); return sujets.map((s) => (c[s.id] ? { ...s, arret: c[s.id] } : s)); };
+function parseCommentaires(fichier) {
   const out = {}; let cur = null;
-  for (const raw of D('oblig/commentaires.txt').split('\n')) {
+  for (const raw of D(fichier).split('\n')) {
     const l = raw.trim();
     if (!l || l.startsWith('#')) continue;
     if (l.startsWith('&')) { cur = { txt: [], just: {} }; out[l.slice(1).trim()] = cur; continue; }
@@ -348,7 +348,7 @@ export function lireContenu() {
     arrets: parseArrets(),
     familles: parseFamilles(),
     juges: parseJuges(),
-    sujets: parseSujets(),
+    sujets: avecArret(parseSujets(), 'commentaires.txt'),
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
   };
 }
