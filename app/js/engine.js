@@ -176,6 +176,7 @@ export const dispo = (ix, zones) => ({
   puzzle: ix.arrets.filter((a) => !a.nf && a.zones.some((z) => zones.includes(z))),
   juges: ix.juges.filter((j) => ix.parId.get(j.id).zones.some((z) => zones.includes(z))),
   sujets: ix.sujets.filter((s) => s.zones.some((z) => zones.includes(z))),
+  frises: (ix.frises || []).filter((f) => f.zones.some((z) => zones.includes(z))),
 });
 
 // DROIT DES OBLIGATIONS -----------------------------------------------------------
@@ -298,6 +299,7 @@ export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new S
     case 'juge': { const j = prendre(d.juges); return { type, ...casJuge(ix, j.id, rng) }; }
     case 'plan': { const s = prendre(d.sujets); return { type, ...roundPlan(ix, s, rng) }; }
     case 'architecte': { const s = prendre(d.sujets); return { type, ...roundArchitecte(ix, s, rng) }; }
+    case 'frise': { const f = prendre(d.frises.length ? d.frises : ix.frises); return { type, ...roundFrise(f, rng) }; }
     default: throw new Error('mode inconnu ' + type);
   }
 }

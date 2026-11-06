@@ -348,6 +348,7 @@ export function lireContenu() {
     arrets: parseArrets(),
     familles: parseFamilles(),
     juges: parseJuges(),
+    frises: parseFrises('frises.txt'),
     sujets: avecArret(parseSujets(), 'commentaires.txt'),
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
   };

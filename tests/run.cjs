@@ -162,7 +162,7 @@ async function debordement(p, nom) {
   await p.tap('text=Retour au Palais');
 
   // 2. Chaque mode, seul, plusieurs fois, pour couvrir le contenu.
-  for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte']) {
+  for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte', 'Frise de la jurisprudence']) {
     for (let i = 0; i < 3; i++) {
       await p.evaluate(() => window.__app.aller('role')); await p.locator('.role-ligne', { hasText: m }).click();
       if (await p.locator('.boite-genre').count()) await p.locator(`.boite-genre [data-genre="${['C', 'D', 'hasard'][i]}"]`).click();
@@ -476,7 +476,7 @@ async function debordement(p, nom) {
   assert.equal(await c.locator('.sceau-vivant').count(), 0, 'le sceau cède sa place');
   // Une pose différente par exercice.
   const poses = {};
-  for (const [matiere, modes] of [['admin', ['paires', 'puzzle', 'juge', 'plan', 'architecte']], ['oblig', ['cas', 'qualif', 'remede', 'frise', 'plan']]]) {
+  for (const [matiere, modes] of [['admin', ['paires', 'puzzle', 'juge', 'plan', 'architecte', 'frise']], ['oblig', ['cas', 'qualif', 'remede', 'frise', 'plan']]]) {
     await c.evaluate((m) => window.__app.ouvrirMatiere(m), matiere); await c.waitForSelector('.tribune');
     for (const m of modes) {
       await c.evaluate(() => window.__app.aller('role')); await ouvrirMode(c, m);
@@ -917,6 +917,13 @@ async function debordement(p, nom) {
   await f.locator('.scene .pied button').click(); await f.waitForSelector('.frise-vraie');
   assert.match(await f.locator('.frise .question').innerText(), /Toute la frise est juste/, 'échanges qui remettent la frise en ordre');
   await f.screenshot({ path: CAP + 'frise-corrige.png' });
+  // La même frise en droit administratif.
+  await f.goto(URLB + '?test'); await f.waitForSelector('.tribune');
+  await f.evaluate(() => window.__app.ouvrirMatiere('admin')); await f.waitForSelector('.tribune');
+  await f.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; window.__app.aller('role'); });
+  await f.locator('.role-ligne[data-mode="frise"]').click(); await f.waitForSelector('.jalons'); await f.waitForSelector('.palais-portes', { state: 'detached' });
+  await f.screenshot({ path: CAP + 'frise-admin.png' }); await debordement(f, 'frise administrative');
+  await jouer(f); await f.tap('text=Retour au Palais');
   await fr.close();
   log('frise ok');
 

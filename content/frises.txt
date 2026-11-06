@@ -1,0 +1,58 @@
+# Frises du droit administratif.
+# %id | titre | chambres
+# p: ce que montre la frise
+# e: année | nom | ce qu'il décide, sans date | ce que ça change | fiche liée
+# q: question | rang de la bonne étape
+
+%conventionnalite | Le juge et la loi contraire au traité | 5
+p: Vingt et un ans pour que le juge administratif écarte une loi.
+e: 1968 | Semoules | La loi postérieure au traité s'impose au juge | La loi fait écran entre le traité et l'acte | semoules
+e: 1975 | IVG, Conseil constitutionnel | Une loi contraire à un traité n'est pas pour autant contraire à la Constitution | Le contrôle des lois au regard des traités revient aux juges ordinaires | ivg
+e: 1975 | Jacques Vabre | Le juge judiciaire écarte la loi contraire au traité | La Cour de cassation devance le Conseil d'État | jacques-vabre
+e: 1989 | Nicolo | Le juge administratif confronte la loi, même postérieure, au traité | L'écran tombe : l'article 55 suffit | nicolo
+e: 2007 | Gardedieu | L'État répare le préjudice causé par une loi contraire à un traité | Écarter la loi ne suffit plus, il faut aussi indemniser | gardedieu
+q: Quelle étape fait tomber l'écran devant le juge administratif ? | 4
+
+%directives | Les directives devant le juge administratif | 4
+p: Trente ans d'écart avec Luxembourg.
+e: 1974 | Van Duyn, Cour de justice | Une directive claire et inconditionnelle peut être invoquée par un particulier | L'effet direct des directives est admis à Luxembourg | van-duyn
+e: 1978 | Cohn-Bendit | Une directive ne peut pas être invoquée contre un acte individuel | Le Conseil d'État résiste à la Cour de justice | cohn-bendit
+e: 1989 | Alitalia | L'administration doit abroger un règlement contraire à une directive | La directive agit à travers les règlements | alitalia
+e: 1998 | Tête | L'absence de transposition est elle-même illégale | Même le vide réglementaire donne prise à la directive | tete
+e: 2009 | Perreux | Une directive précise peut être invoquée contre un acte individuel | Cohn-Bendit est abandonné | perreux
+q: Quelle étape rejoint enfin la position de la Cour de justice ? | 5
+
+%constitution-ue | La Constitution face au droit de l'Union | 3
+p: La Constitution reste au sommet, sans rupture avec l'Union.
+e: 1998 | Sarran | Dans l'ordre interne, la Constitution l'emporte sur les traités | La suprématie de l'article 55 s'arrête à la Constitution | sarran
+e: 2004 | Économie numérique, Conseil constitutionnel | Transposer une directive est une exigence constitutionnelle | L'article 88-1 entre dans le contrôle des lois | lcen
+e: 2006 | DADVSI, Conseil constitutionnel | Seul un principe inhérent à l'identité constitutionnelle peut faire obstacle à la transposition | La réserve d'identité est formulée | dadvsi
+e: 2007 | Arcelor | Le juge cherche un équivalent européen du principe constitutionnel invoqué | Le contrôle du décret de transposition passe par le droit de l'Union | arcelor
+e: 2021 | Air France, Conseil constitutionnel | L'interdiction de déléguer la force publique relève de l'identité constitutionnelle | Un premier principe d'identité est reconnu | air-france
+q: Quelle étape donne le premier exemple de principe inhérent à l'identité constitutionnelle ? | 5
+
+%pgd | Les principes généraux du droit | 8
+p: Un juge qui dégage des règles sans texte.
+e: 1945 | Aramu | Les droits de la défense s'appliquent même sans texte | Le premier principe général du droit apparaît | aramu
+e: 1954 | Barel | Les opinions ne peuvent fermer l'accès aux emplois publics | L'égalité d'accès devient un principe | barel
+e: 1958 | Chênes-lièges | Un décret ne peut rompre l'égalité devant les charges publiques | Le principe s'impose au pouvoir réglementaire | chenes-lieges
+e: 2006 | KPMG | L'autorité doit prévoir des mesures transitoires | La sécurité juridique devient un principe autonome | kpmg
+e: 2007 | Tropic | Une règle jurisprudentielle nouvelle peut ne valoir que pour l'avenir | Le juge assume son pouvoir normatif | tropic
+q: Quelle étape fait de la sécurité juridique un principe autonome ? | 4
+
+%juge-administratif | Naissance et protection du juge administratif | 1,9
+p: Un juge né dans l'administration, devenu indépendant et protégé.
+e: 1873 | Blanco | La responsabilité de l'État a des règles spéciales, et l'autorité administrative en connaît | Droit spécial et compétence administrative sont liés | blanco
+e: 1889 | Cadot | Le Conseil d'État connaît directement des recours contre les décisions administratives | Fin du ministre-juge | cadot
+e: 1921 | Bac d'Eloka | Un service exploité comme une entreprise privée relève du juge judiciaire | Le service public cesse d'être le seul critère | bac-eloka
+e: 1980 | Validation d'actes administratifs, Conseil constitutionnel | L'indépendance des juridictions administratives est un principe fondamental | Le juge administratif a une existence constitutionnelle | cc-80-119
+e: 1987 | Conseil de la concurrence, Conseil constitutionnel | Annuler ou réformer les décisions de puissance publique revient au juge administratif | Un noyau de compétence est garanti par la Constitution | conseil-concurrence
+q: Quelle étape rompt le lien organique entre l'administration et son juge ? | 2
+
+%loi-ecran | La loi-écran | 2
+p: Un écran qui demeure, mais que le juge apprend à contourner.
+e: 1936 | Arrighi | Le juge refuse de contrôler la constitutionnalité d'une loi | La loi fait écran entre la Constitution et l'acte | arrighi
+e: 1950 | Dame Lamotte | Une loi qui exclut « tout recours » n'exclut pas le recours pour excès de pouvoir | Le juge limite la portée de la loi sans la contrôler | lamotte
+e: 1989 | Nicolo | Le juge écarte une loi contraire à un traité | Le traité contourne l'écran | nicolo
+e: 1991 | Quintin | La loi qui se borne à renvoyer au règlement ne fait pas écran | L'écran devient transparent | quintin
+q: Quelle étape rend l'écran transparent ? | 4

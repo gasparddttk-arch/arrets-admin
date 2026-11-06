@@ -6,6 +6,15 @@ const c = indexer(lireContenu());
 const erreurs = []; const notes = [];
 const err = (m) => erreurs.push(m);
 for (const s of c.sujets) verifierArret(s, err);
+// Frises du droit administratif : années dans l'ordre, fiches existantes, question valide.
+const idsCartes = new Set(c.arrets.map((a) => a.id));
+for (const f of c.frises || []) {
+  const ans = f.e.map((e) => e.an);
+  if (ans.some((a, i) => i && a < ans[i - 1])) err(`frise ${f.id} : années à revoir`);
+  if (f.e.length < 4 || !f.p || !f.q || !(f.r >= 1 && f.r <= f.e.length)) err(`frise ${f.id} : incomplète`);
+  if (new Set(f.e.map((e) => e.t)).size !== f.e.length) err(`frise ${f.id} : deux décisions identiques`);
+  f.e.forEach((e) => { if (!e.carte || !idsCartes.has(e.carte)) err(`frise ${f.id} : fiche inconnue ${e.carte}`); if (!e.ch || !e.t) err(`frise ${f.id} : étape incomplète`); });
+}
 const ids = new Set(c.arrets.map((a) => a.id));
 if (ids.size !== c.arrets.length) err('identifiants en double');
 
