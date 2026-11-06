@@ -16,7 +16,7 @@ q: Quelle étape fait entrer la nature dans le Code civil ? | 4
 %reforme | Les trois temps de la réforme | 2 | 1
 p: Une réforme par ordonnance, puis un contentieux sur son application.
 e: 2015 | Loi d'habilitation | Le Gouvernement est autorisé à réformer par ordonnance | Le recours à l'article 38 est choisi
-e: 2016 | Ordonnance du 10 février | Près de 300 articles sont réécrits | Un nouveau droit s'applique aux contrats conclus dès le 1er octobre | a9-ord
+e: 2016 | Ordonnance du 10 février | Le droit des contrats, le régime général et la preuve sont réécrits | Un nouveau droit s'applique aux contrats conclus dès le 1er octobre | a9-ord
 e: 2018 | Loi de ratification | L'ordonnance est ratifiée avec une vingtaine de changements | Certains changements se disent interprétatifs | a16-loi
 e: 2021 | Civ. 3e, 23 juin | Le promettant s'oblige définitivement dès la promesse | La Cour fait évoluer le droit ancien | revirement2021
 e: 2023 | Com., 15 mars | La chambre commerciale rejoint la troisième chambre civile | Le revirement s'applique au litige en cours | morgane

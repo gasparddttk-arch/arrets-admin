@@ -179,7 +179,7 @@ export const ZONES_OBLIG1 = [
   { id: 13, titre: 'La violence', lieu: 'Pas encore arrivée au cours', travaux: true },
 ].map((z) => ({ ...z, titre: typo(z.titre) }));
 
-const ARTICLES_TEXTES = { '9-ord': ["Art. 9 de l'ordonnance", 'Ord. 9'], '16-loi': ['Art. 16 de la loi de 2018', 'Loi 16'] };
+const ARTICLES_TEXTES = { '9-ord': ["Art. 9 de l'ordonnance", 'Ord. 9'], '16-loi': ['Art. 16 de la loi de 2018', 'Loi 16'], '212-1': ['Art. L. 212-1 C. conso.', 'Conso. L. 212-1'] };
 const labelArticle = (n) => (ARTICLES_TEXTES[n]?.[0] ?? (/^1242-/.test(n) ? `Art. 1242 al. ${n.slice(5)}` : `Art. ${n}`));
 function parseArticles(fichier = 'oblig/articles.txt', heritage = null) {
   return lignes(fichier).map((l) => {

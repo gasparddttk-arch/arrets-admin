@@ -7,10 +7,10 @@
 # 2. La réforme dans le temps
 @interpretative | Loi interprétative | Ass. plén., 23 janv. 2004, n° 03-13.617 | Cass. | 2004 | 3 | 2
 ap: Une loi rétroactive ne s'impose pas aux procès en cours, quelle que soit sa qualification formelle, sauf impérieux motifs d'intérêt général
-nf: 1
+f: Un bail commercial de douze ans est en révision devant le juge quand la loi MURCEF du 11 décembre 2001 modifie les articles L. 145-33 et L. 145-38 du Code de commerce, en se disant interprétative. La cour d'appel l'écarte, et le bailleur se pourvoit.
 q: Le législateur peut-il imposer une loi nouvelle aux procès en cours en la présentant comme interprétative ?
-s: Non, sauf impérieux motifs d'intérêt général. La règle joue quelle que soit la qualification formelle donnée à la loi.
-po: C'est la grille de lecture de l'article 16 de la loi de 2018 : une loi vraiment interprétative fait corps avec le texte qu'elle précise, une fausse loi interprétative ne peut pas modifier le droit après coup.
+s: Non, sauf impérieux motifs d'intérêt général. La règle joue quelle que soit la qualification formelle donnée à la loi. Rejet, par substitution de motifs.
+po: C'est la grille de lecture de l'article 16 de la loi de 2018 : une loi vraiment interprétative fait corps avec le texte qu'elle précise, une fausse loi interprétative ne s'impose pas aux procès en cours sans impérieux motif d'intérêt général.
 
 @climatiseur | Climatiseur | Civ. 1re, 19 sept. 2018, n° 17-24.347 | Cass. | 2018 | 2 | 2
 ap: Un contrat conclu avant le 1er octobre 2016 ne se juge pas avec un texte de la réforme
@@ -36,7 +36,7 @@ po: La chambre commerciale rejoint la troisième chambre civile, au visa de l'ar
 # 4. La notion de contrat
 @autostop | Transport bénévole | Ch. mixte, 20 déc. 1968, n° 67-14.041 | Cass. | 1968 | 2 | 4
 ap: Le passager transporté à titre bénévole peut invoquer contre le conducteur la responsabilité du gardien
-nf: 1
+f: Une voiture quitte la route dans un virage. La passagère, transportée gratuitement, est blessée et agit contre le conducteur et son assureur. Ils soutiennent qu'elle a accepté de partager l'usage du véhicule.
 q: Le passager transporté bénévolement peut-il invoquer l'article 1384 al. 1 ancien contre le conducteur ?
 s: Oui, sauf disposition légale contraire. Rejet.
 po: Le cours en retient que le transport bénévole ne fait pas naître de contrat : la responsabilité du conducteur est délictuelle. Depuis la loi Badinter du 5 juillet 1985, la question a perdu l'essentiel de son intérêt pour les accidents de la route.
@@ -78,7 +78,7 @@ po: L'initiative est indifférente. La Cour élargit le champ de la convention, 
 
 # 5. L'acte unilatéral
 =naturelle | 1,5 | 3
-f: Un parieur gagne au tiercé avec un ami et promet de lui reverser une part du gain. Il refuse ensuite de payer.
+f: Un parieur gagne au Quinté plus. Celui qui validait ses tickets au PMU, contre 10 % des gains selon lui, réclame sa part. Le parieur la lui promet, puis refuse. Ton cours dit « tiercé » : l'arrêt vise bien un Quinté plus.
 
 @geste | Geste commercial | Com., 12 déc. 2018, n° 17-22.268 | Cass. | 2018 | 3 | 5
 ap: Un geste commercial promis après le contrat peut obliger son auteur par engagement unilatéral
@@ -170,9 +170,9 @@ po: Le droit commun s'ajoute ici au droit spécial, car la directive de 2015 ré
 
 @poussin1983 | Poussin, second arrêt | Civ. 1re, 13 déc. 1983, n° 82-12.237 | Cass. | 1983 | 2 | 11
 ap: L'erreur s'apprécie au jour de la vente, mais elle peut se prouver par des éléments postérieurs
-nf: 1
+f: Vendu 2 200 francs comme de l'école des Carrache, le tableau entre au Louvre sous le nom de Poussin. Sur renvoi, la cour d'appel écarte les éléments postérieurs à la vente, comme l'arrêté de 1968 et un article de 1969.
 q: Peut-on utiliser des éléments postérieurs à la vente pour établir l'erreur ?
-s: Oui. Ils peuvent prouver ce qu'était la chose et l'erreur de la partie au moment de la vente.
+s: Oui. Ils peuvent prouver ce qu'était la chose et l'erreur de la partie au moment de la vente. Cassation.
 po: L'authenticité est appréciée au jour du contrat, mais la preuve peut venir après.
 
 @berthon | Berthon | Ch. réun., 24 avr. 1862 | Cass. | 1862 | 3 | 11
@@ -185,9 +185,9 @@ po: La loi du 11 juillet 1975 renverse la solution : l'article 180 vise désorma
 # 12. Le dol
 @reticence1971 | Réticence dolosive | Civ. 3e, 15 janv. 1971, n° 69-12.180 | Cass. | 1971 | 2 | 12
 ap: Le silence qui dissimule un fait déterminant peut constituer un dol
-nf: 1
+f: Un promoteur transige avec un agent immobilier sur un terrain à Villefranche-sur-Mer. Il lui annonce un refus de l'administration, mais tait que celle-ci ne poursuivrait pas et proposait de régulariser. La transaction est annulée pour dol.
 q: Le simple silence d'un contractant peut-il être un dol ?
-s: Oui, s'il dissimule à l'autre un fait qui, connu de lui, l'aurait empêché de contracter.
+s: Oui, s'il dissimule à l'autre un fait qui, connu de lui, l'aurait empêché de contracter. Rejet. L'espèce mêlait une affirmation fausse et des omissions.
 po: À partir des années 1970, le silence qui trompe est sanctionné. Exiger de ne pas se taire, c'est exiger d'informer : l'obligation d'information naît du dol.
 
 =parsys | 12 | 3

@@ -6,7 +6,7 @@
 @naturelle | Obligation naturelle | Civ. 1re, 10 oct. 1995, n° 93-20.300 | Cass. | 1995 | 2 | 1
 ap: Promettre d'exécuter un devoir de conscience crée une obligation civile
 q: Un engagement pris seul, sur un simple devoir moral, peut-il obliger son auteur ?
-s: L'obligation naturelle devient civile par l'engagement unilatéral d'exécuter ce devoir.
+s: L'obligation naturelle devient civile par l'engagement unilatéral d'exécuter ce devoir. Rejet.
 po: L'engagement unilatéral de volonté obtient droit de cité. La réforme de 2016 le rejoint à l'article 1100.
 
 @manoukian | Manoukian | Com., 26 nov. 2003, n° 00-10.243 | Cass. | 2003 | 3 | 2
@@ -55,7 +55,7 @@ ap: L'offre rétractée dans le délai légal ne forme pas la vente, elle n'ouvr
 f: Des bailleurs offrent leur local à leur locataire, qui dispose d'un mois pour se prononcer. Ils se rétractent avant son acceptation. La cour d'appel constate pourtant la vente.
 q: La rétractation d'une offre avant la fin du délai légal empêche-t-elle la vente ?
 s: Oui. Non encore acceptée, l'offre rétractée n'expose son auteur qu'à une action en réparation, exclusive de toute exécution forcée.
-po: La Cour applique l'article 1116 même au droit de préférence du locataire commercial. L'arrêt d'appel est cassé.
+po: La Cour applique l'article 1116 même au droit de préférence du locataire commercial. L'arrêt d'appel est cassé. Le bailleur reste lié pendant le délai : la vente à un tiers est nulle. La rétractation visée était motivée par l'abandon du projet de vente.
 
 @duplessis | Duplessis de Grenadan | Civ. 1re, 22 déc. 1959 | Cass. | 1959 | 2 | 4
 ap: La prescription du pacte ne court pas tant que le bénéficiaire ne peut pas agir

@@ -80,7 +80,7 @@ export const BOUTIQUE = [
   { id: 'recusation', nom: 'Récusation', prix: 15, txt: 'Retire une mauvaise réponse d’une question.' },
   { id: 'indice', nom: 'Note du rapporteur', prix: 10, txt: 'Affiche un indice sur la question.' },
   { id: 'prorogation', nom: 'Prorogation', prix: 10, txt: 'Ajoute 15 secondes quand il faut relier.' },
-  { id: 'passe', nom: 'Passe-droit', prix: 200, txt: 'Ouvre la prochaine chambre sans gagner l’audience.' },
+  { id: 'passe', nom: 'Passe-droit', prix: 120, txt: 'Ouvre la prochaine chambre sans gagner l’audience.' },
 ];
 
 // Chaque tenue change l'habillage de toute l'appli. Une nouvelle tenue s'ajoute ici et dans le CSS.

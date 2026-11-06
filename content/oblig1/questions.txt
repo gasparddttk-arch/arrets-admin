@@ -63,7 +63,7 @@
 5 | 3 | La chambre du geste commercial de 2018 ? || Commerciale || Sociale || Troisième civile
 5 | 3 | La notion d'acte unilatéral a été élaborée par... || les juristes allemands || Pothier || les rédacteurs du Code de 1804
 5 | 3 | La promesse de récompense se trouve dans le BGB au... || § 657 || § 242 || § 1
-5 | 3 | Le tiercé et la part promise à l'ami : arrêt de... || 1995 || 2002 || 2018
+5 | 3 | Le pari gagné et la part promise : arrêt de... || 1995 || 2002 || 2018
 
 6 | 1 | Une vente est un contrat... || synallagmatique || unilatéral || aléatoire
 6 | 1 | Une donation est un contrat... || à titre gratuit || à titre onéreux || aléatoire

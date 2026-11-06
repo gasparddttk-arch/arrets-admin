@@ -141,7 +141,7 @@ v: La fausse attestation est un dol par manœuvres (art. 1137 al. 1). L'erreur q
 a: a1137, a1139, a1144, a1131, a1136, sleeping
 
 %sacha | La promesse au comptoir | 1 | 2 | Création
-c: Sacha gagne une forte somme grâce à un ticket joué sur les conseils de Léa. Devant témoins, il lui écrit : « Je m'engage à te reverser la moitié, tu le mérites. » Le lendemain, il refuse.
+c: Sacha gagne une forte somme grâce à un ticket que Léa a choisi et validé pour lui. Devant témoins, il lui écrit : « Je m'engage à te reverser la moitié, tu le mérites. » Le lendemain, il refuse.
 s: Méthode || Y a-t-il un contrat entre eux ? || Non : Sacha s'engage seul || On n'est pas face à un échange de volontés sur un contrat, mais devant une promesse isolée.
 x: Oui : un contrat de vente du ticket, conclu devant témoins || Aucune chose ni aucun prix.
 x: Oui : un contrat de travail rémunérant les conseils de Léa || Léa n'a aucun lien de subordination.

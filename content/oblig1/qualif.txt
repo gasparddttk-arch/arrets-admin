@@ -12,10 +12,10 @@ m: Obligation naturelle | art. 1100 | Un frère promet par écrit d'aider sa sœ
 m: Préjudice écologique | art. 1246 | Une usine pollue une rivière et atteint durablement son écosystème. | Le Code civil impose de réparer l'atteinte à l'environnement.
 
 %temps | Quelle version du droit ? | 2
-m: Survie de la loi ancienne | art. 9-ord | Un bail signé en 2014 pose une question de caducité en 2026. | Le contrat conclu avant le 1er octobre 2016 reste soumis à la loi ancienne.
+m: Survie de la loi ancienne | art. 9-ord | Un contrat de douze ans, signé en 2014 et jamais renouvelé, pose une question de caducité en 2026. | Le contrat conclu avant le 1er octobre 2016 reste soumis à la loi ancienne.
 m: Action interrogatoire | art. 9-ord | En 2017, un tiers demande au bénéficiaire d'un pacte signé en 2012 s'il entend s'en prévaloir. | Ces actions s'appliquent dès l'entrée en vigueur, y compris aux contrats en cours.
 m: Modification interprétative | art. 16-loi | Un contrat de 2017 pose la question de l'abus de dépendance : on lit l'article 1143 avec les mots ajoutés en 2018. | Le texte interprétatif fait corps avec celui qu'il précise.
-m: Modification pour l'avenir | art. 16-loi | Une offre émise en 2017 tombe sur le décès de son destinataire : on lit l'article 1117 sans l'ajout de 2018. | Cette modification ne vise que les actes conclus depuis le 1er octobre 2018.
+m: Modification pour l'avenir | art. 16-loi | Le destinataire d'une offre émise en 2017 meurt : on lit l'article 1117 sans l'ajout de 2018. | Cette modification ne vise que les actes conclus depuis le 1er octobre 2018.
 m: Non-rétroactivité | art. 2 | Une loi nouvelle ne dit rien de son application aux situations passées. | Sans disposition transitoire, elle ne dispose que pour l'avenir.
 m: Anticipation jurisprudentielle | art. 9-ord | Pour une promesse de 2012, la Cour vise l'article 1134 ancien, mais retient la solution de l'article 1124. | Le juge applique le droit ancien, interprété à la lumière du nouveau.
 
@@ -43,13 +43,13 @@ m: Contrat unilatéral | art. 1106 | Une caution s'engage envers une banque à p
 m: Contrat synallagmatique | art. 1106 | Un vendeur et un acheteur s'obligent réciproquement. | Chacun est créancier et débiteur de l'autre.
 m: Quasi-contrat | art. 1300 | Une société annonce à un client qu'il a gagné 10 000 euros, sans aucun aléa apparent. | Depuis 2002, ce fait purement volontaire l'oblige à délivrer le gain.
 m: Acte juridique unilatéral | art. 1100-1 | Un bailleur donne congé à son locataire. | Une seule volonté met fin au bail, sans accord de l'autre partie.
-m: Devoir de conscience | art. 1100 | Un gagnant du tiercé promet à son ami une part de ses gains. | La promesse transforme l'obligation naturelle en obligation civile.
+m: Devoir de conscience | art. 1100 | Un parieur gagnant promet une part de ses gains à celui qui validait ses tickets. | La promesse transforme l'obligation naturelle en obligation civile.
 
 =contrats | 6
 
 %regimes-contrats | Quelle règle pour ce contrat ? | 6
 m: Règles spéciales | art. 1105 | Un litige sur un bail appelle d'abord les textes propres au bail. | Les règles générales s'appliquent sous réserve des règles particulières.
-m: Clause abusive | art. 1171 | Les conditions générales d'un magasin prévoient qu'il ne répond jamais de ses retards. | Clause non négociable et déséquilibre significatif : elle est réputée non écrite.
+m: Clause abusive | art. L. 212-1 C. conso. | Les conditions générales d'un magasin prévoient qu'il ne répond jamais de ses retards. | Face à un consommateur, la clause qui crée un déséquilibre significatif est réputée non écrite.
 m: Interprétation contre le proposant | art. 1190 | Une clause ambiguë figure dans un contrat d'assurance type. | Dans le doute, le contrat d'adhésion se lit contre celui qui l'a proposé.
 m: Contrat à titre gratuit | art. 1107 | Un ami prête 500 euros sans intérêt. | L'un procure un avantage sans en attendre de contrepartie.
 m: Contrat à exécution successive | art. 1111-1 | Un abonnement à une salle de sport court sur douze mois. | Les prestations s'échelonnent dans le temps.
@@ -68,7 +68,7 @@ m: Vente à un tiers de mauvaise foi | art. 1124 | Le promettant vend à un tier
 
 %acceptation | Y a-t-il acceptation ? | 8
 m: Acceptation conforme | art. 1118 | L'acheteur répond : « J'accepte votre offre à 2 000 euros. » | Il veut être lié dans les termes de l'offre.
-m: Acceptation par comportement | art. 1113 | Sans répondre, un client reçoit la marchandise commandée et la revend. | La volonté peut résulter d'un comportement non équivoque.
+m: Acceptation par comportement | art. 1113 | Sans répondre, un client habituel reçoit une livraison à des conditions nouvelles et revend les produits sans protester. | La volonté peut résulter d'un comportement non équivoque.
 m: Contre-offre | art. 1118 | L'acheteur répond : « D'accord, mais à 1 800 euros. » | L'acceptation non conforme ne vaut au plus qu'offre nouvelle.
 m: Conditions générales inopposables | art. 1119 | Un fournisseur invoque des conditions que son client n'a jamais vues. | Elles doivent avoir été portées à sa connaissance et acceptées.
 m: Accord sur la chose et le prix | art. 1583 | Une société accepte sans réserve une offre d'achat précise, par courriel. | La vente est parfaite, même sans acte notarié.

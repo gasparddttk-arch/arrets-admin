@@ -42,7 +42,8 @@
 1110 | 6 | 3
 1111 | 6 | 1
 1111-1 | 6 | 1
-1171 | 6 | 3 | Clause abusive | Dans un contrat d'adhésion, la clause non négociable, déterminée à l'avance par une partie, qui crée un déséquilibre significatif est réputée non écrite. Le contrôle ne porte ni sur l'objet principal du contrat ni sur l'adéquation du prix.
+212-1 | 6 | 3 | Clause abusive du consommateur | Dans un contrat entre un professionnel et un consommateur, la clause qui crée un déséquilibre significatif au détriment du consommateur est abusive et réputée non écrite.
+1171 | 6 | 3 | Clause abusive | Dans un contrat d'adhésion, la clause non négociable, déterminée à l'avance par une partie, qui crée un déséquilibre significatif est réputée non écrite. Le contrôle ne porte ni sur l'objet principal du contrat ni sur l'adéquation du prix. Il ne joue pas pour les contrats de consommation (art. L. 212-1 C. conso.).
 1190 | 6 | 2 | Interprétation en cas de doute | Dans le doute, le contrat de gré à gré s'interprète contre le créancier et en faveur du débiteur, le contrat d'adhésion contre celui qui l'a proposé.
 
 # 7. L'offre et la promesse

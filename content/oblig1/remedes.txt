@@ -107,10 +107,10 @@ c: Les conditions générales d'un magasin, que le client ne peut pas négocier,
 d: Faire réputer la clause non écrite devant le juge
 dx: Demander la nullité de tout le contrat || Seule la clause tombe.
 dx: Renégocier le prix de la commande devant le juge || Le contrôle ne porte pas sur l'adéquation du prix.
-r: La clause non négociable qui crée un déséquilibre significatif est réputée non écrite.
-rx: Le client qui signe accepte tout, puisque le contrat est sa loi. || L'article 1171 protège justement l'adhérent.
+r: Face à un consommateur, la clause qui crée un déséquilibre significatif est réputée non écrite (art. L. 212-1 C. conso.).
+rx: Le client qui signe accepte tout, puisque le contrat est sa loi. || Le Code de la consommation protège justement le client.
 rx: Toute clause défavorable à un client est nulle de plein droit, quel que soit le contrat qu'il a signé. || Il faut un déséquilibre significatif.
-a: a1171, a1110
+a: a212-1, a1110
 
 %clause-ambigue | 6 | 1
 c: Une clause d'un contrat d'assurance type peut se lire de deux façons. L'assureur retient celle qui exclut sa garantie.
