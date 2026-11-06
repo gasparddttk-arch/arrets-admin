@@ -2,7 +2,7 @@
 import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES } from './chouette.js';
-import { son, reveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
+import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import {
   etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage, rembourse,
@@ -823,6 +823,7 @@ async function demarrer() {
   ix = CONTENUS[etat.matiere];
   appliquerTheme();
   appliquerSession();
+  surveillerAudio();
   for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click']) document.addEventListener(ev, reveillerAudio, { passive: true });
   const evenement = verifierSerie();
   // L'appli s'ouvre sur le choix de la matière. Les tests vont droit à la matière demandée.

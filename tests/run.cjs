@@ -581,6 +581,30 @@ async function debordement(p, nom) {
   await pc.close();
   log('chouette ok');
 
+  // Le son doit survivre à une interruption : l'iPhone peut figer le contexte sans rien dire.
+  const audio = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  await audio.addInitScript(() => {
+    const AC = window.AudioContext; window.__ctx = [];
+    window.AudioContext = class extends AC { constructor(...a) { super(...a); window.__ctx.push(this); } };
+  });
+  const a1 = await audio.newPage(); a1.on('pageerror', (x) => erreurs.push(x.message));
+  await a1.goto(URLB + '?test&choix'); await a1.waitForSelector('.portes');
+  await a1.locator('.porte-oblig').click(); await a1.waitForSelector('.tribune');
+  const nbCtx = () => a1.evaluate(() => window.__ctx.length);
+  const etats = () => a1.evaluate(() => window.__ctx.map((c) => c.state));
+  await a1.tap('.tribune'); assert.equal(await nbCtx(), 1, 'un seul contexte');
+  await a1.tap('.tribune'); assert.equal(await nbCtx(), 1, 'pas de contexte de plus à chaque geste');
+  await a1.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); delete document.hidden; document.dispatchEvent(new Event('visibilitychange')); });
+  await a1.tap('.tribune');
+  assert.equal(await nbCtx(), 2, 'contexte remplacé au retour');
+  await a1.waitForFunction(() => window.__ctx[0].state === 'closed' && window.__ctx[1].state === 'running');
+  await a1.evaluate(() => window.__ctx[1].suspend()); await a1.waitForFunction(() => window.__ctx[1].state === 'suspended');
+  await a1.tap('.tribune'); await a1.waitForFunction(() => window.__ctx.at(-1).state === 'running');
+  assert.ok((await etats()).at(-1) === 'running', 'le son revient après une suspension');
+  assert.equal((await a1.evaluate(() => JSON.parse(JSON.stringify(window.__app.etat())))).reglages.son, true, 'le réglage ne change pas');
+  await audio.close();
+  log('son ok');
+
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }
   log('\nTous les tests sont passés.');

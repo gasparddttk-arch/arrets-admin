@@ -218,16 +218,46 @@ const SONS = {
   tic(b, t) { bois(b, 2100, t, 0.1, 0.03, 0.1); },
 };
 
+// iPhone : après un appel, le verrouillage ou un passage en arrière-plan, le contexte peut rester
+// muet tout en se disant actif. On le remplace alors au geste suivant : l'appareil exige un geste.
+let aRefaire = false;
+let repere = null;
+
+function jeter() {
+  try { ctx?.close?.()?.catch?.(() => {}); } catch { /* déjà fermé */ }
+  ctx = null; bus = null; repere = null;
+}
+
+function creer() {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return;
+  ctx = new AC({ latencyHint: 'interactive' });
+  bus = montage(ctx);
+  ctx.addEventListener?.('statechange', (e) => { if (e.target === ctx && ctx.state !== 'running') aRefaire = true; });
+}
+
 export function reveillerAudio() {
   try {
-    if (!ctx) {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
-      ctx = new AC({ latencyHint: 'interactive' });
-      bus = montage(ctx);
+    if (ctx) {
+      const t = performance.now();
+      const fige = ctx.state === 'running' && repere && t - repere.t > 250 && ctx.currentTime === repere.c;
+      if (aRefaire || fige || ctx.state === 'closed' || ctx.state === 'interrupted') jeter();
     }
-    if (ctx.state !== 'running') ctx.resume();
-  } catch { ctx = null; }
+    aRefaire = false;
+    if (!ctx) creer();
+    if (!ctx) return;
+    repere = { t: performance.now(), c: ctx.currentTime };
+    if (ctx.state !== 'running') ctx.resume()?.catch?.(() => {});
+  } catch { ctx = null; bus = null; }
+}
+
+export function surveillerAudio() {
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) aRefaire = true; else appliquerSession();
+  });
+  window.addEventListener('pagehide', () => { aRefaire = true; });
+  window.addEventListener('pageshow', (e) => { if (e.persisted) { aRefaire = true; appliquerSession(); } });
+  try { navigator.audioSession?.addEventListener?.('statechange', () => { if (navigator.audioSession.state !== 'active') aRefaire = true; }); } catch { /* selon le navigateur */ }
 }
 
 // « ambient » laisse la musique continuer et respecte le mode silencieux de l'iPhone.
@@ -239,12 +269,14 @@ const estRose = () => document.documentElement.dataset.theme === 'rose';
 
 export function son(nom, o = {}) {
   if (!etat.reglages.son) return;
-  if (!ctx) reveillerAudio();
+  reveillerAudio();
   if (!ctx) return;
-  try {
-    if (ctx.state !== 'running') ctx.resume();
-    SONS[nom]?.(bus, ctx.currentTime + 0.006 + (o.retard || 0), o, estRose());
-  } catch { /* le son reste facultatif */ }
+  const c = ctx; const b = bus;
+  const jouer = () => { try { SONS[nom]?.(b, c.currentTime + 0.006 + (o.retard || 0), o, estRose()); } catch { /* le son reste facultatif */ } };
+  if (c.state === 'running') { jouer(); return; }
+  // Jouer sur une horloge arrêtée perdrait le son : on attend la reprise, sans rejouer un son périmé.
+  const debut = performance.now();
+  try { c.resume()?.then(() => { if (c === ctx && performance.now() - debut < 500) jouer(); })?.catch?.(() => {}); } catch { /* idem */ }
 }
 
 // Rendu hors temps réel, pour contrôler le niveau de chaque son sans enceinte.
