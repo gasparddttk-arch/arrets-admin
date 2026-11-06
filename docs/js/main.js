@@ -684,7 +684,7 @@ function gardeRobe() {
   };
   return [
     h('div', { class: 'essayage' }, h('span', { class: 'aura', 'aria-hidden': 'true' }), chouette('debout', { taille: 230, vivante: true })),
-    images.mascotte ? h('p', { class: 'aide-claire' }, 'Ton image personnelle remplace la chouette : retire-la dans Profil pour voir ses tenues.') : null,
+    images.mascotte ? h('p', { class: 'aide-claire' }, 'Ton image personnelle remplace Lexou : retire-la dans Profil pour voir ses tenues.') : null,
     skinPorte() ? h('p', { class: 'aide-claire' }, 'Tu portes un skin : retire-le pour retrouver ces tenues au Palais.') : null,
     h('ul', { class: 'articles' }, TENUES.map(ligne)),
   ];
@@ -735,7 +735,7 @@ function skinsDuHibou() {
               : h('span', { class: 'skin-prix' }, h('i', { class: 'jeton' }), s.prix))));
   };
   return [
-    h('p', { class: 'aide-claire' }, 'Un skin remplace la chouette au Palais. Appuie pour le voir en grand.'),
+    h('p', { class: 'aide-claire' }, 'Un skin remplace Lexou au Palais. Appuie pour le voir en grand.'),
     h('ul', { class: 'skins' }, SKINS.map(carte)),
   ];
 }
@@ -765,7 +765,7 @@ function boutique() {
     h('p', { class: 'page-sous' }, estRose() ? 'Tes canettes de Ratio se gagnent en finissant des épreuves.' : 'Tes jetons de présence se gagnent en finissant des épreuves.'),
     h('ul', { class: 'articles' }, objets), h('h2', {}, 'Mini-jeux'), h('ul', { class: 'articles' }, miniJeux()),
     h('h2', {}, 'Skins du hibou'), skinsDuHibou(),
-    h('h2', {}, 'Garde-robe de la chouette'), gardeRobe(),
+    h('h2', {}, 'Garde-robe de Lexou'), gardeRobe(),
     h('h2', {}, 'Tenues'), h('ul', { class: 'articles' }, themes),
     h('h2', {}, 'Insignes'), h('ul', { class: 'articles' }, insignes),
     h('h2', {}, 'Décors du Palais'), h('ul', { class: 'articles' }, decors)));
@@ -808,7 +808,7 @@ function blocImages() {
   };
   return h('div', { class: 'images-perso' },
     h('p', { class: 'aide-claire' }, 'Ces images restent sur ce téléphone. Elles ne sont ni publiées ni copiées en ligne.'),
-    ligne('mascotte', 'Mascotte', 'Remplace la chouette dans toute l’appli', () => chouette('debout', { taille: 56, tenue: false })),
+    ligne('mascotte', 'Mascotte', 'Remplace Lexou dans toute l’appli', () => chouette('debout', { taille: 56, tenue: false })),
     etat.themes.includes('rose') ? ligne('jeton', 'Jetons', 'Remplace la canette partout', () => h('img', { src: 'img/canette.svg', alt: '' })) : null);
 }
 

@@ -17,10 +17,15 @@ TROUS = {
     'bosslady': [(1115, 1246), (685, 1288)],
     'nana': [(1524, 1361), (609, 1181)],
     'loco': [(522, 1179)],
+    'noel': [(520, 622), (512, 1474), (550, 794)],
     '67-droite': [(949, 305)],
     '67-gauche': [(844, 317), (1170, 283)],
     '67-deux': [(951, 305)],
 }
+
+
+# Le bonnet de Noël est presque aussi blanc que le fond.
+SEUIL = {'noel': 252}
 
 
 def lire(nom):
@@ -28,7 +33,7 @@ def lire(nom):
 
 
 def alpha_de(a, nom):
-    blanc = a.min(axis=2) >= 236
+    blanc = a.min(axis=2) >= SEUIL.get(nom, 236)
     l, _ = ni.label(blanc)
     bords = set(np.unique(l[0])) | set(np.unique(l[-1])) | set(np.unique(l[:, 0])) | set(np.unique(l[:, -1]))
     bords.discard(0)
@@ -37,7 +42,7 @@ def alpha_de(a, nom):
     for x, y in TROUS.get(nom, []):
         i = np.argmin((xs - x) ** 2 + (ys - y) ** 2)
         fond |= l == l[ys[i], xs[i]]
-    plein = ni.binary_erosion(~fond, iterations=2)
+    plein = ni.binary_erosion(~fond, iterations=4 if nom in SEUIL else 2)
     return ni.gaussian_filter(plein.astype(np.float32), 0.9)
 
 
@@ -182,7 +187,7 @@ def six_sept():
         ecrire(rgb, al, sortie)
 
 
-for nom in ('goumin', 'bosslady', 'loco', 'nana', 'alcoolique'):
+for nom in ('goumin', 'bosslady', 'loco', 'nana', 'alcoolique', 'tung', 'noel'):
     x = lire(nom)
     ecrire(x, alpha_de(x, nom), nom)
 survet()

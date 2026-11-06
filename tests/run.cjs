@@ -682,7 +682,7 @@ async function debordement(p, nom) {
   await k.locator('.porte-admin').click(); await k.waitForSelector('.tribune');
   const skinPalais = () => k.locator('.figure-chouette [data-skin]');
   await k.evaluate(() => { const e = window.__app.etat(); e.jetons = 150; e.chouette.tenues = ['toque']; e.chouette.porte.tete = 'toque'; window.__app.aller('boutique'); });
-  assert.equal(await k.locator('.skin-carte').count(), 7, 'sept skins en boutique');
+  assert.equal(await k.locator('.skin-carte').count(), 9, 'neuf skins en boutique');
   await debordement(k, 'skins');
   await k.locator('.skin-carte[data-skin-carte="goumin"]').click();
   assert.match(await k.locator('.boite-skin .bouton-or').innerText(), /Il te manque 50 jetons/);

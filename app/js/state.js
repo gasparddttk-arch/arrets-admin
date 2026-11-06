@@ -86,7 +86,7 @@ export const BOUTIQUE = [
 // Chaque tenue change l'habillage de toute l'appli. Une nouvelle tenue s'ajoute ici et dans le CSS.
 export const THEMES = [
   { id: 'palais', nom: 'Bleu', prix: 0, txt: 'Le bleu du Palais, l’or et la cire' },
-  { id: 'rose', nom: 'Rose', prix: 200, txt: 'Le livre rose de la chouette, les canettes de Ratio, et Slay Diva' },
+  { id: 'rose', nom: 'Rose', prix: 200, txt: 'Le livre rose de Lexou, les canettes de Ratio, et Slay Diva' },
 ];
 const ANCIENNES_TENUES = { tapis: 150, robe: 150, pourpre: 300 };
 

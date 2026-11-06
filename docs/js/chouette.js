@@ -29,6 +29,8 @@ export const SKINS = [
   { id: 'loco', nom: 'Hibou Loco', prix: 200, txt: 'Il a relu tout le cours en une nuit.' },
   { id: 'nana', nom: 'Sexy Nana', prix: 200, txt: 'Lunettes noires, sac à main, aucune question.' },
   { id: 'alcoolique', nom: 'Hibou Alcoolique', prix: 200, txt: 'Une canette après le partiel. Puis une autre.' },
+  { id: 'tung', nom: 'Tung Tung Lexou', prix: 200, txt: 'Tung, tung, tung. Lexou sort de son tronc pour réviser.' },
+  { id: 'noel', nom: 'Noël', prix: 200, txt: 'Les guirlandes aux yeux, et les partiels à la rentrée.' },
 ];
 
 const DOSSIER = 'img/chouette/';
@@ -82,7 +84,7 @@ function faireCligner(el) {
   setTimeout(pas, 1400 + Math.random() * 2600);
 }
 
-export function chouette(pose = 'debout', { taille = 180, tenue = true, porte = null, vivante = false, classe = '', alt = 'La chouette en robe' } = {}) {
+export function chouette(pose = 'debout', { taille = 180, tenue = true, porte = null, vivante = false, classe = '', alt = 'Lexou en robe' } = {}) {
   const style = `--taille:${taille}px`;
   if (images.mascotte) return h('div', { class: `chouette perso ${classe}`, style }, h('img', { class: 'mascotte-perso', src: images.mascotte, alt: 'Ta mascotte', draggable: 'false' }));
   const r = REPERES[pose];
