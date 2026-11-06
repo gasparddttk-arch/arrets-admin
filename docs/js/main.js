@@ -764,7 +764,7 @@ function boutique() {
   montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, 'La boutique'),
     h('p', { class: 'page-sous' }, estRose() ? 'Tes canettes de Ratio se gagnent en finissant des épreuves.' : 'Tes jetons de présence se gagnent en finissant des épreuves.'),
     h('ul', { class: 'articles' }, objets), h('h2', {}, 'Mini-jeux'), h('ul', { class: 'articles' }, miniJeux()),
-    h('h2', {}, 'Skins du hibou'), skinsDuHibou(),
+    h('h2', {}, 'Skins de Lexou'), skinsDuHibou(),
     h('h2', {}, 'Garde-robe de Lexou'), gardeRobe(),
     h('h2', {}, 'Tenues'), h('ul', { class: 'articles' }, themes),
     h('h2', {}, 'Insignes'), h('ul', { class: 'articles' }, insignes),

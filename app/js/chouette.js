@@ -22,13 +22,13 @@ export const TENUES = [
 
 // Les skins remplacent la chouette au Palais et dans l'aperçu de la boutique, nulle part ailleurs.
 export const SKINS = [
-  { id: 'six-sept', nom: 'Hibou 6-7', prix: 500, legendaire: true, anime: true, txt: 'Six, sept, six, sept. Le seul skin qui bouge.' },
+  { id: 'six-sept', nom: 'Lexou 6-7', prix: 500, legendaire: true, anime: true, txt: 'Six, sept, six, sept. Le seul skin qui bouge.' },
   { id: 'goumin', nom: 'Goumin', prix: 200, txt: 'Il garde la photo. Il garde aussi la moitié du cœur.' },
   { id: 'survet', nom: 'Le Survêt', prix: 200, txt: 'Survêt, chaîne et baskets à bulles.' },
   { id: 'bosslady', nom: 'Boss Lady', prix: 200, txt: 'Les paillettes d’abord, le plan en deux parties ensuite.' },
-  { id: 'loco', nom: 'Hibou Loco', prix: 200, txt: 'Il a relu tout le cours en une nuit.' },
+  { id: 'loco', nom: 'Lexou Loco', prix: 200, txt: 'Il a relu tout le cours en une nuit.' },
   { id: 'nana', nom: 'Sexy Nana', prix: 200, txt: 'Lunettes noires, sac à main, aucune question.' },
-  { id: 'alcoolique', nom: 'Hibou Alcoolique', prix: 200, txt: 'Une canette après le partiel. Puis une autre.' },
+  { id: 'alcoolique', nom: 'Lexou Alcoolique', prix: 200, txt: 'Une canette après le partiel. Puis une autre.' },
   { id: 'tung', nom: 'Tung Tung Lexou', prix: 200, txt: 'Tung, tung, tung. Lexou sort de son tronc pour réviser.' },
   { id: 'noel', nom: 'Noël', prix: 200, txt: 'Les guirlandes aux yeux, et les partiels à la rentrée.' },
 ];
