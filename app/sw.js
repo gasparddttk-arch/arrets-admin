@@ -58,6 +58,8 @@ function jourParis() {
 self.addEventListener('push', (e) => {
   let d = { title: 'Ta série t’attend', body: 'Une séance aujourd’hui, et ton sceau reste en place.', question: '' };
   try { d = { ...d, ...e.data.json() }; } catch { /* message par défaut */ }
+  // Les nouvelles des amis s'affichent telles quelles et ouvrent la page Amis.
+  if (d.ami) { e.waitUntil(self.registration.showNotification(d.title, { body: d.body, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: d.tag, data: { url: './?amis' } })); return; }
   e.waitUntil((async () => {
     const s = await lireSerie();
     let { title, body } = d;
@@ -75,7 +77,8 @@ self.addEventListener('notificationclick', (e) => {
   e.notification.close();
   e.waitUntil((async () => {
     const ouverts = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-    if (ouverts.length) return ouverts[0].focus();
-    return self.clients.openWindow('./');
+    const url = e.notification.data?.url || './';
+    if (ouverts.length) { const c = ouverts[0]; if (url !== './') c.postMessage('amis'); return c.focus(); }
+    return self.clients.openWindow(url);
   })());
 });

@@ -1,0 +1,55 @@
+// Envoie sur les téléphones les notifications que l'appelant vient de créer (demande d'ami, défi, révision).
+// L'appelant est identifié par son jeton ; seules ses propres notifications des deux dernières minutes partent.
+import webpush from 'npm:web-push@3.6.7';
+import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
+
+const PUBLIQUE = 'BLsoEkbLXGZbRgEpqtBy4wC6et54RaMPURc8HDK1G3EfrZz0l8xiV7YkOy7sR9EJdsnckBqV6fxrdOlP4gNklQM';
+const ORIGINE = 'https://gasparddttk-arch.github.io';
+
+const TEXTES: Record<string, (p: string, d: Record<string, unknown>) => [string, string]> = {
+  demande: (p) => ['Demande d’ami', `${p} veut t’ajouter sur Gdroit.`],
+  acceptee: (p) => ['Nouvel ami', `${p} a accepté ta demande.`],
+  defi_recu: (p) => ['Tu es défié', `${p} te lance un défi. À toi de jouer.`],
+  defi_resultat: (p, d) => {
+    const moi = Math.round(Number(d.moi) * 100); const lui = Math.round(Number(d.lui) * 100);
+    return ['Défi relevé', lui > moi ? `${p} a battu ton score : ${lui} % contre ${moi} %.` : lui === moi ? `Égalité avec ${p} : ${lui} %.` : `${p} n’a pas battu ton score : ${lui} % contre ${moi} %.`];
+  },
+  ami_defi: (p) => ['Défi du jour', `${p} a fini son défi du jour.`],
+};
+
+const entetes = { 'Access-Control-Allow-Origin': ORIGINE, 'Access-Control-Allow-Headers': 'authorization, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response(null, { headers: entetes });
+  const prive = Deno.env.get('VAPID_PRIVATE_KEY');
+  const url = Deno.env.get('SUPABASE_URL')!;
+  const service = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  const jeton = (req.headers.get('Authorization') || '').replace(/^Bearer /, '');
+  const base = createClient(url, service);
+  const { data: u } = await base.auth.getUser(jeton);
+  if (!u?.user) return new Response('non connecté', { status: 401, headers: entetes });
+  if (!prive) return new Response(JSON.stringify({ envoyees: 0, raison: 'cle absente' }), { headers: { ...entetes, 'Content-Type': 'application/json' } });
+  webpush.setVapidDetails('https://github.com/gasparddttk-arch/arrets-admin', PUBLIQUE, prive);
+
+  const depuis = new Date(Date.now() - 120000).toISOString();
+  const { data: liste } = await base.from('notifications').select('id, destinataire, type, donnees').eq('de', u.user.id).eq('pousser', true).is('pousse_le', null).gte('cree_le', depuis).limit(50);
+  if (!liste?.length) return new Response(JSON.stringify({ envoyees: 0 }), { headers: { ...entetes, 'Content-Type': 'application/json' } });
+  await base.from('notifications').update({ pousse_le: new Date().toISOString() }).in('id', liste.map((n) => n.id));
+  const { data: prof } = await base.from('profils').select('pseudo').eq('id', u.user.id).single();
+  const pseudo = prof?.pseudo || 'Un ami';
+  let envoyees = 0;
+  for (const n of liste) {
+    const { data: apps } = await base.from('appareils').select('point, abonnement').eq('proprietaire', n.destinataire);
+    const [title, body] = (TEXTES[n.type] || TEXTES.demande)(pseudo, n.donnees || {});
+    for (const a of apps || []) {
+      try {
+        await webpush.sendNotification(a.abonnement, JSON.stringify({ title, body, ami: true, tag: `${n.type}-${n.id}` }), { TTL: 3600 * 12 });
+        envoyees++;
+      } catch (e) {
+        const code = (e as { statusCode?: number }).statusCode;
+        if (code === 404 || code === 410) await base.from('appareils').delete().eq('point', a.point);
+      }
+    }
+  }
+  return new Response(JSON.stringify({ envoyees }), { headers: { ...entetes, 'Content-Type': 'application/json' } });
+});

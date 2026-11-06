@@ -17,6 +17,7 @@ async function etat(p) { return p.evaluate(() => JSON.parse(JSON.stringify(windo
 // Aucun texte technique ne doit jamais apparaître à l'écran.
 async function textePropre(p) {
   const tache = await p.evaluate(() => (document.body.innerText.match(/\b(null|undefined|NaN)\b|\[object/) || [null])[0]);
+  if (tache) console.log("CONTEXTE", await p.evaluate(() => { const t = document.body.innerText; const i = t.search(/\b(null|undefined|NaN)\b/); return t.slice(Math.max(0, i - 120), i + 40); }));
   assert.equal(tache, null, `Texte technique affiché : ${tache}`);
 }
 
@@ -895,7 +896,9 @@ async function debordement(p, nom) {
 
   // Le compte : connexion obligatoire, copie en ligne, reprise sur un autre téléphone. Supabase est simulé.
   const SUPA = 'https://jhpgxisxayceixmppxuu.supabase.co';
-  const faux = { progression: null, envois: [], signalements: [], otp: [], rpc: [] };
+  const faux = { progression: null, envois: [], signalements: [], otp: [], rpc: [], pousse: 0, defi: null };
+  const jourParis = (() => { const t = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).split('-').map(Number); return Math.floor(Date.UTC(t[0], t[1] - 1, t[2]) / 864e5); })();
+  const lundiT = jourParis - ((new Date(jourParis * 864e5).getUTCDay() + 6) % 7);
   const simuler = async (ctx) => ctx.route(SUPA + '/**', async (route) => {
     const r = route.request(); const u = new URL(r.url()); const corps = r.postData() ? JSON.parse(r.postData()) : null;
     const json = (x, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(x) });
@@ -908,12 +911,20 @@ async function debordement(p, nom) {
     assert.equal(r.headers().authorization, 'Bearer jeton', 'appel authentifié');
     if (u.pathname === '/rest/v1/progressions' && r.method() === 'GET') return json(faux.progression ? [faux.progression] : []);
     if (u.pathname === '/rest/v1/progressions') { faux.progression = { donnees: corps.donnees, maj: corps.maj }; faux.envois.push(corps); return route.fulfill({ status: 201 }); }
-    if (u.pathname === '/rest/v1/profils' && r.method() === 'GET') return json([{ pseudo: 'Testeur', equipe: null, acces: 'admin' }]);
+    if (u.pathname === '/functions/v1/pousser') { faux.pousse++; return json({ envoyees: 0 }); }
+    if (u.pathname === '/rest/v1/profils' && r.method() === 'GET') return json([{ pseudo: 'Testeur', equipe: null, acces: 'admin', code_ami: 'TEST-2345', masquer: false, notifs: { demandes: true, defis: true, revisions: false } }]);
     if (u.pathname.startsWith('/rest/v1/rpc/')) {
       const nom = u.pathname.split('/').pop(); faux.rpc.push([nom, corps]);
       if (nom === 'admin_comptes') return json([{ id: 'u-1', email: 'test@exemple.fr', pseudo: 'Testeur', acces: 'admin', jetons: 50, xp: 10, xp_oblig: 0, seances: 1, vu_le: new Date().toISOString(), en_attente: 0 }, { id: 'u-2', email: 'camille.tres.longue.adresse@exemple.fr', pseudo: 'Camille', acces: 'testeur', jetons: 120, xp: 300, xp_oblig: 40, seances: 9, vu_le: null, en_attente: -20 }]);
       if (nom === 'admin_signalements') return json([{ id: 1, nom: 'Blanco', carte: 'blanco', texte: 'Date fausse', pseudo: 'Camille', cree_le: new Date().toISOString(), traite: false, equipe: 1 }]);
       if (nom === 'admin_lire_reglage') return json('testeur');
+      if (nom === 'mes_amis') return json([{ id: 'u-2', pseudo: 'Camille', equipe: 1, lien: 'ami', masque: false, resume: { jour: jourParis, serie: 3, sceau: true, grade: 'Licencié en droit', xp: 900, xpAdmin: 500, xpOblig: 400, semaine: lundiT, xpSemaine: 5240, maitrises: 12, equipe: 1, seances: 20 } }, { id: 'u-3', pseudo: 'Léa', lien: 'recue' }]);
+      if (nom === 'mes_notifications') return json([{ id: 1, type: 'demande', pseudo: 'Léa', donnees: {}, cree_le: new Date().toISOString(), lu: false }, { id: 2, type: 'defi_recu', pseudo: 'Camille', donnees: { defi: 'd-1' }, cree_le: new Date().toISOString(), lu: false }]);
+      if (nom === 'mes_defis') return json([{ id: 'd-1', recu: true, autre: 'u-2', pseudo: 'Camille', matiere: 'admin', score_auteur: 0.5, statut: 'ouvert', cree_le: new Date().toISOString() }]);
+      if (nom === 'mes_bloques') return json([]);
+      if (nom === 'demander_ami') return json('envoyee');
+      if (nom === 'creer_defi') { faux.defi = corps; return json('d-2'); }
+      if (nom === 'lire_defi') return json({ id: 'd-1', statut: 'ouvert', matiere: 'admin', equipe: null, score_auteur: 0.5, pseudo_auteur: 'Camille', rounds: faux.defi.rounds });
       return route.fulfill({ status: 204 });
     }
     if (u.pathname === '/rest/v1/profils') return route.fulfill({ status: 204 });
@@ -961,12 +972,47 @@ async function debordement(p, nom) {
   await k1.locator('.admin-compte[data-compte="u-1"]').click(); assert.equal(await k1.locator('.admin-fiche .bascule').count(), 0, 'pas de statut pour soi'); await k1.locator('.admin-fiche .bouton-lien').click();
   await k1.locator('text=Marquer comme traité').click(); await k1.waitForTimeout(300);
   assert(faux.rpc.some(([n, c]) => n === 'admin_traiter' && c.fait === true), 'signalement traité');
+  // Les amis : nouvelles, classement, demande, défi lancé puis relevé, lien d'invitation.
+  await k1.evaluate(() => window.__app.aller('palais')); await k1.waitForSelector('.haut-amis .pastille');
+  await k1.locator('.haut-amis').click(); await k1.waitForSelector('.classement');
+  assert.equal(await k1.locator('.classement li').count(), 2, 'toi et Camille');
+  assert.match(await k1.locator('.classement li').first().innerText(), /Camille[\s\S]*240/, 'Camille en tête de la semaine');
+  await k1.screenshot({ path: CAP + 'amis.png', fullPage: true }); await debordement(k1, 'amis');
+  await k1.locator('button', { hasText: 'Accepter' }).click();
+  await k1.waitForFunction(() => true); for (let i = 0; i < 20 && !faux.rpc.some(([n]) => n === 'repondre_ami'); i++) await k1.waitForTimeout(100);
+  assert.deepEqual(faux.rpc.find(([n]) => n === 'repondre_ami')[1], { autre: 'u-3', accepter: true });
+  await k1.waitForSelector('.classement');
+  await k1.fill('.amis input[aria-label="Code ami"]', 'abcd efgh'); await k1.locator('text=Envoyer la demande').click();
+  await k1.waitForTimeout(400); assert(!faux.rpc.some(([n, c]) => n === 'demander_ami'), 'code mal formé refusé');
+  await k1.fill('.amis input[aria-label="Code ami"]', 'abcdefgh'); await k1.locator('text=Envoyer la demande').click();
+  for (let i = 0; i < 20 && !faux.rpc.some(([n]) => n === 'demander_ami'); i++) await k1.waitForTimeout(100);
+  assert.deepEqual(faux.rpc.find(([n]) => n === 'demander_ami')[1], { code: 'ABCD-EFGH' });
+  await k1.waitForSelector('.classement');
+  await k1.locator('.ami-ligne').first().click(); await k1.waitForSelector('.comparer');
+  await k1.screenshot({ path: CAP + 'ami-fiche.png' });
+  await k1.locator('.admin-fiche .bouton-or', { hasText: 'Administratif' }).click();
+  await jouer(k1);
+  for (let i = 0; i < 30 && !faux.defi; i++) await k1.waitForTimeout(100);
+  assert(faux.defi && faux.defi.invite === 'u-2' && faux.defi.rounds.length >= 3 && faux.defi.score >= 0 && faux.defi.score <= 1, 'défi envoyé avec ses questions');
+  assert(faux.pousse > 0, 'notification poussée');
+  await k1.tap('text=Retour au Palais'); await k1.locator('.haut-amis').click(); await k1.waitForSelector('.classement');
+  await k1.locator('.amis .bouton-or', { hasText: 'Relever' }).first().click();
+  await jouer(k1);
+  for (let i = 0; i < 30 && !faux.rpc.some(([n]) => n === 'repondre_defi'); i++) await k1.waitForTimeout(100);
+  assert.equal(faux.rpc.find(([n]) => n === 'repondre_defi')[1].defi, 'd-1', 'score renvoyé');
+  assert.match(await k1.locator('.resultats').innerText(), /Camille/, 'comparaison avec Camille');
+  await k1.tap('text=Retour au Palais');
+  faux.rpc.length = 0;
+  await k1.goto(URLB + '?test&compte&ami=WXYZ-2345'); await k1.waitForSelector('.boite');
+  await k1.locator('.boite .bouton-or').click();
+  for (let i = 0; i < 20 && !faux.rpc.some(([n]) => n === 'demander_ami'); i++) await k1.waitForTimeout(100);
+  assert.deepEqual(faux.rpc.find(([n]) => n === 'demander_ami')[1], { code: 'WXYZ-2345' }, 'lien d’invitation');
   // Un autre téléphone, connecté par Google : il retrouve la progression.
   const t2 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' }); await simuler(t2);
   const k2 = await t2.newPage(); k2.on('pageerror', (x) => erreurs.push(x.message));
   await k2.goto(URLB + '?test&compte#access_token=jeton&refresh_token=renouveau&expires_in=3600&token_type=bearer'); await k2.waitForSelector('.tribune');
   assert.equal(new URL(k2.url()).hash, '', 'jetons retirés de l’adresse');
-  ec = await etat(k2); assert.equal(ec.xp, xp1, 'progression retrouvée sur le second téléphone'); assert.equal(ec.compte.id, 'u-1');
+  ec = await etat(k2); assert(ec.xp >= xp1 && ec.xp === faux.progression.donnees.xp, 'progression retrouvée sur le second téléphone'); assert.equal(ec.compte.id, 'u-1');
   // Signaler part en ligne ; se déconnecter efface le téléphone.
   await k2.evaluate(() => window.__app.aller('profil')); await k2.waitForSelector('.compte');
   await k2.locator('text=Se déconnecter').click(); await k2.locator('.boite .bouton-or').click();

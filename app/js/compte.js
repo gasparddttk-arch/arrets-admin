@@ -1,7 +1,7 @@
 // Le compte : connexion obligatoire (Google ou code par email), profil et copie en ligne de la progression.
 // Tout passe par l'API de Supabase, sans bibliothèque : la session est gardée sur le téléphone.
 import { SUPABASE_URL, SUPABASE_CLE } from './config.js';
-import { etat, sauver, remplacerEtat } from './state.js';
+import { etat, sauver, remplacerEtat, jour, lundi, rangGeneral, M } from './state.js';
 
 const CLE_SESSION = 'gdroit-session';
 const ici = () => location.origin + location.pathname;
@@ -100,6 +100,17 @@ function aEnvoyer() {
   const { enCours, compte, ...reste } = etat; void enCours; void compte;
   return { ...reste, oblig: { ...etat.oblig, enCours: null } };
 }
+// Ce que voient les amis : jamais le détail des fiches.
+export function resume() {
+  const j = jour(); const s = etat.serie;
+  const maitrises = ['admin', 'oblig'].reduce((n, m) => n + Object.values(M(m).arrets || {}).filter((a) => a.b >= 5).length, 0);
+  return {
+    jour: j, serie: s.dernier >= j - 1 ? s.n : 0, sceau: s.dernier === j, grade: rangGeneral().nom,
+    xp: (etat.xp || 0) + (etat.oblig?.xp || 0), xpAdmin: etat.xp || 0, xpOblig: etat.oblig?.xp || 0,
+    semaine: lundi(), xpSemaine: etat.semaine?.debut === lundi() ? etat.semaine.xp : 0,
+    maitrises, equipe: etat.equipe || null, seances: etat.stats?.seances || 0,
+  };
+}
 const poids = (e) => (e?.xp || 0) + (e?.oblig?.xp || 0) + (e?.stats?.seances || 0);
 
 let envoi = null;
@@ -109,7 +120,7 @@ export async function envoyerProgression() {
   envoi = (async () => {
     try {
       const maj = new Date().toISOString();
-      await api('progressions?on_conflict=id', { method: 'POST', corps: { id: session.user.id, donnees: aEnvoyer(), maj }, prefer: 'resolution=merge-duplicates,return=minimal' });
+      await api('progressions?on_conflict=id', { method: 'POST', corps: { id: session.user.id, donnees: aEnvoyer(), resume: resume(), maj }, prefer: 'resolution=merge-duplicates,return=minimal' });
       etat.compte = { ...etat.compte, sync: Date.parse(maj) }; sauver();
       return true;
     } catch { return false; } finally { envoi = null; }
@@ -177,3 +188,29 @@ export const adminSignalements = () => rpc('admin_signalements');
 export const adminTraiter = (signalement, fait) => rpc('admin_traiter', { signalement, fait });
 export const adminReglage = () => rpc('admin_lire_reglage');
 export const adminChangerReglage = (statut) => rpc('admin_reglage_nouveaux', { statut });
+
+// AMIS --------------------------------------------------------------------------------
+export const monProfil = async () => (await api(`profils?id=eq.${session.user.id}&select=pseudo,code_ami,masquer,notifs`))?.[0];
+export const reglerProfil = (champs) => api(`profils?id=eq.${session.user.id}`, { method: 'PATCH', corps: champs });
+export const mesAmis = () => rpc('mes_amis');
+export const mesBloques = () => rpc('mes_bloques');
+export const demanderAmi = (code) => rpc('demander_ami', { code }).then((r) => { pousser(); return r; });
+export const repondreAmi = (autre, accepter) => rpc('repondre_ami', { autre, accepter }).then(() => pousser());
+export const retirerAmi = (autre) => rpc('retirer_ami', { autre });
+export const bloquer = (autre, oui = true) => rpc('bloquer', { autre, oui });
+export const mesDefis = () => rpc('mes_defis');
+export const creerDefi = (invite, matiere, equipe, rounds, score) => rpc('creer_defi', { invite, matiere, equipe, rounds, score }).then((id) => { pousser(); return id; });
+export const lireDefi = (defi) => rpc('lire_defi', { defi });
+export const repondreDefi = (defi, score) => rpc('repondre_defi', { defi, score }).then(() => pousser());
+export const refuserDefi = (defi) => rpc('refuser_defi', { defi });
+export const mesNotifications = () => rpc('mes_notifications');
+export const toutLu = () => rpc('tout_lu');
+export async function annoncerDefiJour() {
+  if (!connecte() || navigator.onLine === false) return;
+  try { await rpc('annoncer_defi_jour'); pousser(); } catch { /* sans réseau */ }
+}
+// Les notifications créées partent sur les téléphones des amis.
+export async function pousser() {
+  try { const t = await jeton(); await fetch(`${SUPABASE_URL}/functions/v1/pousser`, { method: 'POST', headers: { apikey: SUPABASE_CLE, Authorization: `Bearer ${t}` } }); } catch { /* l'appli les montrera à l'ouverture */ }
+}
+export const inscrireAppareil = (abonnement) => api('appareils?on_conflict=point', { method: 'POST', corps: { point: abonnement.endpoint, abonnement }, prefer: 'resolution=merge-duplicates,return=minimal' });

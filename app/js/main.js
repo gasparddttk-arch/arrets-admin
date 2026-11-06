@@ -3,8 +3,8 @@ import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
-import { remplacerEtat, changerEquipe,
-  SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
+import { remplacerEtat, ajouterSemaine, changerEquipe,
+  SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, lundi, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
 } from './state.js';
@@ -15,7 +15,7 @@ import { lancerDunk } from './dunk.js';
 import { activerRappel, etatRappel, testerNotification, estInstallee, abonnementActuel } from './notif.js';
 import { cloudActif, inscrireAbonnement } from './cloud.js';
 import { SUPABASE_URL } from './config.js';
-import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage } from './compte.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
 const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise };
@@ -52,7 +52,14 @@ function barreHaut() {
     h('button', { class: 'haut-rang', onClick: () => aller('profil'), 'aria-label': `${r.nom}, voir le profil` },
       h('span', { class: 'haut-ligne' }, h('span', { class: 'haut-nom' }, etat.insigne !== 'aucun' ? icone(etat.insigne, 16) : null, r.nom), laurier(36)),
       h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${r.part.toFixed(3)})` }))),
+    connecte() ? h('button', { class: 'haut-amis', onClick: () => aller('amis'), 'aria-label': nonLus ? `Amis, ${pluriel(nonLus, 'nouvelle')}` : 'Amis' }, icone('equipe', 26), nonLus ? h('span', { class: 'pastille' }, nonLus > 9 ? '9+' : String(nonLus)) : null) : null,
     h('button', { class: 'haut-jetons', onClick: () => aller('boutique'), 'aria-label': monnaie(etat.jetons) }, h('i', { class: 'jeton' }), fmt(etat.jetons)));
+}
+let nonLus = 0;
+async function compterNouvelles() {
+  try { nonLus = (await mesNotifications()).filter((n) => !n.lu).length; } catch { return; }
+  const b = document.querySelector('.haut-amis');
+  if (b) b.replaceWith(barreHaut().querySelector('.haut-amis') || '');
 }
 
 // ÉCRAN DE CHOIX -----------------------------------------------------------------
@@ -124,7 +131,8 @@ function aller(id, p) {
   ongletCourant = id === 'role' || id === 'examen' ? 'palais' : id;
   afficherOnglets(true);
   if (id === 'admin') ongletCourant = 'profil';
-  ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen, admin: ecranAdmin }[id])(p);
+  if (id === 'amis') ongletCourant = 'palais';
+  ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen, admin: ecranAdmin, amis: ecranAmis }[id])(p);
 }
 
 // PALAIS -----------------------------------------------------------------------
@@ -307,11 +315,11 @@ function lancerMode(m, genre = null) {
 }
 
 // SÉANCE ------------------------------------------------------------------------
-function lancer({ rounds, titre, type, zone, reprise, mode, long = false }) {
+function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAmi = null }) {
   if (document.querySelector('.palais-portes')) return;
   const S = reprise
     ? { ...reprise, rounds: JSON.parse(JSON.stringify(reprise.rounds)), touches: new Map(reprise.touches), nettoyer: [] }
-    : { rounds, titre, type, zone, long, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0 };
+    : { rounds, titre, type, zone, long, defiAmi, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0 };
   ({ type, titre, zone } = S);
   // Copie intacte des épreuves : c'est elle qui sert à reprendre après une coupure.
   const copie = JSON.stringify(S.rounds);
@@ -438,8 +446,10 @@ function resultats(S, reussi) {
   etat.stats.comboMax = Math.max(etat.stats.comboMax, S.comboMax);
   const parfaite = S.parfaites === S.rounds.length && reussi;
   if (parfaite) etat.stats.parfaites++;
-  M().xp += S.xp;
+  M().xp += S.xp; ajouterSemaine(S.xp);
   const pieces = crediter(S.jetons);
+  const ligneAmi = suiteDefiAmi(S, moyenne);
+  if (S.type === 'defi') annoncerDefiJour();
 
   let textBoss = null;
   if (S.type === 'boss') {
@@ -480,6 +490,7 @@ function resultats(S, reussi) {
     h('div', { class: 'res-scene' }, figureFin, zoneSceau),
     h('h1', {}, S.type === 'boss' ? (reussi ? 'Audience gagnée' : 'Audience perdue') : pourcent === 100 ? 'Sans faute' : pourcent >= 70 ? 'Bien jugé' : 'À réviser'),
     textBoss ? h('p', { class: 'res-texte' }, textBoss) : null,
+    ligneAmi,
     h('dl', { class: 'res-chiffres' },
       h('div', {}, h('dt', {}, 'Réussite'), h('dd', {}, `${pourcent} %`)),
       h('div', {}, h('dt', {}, 'Expérience'), h('dd', {}, `+${fmt(S.xp)}`)),
@@ -948,6 +959,196 @@ function blocCompte() {
     h('button', { class: 'bouton-fantome', onClick: async () => { const v = champ.value.trim(); if (!v) return toast('Choisis un pseudo.'); try { await changerPseudo(v); etat.compte.pseudo = v; sauver(); toast('Pseudo enregistré.'); } catch { toast('Pas de connexion. Réessaie plus tard.'); } } }, 'Changer de pseudo'),
     h('button', { class: 'bouton-lien', onClick: () => confirmerDeconnexion() }, 'Se déconnecter'));
 }
+// AMIS --------------------------------------------------------------------------------
+const pct = (x) => `${Math.round((x || 0) * 100)} %`;
+const semaineDe = (r) => (r && r.semaine === lundi() ? r.xpSemaine || 0 : 0);
+const TEXTE_NOTIF = {
+  demande: (n) => `${n.pseudo} veut t’ajouter.`,
+  acceptee: (n) => `${n.pseudo} a accepté ta demande.`,
+  defi_recu: (n) => `${n.pseudo} te lance un défi.`,
+  defi_resultat: (n) => { const a = n.donnees.moi; const b = n.donnees.lui; return b > a ? `${n.pseudo} a battu ton score : ${pct(b)} contre ${pct(a)}.` : b === a ? `Égalité avec ${n.pseudo} : ${pct(b)}.` : `${n.pseudo} n’a pas battu ton score : ${pct(b)} contre ${pct(a)}.`; },
+  ami_defi: (n) => `${n.pseudo} a fini son défi du jour.`,
+};
+
+async function ecranAmis() {
+  const corps = h('div', {}, h('p', { class: 'aide-claire' }, 'Chargement…'));
+  montrer(barreHaut(), retourPalais(), h('section', { class: 'page amis' }, h('h1', {}, 'Amis'), h('p', { class: 'page-sous' }, 'Compare ta semaine, lance des défis.'), corps));
+  let moi; let liste; let defis; let notifs; let bloques;
+  try { [moi, liste, defis, notifs, bloques] = await Promise.all([monProfil(), mesAmis(), mesDefis(), mesNotifications(), mesBloques()]); } catch {
+    corps.replaceChildren(h('p', { class: 'aide-claire' }, 'Il faut du réseau pour voir tes amis.')); return;
+  }
+  if (notifs.some((n) => !n.lu)) { toutLu().catch(() => {}); nonLus = 0; }
+  const amis = liste.filter((a) => a.lien === 'ami');
+  const recues = liste.filter((a) => a.lien === 'recue');
+  const envoyees = liste.filter((a) => a.lien === 'envoyee');
+  const recharger = () => ecranAmis();
+
+  // Le classement de la semaine : toi et tes amis, remis à zéro chaque lundi.
+  const moiR = monResume();
+  const lignes = [{ id: 'moi', pseudo: `${moi.pseudo || 'Toi'} (toi)`, r: moiR }, ...amis.filter((a) => a.resume).map((a) => ({ id: a.id, pseudo: a.pseudo, r: a.resume, ami: a }))]
+    .sort((a, b) => semaineDe(b.r) - semaineDe(a.r));
+  const classement = h('ol', { class: 'classement' }, lignes.map((l, i) => h('li', { class: l.id === 'moi' ? 'moi' : '' },
+    h('button', { disabled: l.id === 'moi', onClick: () => ficheAmi(l.ami) },
+      h('span', { class: 'place' }, String(i + 1)),
+      h('span', { class: 'qui' }, h('b', {}, l.pseudo), h('small', {}, `Série de ${pluriel(l.r?.serie || 0, 'jour')}${l.r?.sceau && l.r.jour === jour() ? ', sceau posé aujourd’hui' : ''}`)),
+      h('span', { class: 'points' }, fmt(semaineDe(l.r)))))));
+
+  const champ = h('input', { class: 'code', placeholder: 'Code ami, par exemple ABCD-EFGH', 'aria-label': 'Code ami', autocapitalize: 'characters', autocomplete: 'off', maxlength: 12 });
+  const envoyer = async (code) => {
+    const c = (code || champ.value).trim().toUpperCase();
+    if (!/^[A-Z2-9]{4}-?[A-Z2-9]{4}$/.test(c)) return toast('Ce code ne ressemble pas à un code ami.');
+    const norme = c.includes('-') ? c : `${c.slice(0, 4)}-${c.slice(4)}`;
+    try {
+      const r = await demanderAmi(norme);
+      toast({ envoyee: 'Demande envoyée.', acceptee: 'Vous êtes amis.', deja: 'Vous êtes déjà amis.', soi: 'C’est ton propre code.', inconnu: 'Aucun compte avec ce code.' }[r] || 'Demande envoyée.');
+      recharger();
+    } catch { toast('Pas de connexion. Réessaie.'); }
+  };
+  const lien = `${location.origin}${location.pathname}?ami=${moi.code_ami}`;
+  const partager = async () => {
+    const texte = `Ajoute-moi sur Gdroit pour réviser ensemble : ${lien}`;
+    try { if (navigator.share) await navigator.share({ title: 'Gdroit', text: texte }); else { await navigator.clipboard.writeText(texte); toast('Lien copié.'); } } catch { /* partage annulé */ }
+  };
+
+  const boiteNotifs = notifs.length ? [h('h2', {}, 'Nouvelles'), h('ul', { class: 'articles notifs' }, notifs.slice(0, 8).map((n) => h('li', { class: `article${n.lu ? '' : ' neuf'}` }, h('div', {},
+    h('p', {}, (TEXTE_NOTIF[n.type] || (() => ''))({ ...n, pseudo: n.pseudo || 'Un ami' })),
+    h('small', {}, quandCourt(n.cree_le)),
+    n.type === 'defi_recu' && defis.some((d) => d.id === n.donnees.defi && d.statut === 'ouvert') ? h('button', { class: 'bouton-lien', onClick: () => releverDefi(n.donnees.defi) }, 'Relever le défi') : null))))] : [];
+
+  const defisRecus = defis.filter((d) => d.recu && d.statut === 'ouvert');
+  const autresDefis = defis.filter((d) => !(d.recu && d.statut === 'ouvert')).slice(0, 10);
+  const ligneDefi = (d) => {
+    const moiS = d.recu ? d.score_invite : d.score_auteur; const luiS = d.recu ? d.score_auteur : d.score_invite;
+    const etatTxt = d.statut === 'joue' ? (moiS > luiS ? `Gagné, ${pct(moiS)} contre ${pct(luiS)}` : moiS === luiS ? `Égalité, ${pct(moiS)}` : `Perdu, ${pct(moiS)} contre ${pct(luiS)}`)
+      : d.statut === 'refuse' ? 'Refusé' : d.statut === 'expire' ? 'Expiré' : d.recu ? `À toi de battre ${pct(d.score_auteur)}` : `En attente, tu as fait ${pct(d.score_auteur)}`;
+    return h('li', { class: 'article' }, h('div', {},
+      h('b', {}, `${d.recu ? 'De' : 'Pour'} ${d.pseudo || 'un ami'}`), h('p', {}, etatTxt),
+      h('small', {}, `${d.matiere === 'oblig' ? 'Droit des obligations' : 'Droit administratif'}, ${quandCourt(d.cree_le)}`),
+      d.recu && d.statut === 'ouvert' ? h('div', { class: 'admin-duo' },
+        h('button', { class: 'bouton-or', onClick: () => releverDefi(d.id) }, 'Relever'),
+        h('button', { class: 'bouton-fantome', onClick: async () => { await refuserDefi(d.id).catch(() => {}); recharger(); } }, 'Refuser')) : null));
+  };
+
+  const demande = (a, recue) => h('li', { class: 'article' }, h('div', {}, h('b', {}, a.pseudo || 'Sans pseudo'), h('p', {}, recue ? 'Veut t’ajouter' : 'Demande envoyée'),
+    recue ? h('div', { class: 'admin-duo' },
+      h('button', { class: 'bouton-or', onClick: async () => { try { await repondreAmi(a.id, true); toast(`${a.pseudo} est ton ami.`); recharger(); } catch { toast('Pas de connexion.'); } } }, 'Accepter'),
+      h('button', { class: 'bouton-fantome', onClick: async () => { await repondreAmi(a.id, false).catch(() => {}); recharger(); } }, 'Refuser'))
+      : h('button', { class: 'bouton-lien', onClick: async () => { await retirerAmi(a.id).catch(() => {}); recharger(); } }, 'Annuler la demande')));
+
+  corps.replaceChildren(h('div', {},
+    ...boiteNotifs,
+    recues.length ? h('h2', {}, 'Demandes reçues') : null, recues.length ? h('ul', { class: 'articles' }, recues.map((a) => demande(a, true))) : null,
+    defisRecus.length ? h('h2', {}, 'Défis à relever') : null, defisRecus.length ? h('ul', { class: 'articles' }, defisRecus.map(ligneDefi)) : null,
+    h('h2', {}, 'Classement de la semaine'),
+    h('p', { class: 'aide-claire' }, 'Les points gagnés depuis lundi. Tout le monde repart de zéro chaque semaine.'),
+    classement,
+    amis.some((a) => a.masque) ? h('p', { class: 'aide-claire' }, `${amis.filter((a) => a.masque).map((a) => a.pseudo).join(', ')} préfère${amis.filter((a) => a.masque).length > 1 ? 'nt' : ''} garder sa progression pour soi.`) : null,
+    h('h2', {}, 'Ajouter un ami'),
+    h('p', { class: 'aide-claire' }, 'Ton code ami :'), h('p', { class: 'code-recup code-ami' }, moi.code_ami),
+    h('button', { class: 'bouton-or', onClick: partager }, 'Envoyer mon lien d’invitation'),
+    champ, h('button', { class: 'bouton-fantome', onClick: () => envoyer() }, 'Envoyer la demande'),
+    envoyees.length ? h('ul', { class: 'articles' }, envoyees.map((a) => demande(a, false))) : null,
+    amis.length ? h('h2', {}, `Mes amis (${amis.length})`) : null,
+    amis.length ? h('ul', { class: 'articles' }, amis.map((a) => h('li', {}, h('button', { class: 'article ami-ligne', onClick: () => ficheAmi(a) }, h('div', {},
+      h('b', {}, a.pseudo || 'Sans pseudo'), h('small', {}, a.masque ? 'Progression masquée' : a.resume ? `${a.resume.grade}, ${fmt(a.resume.xp)} points` : 'Pas encore de séance')))))) : null,
+    autresDefis.length ? h('h2', {}, 'Derniers défis') : null, autresDefis.length ? h('ul', { class: 'articles' }, autresDefis.map(ligneDefi)) : null,
+    h('h2', {}, 'Réglages'), reglagesAmis(moi),
+    bloques.length ? h('h2', {}, 'Comptes bloqués') : null,
+    bloques.length ? h('ul', { class: 'articles' }, bloques.map((b) => h('li', { class: 'article' }, h('div', {}, h('b', {}, b.pseudo || 'Sans pseudo'),
+      h('button', { class: 'bouton-lien', onClick: async () => { await bloquer(b.id, false).catch(() => {}); recharger(); } }, 'Débloquer'))))) : null));
+}
+function proposerAmi(code) {
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite', role: 'dialog', 'aria-label': 'Invitation' },
+    h('p', {}, `Tu as ouvert une invitation (code ${code}). Envoyer une demande d’ami ?`),
+    h('div', { class: 'boite-actions' },
+      h('button', { class: 'bouton-or', onClick: async () => {
+        voile.remove();
+        try { const r = await demanderAmi(code); toast({ envoyee: 'Demande envoyée.', acceptee: 'Vous êtes amis.', deja: 'Vous êtes déjà amis.', soi: 'C’est ton propre lien.', inconnu: 'Ce lien ne correspond à aucun compte.' }[r] || 'Demande envoyée.'); } catch { toast('Pas de connexion. Réessaie depuis la page Amis.'); }
+        aller('amis');
+      } }, 'Envoyer la demande'),
+      h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Plus tard'))));
+  document.body.append(voile);
+}
+const quandCourt = (d) => new Date(d).toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+
+function reglagesAmis(moi) {
+  const n = { demandes: true, defis: true, revisions: false, ...(moi.notifs || {}) };
+  const bouton = (nom, actif, changer) => h('label', { class: 'reglage' }, h('span', {}, nom),
+    h('input', { type: 'checkbox', role: 'switch', checked: actif, onChange: async (e) => {
+      const c = e.target; try { await changer(c.checked); son('tap'); } catch { c.checked = !c.checked; toast('Pas de connexion.'); }
+    } }));
+  const prefs = (cle) => (v) => { n[cle] = v; return reglerProfil({ notifs: n }); };
+  return h('div', { class: 'reglages' },
+    bouton('Montrer ma progression à mes amis', !moi.masquer, (v) => reglerProfil({ masquer: !v })),
+    bouton('Notifier les demandes d’ami', n.demandes, prefs('demandes')),
+    bouton('Notifier les défis reçus et leurs résultats', n.defis, prefs('defis')),
+    bouton('Notifier quand un ami finit son défi du jour', n.revisions, prefs('revisions')),
+    h('p', { class: 'aide-claire' }, 'Au plus une nouvelle par ami et par jour pour les révisions, et rien sur le téléphone entre 22 h et 8 h : tout reste ici.'),
+    h('button', { class: 'bouton-fantome', onClick: activerNotifsTelephone }, 'Recevoir ces notifications sur ce téléphone'));
+}
+async function activerNotifsTelephone() {
+  if (!('Notification' in window) || !('PushManager' in window)) return toast(estInstallee() ? 'Ce téléphone ne permet pas les notifications.' : 'Installe d’abord l’appli sur l’écran d’accueil.');
+  try { await activerRappel(); const s = await abonnementActuel(); if (!s) throw new Error(); await inscrireAppareil(s); toast('Notifications activées sur ce téléphone.'); } catch (e) { toast(e.message || 'Notifications refusées.'); }
+}
+
+function ficheAmi(a) {
+  if (!a) return;
+  const r = a.resume; const moi = monResume();
+  const ligne = (nom, x, y) => h('tr', {}, h('th', {}, nom), h('td', {}, x), h('td', {}, y));
+  const memeEquipe = r?.equipe && r.equipe === etat.equipe;
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite admin-fiche', role: 'dialog', 'aria-label': `Fiche de ${a.pseudo}` },
+    h('h2', {}, a.pseudo || 'Sans pseudo'),
+    r ? h('table', { class: 'comparer' }, h('thead', {}, h('tr', {}, h('th', {}), h('th', {}, 'Toi'), h('th', {}, a.pseudo || 'Ami'))), h('tbody', {},
+      ligne('Grade', moi.grade, r.grade),
+      ligne('Cette semaine', fmt(semaineDe(moi)), fmt(semaineDe(r))),
+      ligne('Série', pluriel(moi.serie, 'jour'), pluriel(r.serie, 'jour')),
+      ligne('Points', fmt(moi.xp), fmt(r.xp)),
+      ligne('Administratif', fmt(moi.xpAdmin), fmt(r.xpAdmin)),
+      ligne('Obligations', fmt(moi.xpOblig), fmt(r.xpOblig)),
+      ligne('Fiches maîtrisées', fmt(moi.maitrises), fmt(r.maitrises)),
+      ligne('Séances', fmt(moi.seances), fmt(r.seances))))
+      : h('p', { class: 'aide-claire' }, a.masque ? 'Cet ami garde sa progression pour lui.' : 'Pas encore de progression à comparer.'),
+    h('h3', {}, 'Lancer un défi'),
+    h('p', { class: 'aide-claire' }, 'Tu joues un défi, puis ton ami reçoit les mêmes questions et doit battre ton score.'),
+    h('div', { class: 'admin-duo' },
+      h('button', { class: 'bouton-or', onClick: () => { voile.remove(); lancerDefiAmi(a, 'admin'); } }, 'Administratif'),
+      h('button', { class: 'bouton-or', disabled: !memeEquipe, onClick: () => { voile.remove(); lancerDefiAmi(a, 'oblig'); } }, 'Obligations')),
+    memeEquipe ? null : h('p', { class: 'aide-claire' }, 'Les obligations se défient entre membres de la même équipe.'),
+    h('div', { class: 'boite-actions' },
+      h('button', { class: 'bouton-lien', onClick: async () => { voile.remove(); await retirerAmi(a.id).catch(() => {}); toast(`${a.pseudo} n’est plus dans tes amis.`); ecranAmis(); } }, 'Retirer de mes amis'),
+      h('button', { class: 'bouton-lien', onClick: async () => { voile.remove(); await bloquer(a.id).catch(() => {}); toast(`${a.pseudo} est bloqué.`); ecranAmis(); } }, 'Bloquer'),
+      h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Fermer'))));
+  document.body.append(voile);
+}
+
+function changerMatiereSilencieux(m) { if (etat.matiere !== m) { etat.matiere = m; ix = CONTENUS[m]; sauver(); } }
+function lancerDefiAmi(a, matiere) {
+  changerMatiereSilencieux(matiere);
+  const zones = zonesDuJour(ix);
+  const rounds = composerDefi(ix, zones, aRevoir(ix, zones));
+  lancer({ type: 'defi-ami', titre: `Défi pour ${a.pseudo}`, rounds, defiAmi: { cible: a.id, pseudo: a.pseudo, matiere, rounds: JSON.parse(JSON.stringify(rounds)) } });
+}
+async function releverDefi(id) {
+  let d;
+  try { d = await lireDefi(id); } catch { return toast('Pas de connexion.'); }
+  if (!d || d.statut !== 'ouvert') return toast('Ce défi n’est plus ouvert.');
+  if (d.matiere === 'oblig' && d.equipe && d.equipe !== etat.equipe) return toast('Ce défi porte sur le cours de l’autre équipe.');
+  changerMatiereSilencieux(d.matiere);
+  lancer({ type: 'defi-ami', titre: `Défi de ${d.pseudo_auteur || 'ton ami'}`, rounds: d.rounds, defiAmi: { id: d.id, pseudo: d.pseudo_auteur, score: d.score_auteur } });
+}
+// En fin de défi : on l'envoie à l'ami, ou on lui renvoie le score.
+function suiteDefiAmi(S, moyenne) {
+  const d = S.defiAmi; if (!d) return null;
+  if (d.cible) {
+    creerDefi(d.cible, d.matiere, d.matiere === 'oblig' ? etat.equipe : null, d.rounds, Math.round(moyenne * 1000) / 1000)
+      .then(() => toast(`Défi envoyé à ${d.pseudo}.`)).catch(() => toast('Le défi n’a pas pu partir. Vérifie ta connexion.'));
+    return h('p', { class: 'res-texte' }, `${d.pseudo} va recevoir les mêmes questions. À lui de battre tes ${pct(moyenne)}.`);
+  }
+  repondreDefi(d.id, Math.round(moyenne * 1000) / 1000).catch(() => toast('Ton score n’a pas pu partir. Vérifie ta connexion.'));
+  const gagne = moyenne > d.score; const egal = Math.round(moyenne * 100) === Math.round(d.score * 100);
+  return h('p', { class: 'res-coffre' }, egal ? `Égalité avec ${d.pseudo} : ${pct(moyenne)}.` : gagne ? `Tu bats ${d.pseudo} : ${pct(moyenne)} contre ${pct(d.score)}.` : `${d.pseudo} garde l’avantage : ${pct(d.score)} contre ${pct(moyenne)}.`);
+}
+
 // ADMINISTRATION ----------------------------------------------------------------------
 // Réservé au compte administrateur : le serveur refuse toute autre personne.
 const NOMS_STATUT = { admin: 'Admin', testeur: 'Testeur', paye: 'Payé', aucun: 'Sans accès' };
@@ -1108,6 +1309,8 @@ function surveillerFluidite() {
 
 async function demarrer() {
   const params = new URLSearchParams(location.search);
+  // Un lien d'invitation survit à la connexion : le code attend dans le téléphone.
+  if (params.get('ami')) { try { localStorage.setItem('gdroit-ami', params.get('ami')); } catch { /* rien */ } history.replaceState(null, '', location.pathname); }
   // Une ouverture lente : la chouette patiente, montre en main.
   const attente = setTimeout(() => racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Le Palais ouvre ses portes'))), 700);
   if (params.has('decalage')) fixerDecalage(+params.get('decalage'));
@@ -1140,6 +1343,11 @@ async function demarrer() {
   enregistrerServiceWorker();
   if (connecte()) {
     envoyerSignalements();
+    compterNouvelles();
+    navigator.serviceWorker?.addEventListener('message', (e) => { if (e.data === 'amis') aller('amis'); });
+    let invite = null; try { invite = localStorage.getItem('gdroit-ami'); localStorage.removeItem('gdroit-ami'); } catch { /* rien */ }
+    if (invite) proposerAmi(invite);
+    else if (params.has('amis')) aller('amis');
     window.addEventListener('online', () => { envoyerProgression(); envoyerSignalements(); });
     document.addEventListener('visibilitychange', () => { if (document.hidden) envoyerProgression(); });
     recevoirCadeauxCompte().then((n) => {

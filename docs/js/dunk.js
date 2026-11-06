@@ -3,7 +3,7 @@
 import { h, svg, confettis, duree, toast } from './ui.js';
 import { icone } from './visuels.js';
 import { son, vibrer } from './sons.js';
-import { etat, sauver, noter, crediter, M, PLAFOND_JOUR, PRIME_MAITRISE } from './state.js';
+import { etat, sauver, ajouterSemaine, noter, crediter, M, PLAFOND_JOUR, PRIME_MAITRISE } from './state.js';
 import { questionsDunk, tirerDunk } from './engine.js';
 import { repere } from './games.js';
 
@@ -133,7 +133,7 @@ export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
     d.parties++; d.paniers += tir;
     const prevu = Math.floor(tir / 5);
     const obtenu = crediter(prevu);
-    M().xp += tir * 3;
+    M().xp += tir * 3; ajouterSemaine(tir * 3);
     sauver();
     const plafond = obtenu < prevu;
     if (gagne || record) { confettis(); son('grade'); } else son('valide');

@@ -1,5 +1,5 @@
 // Service worker : tout le contenu est mis en cache à l'installation, pour jouer sans réseau.
-const VERSION = '8940a46ccc87';
+const VERSION = 'a8d069f1fea6';
 const FICHIERS = ["./","confidentialite.html","content.json","css/app.css","fonts/garamond-400.woff2","fonts/garamond-500.woff2","fonts/garamond-500i.woff2","fonts/garamond-600.woff2","fonts/garamond-700.woff2","fonts/garamond-700i.woff2","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable.png","img/canette.svg","img/chouette/acc-epitoge.webp","img/chouette/acc-laurier.webp","img/chouette/acc-lun_acc.webp","img/chouette/acc-toque.webp","img/chouette/assise-livre.webp","img/chouette/assise-robe.webp","img/chouette/assise.webp","img/chouette/balance-robe.webp","img/chouette/balance.webp","img/chouette/clin-livre.webp","img/chouette/clin-robe.webp","img/chouette/clin.webp","img/chouette/debout-livre.webp","img/chouette/debout-robe.webp","img/chouette/debout.webp","img/chouette/echelle-livre.webp","img/chouette/echelle-robe.webp","img/chouette/echelle.webp","img/chouette/lunettes-robe.webp","img/chouette/lunettes.webp","img/chouette/marteau-robe.webp","img/chouette/marteau.webp","img/chouette/notes-robe.webp","img/chouette/notes.webp","img/chouette/pause-robe.webp","img/chouette/pause.webp","img/chouette/piles-livre.webp","img/chouette/piles-robe.webp","img/chouette/piles.webp","img/chouette/reflexion-robe.webp","img/chouette/reflexion.webp","img/chouette/serment-livre.webp","img/chouette/serment-robe.webp","img/chouette/serment.webp","img/chouette/tableau-robe.webp","img/chouette/tableau.webp","img/chouette/tribune-robe.webp","img/chouette/tribune.webp","img/skins/67-deux.webp","img/skins/67-droite.webp","img/skins/67-gauche.webp","img/skins/alcoolique.webp","img/skins/bosslady.webp","img/skins/goumin.webp","img/skins/loco.webp","img/skins/nana.webp","img/skins/noel.webp","img/skins/survet.webp","img/skins/tung.webp","js/chouette-reperes.js","js/chouette.js","js/cloud.js","js/compte.js","js/config.js","js/dunk.js","js/engine.js","js/games.js","js/images.js","js/jeux-oblig.js","js/main.js","js/notif.js","js/sons.js","js/state.js","js/ui.js","js/visuels.js","manifest.webmanifest","oblig.json","oblig1.json"];
 const CACHE = `arrets-${VERSION}`;
 
@@ -58,6 +58,8 @@ function jourParis() {
 self.addEventListener('push', (e) => {
   let d = { title: 'Ta série t’attend', body: 'Une séance aujourd’hui, et ton sceau reste en place.', question: '' };
   try { d = { ...d, ...e.data.json() }; } catch { /* message par défaut */ }
+  // Les nouvelles des amis s'affichent telles quelles et ouvrent la page Amis.
+  if (d.ami) { e.waitUntil(self.registration.showNotification(d.title, { body: d.body, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: d.tag, data: { url: './?amis' } })); return; }
   e.waitUntil((async () => {
     const s = await lireSerie();
     let { title, body } = d;
@@ -75,7 +77,8 @@ self.addEventListener('notificationclick', (e) => {
   e.notification.close();
   e.waitUntil((async () => {
     const ouverts = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-    if (ouverts.length) return ouverts[0].focus();
-    return self.clients.openWindow('./');
+    const url = e.notification.data?.url || './';
+    if (ouverts.length) { const c = ouverts[0]; if (url !== './') c.postMessage('amis'); return c.focus(); }
+    return self.clients.openWindow(url);
   })());
 });

@@ -151,6 +151,7 @@ function etatInitial() {
     cloud: { code: null, dernier: null },
     compte: { id: null, email: null, pseudo: null, acces: null, sync: 0 },
     modifie: 0,
+    semaine: { debut: 0, xp: 0 },
     cadeaux: [],
     chouette: { tenues: [], skins: [], skin: null, porte: { tete: null, visage: null, buste: null, robe: null }, reveil: null, retour: null, seance: null, tapes: 0 },
   };
@@ -158,7 +159,7 @@ function etatInitial() {
 
 function fusion(base, x) {
   const o = { ...base, ...x };
-  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud', 'compte', 'gains', 'dunk', 'chouette']) o[k] = { ...base[k], ...(x[k] || {}) };
+  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud', 'compte', 'semaine', 'gains', 'dunk', 'chouette']) o[k] = { ...base[k], ...(x[k] || {}) };
   const ob = x.oblig || {};
   o.oblig = { ...base.oblig, ...ob, gains: { ...base.oblig.gains, ...(ob.gains || {}) }, zones: { ...base.oblig.zones, ...(ob.zones || {}) } };
   if (!['admin', 'oblig'].includes(o.matiere)) o.matiere = 'admin';
@@ -305,6 +306,13 @@ function palier(liste, xp) {
   liste.forEach((r, k) => { if (xp >= r.xp) i = k; });
   const suivant = liste[i + 1];
   return { i, nom: liste[i].nom, suivant, xp, part: suivant ? (xp - liste[i].xp) / (suivant.xp - liste[i].xp) : 1 };
+}
+// Le lundi de la semaine en cours, et les points gagnés depuis : c'est ce que compare le classement entre amis.
+export function lundi(j = jour()) { return j - ((new Date(j * 864e5).getUTCDay() + 6) % 7); }
+export function ajouterSemaine(n) {
+  const l = lundi();
+  if (etat.semaine.debut !== l) etat.semaine = { debut: l, xp: 0 };
+  etat.semaine.xp += n;
 }
 export const rang = (m = etat.matiere) => palier(matiereDe(m).rangs, M(m).xp);
 export const rangGeneral = () => palier(RANGS_GENERAL, etat.xp + etat.oblig.xp);
