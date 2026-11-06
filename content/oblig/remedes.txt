@@ -72,8 +72,8 @@ dx: La nullité avec restitution réciproque du bien et du prix || Elle veut gar
 dx: La révision du prix || Le juge ne réécrit pas le prix : il répare un préjudice.
 r: Le dol est aussi une faute, qui ouvre droit à réparation.
 rx: Le dol entraîne toujours la nullité du contrat, même si la victime s'y oppose. || La nullité n'est qu'une option de la victime.
-rx: Elle a droit à la perte de chance de ne pas contracter. || Parsys limite le préjudice à la perte de chance de meilleures conditions.
-a: a1137, a1131, parsys
+rx: Elle a droit à la perte de chance de ne pas contracter. || Elle garde le contrat : on répare la perte de meilleures conditions ou, pour un immeuble, l'excès de prix.
+a: a1137, a1131, parsys, excesprix
 
 %erreur-valeur | 5 | 2
 c: Un vendeur s'aperçoit, sans aucune tromperie, qu'il a cédé son fonds de commerce à un prix bien inférieur à sa valeur.

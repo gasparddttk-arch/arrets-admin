@@ -161,10 +161,17 @@ s: Non. Ces motifs sont impropres à l'exclure, car elle rend toujours excusable
 po: Application directe des articles 1137 et 1139.
 
 @parsys | Parsys | Com., 10 juill. 2012, n° 11-21.954 | Cass. | 2012 | 2 | 5
-ap: Sans demande de nullité, seule la perte de chance de meilleures conditions est réparée
+ap: La victime d'un dol qui garde le contrat ne peut pas réclamer la perte de chance de ne pas l'avoir conclu
 q: Quel préjudice répare-t-on quand la victime du dol garde le contrat ?
 s: La perte de chance de contracter à des conditions plus avantageuses, et non celle de ne pas avoir contracté.
-po: La victime peut demander la nullité et des dommages et intérêts, ou les seuls dommages et intérêts. Si elle garde le contrat, ce choix borne le préjudice réparable.
+po: La victime peut demander la nullité et des dommages et intérêts, ou les seuls dommages et intérêts. Si elle garde le contrat, ce choix borne le préjudice réparable. Pour un immeuble, voir Civ. 3e, 28 mai 2026.
+
+@excesprix | Excès de prix | Civ. 3e, 28 mai 2026, n° 24-20.821 | Cass. | 2026 | 2 | 5
+ap: L'acquéreur d'un immeuble victime d'un dol qui garde le bien peut être indemnisé d'un excès de prix
+f: En 2016, un couple achète un appartement et un emplacement de stationnement pour 710 000 euros. Il reproche aux vendeurs de lui avoir caché le comportement anormal d'un voisin. Il garde le bien et demande réparation sur le fondement du dol.
+q: L'acquéreur d'un immeuble, victime d'un dol, qui ne demande pas l'annulation est-il limité à la perte de chance de meilleures conditions ?
+s: Non. Il peut agir en indemnisation d'un excès de prix. Le préjudice, une dépréciation du bien, a été souverainement évalué à 15 % du prix. Rejet.
+po: Les vendeurs invoquaient la perte de chance : la Cour répond sur l'excès de prix, sans la reprendre. La solution vise l'acquéreur d'un immeuble. Pour les cessions de droits sociaux, la référence reste Parsys.
 
 @voiedroit | Menace d'une voie de droit | Civ. 3e, 17 janv. 1984, n° 82-15.753 | Cass. | 1984 | 2 | 6
 ap: Annoncer qu'on exercera son droit n'est pas, en soi, une violence

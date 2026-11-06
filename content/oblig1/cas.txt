@@ -15,10 +15,10 @@ x: Oui : le voisin aurait accepté s'il avait été là || On ne présume pas un
 s: Qualifier || Quelle notion convient ? || La gestion d'affaires || Art. 1301 : celui qui, sans y être tenu, gère sciemment et utilement l'affaire d'autrui, à son insu ou sans son opposition.
 x: Le paiement de l'indu, puisque le voisin n'a rien voulu || L'étudiant n'a rien payé au voisin par erreur.
 x: La responsabilité pour faute du voisin absent || Le voisin n'a commis aucune faute.
-s: Trancher || Quel est ton jugement ? || Le voisin doit rembourser les dépenses utiles || La gestion a été utile : l'acte altruiste, que le droit veut encourager, oblige le maître de l'affaire.
+s: Trancher || Quel est ton jugement ? || Le voisin doit rembourser les dépenses utiles || La gestion a été utile : l'acte altruiste, que le droit veut encourager, oblige le maître de l'affaire (art. 1301-2).
 x: Il ne doit rien, car on ne s'oblige que par sa volonté || Toutes les obligations ne reposent pas sur la volonté.
 x: Il doit le double, pour récompenser l'étudiant || La loi rembourse les dépenses, elle ne récompense pas.
-v: Aucun contrat n'existe, mais l'étudiant a géré utilement l'affaire de son voisin (art. 1301). Ce quasi-contrat oblige le voisin à l'indemniser des dépenses utiles, sans accord préalable.
+v: Aucun contrat n'existe, mais l'étudiant a géré utilement l'affaire de son voisin (art. 1301). Ce quasi-contrat oblige le voisin à l'indemniser des dépenses utiles, sans accord préalable (art. 1301-2).
 a: a1100, a1301, a1300
 
 %cycliste | Le piéton renversé | 1 | 1 | Cours
@@ -43,7 +43,7 @@ x: La rétroactivité de toute réforme || L'article 2 pose le principe inverse.
 s: Texte || Que prévoit l'ordonnance ? || Les contrats conclus avant le 1er octobre 2016 restent soumis à la loi ancienne || Art. 9 al. 2, y compris pour leurs effets légaux et les dispositions d'ordre public.
 x: Les contrats en cours basculent au 1er octobre 2016 || L'ordonnance le refuse.
 x: Le droit nouveau s'applique dès que le litige est né après 2016 || C'est la date du contrat qui compte, pas celle du litige.
-s: Exception || Quelle exception prévoit ce texte ? || Les actions interrogatoires || Les articles 1123 al. 3 et 4, 1158 et 1183 s'appliquent tout de suite : ils sont d'ordre procédural.
+s: Exception || Quelle exception prévoit ce texte ? || Les actions interrogatoires || Les articles 1123 al. 3 et 4, 1158 et 1183 s'appliquent tout de suite : le Rapport au Président y voit des dispositifs d'ordre procédural.
 x: Les clauses d'ordre public || L'article 9 vise au contraire les dispositions d'ordre public dans la survie de la loi ancienne.
 x: Tous les contrats de plus de dix ans || Rien de tel.
 s: Trancher || Que doit faire la Cour de cassation ? || Casser la décision au visa de l'article 9 || C'est ce qu'elle a jugé le 19 septembre 2018 pour un climatiseur.
@@ -212,7 +212,7 @@ x: Un contrat solennel || Le papier n'est pas une condition de validité.
 s: Danger || Pourquoi le Code s'en méfie-t-il ? || Parce qu'une partie peut abuser de l'autre || C'est la tension du cours : le contrat peut devenir un instrument de domination.
 x: Parce que ces contrats sont illicites || Ils sont licites.
 x: Parce qu'ils ne se forment jamais || Yanis a bien adhéré.
-s: Clause de panne || Quel est son sort ? || Elle peut être réputée non écrite || Art. 1171, si elle crée un déséquilibre significatif.
+s: Clause de panne || Quel est son sort ? || Elle peut être réputée non écrite || Art. 1171, si elle crée un déséquilibre significatif. Le Code de la consommation prévoit aussi cette sanction pour le consommateur.
 x: Elle annule tout le contrat || Seule la clause est touchée.
 x: Elle s'applique, puisqu'il a signé || La signature ne purge pas la clause.
 s: Clause ambiguë || Comment la lire ? || Contre le magasin, qui l'a proposée || Art. 1190.
@@ -236,7 +236,7 @@ x: Oui : la rétractation fautive est sans effet || C'est la règle de la promes
 x: Oui, mais à un prix fixé par le juge || Le juge ne fait pas le contrat.
 s: Décès || Que produit le décès d'Emma sur une offre encore en cours ? || La caducité || Art. 1117 al. 2 : l'offre ne se transmet pas aux héritiers.
 x: Les héritiers sont tenus de la maintenir || Le Code a choisi l'inverse.
-x: Rien : l'offre survit tant qu'un délai raisonnable court || La jurisprudence de 1997 allait en ce sens, la réforme l'écarte.
+x: Rien : l'offre survit tant qu'un délai raisonnable court || Le texte prévoit la caducité, sans réserver ce délai.
 s: Nature || Que montre ce régime ? || L'offre n'est pas un engagement unilatéral || Si elle l'était, sa rétractation serait sans effet et elle se transmettrait.
 x: L'offre est déjà un contrat || Seule la promesse en est un.
 x: L'offre oblige plus que la promesse || C'est l'inverse.
@@ -365,7 +365,7 @@ x: L'agence est libérée, ayant respecté le Code du tourisme || Respecter le d
 v: Le respect du droit spécial ne dispense pas de l'article 1112-1. En n'alertant pas ses clients sur un risque déterminant, l'agence a commis une faute, et aucune clause ne peut écarter ce devoir (Civ. 1re, 25 sept. 2024).
 a: hawai, a1112-1
 
-%baldusbis | Les photographies de la brocante | 10 | 1 | TD 4
+%baldusbis | Les photographies et le locataire | 10 | 1 | TD 4
 c: Une vendeuse cède à Marc des photographies à 1 000 euros pièce. Marc sait qu'elles valent bien plus, et il n'en dit rien. Dans une autre affaire, en 2012, Hélène achète un appartement occupé. Elle a obtenu en secret que le locataire parte et ne le dit pas à la venderesse.
 s: Marc || Devait-il révéler la valeur ? || Non : aucune obligation d'information ne pèse sur l'acheteur quant à la valeur || Baldus, repris aux articles 1112-1 al. 2 et 1137 al. 3.
 x: Oui : il connaît la vraie valeur, donc il doit parler || C'est ce que la Cour a censuré.
@@ -383,7 +383,7 @@ a: baldus, bailcache, a1112-1
 =lyon | 11
 
 %catalogue | Le catalogue de vente | 11 | 1 | Cours
-c: Dans une vente aux enchères, un tableau est décrit au catalogue comme « attribué à » un grand maître. Clara l'achète 90 000 euros, puis un expert affirme qu'il n'est pas de lui. Elle veut annuler. Le vendeur, lui, découvre dans une autre affaire qu'une toile vendue comme copie certaine pourrait être du maître.
+c: Dans une vente aux enchères, un tableau est décrit au catalogue comme « attribué à » un grand maître. Clara l'achète 90 000 euros, puis un expert affirme qu'il n'est pas de lui. Elle veut annuler. Dans une autre affaire, un vendeur découvre que la toile qu'il a cédée comme copie certaine pourrait être du maître.
 s: Qualifier || L'authenticité est-elle une qualité essentielle ? || Oui : elle est inhérente à l'œuvre d'art || Elle entre dans le champ contractuel sans qu'il faille l'exprimer.
 x: Non : c'est un simple motif || Le motif reste extérieur : pas l'authenticité.
 x: Non : c'est une question de valeur || L'erreur porte ici sur ce qu'est la chose.
@@ -404,7 +404,7 @@ c: Un couple achète un terrain, présenté dans l'annonce et dans l'acte comme 
 s: Qualifier || Sur quoi porte l'erreur ? || Sur une qualité essentielle de la prestation || Art. 1133 al. 1 : la constructibilité a été expressément convenue.
 x: Sur la valeur du terrain || L'erreur porte sur ce qu'est le terrain, pas sur son prix.
 x: Sur un simple motif, resté extérieur au contrat || Le motif a été intégré à l'acte.
-s: Le piège || Le vendeur n'a trompé personne. Cela l'empêche-t-il d'annuler ? || Non : l'erreur ne suppose aucune faute de l'autre partie || C'est toute la différence avec le dol.
+s: Le piège || Le vendeur n'a trompé personne. Cela empêche-t-il le couple d'obtenir la nullité ? || Non : l'erreur ne suppose aucune faute de l'autre partie || C'est toute la différence avec le dol.
 x: Oui : sans tromperie, il n'y a pas de nullité || L'erreur spontanée suffit.
 x: Oui : seul le vendeur peut se prévaloir d'une erreur || L'erreur peut venir de l'une ou de l'autre partie.
 s: Moment || À quelle date faut-il apprécier l'erreur ? || Au jour de la vente || Le plan existait déjà : l'erreur est constituée. Un plan adopté après la vente ne suffirait pas.
@@ -435,8 +435,8 @@ x: L'action est réduite de moitié || Le texte ne prévoit rien de tel.
 s: Choisir || Il veut garder la voiture. Que peut-il demander ? || Des dommages et intérêts seuls || Le dol est aussi une faute (art. 1240). Il peut renoncer à la nullité.
 x: La nullité sans restitution de la voiture || La nullité impose les restitutions.
 x: Rien : le dol entraîne forcément la nullité || La nullité n'est qu'une option.
-v: Le mensonge constitue un dol (art. 1137), et l'erreur provoquée est toujours excusable (art. 1139). L'acheteur peut garder la voiture et obtenir des dommages et intérêts, le préjudice étant celui de la perte de chance de contracter à de meilleures conditions (Parsys).
-a: a1137, a1139, a1240, parsys
+v: Le mensonge constitue un dol (art. 1137), et l'erreur provoquée est toujours excusable (art. 1139). L'acheteur peut garder la voiture et demander des dommages et intérêts. La mesure du préjudice évolue : perte de chance de meilleures conditions (Parsys), excès de prix pour l'acquéreur d'un immeuble (Civ. 3e, 28 mai 2026).
+a: a1137, a1139, a1240, parsys, excesprix
 
 %porcherie | La maison et le silence | 12 | 1 | Création
 c: Un vendeur sait qu'une porcherie va s'installer à côté de sa maison et que l'acheteuse cherche le calme, ce qu'elle lui a dit. Il se tait, sans mentir. Une fois la vente faite, elle découvre le projet. Le vendeur répond qu'on ne lui a rien demandé.

@@ -6,7 +6,7 @@
 
 # 2. La réforme dans le temps
 @interpretative | Loi interprétative | Ass. plén., 23 janv. 2004, n° 03-13.617 | Cass. | 2004 | 3 | 2
-ap: Le mot « interprétatif » ne suffit pas : le juge contrôle la qualification retenue par le législateur
+ap: Une loi rétroactive ne s'impose pas aux procès en cours, quelle que soit sa qualification formelle, sauf impérieux motifs d'intérêt général
 nf: 1
 q: Le législateur peut-il imposer une loi nouvelle aux procès en cours en la présentant comme interprétative ?
 s: Non, sauf impérieux motifs d'intérêt général. La règle joue quelle que soit la qualification formelle donnée à la loi.
@@ -34,12 +34,12 @@ s: Non, puis oui. Le promettant s'oblige définitivement dès la promesse, sauf 
 po: La chambre commerciale rejoint la troisième chambre civile, au visa de l'article 1134 ancien et compte tenu de l'évolution du droit des obligations. La survie de la loi ancienne reste respectée : c'est l'interprétation du droit ancien qui change.
 
 # 4. La notion de contrat
-@autostop | Transport bénévole | Ch. mixte, 20 déc. 1968 | Cass. | 1968 | 2 | 4
-ap: Le transport bénévole ne fait pas naître de contrat : la responsabilité du conducteur est délictuelle
+@autostop | Transport bénévole | Ch. mixte, 20 déc. 1968, n° 67-14.041 | Cass. | 1968 | 2 | 4
+ap: Le passager transporté à titre bénévole peut invoquer contre le conducteur la responsabilité du gardien
 nf: 1
-q: Le conducteur qui transporte gratuitement un passager est-il lié à lui par un contrat ?
-s: Non. Sa responsabilité envers le passager est délictuelle.
-po: Depuis la loi Badinter du 5 juillet 1985, la question a perdu l'essentiel de son intérêt pour les accidents de la route. Le passager n'a pas besoin du contrat pour être indemnisé.
+q: Le passager transporté bénévolement peut-il invoquer l'article 1384 al. 1 ancien contre le conducteur ?
+s: Oui, sauf disposition légale contraire. Rejet.
+po: Le cours en retient que le transport bénévole ne fait pas naître de contrat : la responsabilité du conducteur est délictuelle. Depuis la loi Badinter du 5 juillet 1985, la question a perdu l'essentiel de son intérêt pour les accidents de la route.
 
 @servouse | Servouse | Civ. 1re, 27 mai 1959, n° 57-12.126 | Cass. | 1959 | 2 | 4
 ap: Origine de la convention d'assistance bénévole
@@ -48,12 +48,12 @@ q: Celui qui aide gratuitement autrui peut-il se prévaloir d'un contrat ?
 s: Oui. Un contrat d'assistance peut se former entre celui qui aide et celui qui reçoit l'aide.
 po: Le juge passe par le contrat pour indemniser celui qui vient aider. C'est le point de départ d'une construction que la doctrine juge divinatoire.
 
-@inconscient | L'assisté inconscient | Civ. 1re, 1er déc. 1969, n° 68-12.140 | Cass. | 1969 | 2 | 4
-ap: L'offre faite dans l'intérêt exclusif de son destinataire est présumée acceptée, même s'il est inconscient
-f: Un homme porte secours à une personne qui gît sans connaissance près de son vélomoteur.
-q: Une convention d'assistance peut-elle se former avec une personne hors d'état d'accepter ?
-s: Oui. Celui à qui l'aide profite exclusivement est présumé l'avoir acceptée.
-po: L'échange des consentements est ici une construction plus qu'un constat : il sert à fonder l'indemnisation de l'assistant.
+@inconscient | Le vélomoteur en feu | Civ. 1re, 1er déc. 1969, n° 68-12.140 | Cass. | 1969 | 2 | 4
+ap: L'offre faite dans l'intérêt exclusif de son destinataire est présumée acceptée
+f: Après une collision, un vélomoteur prend feu. Un homme intervient pour éteindre l'incendie et il est blessé par l'explosion du réservoir.
+q: Une convention d'assistance peut-elle se former sans acceptation exprimée de celui qui reçoit l'aide ?
+s: Oui. Celui à qui l'aide profite exclusivement est présumé l'avoir acceptée. Rejet.
+po: Ton corrigé de TD 2 y voit, avec la doctrine, le cas de l'assisté inconscient. L'échange des consentements est ici une construction plus qu'un constat : il sert à fonder l'indemnisation de l'assistant.
 
 @pioche | La pioche | Civ. 1re, 17 déc. 1996, n° 94-21.838 | Cass. | 1996 | 3 | 4
 ap: La convention oblige nécessairement l'assisté à garantir l'assistant de sa responsabilité sans faute envers un tiers
@@ -99,7 +99,7 @@ po: La Chambre mixte préfère le quasi-contrat à l'engagement unilatéral. C'e
 =revirement2021 | 7 | 3
 =gerstaecker | 7 | 3
 
-@maltzkorn | Maltzkorn | Civ. 3e, 28 nov. 1968, n° 67-10.935 | Cass. | 1968 | 2 | 7
+@maltzkorn | Maltzkorn | Civ. 3e, 28 nov. 1968 | Cass. | 1968 | 2 | 7
 ap: L'offre faite au public lie son auteur envers le premier acceptant
 nf: 1
 q: L'offre adressée au public oblige-t-elle son auteur ?
@@ -148,7 +148,7 @@ ap: L'acquéreur qui cache la libération des lieux manque à la loyauté, à la
 f: Une propriétaire promet de vendre des lots occupés. Avant la vente, le bénéficiaire obtient en secret du locataire qu'il parte contre indemnité, ce qui augmente la valeur du bien. Elle vend au prix d'un bien occupé, l'apprend et demande réparation.
 q: L'acquéreur peut-il taire un fait de nature à augmenter significativement la valeur du bien ?
 s: Non. Cette dissimulation manifeste l'absence de loyauté, de bonne foi et de sincérité, et ouvre droit à dommages et intérêts. Rejet.
-po: À comparer à Baldus : l'acheteur ne taisait pas une estimation, mais un fait qu'il avait lui-même créé. Le fondement n'est ni le dol ni l'article 1112-1, le contrat étant ancien, mais la loyauté.
+po: À comparer à Baldus : l'acheteur ne taisait pas une estimation, mais un fait qu'il avait lui-même créé. L'article 1112-1 ne s'applique pas à ce contrat ancien, et la Cour se fonde sur la loyauté, la bonne foi et la sincérité.
 
 @panneaux | Panneaux photovoltaïques | Civ. 1re, 20 déc. 2023, n° 22-18.928 | Cass. | 2023 | 3 | 10
 ap: Le manquement à l'information de l'article L. 111-1 du Code de la consommation entraîne la nullité s'il porte sur des éléments essentiels
@@ -173,7 +173,7 @@ ap: L'erreur s'apprécie au jour de la vente, mais elle peut se prouver par des 
 nf: 1
 q: Peut-on utiliser des éléments postérieurs à la vente pour établir l'erreur ?
 s: Oui. Ils peuvent prouver ce qu'était la chose et l'erreur de la partie au moment de la vente.
-po: L'authenticité est appréciée au jour du contrat, mais la preuve peut venir après. Pour les vendeurs, qui croyaient certaine l'absence d'authenticité, le doute suffit à établir l'erreur.
+po: L'authenticité est appréciée au jour du contrat, mais la preuve peut venir après.
 
 @berthon | Berthon | Ch. réun., 24 avr. 1862 | Cass. | 1862 | 3 | 11
 ap: Avant 1975, seule l'erreur sur l'identité annule le mariage, pas l'erreur sur les qualités
@@ -191,3 +191,4 @@ s: Oui, s'il dissimule à l'autre un fait qui, connu de lui, l'aurait empêché 
 po: À partir des années 1970, le silence qui trompe est sanctionné. Exiger de ne pas se taire, c'est exiger d'informer : l'obligation d'information naît du dol.
 
 =parsys | 12 | 3
+=excesprix | 12 | 3

@@ -42,7 +42,7 @@ m: Engagement unilatéral | art. 1100-1 | Une société affiche publiquement qu'
 m: Contrat unilatéral | art. 1106 | Une caution s'engage envers une banque à payer si le débiteur ne paie pas. | Deux volontés s'accordent, mais une seule partie s'oblige.
 m: Contrat synallagmatique | art. 1106 | Un vendeur et un acheteur s'obligent réciproquement. | Chacun est créancier et débiteur de l'autre.
 m: Quasi-contrat | art. 1300 | Une société annonce à un client qu'il a gagné 10 000 euros, sans aucun aléa apparent. | Depuis 2002, ce fait purement volontaire l'oblige à délivrer le gain.
-m: Acte juridique unilatéral | art. 1100-1 | Un créancier renonce seul à un droit qu'il détenait. | Une seule volonté produit un effet de droit, sans créer d'obligation à sa charge.
+m: Acte juridique unilatéral | art. 1100-1 | Un bailleur donne congé à son locataire. | Une seule volonté met fin au bail, sans accord de l'autre partie.
 m: Devoir de conscience | art. 1100 | Un gagnant du tiercé promet à son ami une part de ses gains. | La promesse transforme l'obligation naturelle en obligation civile.
 
 =contrats | 6
@@ -78,14 +78,14 @@ m: Contrat formé à réception | art. 1121 | Un Marseillais accepte par lettre 
 
 %information | Quel degré d'information ? | 10
 m: Renseignement | art. 1112-1 | Un vendeur indique le prix, les délais et les caractéristiques d'un bien. | Il donne des données objectives sur la prestation.
-m: Conseil | art. 1112-1 | Un informaticien oriente son client vers le logiciel adapté à ses besoins. | Il tient compte des besoins de l'autre partie.
-m: Mise en garde | art. 1112-1 | Une mention rappelle : « Un crédit vous engage et doit être remboursé. » | Elle refrène les ardeurs du contractant et montre les risques.
+m: Conseil | cours, au-delà de l'art. 1112-1 | Un informaticien oriente son client vers le logiciel adapté à ses besoins. | Il tient compte des besoins de l'autre partie.
+m: Mise en garde | cours, au-delà de l'art. 1112-1 | Une mention rappelle : « Un crédit vous engage et doit être remboursé. » | Elle refrène les ardeurs du contractant et montre les risques.
 m: Délai de réflexion | art. 1122 | Un texte interdit d'accepter une offre avant l'expiration d'un délai. | Le contractant dispose du temps de l'engagement.
 m: Délai de rétractation | art. 1122 | Un consommateur revient sur le contrat qu'il a signé, dans le délai légal. | Il dispose du temps du désengagement.
 m: Preuve de l'information | art. 1353 | Le vendeur doit montrer qu'il a bien fourni l'information qu'il devait. | Celui qui se prétend libéré doit justifier du fait qui a éteint son obligation.
 
 %determinante | L'article 1112-1 joue-t-il ? | 10
-m: Information due | art. 1112-1 | Un vendeur sait que la maison est inconstructible, ce que l'acheteur ignore, et le projet de construire est connu. | Information connue, déterminante, liée au contrat, légitimement ignorée.
+m: Information due | art. 1112-1 | Un vendeur sait que le terrain est inconstructible, ce que l'acheteur ignore, et le projet de construire est connu. | Information connue, déterminante, liée au contrat, légitimement ignorée.
 m: Valeur de la prestation | art. 1112-1 | Une acheteuse sait qu'un meuble vaut bien plus que son prix et n'en dit rien. | Le devoir d'information ne porte pas sur l'estimation de la valeur.
 m: Dissimulation intentionnelle | art. 1137 | Un cédant cache volontairement une dette qu'il sait déterminante. | L'intention de tromper fait basculer le silence dans le dol.
 m: Devoir exclu par clause | art. 1112-1 | Un contrat prévoit que le vendeur ne doit aucune information. | Les parties ne peuvent ni limiter ni exclure ce devoir.

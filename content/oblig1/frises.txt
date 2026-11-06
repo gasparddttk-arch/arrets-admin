@@ -25,7 +25,7 @@ q: Quelle étape ratifie l'ordonnance en la modifiant ? | 3
 %assistance | La convention d'assistance bénévole | 4 | 1
 p: Un contrat inventé pour protéger, qui finit par obliger.
 e: 1959 | Servouse | Un contrat peut naître de l'aide gratuite | La convention d'assistance apparaît | servouse
-e: 1969 | L'assisté inconscient | L'offre dans l'intérêt exclusif du destinataire est présumée acceptée | L'acceptation devient une construction | inconscient
+e: 1969 | Le vélomoteur en feu | L'offre dans l'intérêt exclusif du destinataire est présumée acceptée | L'acceptation devient une construction | inconscient
 e: 1996 | La pioche | L'assisté garantit nécessairement l'assistant envers les tiers | Le juge fixe le contenu du contrat | pioche
 e: 2022 | La lampe à souder | L'imprudence de l'assistant peut engager sa responsabilité | L'assistant devient aussi débiteur | lampe
 e: 2023 | L'aide sollicitée | L'assistance peut être demandée par l'assisté | L'initiative n'importe plus | sollicitee
@@ -60,7 +60,7 @@ q: Quelle étape redéfinit le contrat d'adhésion ? | 4
 %retractation | La rétractation de l'offre | 7 | 1
 p: Du délai imposé à l'offrant à l'efficacité de sa rétractation.
 e: 2008 | Civ. 3e, 7 mai | L'offrant ne peut pas retirer l'offre avant le délai qu'il a fixé | L'article 1134 ancien fonde ce maintien
-e: 2009 | Civ. 3e, 20 mai | L'offre sans délai doit être maintenue un délai raisonnable | Le délai raisonnable s'installe
+e: 2009 | Civ. 3e, 20 mai | L'offre sans délai exprès doit être acceptée dans un délai raisonnable | Le délai raisonnable s'installe
 e: 2016 | Article 1116 | La rétractation dans le délai est fautive mais empêche le contrat | Le Code aligne les deux hypothèses | a1116
 e: 2017 | Joueur de rugby | L'offre rétractée dans le délai fait obstacle au contrat de travail | La Cour anticipe sur le droit nouveau | rugby
 e: 2026 | Gerstaecker | L'offre du bailleur rétractée dans le délai légal n'expose qu'à une réparation | L'article 1116 gagne les droits spéciaux | gerstaecker

@@ -3,14 +3,14 @@
 
 1 | 1 | L'obligation est un lien de droit entre... || des personnes || une personne et une chose || des choses
 1 | 1 | Celui qui peut exiger la prestation est... || le créancier || le débiteur || le garant
-1 | 1 | Le droit de propriété est un droit... || réel || personnel || naturel
+1 | 1 | Le droit de propriété est un droit... || réel || personnel || de créance
 1 | 1 | Une obligation peut naître d'un acte, d'un fait ou... || de la loi || de la coutume seule || d'une émotion
 1 | 2 | La livraison de la voiture promise est une exécution... || en nature || par équivalent || par compensation
-1 | 2 | Des dommages et intérêts sont une exécution... || par équivalent || en nature || forcée sur ordre du juge
+1 | 2 | Des dommages et intérêts sont une exécution... || par équivalent || en nature || par compensation entre dettes
 1 | 2 | L'étudiant qui limite l'inondation chez son voisin fait... || une gestion d'affaires || un contrat tacite de réparation || une donation
 1 | 2 | Avant le Code, Domat défend... || un principe général de responsabilité || le formalisme romain || la liste des délits
 1 | 2 | En droit romain, le contrat existe par... || le respect des formes || le seul échange des consentements || la bonne foi
-1 | 2 | Le droit canonique met en avant... || le respect de la parole donnée || le formalisme || la lésion du droit romain
+1 | 2 | Le droit canonique met en avant... || le respect de la parole donnée || le formalisme || la force du seul écrit
 1 | 3 | Dans le Code de 1804, le contrat figure au livre... || III || I || II
 1 | 3 | L'ancien article 1382 est aujourd'hui l'article... || 1240 || 1103 || 1231-1
 1 | 3 | La loi sur le contrat d'assurance date de... || 1930 || 1898 || 1958
@@ -30,7 +30,7 @@
 2 | 3 | L'article 1112 modifié en 2018 est dit... || interprétatif || applicable à l'avenir seulement || abrogé
 2 | 3 | L'article 1117 modifié en 2018 s'applique... || aux actes conclus depuis le 1er octobre 2018 || depuis le 1er octobre 2016 || à tous les contrats en cours
 2 | 3 | La loi de ratification est-elle sèche ? || Non, elle modifie une vingtaine d'articles || Oui, elle ratifie sans rien changer || Elle remplace toute l'ordonnance
-2 | 3 | Quel mot a été ajouté à l'article 1143 en 2018 ? || « à son égard » || « manifestement » || « en tant que de raison »
+2 | 3 | Quels mots ont été ajoutés à l'article 1143 en 2018 ? || « à son égard » || « manifestement » || « en tant que de raison »
 2 | 3 | Le juge qui lit le droit ancien à la lumière du nouveau fait... || une anticipation || une rétroactivité || une ratification
 
 3 | 1 | Qui dit contractuel dit... || juste || libre || légal
@@ -50,7 +50,7 @@
 4 | 2 | L'assistance peut être sollicitée par... || l'assisté || le seul juge || le seul assistant
 4 | 2 | Qui garantit l'assistant envers les tiers ? || L'assisté || L'État || La victime
 4 | 3 | L'origine de la convention d'assistance remonte à... || 1959 || 1804 || 2016
-4 | 3 | L'assisté inconscient : arrêt de... || 1969 || 1959 || 1996
+4 | 3 | Le vélomoteur en feu : arrêt de... || 1969 || 1959 || 1996
 4 | 3 | En 2022, la faute de l'assistant est dite... || susceptible d'engager sa responsabilité || toujours exonérée || présumée
 4 | 3 | Quelle loi a réduit l'intérêt du débat sur l'autostop ? || La loi Badinter || La loi sur le contrat d'assurance || La loi Spinetta
 
@@ -117,7 +117,7 @@
 10 | 2 | Du moins au plus exigeant : renseignement, conseil, puis... || mise en garde || réflexion || confidentialité
 10 | 2 | Le délai pour revenir sur son engagement : délai... || de rétractation || de réflexion || de préavis
 10 | 2 | Le délai avant lequel on ne peut pas accepter : délai... || de réflexion || de rétractation || de carence
-10 | 2 | Le manquement seul engage la responsabilité... || extracontractuelle || contractuelle de plein droit || pénale
+10 | 2 | Le manquement au devoir d'information, seul, engage la responsabilité... || extracontractuelle || contractuelle de plein droit || pénale
 10 | 3 | Baldus date de... || 2000 || 1996 || 2016
 10 | 3 | Le lien direct ne suffit pas : il faut aussi... || une importance déterminante || un écrit || une clause
 10 | 3 | Le code de la consommation prévoit cette information à l'article... || L. 111-1 || L. 212-1 || L. 145-46-1
@@ -148,7 +148,8 @@
 12 | 2 | Taire son estimation de la valeur est... || permis || un dol || une faute pénale
 12 | 2 | Le dol engage aussi une responsabilité... || délictuelle || contractuelle || administrative
 12 | 3 | Art. 1137 al. 3 vient de... || la loi de 2018 || l'ordonnance de 2016 || la loi de 1975
-12 | 3 | Si l'on aurait contracté à d'autres conditions, on parlait de dol... || incident || principal || collectif
-12 | 3 | Sans nullité, on répare la perte de chance... || de meilleures conditions || de ne pas contracter || des gains attendus du contrat
+12 | 3 | Quand on aurait contracté à d'autres conditions, on parlait de dol... || incident || principal || collectif
+12 | 3 | Parsys : sans nullité, on répare la perte de chance... || de meilleures conditions || de ne pas contracter || des gains attendus du contrat
+12 | 3 | L'acquéreur d'un immeuble qui garde le bien peut réclamer... || l'excès de prix || tout le prix payé || le prix et les frais d'acte réunis
 12 | 3 | Le dolus bonus vient du droit... || romain || canonique || allemand
 12 | 3 | L'erreur sur la valeur peut annuler le contrat si elle résulte... || d'un dol || d'une négligence || d'un simple oubli

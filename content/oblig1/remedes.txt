@@ -146,10 +146,10 @@ rx: Le contrat ne se forme jamais sans conditions communes. || Il se forme sur l
 a: a1119
 
 %acte-signe | 8 | 1
-c: Deux sociétés signent un acte de cession mentionnant la chose et le prix, puis continuent à discuter une garantie de passif que l'acheteur tient pour essentielle. L'acheteur invoque l'acte.
+c: Deux sociétés signent un acte de cession mentionnant la chose et le prix, puis continuent à discuter une garantie de passif que chacune tient pour essentielle. L'acheteur invoque l'acte, et le vendeur, que tu conseilles, veut y échapper.
 d: Plaider qu'aucun accord définitif n'existe : les négociations continuent
-dx: Soutenir que la vente est parfaite, puisque l'acte est signé || La signature ne suffit pas si les parties restent en pourparlers.
-dx: Demander la révision du prix pour tenir compte de la garantie || Le litige porte sur la formation.
+dx: Admettre que la vente est parfaite, puisque l'acte est signé || La signature ne suffit pas si les parties restent en pourparlers.
+dx: Demander la révision du prix pour tenir compte de la garantie || Le litige porte sur la formation du contrat.
 r: Les parties peuvent rendre essentiel un élément qui ne l'est pas par nature.
 rx: La chose et le prix suffisent dans tous les cas. || Pas si les parties subordonnent leur accord à d'autres éléments.
 rx: Le juge du fond ne peut jamais rechercher la commune intention. || Il l'apprécie souverainement.
