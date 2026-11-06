@@ -144,7 +144,7 @@ function etatInitial() {
     defi: { jour: null, fini: false },
     cloud: { code: null, dernier: null },
     cadeaux: [],
-    chouette: { tenues: [], porte: { tete: null, visage: null, buste: null, robe: null }, reveil: null, retour: null, seance: null, tapes: 0 },
+    chouette: { tenues: [], skins: [], skin: null, porte: { tete: null, visage: null, buste: null, robe: null }, reveil: null, retour: null, seance: null, tapes: 0 },
   };
 }
 

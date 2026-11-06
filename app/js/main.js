@@ -1,7 +1,7 @@
 // Point d'entrée : écrans, séances, récompenses.
 import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
-import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES } from './chouette.js';
+import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import { changerEquipe,
   etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
@@ -146,7 +146,10 @@ function figureSerie(s, fait) {
   if (reveil) c.reveil = j;
   if (retour) c.retour = j;
   if (reveil || retour) sauver();
-  const bete = chouette(retour ? 'serment' : 'debout', { taille: 236, vivante: true, classe: `sur-accueil ${reveil ? 'reveil' : ''}` });
+  const skin = skinPorte();
+  const anime = SKINS.find((x) => x.id === skin)?.anime;
+  const bete = skin ? hibouSkin(skin, { classe: 'sur-accueil', danse: true })
+    : chouette(retour ? 'serment' : 'debout', { taille: 236, vivante: true, classe: `sur-accueil ${reveil ? 'reveil' : ''}` });
   let enScene = bete;
   const reagirTape = () => {
     if (!effets()) return;
@@ -154,10 +157,12 @@ function figureSerie(s, fait) {
     son('tap');
     const dixieme = c.tapes % 10 === 0;
     const pose = dixieme ? 'tribune' : 'clin';
-    const copie = chouette(pose, { taille: 236, classe: `sur-accueil ${dixieme ? 'pirouette' : 'saute'}` });
+    const geste = dixieme ? 'pirouette' : anime ? '' : 'saute';
+    const copie = skin ? hibouSkin(skin, { classe: `sur-accueil ${geste}`, danse: true })
+      : chouette(pose, { taille: 236, classe: `sur-accueil ${geste}` });
     enScene.replaceWith(copie); enScene = copie;
     if (dixieme) { plumes(24); son('deblocage'); }
-    setTimeout(() => { if (enScene === copie) { copie.replaceWith(bete); enScene = bete; } }, dixieme ? 1500 : 800);
+    setTimeout(() => { if (enScene === copie) { copie.replaceWith(bete); enScene = bete; } }, anime ? DUREE_DANSE : dixieme ? 1500 : 800);
   };
   return h('div', { class: 'figure-chouette', onClick: reagirTape },
     h('span', { class: 'aura', 'aria-hidden': 'true' }), bete,
@@ -649,7 +654,58 @@ function gardeRobe() {
   return [
     h('div', { class: 'essayage' }, h('span', { class: 'aura', 'aria-hidden': 'true' }), chouette('debout', { taille: 230, vivante: true })),
     images.mascotte ? h('p', { class: 'aide-claire' }, 'Ton image personnelle remplace la chouette : retire-la dans Profil pour voir ses tenues.') : null,
+    skinPorte() ? h('p', { class: 'aide-claire' }, 'Tu portes un skin : retire-le pour retrouver ces tenues au Palais.') : null,
     h('ul', { class: 'articles' }, TENUES.map(ligne)),
+  ];
+}
+
+// L'aperçu d'un skin : on le voit en grand avant de l'acheter.
+function apercuSkin(s, reafficher) {
+  const c = etat.chouette;
+  const boite = h('div', { class: 'boite boite-skin', role: 'dialog', 'aria-label': `Aperçu : ${s.nom}` });
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) fermer(); } }, boite);
+  const fermer = () => { voile.remove(); reafficher(); };
+  const acheter = () => { etat.jetons -= s.prix; c.skins.push(s.id); c.skin = s.id; sauver(); son('jeton'); vibrer(10); adjuge(); dessiner(true); };
+  const porter = (id) => () => { c.skin = id; sauver(); son('tap'); vibrer(8); dessiner(true); };
+  function action() {
+    if (c.skin === s.id) return h('button', { class: 'bouton-or', onClick: porter(null) }, 'Retirer');
+    if (c.skins.includes(s.id)) return h('button', { class: 'bouton-or', onClick: porter(s.id) }, 'Équiper');
+    const manque = s.prix - etat.jetons;
+    if (manque > 0) return h('button', { class: 'bouton-or', disabled: true }, `Il te manque ${monnaie(manque)}`);
+    return h('button', { class: 'bouton-or', onClick: acheter }, `Acheter pour ${monnaie(s.prix)}`);
+  }
+  function dessiner(danse) {
+    boite.replaceChildren(...[
+      h('div', { class: `skin-scene ${s.legendaire ? 'legendaire' : ''}` }, h('span', { class: 'aura', 'aria-hidden': 'true' }), hibouSkin(s.id, { taille: 250, danse })),
+      h('h2', {}, s.nom),
+      h('small', { class: 'skin-rarete' }, s.legendaire ? 'Légendaire, animé' : 'Classique'),
+      h('p', {}, s.txt),
+      images.mascotte ? h('p', { class: 'aide-claire' }, 'Ton image personnelle passe avant : retire-la dans Profil pour voir ce skin au Palais.') : null,
+      h('div', { class: 'boite-actions' }, action(), h('button', { class: 'bouton-lien', onClick: fermer }, 'Fermer')),
+    ].filter(Boolean));
+  }
+  dessiner(true);
+  document.body.append(voile);
+}
+
+function skinsDuHibou() {
+  const c = etat.chouette;
+  const reafficher = () => { const y = window.scrollY; boutique(); window.scrollTo(0, y); };
+  const carte = (s) => {
+    const achete = c.skins.includes(s.id);
+    return h('li', { class: s.legendaire ? 'legendaire' : '' },
+      h('button', { class: 'skin-carte', 'data-skin-carte': s.id, 'aria-label': `Voir ${s.nom}`, onClick: () => { son('tap'); apercuSkin(s, reafficher); } },
+        hibouSkin(s.id, { taille: s.legendaire ? 148 : 132 }),
+        h('span', { class: 'skin-texte' },
+          s.legendaire ? h('small', { class: 'skin-rarete' }, 'Légendaire') : null,
+          h('b', {}, s.nom),
+          c.skin === s.id ? h('small', { class: 'skin-etat' }, 'Porté')
+            : achete ? h('small', { class: 'skin-etat' }, 'Acheté')
+              : h('span', { class: 'skin-prix' }, h('i', { class: 'jeton' }), s.prix))));
+  };
+  return [
+    h('p', { class: 'aide-claire' }, 'Un skin remplace la chouette au Palais. Appuie pour le voir en grand.'),
+    h('ul', { class: 'skins' }, SKINS.map(carte)),
   ];
 }
 
@@ -677,6 +733,7 @@ function boutique() {
   montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, 'La boutique'),
     h('p', { class: 'page-sous' }, estRose() ? 'Tes canettes de Ratio se gagnent en finissant des épreuves.' : 'Tes jetons de présence se gagnent en finissant des épreuves.'),
     h('ul', { class: 'articles' }, objets), h('h2', {}, 'Mini-jeux'), h('ul', { class: 'articles' }, miniJeux()),
+    h('h2', {}, 'Skins du hibou'), skinsDuHibou(),
     h('h2', {}, 'Garde-robe de la chouette'), gardeRobe(),
     h('h2', {}, 'Tenues'), h('ul', { class: 'articles' }, themes),
     h('h2', {}, 'Insignes'), h('ul', { class: 'articles' }, insignes),

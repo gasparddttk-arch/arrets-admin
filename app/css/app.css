@@ -597,7 +597,7 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 /* Effets : les ambiances s'arrêtent si l'iPhone peine, tout s'arrête si la personne le demande. */
 [data-effets='leger'] .etincelle, [data-effets='leger'] .cta.brille::after,
 [data-effets='leger'] .role-ligne::before, [data-effets='leger'] .role-ligne::after, [data-effets='leger'] .jour-sceau.aujourdhui::after,
-[data-effets='leger'] .salle.courante .salle-marque { animation: none; }
+[data-effets='leger'] .salle.courante .salle-marque, [data-effets='leger'] .legendaire .skin-carte::before { animation: none; }
 [data-effets='non'] *, [data-effets='non'] *::before, [data-effets='non'] *::after { animation: none !important; transition: none !important; }
 [data-effets='non'] .etincelle { display: none; }
 [data-effets='non'] .role-ligne::before, [data-effets='non'] .role-ligne::after, [data-effets='non'] .cta.brille::after { display: none; }
@@ -822,3 +822,33 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .profil-tete .chouette { margin: -16px auto 2px; }
 .image-apercu .chouette { margin: -6px; }
 [data-effets='leger'] .plumes, [data-effets='non'] .plumes, [data-effets='non'] .bulle-accueil { display: none; }
+
+/* Les skins du hibou */
+.chouette.skin .bras-gauche, .chouette.skin .bras-droit { opacity: 0; }
+.chouette.skin.danse .bras-leves { opacity: 0; }
+.chouette.skin.danse .bras-droit { animation: bras-six .66s steps(1) infinite, dandine .33s ease-in-out infinite alternate; }
+.chouette.skin.danse .bras-gauche { animation: bras-sept .66s steps(1) infinite, dandine .33s ease-in-out infinite alternate; }
+@keyframes bras-six { 0% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes bras-sept { 0% { opacity: 0; } 50% { opacity: 1; } }
+@keyframes dandine { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+.skins { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.skins .legendaire { grid-column: 1 / -1; }
+.skin-carte { position: relative; display: grid; justify-items: center; gap: 2px; width: 100%; height: 100%; padding: 2px 8px 13px; text-align: center; overflow: hidden; border-radius: var(--rayon); background: linear-gradient(180deg, var(--carte-haut), var(--carte-bas)); box-shadow: inset 0 0 0 1px var(--carte-bord), 0 5px 12px var(--ombre); }
+.skin-carte:active { transform: scale(.98); }
+.skin-carte b { display: block; font-weight: 700; font-size: 22px; line-height: 1.1; }
+.skin-texte { display: grid; justify-items: center; gap: 3px; }
+.skin-prix { display: inline-flex; align-items: center; gap: 6px; color: var(--titre-or); font-weight: 700; font-size: 21px; line-height: 1; }
+.skin-etat { color: var(--texte-2); font-size: 17px; }
+.skin-rarete { display: block; color: var(--titre-or); font-size: 17px; }
+.legendaire .skin-carte { grid-template-columns: 148px 1fr; align-items: center; justify-items: start; gap: 10px; padding: 6px 14px 6px 6px; text-align: left; box-shadow: inset 0 0 0 2px var(--or-2), 0 5px 14px var(--ombre); }
+.legendaire .skin-texte { justify-items: start; }
+.legendaire .skin-carte::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 38%, var(--aura) 50%, transparent 62%); background-size: 260% 100%; pointer-events: none; animation: reflet 6s ease-in-out infinite; }
+.legendaire .skin-carte > * { position: relative; }
+@keyframes reflet { from { background-position: 130% 0; } to { background-position: -30% 0; } }
+.boite-skin { text-align: center; }
+.boite-skin h2 { font-weight: 700; font-size: 30px; line-height: 1.1; color: var(--titre-or); }
+.boite-skin p { margin-top: 6px; }
+.skin-scene { position: relative; display: grid; justify-items: center; margin: -18px 0 -8px; }
+@media (prefers-reduced-motion: reduce) {
+  .legendaire .skin-carte::before { animation: none; }
+}

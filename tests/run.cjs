@@ -674,6 +674,111 @@ async function debordement(p, nom) {
   await audio.close();
   log('son ok');
 
+  // Les skins du hibou : aperçu, achat, équipement, Palais seulement.
+  const sk = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const k = await sk.newPage(); k.on('pageerror', (x) => erreurs.push(x.message));
+  await k.goto(URLB + '?test&choix'); await k.waitForSelector('.portes');
+  await k.locator('.porte-admin').click(); await k.waitForSelector('.tribune');
+  const skinPalais = () => k.locator('.figure-chouette [data-skin]');
+  await k.evaluate(() => { const e = window.__app.etat(); e.jetons = 150; e.chouette.tenues = ['toque']; e.chouette.porte.tete = 'toque'; window.__app.aller('boutique'); });
+  assert.equal(await k.locator('.skin-carte').count(), 7, 'sept skins en boutique');
+  await debordement(k, 'skins');
+  await k.locator('.skin-carte[data-skin-carte="goumin"]').click();
+  assert.match(await k.locator('.boite-skin .bouton-or').innerText(), /Il te manque 50 jetons/);
+  await textePropre(k);
+  assert.ok(await k.locator('.boite-skin .bouton-or').isDisabled(), 'pas d’achat sans jetons');
+  await k.screenshot({ path: CAP + 'skin-apercu.png' });
+  await k.locator('.boite-skin .bouton-lien').click();
+  await k.evaluate(() => { window.__app.etat().jetons = 750; window.__app.aller('boutique'); });
+  await k.locator('.skin-carte[data-skin-carte="goumin"]').click();
+  assert.match(await k.locator('.boite-skin .bouton-or').innerText(), /Acheter pour 200 jetons/);
+  await k.locator('.boite-skin .bouton-or').click();
+  await k.waitForSelector('.adjuge', { state: 'attached' });
+  assert.equal(await k.locator('.boite-skin .bouton-or').innerText(), 'Retirer');
+  let ek = await etat(k);
+  assert.equal(ek.jetons, 550, 'prix d’un skin classique'); assert.deepEqual(ek.chouette.skins, ['goumin']); assert.equal(ek.chouette.skin, 'goumin');
+  await k.locator('.boite-skin .bouton-lien').click();
+  await k.evaluate(() => window.__app.aller('palais'));
+  await k.waitForSelector('.figure-chouette [data-skin="goumin"]');
+  assert.equal(await k.locator('.figure-chouette [data-pose]').count(), 0, 'le skin remplace la chouette');
+  assert.equal(await k.locator('.figure-chouette .acc-toque').count(), 0, 'le skin ne se combine pas avec les tenues');
+  await k.evaluate(() => document.querySelector('.figure-chouette').click());
+  await k.waitForSelector('.figure-chouette [data-skin="goumin"].saute');
+  await k.screenshot({ path: CAP + 'skin-palais.png' });
+  // Ailleurs, la chouette normale reste en place.
+  await k.locator('.role-ligne[data-mode="paires"]').click();
+  await k.waitForSelector('.palais-portes [data-pose]', { state: 'attached' });
+  assert.equal(await k.locator('.palais-portes [data-skin]').count(), 0, 'pas de skin dans les portes');
+  await k.waitForSelector('.quitter'); await k.waitForSelector('.palais-portes', { state: 'detached' });
+  await k.tap('.quitter'); await k.tap('.boite .bouton-or'); await k.waitForSelector('.tribune');
+  // Le légendaire : 500 jetons, et les deux bras s'enchaînent.
+  await k.evaluate(() => window.__app.aller('boutique'));
+  await k.locator('.skin-carte[data-skin-carte="six-sept"]').click();
+  await k.waitForSelector('.boite-skin .danse');
+  await k.locator('.boite-skin .bouton-or').click();
+  assert.equal((await etat(k)).jetons, 50, 'prix du légendaire');
+  const vus = await k.evaluate(async () => {
+    const el = document.querySelector('.boite-skin [data-skin]'); const o = new Set();
+    const debut = performance.now();
+    while (performance.now() - debut < 1000) { const a = getComputedStyle(el.querySelector('.bras-droit')).opacity; const c = getComputedStyle(el.querySelector('.bras-gauche')).opacity; o.add(a + c); await new Promise((f) => requestAnimationFrame(f)); }
+    return [...o];
+  });
+  assert.ok(vus.includes('10') && vus.includes('01'), `les deux bras alternent : ${vus}`);
+  await k.waitForFunction(() => !document.querySelector('.boite-skin .danse'), null, { timeout: 2600 });
+  assert.equal(await k.evaluate(() => getComputedStyle(document.querySelector('.boite-skin .bras-leves')).opacity), '1', 'les deux bras levés au repos');
+  await k.locator('.boite-skin .bouton-lien').click();
+  await k.evaluate(() => window.__app.aller('palais'));
+  await k.waitForSelector('.figure-chouette [data-skin="six-sept"].danse');
+  await k.waitForSelector('.figure-chouette [data-skin="six-sept"]:not(.danse)', { timeout: 2600 });
+  await k.evaluate(() => document.querySelector('.figure-chouette').click());
+  await k.waitForSelector('.figure-chouette [data-skin="six-sept"].danse');
+  // Le dixième appui reste la pirouette.
+  await k.evaluate(() => { const e = window.__app.etat(); e.chouette.tapes = 9; document.querySelector('.figure-chouette').click(); });
+  await k.waitForSelector('.figure-chouette [data-skin].pirouette');
+  // Le skin survit à la réouverture.
+  await k.waitForTimeout(1600);
+  await k.reload(); await k.waitForSelector('.portes'); await k.locator('.porte-admin').click();
+  await k.waitForSelector('.figure-chouette [data-skin="six-sept"]');
+  // Retirer le skin rend la chouette et ses tenues.
+  await k.evaluate(() => window.__app.aller('boutique'));
+  await k.locator('.skin-carte[data-skin-carte="six-sept"]').click();
+  await k.locator('.boite-skin .bouton-or').click();
+  assert.equal(await k.locator('.boite-skin .bouton-or').innerText(), 'Équiper');
+  await k.locator('.boite-skin .bouton-lien').click();
+  await k.evaluate(() => window.__app.aller('palais'));
+  await k.waitForSelector('.figure-chouette .acc-toque');
+  assert.equal(await skinPalais().count(), 0, 'chouette rendue');
+  // Tenue rose et petit écran.
+  await k.evaluate(() => { const e = window.__app.etat(); e.chouette.skin = 'survet'; e.chouette.skins.push('survet'); e.theme = 'rose'; window.__app.appliquerTheme(); window.__app.aller('palais'); });
+  await k.waitForSelector('.figure-chouette [data-skin="survet"]');
+  await k.screenshot({ path: CAP + 'skin-palais-rose.png' });
+  await k.evaluate(() => window.__app.aller('boutique'));
+  await k.locator('.skin-carte[data-skin-carte="bosslady"]').click();
+  assert.match(await k.locator('.boite-skin .bouton-or').innerText(), /Il te manque 150 canettes/);
+  await k.locator('.boite-skin .bouton-lien').click();
+  await k.evaluate(() => { window.__app.etat().theme = 'palais'; window.__app.appliquerTheme(); });
+  await k.setViewportSize({ width: 320, height: 568 });
+  await k.evaluate(() => window.__app.aller('boutique')); await debordement(k, 'skins 320');
+  await k.locator('.skin-carte[data-skin-carte="six-sept"]').click(); await debordement(k, 'aperçu 320');
+  const hautBoite = await k.locator('.boite-skin').boundingBox();
+  assert.ok(hautBoite.y >= 0, 'aperçu entier à 320 px');
+  await k.screenshot({ path: CAP + 'skin-apercu-petit.png' });
+  await sk.close();
+  // Sauvegarde d'avant les skins, et mouvements réduits.
+  const av = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block', reducedMotion: 'reduce' });
+  const v = await av.newPage(); v.on('pageerror', (x) => erreurs.push(x.message));
+  await v.goto(URLB + '?test&choix'); await v.waitForSelector('.portes');
+  await v.locator('.porte-admin').click(); await v.waitForSelector('.tribune');
+  await v.evaluate(() => { const c = Object.keys(localStorage).find((x) => { try { return JSON.parse(localStorage.getItem(x)).chouette; } catch { return false; } }); const o = JSON.parse(localStorage.getItem(c)); delete o.chouette.skins; delete o.chouette.skin; localStorage.setItem(c, JSON.stringify(o)); });
+  await v.reload(); await v.waitForSelector('.portes'); await v.locator('.porte-admin').click(); await v.waitForSelector('.tribune');
+  const eAncien = await etat(v);
+  assert.deepEqual(eAncien.chouette.skins, [], 'ancienne sauvegarde lue'); assert.equal(eAncien.chouette.skin, null);
+  await v.evaluate(() => { const e = window.__app.etat(); e.chouette.skins = ['six-sept']; e.chouette.skin = 'six-sept'; e.jetons = 0; window.__app.aller('palais'); });
+  await v.waitForSelector('.figure-chouette [data-skin="six-sept"]');
+  assert.equal(await v.locator('.danse').count(), 0, 'mouvements réduits : pas d’alternance');
+  await av.close();
+  log('skins ok');
+
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }
   log('\nTous les tests sont passés.');

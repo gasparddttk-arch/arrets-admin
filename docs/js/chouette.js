@@ -20,6 +20,17 @@ export const TENUES = [
   { id: 'robe', nom: 'Robe rouge', prix: 400, place: 'robe', txt: 'Celle des conseillers à la Cour de cassation' },
 ];
 
+// Les skins remplacent la chouette au Palais et dans l'aperçu de la boutique, nulle part ailleurs.
+export const SKINS = [
+  { id: 'six-sept', nom: 'Hibou 6-7', prix: 500, legendaire: true, anime: true, txt: 'Six, sept, six, sept. Le seul skin qui bouge.' },
+  { id: 'goumin', nom: 'Goumin', prix: 200, txt: 'Il garde la photo. Il garde aussi la moitié du cœur.' },
+  { id: 'survet', nom: 'Le Survêt', prix: 200, txt: 'Survêt, chaîne et baskets à bulles.' },
+  { id: 'bosslady', nom: 'Boss Lady', prix: 200, txt: 'Les paillettes d’abord, le plan en deux parties ensuite.' },
+  { id: 'loco', nom: 'Hibou Loco', prix: 200, txt: 'Il a relu tout le cours en une nuit.' },
+  { id: 'nana', nom: 'Sexy Nana', prix: 200, txt: 'Lunettes noires, sac à main, aucune question.' },
+  { id: 'alcoolique', nom: 'Hibou Alcoolique', prix: 200, txt: 'Une canette après le partiel. Puis une autre.' },
+];
+
 const DOSSIER = 'img/chouette/';
 const calque = (nom, classe = '') => h('img', { class: `calque ${classe}`, src: `${DOSSIER}${nom}.webp`, alt: '', draggable: 'false', decoding: 'async' });
 const YEUX_DEFAUT = REPERES.debout.yeux;
@@ -87,6 +98,33 @@ export function chouette(pose = 'debout', { taille = 180, tenue = true, porte = 
     habits.visage === 'lunettes' && pose !== 'lunettes' ? accessoire(pose, 'lunettes') : null);
   if (vivante && effets()) faireCligner(el);
   return el;
+}
+
+const imageSkin = (nom, classe = '') => h('img', { class: `calque ${classe}`, src: `img/skins/${nom}.webp`, alt: '', draggable: 'false', decoding: 'sync' });
+
+// Le skin porté au Palais. L'image personnelle choisie dans Profil garde la priorité.
+export function skinPorte() {
+  const c = etat.chouette;
+  return !images.mascotte && c.skins.includes(c.skin) && SKINS.some((s) => s.id === c.skin) ? c.skin : null;
+}
+
+export function hibouSkin(id, { taille = 236, classe = '', danse = false } = {}) {
+  const s = SKINS.find((x) => x.id === id);
+  const el = h('div', { class: `chouette skin ${classe}`, style: `--taille:${taille}px`, role: 'img', 'aria-label': s.nom, 'data-skin': id },
+    s.anime ? [imageSkin('67-gauche', 'bras-gauche'), imageSkin('67-droite', 'bras-droit'), imageSkin('67-deux', 'bras-leves')] : imageSkin(id));
+  if (s.anime && danse) danser(el);
+  return el;
+}
+
+// Trois allers-retours, puis les deux bras levés.
+export const DUREE_DANSE = 2000;
+export function danser(el) {
+  if (!effets()) return;
+  clearTimeout(el.finDanse);
+  el.classList.remove('danse');
+  void el.offsetWidth;
+  el.classList.add('danse');
+  el.finDanse = setTimeout(() => el.classList.remove('danse'), DUREE_DANSE);
 }
 
 // Les images arrivent du cache : les décoder d'avance évite tout clignotement à l'ouverture des portes.
