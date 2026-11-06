@@ -149,6 +149,8 @@ function etatInitial() {
     reglages: { son: true, toutOuvert: false, effets: true, vibration: true, sonSilencieux: false },
     defi: { jour: null, fini: false },
     cloud: { code: null, dernier: null },
+    compte: { id: null, email: null, pseudo: null, acces: null, sync: 0 },
+    modifie: 0,
     cadeaux: [],
     chouette: { tenues: [], skins: [], skin: null, porte: { tete: null, visage: null, buste: null, robe: null }, reveil: null, retour: null, seance: null, tapes: 0 },
   };
@@ -156,7 +158,7 @@ function etatInitial() {
 
 function fusion(base, x) {
   const o = { ...base, ...x };
-  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud', 'gains', 'dunk', 'chouette']) o[k] = { ...base[k], ...(x[k] || {}) };
+  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud', 'compte', 'gains', 'dunk', 'chouette']) o[k] = { ...base[k], ...(x[k] || {}) };
   const ob = x.oblig || {};
   o.oblig = { ...base.oblig, ...ob, gains: { ...base.oblig.gains, ...(ob.gains || {}) }, zones: { ...base.oblig.zones, ...(ob.zones || {}) } };
   if (!['admin', 'oblig'].includes(o.matiere)) o.matiere = 'admin';
@@ -225,6 +227,7 @@ export async function charger() {
 }
 
 export function sauver() {
+  etat.modifie = Date.now();
   const brut = JSON.stringify(etat);
   try { localStorage.setItem(CLE, brut); } catch { /* stockage plein ou bloqué */ }
   ecrireSecours(brut);

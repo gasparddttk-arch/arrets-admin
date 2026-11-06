@@ -3,7 +3,7 @@ import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
-import { changerEquipe,
+import { remplacerEtat, changerEquipe,
   SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
@@ -13,7 +13,9 @@ import { JEUX, NOMS_MODES, NOMS_MODES_OBLIG, continuer } from './games.js';
 import { jouerCas, jouerRemede, jouerFrise } from './jeux-oblig.js';
 import { lancerDunk } from './dunk.js';
 import { activerRappel, etatRappel, testerNotification, estInstallee, abonnementActuel } from './notif.js';
-import { cloudActif, inscrireAbonnement, copierEnLigne, codeRecuperation, restaurerEnLigne, recevoirCadeaux } from './cloud.js';
+import { cloudActif, inscrireAbonnement } from './cloud.js';
+import { SUPABASE_URL } from './config.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
 const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise };
@@ -427,7 +429,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false }) {
 }
 
 function resultats(S, reussi) {
-  setTimeout(copierEnLigne, 1500);
+  setTimeout(envoyerProgression, 1500);
   const avant = rang(); const avantGeneral = rangGeneral();
   const moyenne = S.scores.reduce((a, b) => a + b, 0) / (S.scores.length || 1);
   etat.stats.seances++;
@@ -682,9 +684,10 @@ function signaler(id, nom) {
         h('button', { class: 'bouton-or', onClick: () => {
           const txt = champ.value.trim();
           if (!txt) return toast('Écris ta remarque.');
-          etat.signalements.push({ id, nom, txt, le: new Date().toISOString().slice(0, 10), equipe: etat.equipe });
-          sauver(); voile.remove(); toast('Signalement gardé dans ton profil.');
-        } }, 'Envoyer dans mon profil'),
+          etat.signalements.push({ id, nom, txt, le: new Date().toISOString().slice(0, 10), equipe: etat.equipe, matiere: etat.matiere });
+          sauver(); voile.remove();
+          envoyerSignalements().then((n) => toast(n ? 'Signalement envoyé. Merci.' : 'Signalement gardé : il partira à la prochaine connexion.'));
+        } }, 'Envoyer'),
         h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Annuler'))));
   document.body.append(voile);
   champ.focus();
@@ -922,8 +925,8 @@ function profil() {
     h('button', { class: 'bouton-fantome ecouter', onClick: () => son('grade') }, icone('son', 18), 'Écouter la signature sonore'),
     blocSignalements(),
     h('h2', {}, 'Sauvegarde'),
-    cloudActif() ? blocCloud() : null,
-    h('p', { class: 'aide-claire' }, cloudActif() ? 'Copie manuelle, si tu préfères garder ton propre code.' : 'Ta progression reste sur ce téléphone. Garde une copie de ce code avant de changer d’appareil ou de supprimer l’appli.'),
+    connecte() ? blocCompte() : null,
+    h('p', { class: 'aide-claire' }, connecte() ? 'Copie manuelle, en plus de celle de ton compte.' : 'Ta progression reste sur ce téléphone. Garde une copie de ce code avant de changer d’appareil ou de supprimer l’appli.'),
     h('button', { class: 'bouton-or', onClick: async () => { const c = exporter(); try { await navigator.clipboard.writeText(c); toast('Sauvegarde copiée.'); } catch { champSauvegarde.value = c; toast('Copie le code affiché.'); } } }, 'Copier ma sauvegarde'),
     champSauvegarde,
     h('button', { class: 'bouton-lien', onClick: () => { try { importer(champSauvegarde.value); apresRestauration(); toast('Progression restaurée.'); aller('palais'); } catch { toast('Ce code de sauvegarde est illisible.'); } } }, 'Restaurer ce code'),
@@ -931,17 +934,79 @@ function profil() {
   rendreRappel();
 }
 
-// Copie automatique : le code de récupération est la seule chose à garder.
-function blocCloud() {
-  const code = codeRecuperation();
-  const champ = h('input', { class: 'code', placeholder: 'XXXXXX-XXXXXX-XXXXXX-XXXXXX', 'aria-label': 'Code de récupération', autocapitalize: 'characters', autocomplete: 'off' });
-  return h('div', { class: 'cloud' },
-    h('p', { class: 'aide-claire' }, etat.cloud.dernier === jour() ? 'Copie en ligne à jour.' : etat.cloud.dernier ? 'Copie en ligne faite après ta dernière séance connectée.' : 'Ta progression se copie en ligne après chaque séance.'),
-    h('p', { class: 'aide-claire' }, 'Note ce code une fois, hors de l’appli. Lui seul permet de retrouver ta progression sur un autre téléphone. Ne le partage pas.'),
-    h('p', { class: 'code-recup' }, code),
-    h('button', { class: 'bouton-or', onClick: async () => { try { await navigator.clipboard.writeText(code); toast('Code copié.'); } catch { toast('Recopie le code affiché.'); } } }, 'Copier le code de récupération'),
+// Le compte : qui est connecté, le pseudo, la déconnexion.
+function blocCompte() {
+  const c = etat.compte;
+  const champ = h('input', { class: 'code', value: c.pseudo || '', maxlength: 40, 'aria-label': 'Pseudo', autocomplete: 'nickname' });
+  const dateSync = c.sync ? new Date(c.sync).toLocaleString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : null;
+  return h('div', { class: 'cloud compte' },
+    h('p', { class: 'aide-claire' }, `Connecté : ${c.email || 'compte Gdroit'}.`),
+    h('p', { class: 'aide-claire' }, dateSync ? `Progression copiée sur ton compte le ${dateSync}.` : 'Ta progression se copie sur ton compte après chaque séance.'),
     champ,
-    h('button', { class: 'bouton-lien', onClick: async () => { try { await restaurerEnLigne(champ.value); apresRestauration(); toast('Progression restaurée.'); aller('palais'); } catch (err) { toast(err.message); } } }, 'Restaurer avec ce code'));
+    h('button', { class: 'bouton-fantome', onClick: async () => { const v = champ.value.trim(); if (!v) return toast('Choisis un pseudo.'); try { await changerPseudo(v); etat.compte.pseudo = v; sauver(); toast('Pseudo enregistré.'); } catch { toast('Pas de connexion. Réessaie plus tard.'); } } }, 'Changer de pseudo'),
+    h('button', { class: 'bouton-lien', onClick: () => confirmerDeconnexion() }, 'Se déconnecter'));
+}
+function confirmerDeconnexion() {
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite', role: 'dialog', 'aria-label': 'Se déconnecter' },
+    h('p', {}, 'Ta progression est copiée sur ton compte puis effacée de ce téléphone. Tu la retrouves en te reconnectant.'),
+    h('div', { class: 'boite-actions' },
+      h('button', { class: 'bouton-or', onClick: async () => { voile.remove(); await deconnexion(); remplacerEtat({}); location.reload(); } }, 'Se déconnecter'),
+      h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Annuler'))));
+  document.body.append(voile);
+}
+
+// CONNEXION ---------------------------------------------------------------------------
+function ecranConnexion(erreur) {
+  afficherOnglets(false);
+  const email = h('input', { class: 'code', type: 'email', inputmode: 'email', autocomplete: 'email', placeholder: 'ton.adresse@email.fr', 'aria-label': 'Adresse email' });
+  const code = h('input', { class: 'code', inputmode: 'numeric', autocomplete: 'one-time-code', placeholder: 'Code reçu par email', 'aria-label': 'Code reçu par email', maxlength: 10 });
+  const etape2 = h('div', { class: 'connexion-code', hidden: true }, h('p', { class: 'aide-claire' }, 'Regarde tes emails, y compris les indésirables.'), code,
+    h('button', { class: 'bouton-or', onClick: async (e) => {
+      if (code.value.replace(/\s/g, '').length < 6) return toast('Tape le code reçu.');
+      const bouton = e.currentTarget; bouton.disabled = true;
+      try { await verifierCode(email.value, code.value); location.reload(); } catch (err) { toast(err.message); bouton.disabled = false; }
+    } }, 'Valider le code'));
+  const envoyer = h('button', { class: 'bouton-fantome', onClick: async () => {
+    if (!/^\S+@\S+\.\S+$/.test(email.value.trim())) return toast('Adresse email incomplète.');
+    envoyer.disabled = true;
+    try { await envoyerCode(email.value); etape2.hidden = false; code.focus(); toast('Code envoyé.'); } catch (err) { toast(err.message); } finally { envoyer.disabled = false; }
+  } }, 'Recevoir un code par email');
+  racine.replaceChildren(h('main', { class: 'connexion' },
+    chouette('clin', { taille: 170, tenue: false }),
+    h('h1', {}, 'Gdroit'),
+    h('p', { class: 'connexion-sous' }, 'Connecte-toi pour retrouver ta progression sur tous tes appareils.'),
+    erreur ? h('p', { class: 'connexion-erreur', role: 'alert' }, erreur) : null,
+    h('button', { class: 'bouton-or connexion-google', onClick: () => { if (navigator.onLine === false) return toast('Il faut du réseau pour se connecter.'); connexionGoogle(); } }, logoG(), 'Continuer avec Google'),
+    h('p', { class: 'connexion-ou' }, 'ou'),
+    email, envoyer, etape2,
+    h('p', { class: 'aide-claire connexion-note' }, etat.stats.seances ? 'La progression déjà sur ce téléphone sera rattachée à ton compte.' : 'Un compte se crée à la première connexion.')));
+}
+function logoG() {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('viewBox', '0 0 48 48'); s.setAttribute('width', '22'); s.setAttribute('height', '22'); s.setAttribute('aria-hidden', 'true');
+  s.innerHTML = '<path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.2C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.8c4.3-4 6.9-9.9 6.9-17.1z"/><path fill="#FBBC05" d="M10.6 28.5c-.5-1.4-.8-2.9-.8-4.5s.3-3.1.8-4.5l-7.9-6.2C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.2z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.8c-2.1 1.4-4.8 2.2-8.5 2.2-6.2 0-11.5-4.1-13.4-9.8l-7.9 6.2C6.6 42.6 14.6 48 24 48z"/>';
+  return s;
+}
+
+// Au démarrage, un compte connecté récupère sa progression avant d'ouvrir le Palais.
+async function ouvrirCompte(params) {
+  const requis = Boolean(SUPABASE_URL) && !(params.has('test') && !params.has('compte'));
+  if (!requis) return true;
+  let erreur = null;
+  try { retourConnexion(); } catch (e) { erreur = e.message; }
+  if (!connecte()) { ecranConnexion(erreur); return false; }
+  if (navigator.onLine === false) return true;
+  racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Ta progression arrive')));
+  const delai = { depasse: false };
+  try {
+    await completerUtilisateur();
+    const r = await Promise.race([synchroniser(delai), new Promise((ok) => setTimeout(() => { delai.depasse = true; ok('delai'); }, 6000))]);
+    if (r === 'en-ligne') setTimeout(() => toast('Progression de ton compte récupérée.'), 600);
+    lireProfil().catch(() => {});
+  } catch (e) {
+    if (!connecte()) { ecranConnexion(e.message); return false; }
+  }
+  return true;
 }
 
 function guideInstallation() {
@@ -975,6 +1040,7 @@ async function demarrer() {
   if (params.has('decalage')) fixerDecalage(+params.get('decalage'));
   const [admin, oblig2, oblig1] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), charger().then(chargerImages)]);
   clearTimeout(attente);
+  if (!(await ouvrirCompte(params))) { enregistrerServiceWorker(); return; }
   // Une ancienne sauvegarde connaît déjà le jour de la dernière séance.
   if (etat.chouette.seance === null) etat.chouette.seance = etat.serie.dernier;
   // ?equipe=1 : les tests ouvrent directement une équipe, sans passer par la question.
@@ -998,6 +1064,21 @@ async function demarrer() {
   setTimeout(surveillerFluidite, 1200);
   precharger();
 
+  enregistrerServiceWorker();
+  if (connecte()) {
+    envoyerSignalements();
+    window.addEventListener('online', () => { envoyerProgression(); envoyerSignalements(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) envoyerProgression(); });
+    recevoirCadeauxCompte().then((n) => {
+      if (!n) return;
+      if (document.querySelector('.tribune')) accueil();
+      else if (document.querySelector('.porte-oblig')) matieres();
+      toast(`${monnaie(n)} offerts, ils sont dans ta réserve.`);
+    });
+  }
+}
+
+async function enregistrerServiceWorker() {
   if ('serviceWorker' in navigator) {
     try {
       const reg = await navigator.serviceWorker.register('sw.js');
@@ -1009,14 +1090,6 @@ async function demarrer() {
       let recharge = false;
       if (cloudActif()) {
         abonnementActuel().then((s) => s && inscrireAbonnement(s)).catch(() => {});
-        copierEnLigne();
-        window.addEventListener('online', copierEnLigne);
-        recevoirCadeaux().then((n) => {
-          if (!n) return;
-          if (document.querySelector('.tribune')) accueil();
-          else if (document.querySelector('.porte-oblig')) matieres();
-          toast(`${monnaie(n)} offerts, ils sont dans ta réserve.`);
-        });
       }
       navigator.serviceWorker.addEventListener('controllerchange', () => { if (!recharge && document.querySelector('.maj')) { recharge = true; location.reload(); } });
     } catch (e) { console.warn('Service worker indisponible', e); }

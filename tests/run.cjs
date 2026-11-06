@@ -381,40 +381,7 @@ async function debordement(p, nom) {
   await sn.close();
   log('sons ok :', niveaux.length, 'rendus');
 
-  // 14. Copie en ligne et rappel, service simulé.
-  const nuage = await b.newContext({ ...devices['iPhone 13'] });
-  const base = new Map(); const rpc = [];
-  await nuage.route('**/rest/v1/rpc/**', async (r) => {
-    const nom = r.request().url().split('/').pop(); const c = r.request().postDataJSON(); rpc.push(nom);
-    if (nom === 'ecrire_sauvegarde') base.set(c.code, c.donnees);
-    if (nom === 'lire_cadeaux') return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(base.has(c.code) ? [{ id: 'essai', jetons: 200 }] : []) });
-    return r.fulfill({ status: 200, contentType: 'application/json', body: nom === 'lire_sauvegarde' ? JSON.stringify(base.get(c.code) ?? null) : 'null' });
-  });
-  const n = await nuage.newPage(); n.on('pageerror', (x) => erreurs.push(x.message));
-  await n.goto(URLB + '?test&cloud'); await n.waitForSelector('.tribune');
-  await n.evaluate(() => window.__app.aller('role')); await n.tap('.role-ligne[data-mode="express"]'); await jouer(n);
-  await n.waitForFunction(() => window.__app?.etat().serie.n === 1 && window.__app.etat().cloud.dernier !== null, null, { timeout: 8000 });
-  const avantC = await etat(n);
-  for (let i = 0; i < 40 && !(base.has(avantC.cloud.code) && JSON.parse(base.get(avantC.cloud.code)).xp === avantC.xp); i++) await n.waitForTimeout(100);
-  assert(base.has(avantC.cloud.code), 'copie envoyée');
-  assert.match(avantC.cloud.code, /^([A-Z2-9]{6}-){3}[A-Z2-9]{6}$/, 'format du code');
-  assert(!JSON.parse(base.get(avantC.cloud.code)).enCours, 'pas de séance dans la copie');
-  const avantCadeau = (await etat(n)).jetons;
-  await n.waitForTimeout(300);
-  await n.reload(); await n.waitForFunction((j) => window.__app?.etat().jetons >= j + 200, avantCadeau, { timeout: 8000 });
-  await n.waitForTimeout(400); await n.reload(); await n.waitForSelector('.tribune'); await n.waitForTimeout(800);
-  assert.equal((await etat(n)).jetons, avantCadeau + 200, 'cadeau reçu une seule fois');
-  const autre = await nuage.browser().newContext({ ...devices['iPhone 13'] });
-  await autre.route('**/rest/v1/rpc/**', (r) => { const c = r.request().postDataJSON(); return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(base.get(c.code) ?? null) }); });
-  const m2 = await autre.newPage(); await m2.goto(URLB + '?test&cloud'); await m2.waitForSelector('.tribune');
-  await m2.evaluate(() => window.__app.aller('profil'));
-  await debordement(m2, 'profil en ligne');
-  await m2.fill('.cloud input', avantC.cloud.code.toLowerCase().replace(/-/g, ' '));
-  await m2.tap('text=Restaurer avec ce code'); await m2.waitForSelector('.tribune');
-  const restau = await etat(m2);
-  assert.deepEqual([restau.xp, restau.serie.n, restau.cloud.code], [avantC.xp, avantC.serie.n, avantC.cloud.code], 'progression retrouvée');
-  await autre.close(); await nuage.close();
-  log('copie en ligne ok');
+  // 14. La copie en ligne passe par le compte : voir la section « compte ».
 
   // 15. Écran de choix, obligations, carrières séparées, plafond de pièces.
   const ob = await b.newContext({ ...devices['iPhone 13'] });
@@ -649,7 +616,7 @@ async function debordement(p, nom) {
   const anc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
   const a2 = await anc.newPage(); a2.on('pageerror', (x) => erreurs.push(x.message));
   await a2.addInitScript(() => { if (!sessionStorage.getItem('pose')) { sessionStorage.setItem('pose', '1'); localStorage.setItem('arrets-admin.v1', JSON.stringify({ v: 1, m: 2, xp: 500, jetons: 777, matiere: 'oblig', equipe: 2, oblig: { xp: 900, arrets: { manoukian: { b: 4, d: 0, ok: 4, ko: 0, c: {} } }, zones: { ouvertes: [1, 2, 3], gagnees: [1, 2], parfaites: [] } }, serie: { n: 12, dernier: null, record: 12 } })); } });
-  await a2.goto(URLB + '?groupe'); await a2.waitForSelector('.porte-equipe');
+  await a2.goto(URLB + '?test&choix&groupe'); await a2.waitForSelector('.porte-equipe');
   await a2.locator('.porte-equipe[data-equipe="1"]').click(); await a2.waitForSelector('.porte-oblig');
   const ancien = await a2.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')));
   assert.equal(ancien.jetons, 777); assert.equal(ancien.oblig.xp, 900); assert.equal(ancien.oblig.arrets.manoukian.b, 4);
@@ -925,6 +892,67 @@ async function debordement(p, nom) {
   }
   await cm.close();
   log('commentaire ok');
+
+  // Le compte : connexion obligatoire, copie en ligne, reprise sur un autre téléphone. Supabase est simulé.
+  const SUPA = 'https://jhpgxisxayceixmppxuu.supabase.co';
+  const faux = { progression: null, envois: [], signalements: [], otp: [] };
+  const simuler = async (ctx) => ctx.route(SUPA + '/**', async (route) => {
+    const r = route.request(); const u = new URL(r.url()); const corps = r.postData() ? JSON.parse(r.postData()) : null;
+    const json = (x, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(x) });
+    const jetonOk = { access_token: 'jeton', refresh_token: 'renouveau', expires_in: 3600, user: { id: 'u-1', email: 'test@exemple.fr', user_metadata: { full_name: 'Testeur' } } };
+    if (u.pathname === '/auth/v1/otp') { faux.otp.push(corps.email); return json({}); }
+    if (u.pathname === '/auth/v1/verify') return corps.token === '123456' ? json(jetonOk) : json({ msg: 'Token has expired or is invalid' }, 403);
+    if (u.pathname === '/auth/v1/user') return json(jetonOk.user);
+    if (u.pathname === '/auth/v1/token') return json(jetonOk);
+    if (u.pathname === '/auth/v1/logout') return route.fulfill({ status: 204 });
+    assert.equal(r.headers().authorization, 'Bearer jeton', 'appel authentifié');
+    if (u.pathname === '/rest/v1/progressions' && r.method() === 'GET') return json(faux.progression ? [faux.progression] : []);
+    if (u.pathname === '/rest/v1/progressions') { faux.progression = { donnees: corps.donnees, maj: corps.maj }; faux.envois.push(corps); return route.fulfill({ status: 201 }); }
+    if (u.pathname === '/rest/v1/profils' && r.method() === 'GET') return json([{ pseudo: 'Testeur', equipe: null, acces: 'testeur' }]);
+    if (u.pathname === '/rest/v1/profils') return route.fulfill({ status: 204 });
+    if (u.pathname === '/rest/v1/signalements') { faux.signalements.push(...corps); return route.fulfill({ status: 201 }); }
+    if (u.pathname === '/rest/v1/cadeaux') return json([{ id: 'cadeau-1', jetons: 7 }]);
+    return json({});
+  });
+  const t1 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' }); await simuler(t1);
+  const k1 = await t1.newPage(); k1.on('pageerror', (x) => erreurs.push(x.message));
+  await k1.goto(URLB + '?test&compte'); await k1.waitForSelector('.connexion');
+  assert.equal(await k1.$('.tribune'), null, 'rien sans connexion');
+  await k1.screenshot({ path: CAP + 'connexion.png' }); await debordement(k1, 'connexion');
+  await k1.fill('.connexion input[type="email"]', 'Test@Exemple.fr'); await k1.locator('text=Recevoir un code par email').click();
+  await k1.waitForSelector('.connexion-code:not([hidden])'); assert.deepEqual(faux.otp, ['test@exemple.fr']);
+  await k1.fill('.connexion-code input', '000000'); await k1.locator('text=Valider le code').click();
+  await k1.waitForSelector('.toast, .notif', { timeout: 5000 }).catch(() => {});
+  assert(await k1.$('.connexion'), 'code faux refusé');
+  await k1.fill('.connexion-code input', '123456'); await k1.locator('text=Valider le code').click();
+  await k1.waitForSelector('.tribune');
+  let ec = await etat(k1);
+  assert.equal(ec.compte.id, 'u-1'); assert.equal(ec.compte.email, 'test@exemple.fr');
+  await k1.waitForFunction(() => window.__app.etat().jetons >= 7, null, { timeout: 5000 });
+  await k1.evaluate(() => window.__app.aller('role')); await k1.tap('.role-ligne[data-mode="express"]'); await jouer(k1); await k1.tap('text=Retour au Palais');
+  for (let i = 0; i < 60 && !(faux.progression?.donnees.stats.seances >= 1); i++) await k1.waitForTimeout(100);
+  assert(faux.progression.donnees.stats.seances >= 1, 'progression envoyée');
+  assert(!('compte' in faux.progression.donnees) && !faux.progression.donnees.enCours, 'ni compte ni séance en cours en ligne');
+  await k1.evaluate(() => { window.__app.etat().signalements.push({ id: 'blanco', nom: 'Blanco', txt: 'Date fausse', le: '2026-11-06', equipe: 1 }); window.dispatchEvent(new Event('online')); });
+  await k1.waitForFunction(() => window.__app.etat().signalements.every((x) => x.envoye), null, { timeout: 5000 });
+  assert.equal(faux.signalements[0].carte, 'blanco', 'signalement reçu en ligne');
+  const xp1 = (await etat(k1)).xp;
+  await k1.evaluate(() => window.__app.aller('profil')); await k1.waitForSelector('.compte');
+  await k1.screenshot({ path: CAP + 'compte-profil.png' });
+  // Un autre téléphone, connecté par Google : il retrouve la progression.
+  const t2 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' }); await simuler(t2);
+  const k2 = await t2.newPage(); k2.on('pageerror', (x) => erreurs.push(x.message));
+  await k2.goto(URLB + '?test&compte#access_token=jeton&refresh_token=renouveau&expires_in=3600&token_type=bearer'); await k2.waitForSelector('.tribune');
+  assert.equal(new URL(k2.url()).hash, '', 'jetons retirés de l’adresse');
+  ec = await etat(k2); assert.equal(ec.xp, xp1, 'progression retrouvée sur le second téléphone'); assert.equal(ec.compte.id, 'u-1');
+  // Signaler part en ligne ; se déconnecter efface le téléphone.
+  await k2.evaluate(() => window.__app.aller('profil')); await k2.waitForSelector('.compte');
+  await k2.locator('text=Se déconnecter').click(); await k2.locator('.boite .bouton-or').click();
+  await k2.waitForSelector('.connexion');
+  const apres = await k2.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')));
+  assert.equal(apres.xp, 0, 'téléphone effacé après déconnexion');
+  await t1.close(); await t2.close();
+  log('compte ok');
 
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }
