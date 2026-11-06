@@ -1,0 +1,85 @@
+# Les commentaires d'arrêt : version courte et phrases à justifier.
+# &id du sujet
+# date: date de la décision    ref: juridiction et numéro    source: origine du texte
+# res: résumé des faits et de la procédure, rédigé pour l'appli
+# t: phrase citée mot pour mot
+# j: partie || bonne phrase || leurre || leurre || pourquoi
+
+&com-baldus
+date: 3 mai 2000
+ref: Cass. civ. 1re, n° 98-11.381
+source: Fiche 4, document 3
+res: En 1986, Mme Y... vend aux enchères cinquante photographies de X... à 1 000 francs pièce. En 1989, elle en vend quatre-vingt-cinq autres à M. Z... au même prix, puis découvre la grande notoriété du photographe. Elle demande la nullité des ventes pour dol. La cour d'appel condamne l'acheteur à restituer leur valeur.
+t: il savait donc qu'en achetant de nouvelles photographies au prix de 1 000 francs l'unité, il contractait à un prix dérisoire par rapport à la valeur des clichés sur le marché de l'art
+t: manquant ainsi à l'obligation de contracter de bonne foi qui pèse sur tout contractant
+t: par sa réticence à lui faire connaître la valeur exacte des photographies, M. Z... a incité Mme Y... à conclure une vente qu'elle n'aurait pas envisagée dans ces conditions
+t: Attendu qu'en statuant ainsi, alors qu'aucune obligation d'information ne pesait sur l'acheteur, la cour d'appel a violé le texte susvisé
+j: 1a || la cour d'appel a violé le texte susvisé || manquant ainsi à l'obligation de contracter de bonne foi qui pèse sur tout contractant || il contractait à un prix dérisoire par rapport à la valeur des clichés sur le marché de l'art || C'est la censure de la Cour. Les deux autres phrases reprennent le raisonnement de la cour d'appel.
+j: 1b || alors qu'aucune obligation d'information ne pesait sur l'acheteur || par sa réticence à lui faire connaître la valeur exacte des photographies || manquant ainsi à l'obligation de contracter de bonne foi qui pèse sur tout contractant || Cette phrase laisse à chaque partie le soin de s'informer de la valeur. Les autres sont celles que la Cour écarte.
+
+&com-manoukian
+date: 26 novembre 2003
+ref: Cass. com., n° 00-10.243 et 00-10.949
+source: Fiche 3, document 4
+res: La société Alain Manoukian négocie le rachat des actions de la société Stuck. Alors qu'un projet circule, les actionnaires promettent leurs actions à la société Les complices. Manoukian agit contre eux et contre ce tiers. La cour d'appel limite l'indemnité aux frais engagés et met Les complices hors de cause.
+t: les circonstances constitutives d'une faute commise dans l'exercice du droit de rupture unilatérale des pourparlers précontractuels ne sont pas la cause du préjudice consistant dans la perte d'une chance de réaliser les gains que permettait d'espérer la conclusion du contrat
+t: en l'absence d'accord ferme et définitif, le préjudice subi par la société Alain Manoukian n'incluait que les frais occasionnés par la négociation et les études préalables auxquelles elle avait fait procéder et non les gains qu'elle pouvait, en cas de conclusion du contrat, espérer tirer de l'exploitation du fonds de commerce ni même la perte d'une chance d'obtenir ces gains
+t: le simple fait de contracter, même en connaissance de cause, avec une personne ayant engagé des pourparlers avec un tiers ne constitue pas, en lui-même et sauf s'il est dicté par l'intention de nuire ou s'accompagne de manoeuvres frauduleuses, une faute de nature à engager la responsabilité de son auteur
+j: 1a || et non les gains qu'elle pouvait, en cas de conclusion du contrat, espérer tirer de l'exploitation du fonds de commerce ni même la perte d'une chance d'obtenir ces gains || n'incluait que les frais occasionnés par la négociation et les études préalables || le simple fait de contracter, même en connaissance de cause, avec une personne ayant engagé des pourparlers avec un tiers || Cette phrase exclut les gains espérés et même la chance de les obtenir.
+j: 1b || ne sont pas la cause du préjudice consistant dans la perte d'une chance de réaliser les gains || en l'absence d'accord ferme et définitif || sauf s'il est dicté par l'intention de nuire || La Cour raisonne ici sur le lien de causalité : la faute de rupture n'a pas causé la perte des gains.
+j: 2a || n'incluait que les frais occasionnés par la négociation et les études préalables || ne sont pas la cause du préjudice consistant dans la perte d'une chance de réaliser les gains || le simple fait de contracter, même en connaissance de cause, avec une personne ayant engagé des pourparlers avec un tiers || Cette phrase fixe ce qui reste réparable : les frais et les études.
+j: 2b || sauf s'il est dicté par l'intention de nuire ou s'accompagne de manoeuvres frauduleuses || ne sont pas la cause du préjudice consistant dans la perte d'une chance de réaliser les gains || n'incluait que les frais occasionnés par la négociation et les études préalables || Le tiers n'engage sa responsabilité que dans ces deux cas.
+
+&com-2006
+date: 26 mai 2006
+ref: Cass. ch. mixte, n° 03-19.376 et 03-19.495
+source: TD 2, document 6
+res: Un acte de 1957 contient un pacte de préférence. Une parcelle est vendue en 1985 à la SCI Emeraude. Invoquant la violation du pacte, Mme X... demande en 1992 sa substitution à l'acquéreur et, à titre subsidiaire, des dommages-intérêts. La cour d'appel refuse la substitution.
+t: si le bénéficiaire d'un pacte de préférence est en droit d'exiger l'annulation du contrat passé avec un tiers en méconnaissance de ses droits et d'obtenir sa substitution à l'acquéreur
+t: c'est à la condition que ce tiers ait eu connaissance, lorsqu'il a contracté, de l'existence du pacte de préférence et de l'intention du bénéficiaire de s'en prévaloir
+t: ayant retenu qu'il n'était pas démontré que la société Emeraude savait que Mme X... avait l'intention de se prévaloir de son droit de préférence
+t: la cour d'appel a exactement déduit de ce seul motif, que la réalisation de la vente ne pouvait être ordonnée au profit de la bénéficiaire du pacte
+j: 1a || est en droit d'exiger l'annulation du contrat passé avec un tiers en méconnaissance de ses droits et d'obtenir sa substitution à l'acquéreur || c'est à la condition que ce tiers ait eu connaissance || la réalisation de la vente ne pouvait être ordonnée || La Cour admet ici une sanction en nature, au-delà des dommages-intérêts.
+j: 2a || de l'existence du pacte de préférence et de l'intention du bénéficiaire de s'en prévaloir || d'obtenir sa substitution à l'acquéreur || il n'était pas démontré que la société Emeraude savait || Ce sont les deux connaissances exigées du tiers.
+j: 2b || il n'était pas démontré que la société Emeraude savait que Mme X... avait l'intention de se prévaloir de son droit de préférence || est en droit d'exiger l'annulation du contrat passé avec un tiers || c'est à la condition que ce tiers ait eu connaissance || L'espèce montre la difficulté : la preuve de cette connaissance manque, et la substitution échoue.
+
+&com-2021
+date: 23 juin 2021
+ref: Cass. civ. 3e, n° 20-17.554
+source: TD 2, document 12
+res: En 1999, une promesse de vente est consentie, l'option ne pouvant être levée qu'au décès de la précédente propriétaire. Mme K. se rétracte en 2010 et les bénéficiaires lèvent l'option en 2011. Ils demandent la réalisation de la vente, et la cour d'appel déclare la vente parfaite.
+t: la Cour de cassation jugeait jusqu'à présent, que, tant que les bénéficiaires n'avaient pas déclaré acquérir, l'obligation du promettant ne constituait qu'une obligation de faire
+t: à la différence de la simple offre de vente, la promesse unilatérale de vente est un avant-contrat qui contient, outre le consentement du vendeur, les éléments essentiels du contrat définitif
+t: la faculté pour toute partie contractante, quelle que soit la nature de son obligation, de poursuivre l'exécution forcée de la convention lorsque celle-ci est possible
+t: il s'oblige définitivement à vendre dès la conclusion de l'avant-contrat, sans possibilité de rétractation, sauf stipulation contraire
+t: la rétractation du promettant ne constituait pas une circonstance propre à empêcher la formation de la vente
+j: 1a || la Cour de cassation jugeait jusqu'à présent || il s'oblige définitivement à vendre dès la conclusion de l'avant-contrat || la rétractation du promettant ne constituait pas une circonstance propre à empêcher la formation de la vente || « Jusqu'à présent » annonce l'abandon de l'analyse en obligation de faire.
+j: 1b || à la différence de la simple offre de vente, la promesse unilatérale de vente est un avant-contrat || la faculté pour toute partie contractante || l'obligation du promettant ne constituait qu'une obligation de faire || La Cour oppose ici la promesse à l'offre.
+j: 2a || il s'oblige définitivement à vendre dès la conclusion de l'avant-contrat, sans possibilité de rétractation, sauf stipulation contraire || à la différence de la simple offre de vente || la faculté pour toute partie contractante || C'est la nouvelle solution : l'engagement est définitif dès l'avant-contrat.
+
+&com-2022
+date: 5 janvier 2022
+ref: Cass. civ. 1re, n° 20-20.331
+source: Fiche 2, document 5
+res: M. K. travaille bénévolement sur la toiture de la maison de M. O. quand un incendie se déclare. L'assureur de M. O. reproche à M. K. une imprudence avec une lampe à souder et agit contre l'assureur de celui-ci. La cour d'appel rejette les demandes, et un pourvoi est formé.
+t: Vu l'article 1147 du code civil, dans sa rédaction antérieure à celle issue de l'ordonnance n° 2016-131 du 10 février 2016
+t: En présence d'une convention d'assistance bénévole, toute faute de l'assistant, fût-elle d'imprudence, ayant causé un dommage à l'assisté est susceptible d'engager la responsabilité de l'assistant.
+t: la responsabilité de M. [K] s'apprécie au regard de la commune intention des parties qui exclut qu'en présence d'une convention d'assistance bénévole, l'assistant réponde des conséquences d'une simple imprudence
+t: En statuant ainsi, la cour d'appel a violé le texte susvisé.
+j: 1a || Vu l'article 1147 du code civil || la responsabilité de M. [K] s'apprécie au regard de la commune intention des parties || En statuant ainsi, la cour d'appel a violé le texte susvisé. || Le visa de l'ancien article 1147 place le litige sur le terrain contractuel.
+j: 2a || toute faute de l'assistant, fût-elle d'imprudence || la responsabilité de M. [K] s'apprécie au regard de la commune intention des parties || Vu l'article 1147 du code civil || « Toute faute » écarte l'exonération que la cour d'appel tirait de la commune intention.
+j: 2b || est susceptible d'engager la responsabilité de l'assistant || En statuant ainsi, la cour d'appel a violé le texte susvisé. || Vu l'article 1147 du code civil || Le mot « susceptible » invite à mesurer la portée de la solution.
+
+&com-2023
+date: 15 mars 2023
+ref: Cass. com., n° 21-20.399
+source: Extraits courts de Légifrance
+res: Un protocole de 2012 prévoit l'entrée de GTD au capital de C2G, avec une promesse unilatérale sur 13 % des actions. MG se rétracte le 8 mars 2016 et GTD notifie son intention de lever l'option le 28 juin 2016. L'exécution forcée est demandée. La cour d'appel la refuse, et un pourvoi est formé.
+t: excluait toute rencontre des volontés réciproques de vendre et d'acquérir
+t: s'oblige définitivement à vendre dès cette promesse et ne peut pas se rétracter
+t: ne consacrent pas de droit acquis à une jurisprudence constante
+t: n'était pas imprévisible au jour où la société GTM a formé son pourvoi
+t: les conséquences du revirement pour la société MG n'apparaissent pas disproportionnées
+j: 1a || s'oblige définitivement à vendre dès cette promesse et ne peut pas se rétracter || ne consacrent pas de droit acquis à une jurisprudence constante || les conséquences du revirement pour la société MG n'apparaissent pas disproportionnées || La Cour abandonne ici son ancienne solution pour une promesse antérieure à la réforme.
+j: 2a || ne consacrent pas de droit acquis à une jurisprudence constante || s'oblige définitivement à vendre dès cette promesse et ne peut pas se rétracter || excluait toute rencontre des volontés réciproques de vendre et d'acquérir || La Cour répond à l'argument de sécurité juridique.
+j: 2b || les conséquences du revirement pour la société MG n'apparaissent pas disproportionnées || ne consacrent pas de droit acquis à une jurisprudence constante || excluait toute rencontre des volontés réciproques de vendre et d'acquérir || La proportionnalité du revirement est appréciée ici.

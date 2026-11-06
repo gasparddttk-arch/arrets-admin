@@ -137,6 +137,17 @@ function controlerObligations(ob, equipe) {
     q.m.forEach((m) => lien(m.carte, `famille ${q.id}`));
   }
   for (const s of ob.sujets) {
+    if (s.type === 'C' && !s.arret) err2(`${s.id} : commentaire sans arrêt`);
+    if (s.arret) {
+      const texte = s.arret.txt.join(' ');
+      if (!s.arret.date || !s.arret.ref || !s.arret.res) err2(`${s.id} : date, référence ou résumé manquant`);
+      for (const [c, j] of Object.entries(s.arret.just)) {
+        if (!s.bon[c]) err2(`${s.id} : partie ${c} inconnue`);
+        for (const p of [j.bon, ...j.faux]) if (!texte.includes(p)) err2(`${s.id} : citation absente du texte : ${p}`);
+        if (new Set([j.bon, ...j.faux]).size !== 3) err2(`${s.id} : phrases identiques en ${c}`);
+      }
+      if (Object.keys(s.arret.just).length < 2) err2(`${s.id} : moins de deux parties à justifier`);
+    }
     for (const k of ['1a', '1b', '2a', '2b']) s.bon[k].ids.forEach((id) => lien(id, `sujet ${s.id}`));
     if (s.mauvais.length !== 2) err2(`sujet ${s.id} : 2 mauvais plans attendus`);
     for (const m of s.mauvais) if (!ob.defauts[m.code]) err2(`sujet ${s.id} : défaut ${m.code} inconnu`);

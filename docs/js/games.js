@@ -324,8 +324,29 @@ const feuillePlan = (p, classe = '', attrs = {}) => h('div', { class: `feuille-p
   h('p', { class: 'p2' }, h('b', {}, 'A'), p['2a']),
   h('p', { class: 'p2' }, h('b', {}, 'B'), p['2b']));
 
+// Le bandeau de l'arrêt : le texte reste à portée de main pendant tout le commentaire.
+function bandeauArret(s, ouvert = false) {
+  const a = s.arret;
+  return h('details', { class: 'bandeau-arret', open: ouvert },
+    h('summary', {}, h('span', {}, h('b', {}, 'Lire l’arrêt'), h('small', {}, `${a.ref}, ${a.date}`)), icone('chevron', 18)),
+    h('div', { class: 'bandeau-texte' },
+      h('p', { class: 'bandeau-resume' }, a.res),
+      a.txt.map((t) => h('blockquote', {}, t)),
+      h('small', {}, `Version courte. Faits résumés, citations reprises de ${a.source.charAt(0).toLowerCase()}${a.source.slice(1)}.`)));
+}
+const NOM_PARTIE = { '1a': 'I.A', '1b': 'I.B', '2a': 'II.A', '2b': 'II.B' };
+
 export async function jouerPlan(zone, ctx, round) {
   const s = round.sujet;
+  const bandeau = s.arret ? bandeauArret(s) : null;
+  if (s.arret) {
+    await new Promise((suite) => {
+      zone.replaceChildren(h('div', { class: 'ecran commentaire' },
+        h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre), bandeauArret(s, true)),
+        barrePied(continuer('Voir les plans', suite))));
+      window.scrollTo(0, 0);
+    });
+  }
   const choixPlan = await new Promise((suite) => {
     let fait = false;
     const cartes = round.plans.map((p, i) => { p.el = feuillePlan(p.plan, 'plan-carte', { 'data-ok': repere(!!p.ok), 'aria-label': `Plan ${i + 1}` }); return p.el; });
@@ -355,31 +376,52 @@ export async function jouerPlan(zone, ctx, round) {
     }
     rail.addEventListener('scroll', maj, { passive: true });
     zone.replaceChildren(h('div', { class: 'ecran bonplan' },
-      h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre), h('p', { class: 'aide' }, s.pb)),
+      h('div', { class: 'ecran-corps' }, bandeau, h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre), h('p', { class: 'aide' }, s.pb)),
       rail, points, pied));
     maj();
     window.scrollTo(0, 0);
   });
+  // Justifier une partie du bon plan par une phrase de l'arrêt : une seule, deux en version longue.
+  const parties = s.arret ? melange(Object.keys(s.arret.just)).slice(0, ctx.long ? 2 : 1) : [];
+  let justesBonnes = 0;
+  for (const c of parties) {
+    const j = s.arret.just[c];
+    const r = await qcm(zone, ctx, {
+      classe: 'diagnostic', surtitre: `Justifie le ${NOM_PARTIE[c]}`, question: `Quelle phrase de l’arrêt fonde « ${s.bon[c].t} » ?`,
+      options: melange([{ t: j.bon, ok: true }, ...j.faux.map((t) => ({ t, ok: false, w: 'Cette phrase ne fonde pas cette partie.' }))]),
+      pourquoiBon: j.w, avant: bandeauArret(s),
+    });
+    if (r.ok) justesBonnes++;
+  }
+  const diagnostics = s.arret && !ctx.long ? round.diagnostics.slice(0, 1) : round.diagnostics;
   let diagBons = 0; let i = 0;
-  for (const d of round.diagnostics) {
+  for (const d of diagnostics) {
     i++;
     const r = await qcm(zone, ctx, {
-      classe: 'diagnostic', surtitre: `Diagnostic ${i} sur ${round.diagnostics.length}`, question: 'Quel est le vrai défaut de ce plan\u00a0?',
+      classe: 'diagnostic', surtitre: `Diagnostic ${i} sur ${diagnostics.length}`, question: 'Quel est le vrai défaut de ce plan\u00a0?',
       options: d.options.map((o) => ({ t: o.l, ok: o.ok, w: `${o.t} Ce n’est pas le problème ici.` })), pourquoiBon: d.pourquoi,
       avant: feuillePlan(d.plan, 'plan-rappel'),
     });
     if (r.ok) diagBons++;
   }
-  const ok = choixPlan.ok && diagBons === round.diagnostics.length;
+  const ok = choixPlan.ok && diagBons === diagnostics.length && justesBonnes === parties.length;
   if (ok) etat.stats.plan++;
-  const score = (choixPlan.ok ? 0.4 : 0) + 0.6 * (diagBons / round.diagnostics.length);
+  const score = s.arret
+    ? (choixPlan.ok ? 0.4 : 0) + 0.3 * (justesBonnes / parties.length) + 0.3 * (diagBons / diagnostics.length)
+    : (choixPlan.ok ? 0.4 : 0) + 0.6 * (diagBons / diagnostics.length);
   ctx.gain(Math.round(32 * score) + (ok ? 8 : 0), Math.round(7 * score) + (ok ? 2 : 0));
-  ctx.fin({ score, parfait: ok });
+  if (!s.arret) { ctx.fin({ score, parfait: ok }); return; }
+  finEpreuve(zone, ctx, { score, parfait: ok },
+    h('p', { class: 'surtitre' }, ok ? 'Commentaire sans faute.' : 'Le corrigé'),
+    h('article', { class: 'revelation corrige-plan' },
+      h('h3', {}, 'Le plan et ses appuis'),
+      Object.entries(s.arret.just).map(([c, j]) => h('div', { class: 'rubrique' }, h('h3', {}, `${NOM_PARTIE[c]}. ${s.bon[c].t}`), h('blockquote', {}, j.bon)))));
 }
 
 // ARCHITECTE : le plan se construit sous les yeux, un intitulé à la fois -----------------
 export async function jouerArchitecte(zone, ctx, round, ix) {
   const s = round.sujet; const place = {};
+  const bandeau = s.arret ? bandeauArret(s) : null;
   let pile = round.titres.map((t) => ({ ...t }));
   let ecartes = [];
   await new Promise((suite) => {
@@ -404,7 +446,7 @@ export async function jouerArchitecte(zone, ctx, round, ix) {
       const ecarter = () => { ecartes.push(pile.shift()); son('ecart'); vibrer(8); rendre(); };
       const plusTard = () => { pile.push(pile.shift()); son('carte'); rendre(); };
       zone.replaceChildren(h('div', { class: 'ecran architecte' },
-        h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre), h('div', { class: 'squelette' }, lignes)),
+        h('div', { class: 'ecran-corps' }, bandeau, h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre), h('div', { class: 'squelette' }, lignes)),
         h('div', { class: 'dock' },
           tuile ? h('article', { class: 'tuile', 'data-case': repere(tuile.c || 'leurre') }, tuile.t) : null,
           tuile ? h('div', { class: 'dock-bas' }, fantome('ecarter', 'Écarter', ecarter), fantome('plusTard', 'Plus tard', plusTard, { disabled: pile.length < 2 })) : null,

@@ -111,6 +111,23 @@ function parseJuges() {
   return out;
 }
 
+// Les arrêts à lire pendant un commentaire, communs aux deux équipes.
+const avecArret = (sujets) => { const c = parseCommentaires(); return sujets.map((s) => (c[s.id] ? { ...s, arret: c[s.id] } : s)); };
+function parseCommentaires() {
+  const out = {}; let cur = null;
+  for (const raw of D('oblig/commentaires.txt').split('\n')) {
+    const l = raw.trim();
+    if (!l || l.startsWith('#')) continue;
+    if (l.startsWith('&')) { cur = { txt: [], just: {} }; out[l.slice(1).trim()] = cur; continue; }
+    const m = l.match(/^(date|ref|source|res|t|j):\s?(.*)$/);
+    if (!m) throw new Error('commentaires : ' + l);
+    const [, k, v] = m;
+    if (k === 't') cur.txt.push(typo(v));
+    else if (k === 'j') { const [c, bon, f1, f2, w] = v.split('||').map((s) => typo(s.trim())); if (!w) throw new Error('commentaire incomplet : ' + v); cur.just[c] = { bon, faux: [f1, f2], w }; } else cur[k] = typo(v);
+  }
+  return out;
+}
+
 function parseSujets(fichier = 'sujets.txt', heritage = null) {
   const out = []; let cur = null;
   const titreIds = (v) => { const [t, ids = ''] = v.split('|').map((s) => s.trim()); return { t: typo(t), ids: ids ? ids.split(',').map((s) => s.trim()) : [] }; };
@@ -286,7 +303,7 @@ export function lireObligations() {
     articles: parseArticles(),
     familles: [], juges: [],
     cas: parseCas(), qualifs: parseQualifs(), remedes: parseRemedes(), frises: parseFrises(), questions: parseQuestions(),
-    sujets: parseSujets('oblig/sujets.txt'),
+    sujets: avecArret(parseSujets('oblig/sujets.txt')),
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
   };
 }
@@ -319,7 +336,7 @@ export function lireObligations1() {
     remedes: parseRemedes('oblig1/remedes.txt', b.remedes).map(lier),
     frises: parseFrises('oblig1/frises.txt', b.frises).map(frise),
     questions: parseQuestions('oblig1/questions.txt'),
-    sujets: parseSujets('oblig1/sujets.txt', b.sujets).map(sujet),
+    sujets: avecArret(parseSujets('oblig1/sujets.txt', b.sujets)).map(sujet),
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
   };
 }

@@ -871,6 +871,41 @@ async function debordement(p, nom) {
   await mj.close();
   log('mesure ok');
 
+  // Le commentaire : l'arrêt reste lisible, et le plan se justifie par le texte.
+  const cm = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const y = await cm.newPage(); y.on('pageerror', (x) => erreurs.push(x.message));
+  await y.goto(URLB + '?test&choix'); await y.waitForSelector('.portes');
+  await y.locator('.porte-oblig').click(); await y.waitForSelector('.tribune');
+  await y.evaluate(() => { const ix = window.__app.ix; ix.sujets = ix.sujets.filter((x) => x.type === 'C'); window.__app.aller('role'); });
+  await y.locator('.role-ligne[data-mode="plan"]').click();
+  await y.waitForSelector('.ecran.commentaire'); await y.waitForSelector('.palais-portes', { state: 'detached' });
+  assert(await y.locator('.ecran.commentaire .bandeau-arret').evaluate((d) => d.open), 'arrêt ouvert à la lecture');
+  assert.match(await y.locator('.bandeau-arret summary').innerText(), /\d{4}/, 'date de l’arrêt dans le bandeau');
+  await y.screenshot({ path: CAP + 'commentaire-lecture.png' }); await debordement(y, 'lecture de l’arrêt');
+  await y.locator('.pied button').click(); await y.waitForSelector('.plans-rail');
+  assert.equal(await y.locator('.bandeau-arret').evaluate((d) => d.open), false, 'bandeau replié sur le plan');
+  await y.locator('.bandeau-arret summary').click(); await y.screenshot({ path: CAP + 'commentaire-bandeau.png' }); await y.locator('.bandeau-arret summary').click();
+  const etapes = new Set();
+  for (let i = 0; i < 600 && !(await y.$('.corrige-plan')); i++) {
+    const t = await y.evaluate(() => document.querySelector('.scene .surtitre')?.textContent);
+    if (t) etapes.add(t);
+    if (t?.startsWith('Justifie') && !(await y.$('.commentaire-vu'))) { await y.evaluate(() => document.body.classList.add('commentaire-vu')); await y.screenshot({ path: CAP + 'commentaire-justifie.png' }); }
+    await y.evaluate(() => {
+      const r = document.querySelector('.plans-rail');
+      if (r) { const bon = document.querySelector('.plan-carte[data-ok="true"]'); if (bon && !bon.classList.contains('centree')) { r.scrollLeft = bon.offsetLeft - r.firstChild.offsetLeft; return; } }
+      const suite = document.querySelector('.scene .pied button'); if (suite) return suite.click();
+      document.querySelector('.scene .option[data-ok="true"]')?.click();
+    });
+    await y.waitForTimeout(80);
+  }
+  assert(await y.$('.corrige-plan'), 'corrigé affiché');
+  await y.screenshot({ path: CAP + 'commentaire-corrige.png' });
+  const vues = [...etapes];
+  assert.equal(vues.filter((x) => x.startsWith('Justifie')).length, 1, 'une partie à justifier');
+  assert.equal(vues.filter((x) => x.startsWith('Diagnostic')).length, 1, 'un seul diagnostic');
+  await cm.close();
+  log('commentaire ok');
+
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }
   log('\nTous les tests sont passés.');

@@ -236,7 +236,7 @@ function lancerExamen(i) {
   const zones = estOblig() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix);
   const dus = aRevoir(ix, zones); const deja = new Set();
   const types = estOblig() ? n.oblig : n.admin;
-  lancer({ type: 'examen', titre: `Vers l’examen, ${n.nom.toLowerCase()}`, rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
+  lancer({ type: 'examen', long: i === 2, titre: `Vers l’examen, ${n.nom.toLowerCase()}`, rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
 }
 function ecranExamen() {
   montrer(barreHaut(), retourPalais(), h('section', { class: 'role' }, h('h1', {}, 'Vers l’examen'),
@@ -286,11 +286,11 @@ function lancerMode(m) {
 }
 
 // SÉANCE ------------------------------------------------------------------------
-function lancer({ rounds, titre, type, zone, reprise, mode }) {
+function lancer({ rounds, titre, type, zone, reprise, mode, long = false }) {
   if (document.querySelector('.palais-portes')) return;
   const S = reprise
     ? { ...reprise, rounds: JSON.parse(JSON.stringify(reprise.rounds)), touches: new Map(reprise.touches), nettoyer: [] }
-    : { rounds, titre, type, zone, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0 };
+    : { rounds, titre, type, zone, long, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0 };
   ({ type, titre, zone } = S);
   // Copie intacte des épreuves : c'est elle qui sert à reprendre après une coupure.
   const copie = JSON.stringify(S.rounds);
@@ -341,6 +341,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode }) {
     },
     decor: (el) => decor.replaceChildren(el),
     aide() { S.aide = true; },
+    get long() { return S.long; },
     noter(id, ok, conf) {
       const monte = noter(id, ok, conf, S.aide);
       if (monte) S.montees = (S.montees || 0) + 1;
