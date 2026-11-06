@@ -4,7 +4,7 @@ import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import { changerEquipe,
-  etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
+  SCEAU_REUSSITE, SCEAU_FICHES, etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
 } from './state.js';
@@ -61,7 +61,7 @@ function ouvrirMatiere(id) {
 }
 
 // Le groupe se choisit une fois. Il décide du cours et des exercices de droit des obligations.
-const indexerObligations = () => { CONTENUS.oblig = indexer(PAR_EQUIPE[etat.equipe], etat.equipe); };
+const indexerObligations = () => { CONTENUS.oblig = indexer(PAR_EQUIPE[etat.equipe], etat.equipe); CONTENUS.oblig.vus = () => (etat.oblig.exos ||= {}); };
 function rejoindreEquipe(n) {
   changerEquipe(n); indexerObligations(); filtre = { texte: '', zone: 0, type: 'arrets' };
   if (etat.matiere === 'oblig') ix = CONTENUS.oblig;
@@ -259,10 +259,6 @@ function blocDunk() {
     });
   };
   const entete = h('span', { class: 'role-icone' }, icone('dunk', 28));
-  if (!d.cinq) {
-    return h('button', { class: 'role-ligne', 'data-mode': 'dunk', onClick: () => aller('boutique') },
-      entete, h('span', { class: 'role-txt' }, h('b', {}, 'Dunk shot'), h('small', {}, `Mini-jeu à débloquer pour ${monnaie(PRIX_DUNK.cinq)}`)), icone('cadenas', 22));
-  }
   return h('div', { class: 'role-ligne dunk-bloc', 'data-mode': 'dunk' },
     entete, h('span', { class: 'role-txt' }, h('b', {}, 'Dunk shot'), h('small', {}, d.record ? `Record : ${pluriel(d.record, 'panier')}` : 'Articles, arrêts, cours : un panier par bonne réponse'),
       h('span', { class: 'dunk-choix' },
@@ -344,8 +340,9 @@ function lancer({ rounds, titre, type, zone, reprise, mode }) {
       if (!ok && estRose()) bebew();
     },
     decor: (el) => decor.replaceChildren(el),
+    aide() { S.aide = true; },
     noter(id, ok, conf) {
-      noter(id, ok, conf);
+      if (noter(id, ok, conf, S.aide)) S.montees = (S.montees || 0) + 1;
       const t = S.touches.get(id) || { ok: 0, ko: 0 };
       t[ok ? 'ok' : 'ko']++; S.touches.set(id, t);
     },
@@ -383,7 +380,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode }) {
     const r = S.rounds[S.i];
     // Le Juge a son propre lever de rideau : l'audience s'ouvre avec ses trois coups.
     if (r.type !== 'juge' && r.type !== 'cas') son(S.i === 0 ? 'lancement' : 'epreuve', { retard: retardEpreuve });
-    retardEpreuve = 0; finEnCours = false;
+    retardEpreuve = 0; finEnCours = false; S.aide = false;
     scene.className = 'scene'; scene.replaceChildren(); decor.replaceChildren();
     window.scrollTo(0, 0);
     // Entre deux épreuves, un simple glissement, sans chouette.
@@ -434,7 +431,9 @@ function resultats(S, reussi) {
       textBoss = premier ? `Audience gagnée. La chambre suivante s’ouvre, et ${monnaie(BONUS_AUDIENCE)} te reviennent.` : 'Audience gagnée une nouvelle fois.';
     } else textBoss = 'Audience perdue. Révise cette chambre, puis réessaie.';
   }
-  const v = reussi || S.type !== 'boss' ? validerJour() : { nouveau: false, n: etat.serie.n };
+  const merite = S.type === 'boss' ? reussi : moyenne >= SCEAU_REUSSITE || (S.montees || 0) >= SCEAU_FICHES;
+  const sceauManque = !merite && S.type !== 'boss' && etat.serie.dernier !== jour();
+  const v = merite ? validerJour() : { nouveau: false, n: etat.serie.n };
   sauver();
   const apres = rang(); const apresGeneral = rangGeneral();
   const nouveaux = evaluerTrophees(ix);
@@ -461,6 +460,7 @@ function resultats(S, reussi) {
       h('div', {}, h('dt', {}, 'Réussite'), h('dd', {}, `${pourcent} %`)),
       h('div', {}, h('dt', {}, 'Expérience'), h('dd', {}, `+${fmt(S.xp)}`)),
       h('div', {}, h('dt', {}, estRose() ? 'Canettes' : 'Jetons'), nombrePieces)),
+    sceauManque ? h('p', { class: 'res-texte' }, `Sceau du jour non obtenu : il faut ${Math.round(SCEAU_REUSSITE * 100)} % de réussite ou ${SCEAU_FICHES} fiches reprises.`) : null,
     pieces < S.jetons ? h('p', { class: 'res-texte' }, `Plafond du jour atteint dans cette matière : ${monnaie(PLAFOND_JOUR)}.`) : null,
     v.coffre ? h('p', { class: 'res-coffre' }, `Coffre de série : ${v.etape ?? v.coffre.etape} jours tenus, ${monnaie(v.coffre.jetons)} et ${pluriel(v.coffre.sursis, 'sursis', 'sursis')}.`) : null,
     apres.i > avant.i ? h('div', { class: 'decret' }, h('p', {}, 'Par décret, tu es nommé'), h('strong', {}, apres.nom)) : null,
@@ -633,6 +633,7 @@ function fiche(id) {
       h('h2', {}, 'La fiche'),
       champs.map(([l, t]) => h('div', { class: 'rubrique' }, h('h3', {}, l), h('p', {}, t))),
       conf.length ? h('div', { class: 'confusions' }, h('h2', {}, 'Tu le confonds avec'), h('ul', {}, conf.map(([c, n]) => h('li', {}, h('button', { onClick: () => fiche(c) }, ix.parId.get(c).court), ` ${n} fois`)))) : null,
+      boutonSignaler(id, `${a.court}, ${a.an}`),
       jum.length ? h('div', { class: 'jumeaux' }, h('h2', {}, 'Ses faux jumeaux'), h('ul', {}, jum.map((j) => h('li', {}, h('button', { onClick: () => fiche(j.id) }, `${ix.parId.get(j.id).court}, ${ix.parId.get(j.id).an}`), ' ', j.k)))) : null,
     ));
 }
@@ -644,7 +645,35 @@ function ficheArticle(a) {
     h('article', { class: 'fiche' },
       h('div', { class: 'revelation-tete' }, h('div', {}, h('h1', {}, a.nom), h('p', { class: 'ref' }, a.titre))),
       h('p', { class: 'apport' }, a.regle),
-      h('p', { class: 'aide-claire' }, `Chambre : ${z.titre}. Texte reformulé pour réviser : pour la lettre exacte, reporte-toi au Code civil.`)));
+      h('p', { class: 'aide-claire' }, `Chambre : ${z.titre}. Texte reformulé pour réviser : pour la lettre exacte, reporte-toi au Code civil.`),
+      boutonSignaler(a.id, a.nom)));
+}
+
+// Signaler une erreur : la remarque reste sur le téléphone, avec la référence de la fiche.
+const boutonSignaler = (id, nom) => h('button', { class: 'bouton-lien signaler', onClick: () => signaler(id, nom) }, 'Signaler une erreur');
+function signaler(id, nom) {
+  const champ = h('textarea', { class: 'code', rows: 4, placeholder: 'Qu’est-ce qui ne va pas ?', 'aria-label': 'Ta remarque' });
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } },
+    h('div', { class: 'boite', role: 'dialog', 'aria-label': `Signaler une erreur sur ${nom}` },
+      h('h2', {}, 'Signaler une erreur'), h('p', {}, nom), champ,
+      h('div', { class: 'boite-actions' },
+        h('button', { class: 'bouton-or', onClick: () => {
+          const txt = champ.value.trim();
+          if (!txt) return toast('Écris ta remarque.');
+          etat.signalements.push({ id, nom, txt, le: new Date().toISOString().slice(0, 10), equipe: etat.equipe });
+          sauver(); voile.remove(); toast('Signalement gardé dans ton profil.');
+        } }, 'Envoyer dans mon profil'),
+        h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Annuler'))));
+  document.body.append(voile);
+  champ.focus();
+}
+const texteSignalements = () => etat.signalements.map((s) => `${s.le} | ${s.nom} (${s.id}) | équipe ${s.equipe} : ${s.txt}`).join('\n');
+function blocSignalements() {
+  if (!etat.signalements.length) return null;
+  return [h('h2', {}, 'Mes signalements'),
+    h('ul', { class: 'articles' }, etat.signalements.map((s) => h('li', { class: 'article' }, h('div', {}, h('b', {}, s.nom), h('p', {}, s.txt), h('small', {}, s.le))))),
+    h('button', { class: 'bouton-or', onClick: async () => { try { await navigator.clipboard.writeText(texteSignalements()); toast('Liste copiée.'); } catch { toast('Copie impossible.'); } } }, 'Copier la liste'),
+    h('button', { class: 'bouton-lien', onClick: () => { etat.signalements = []; sauver(); aller('profil'); } }, 'Vider la liste')];
 }
 
 // BOUTIQUE ---------------------------------------------------------------------------
@@ -664,10 +693,7 @@ function miniJeux() {
     d[cle] ? h('button', { class: 'prix actif', disabled: true }, 'Débloqué')
       : bloque ? h('button', { class: 'prix', disabled: true }, icone('cadenas', 16))
         : boutonPrix(PRIX_DUNK[cle], achat(cle), `Débloquer ${nom} pour ${monnaie(PRIX_DUNK[cle])}`));
-  return [
-    ligne('cinq', 'Dunk shot', 'Cinq paniers à réussir sur les articles, les arrêts et le cours, dans les deux matières.', false),
-    ligne('infini', 'Dunk shot infini', 'La partie continue jusqu’à ta première erreur, de plus en plus vite.', !d.cinq),
-  ];
+  return [ligne('infini', 'Dunk shot infini', 'La partie continue jusqu’à ta première erreur, de plus en plus vite.', false)];
 }
 
 // La garde-robe : un seul accessoire par place, et l'aperçu montre la chouette telle qu'elle sera.
@@ -741,7 +767,7 @@ function skinsDuHibou() {
 }
 
 function boutique() {
-  const objets = BOUTIQUE.map((b) => h('li', { class: 'article' },
+  const objets = BOUTIQUE.filter((b) => !b.admin || !estOblig()).map((b) => h('li', { class: 'article' },
     h('div', {}, h('b', {}, b.nom), h('p', {}, b.txt), h('small', {}, `En stock : ${etat.inv[b.id] || 0}`)),
     boutonPrix(b.prix, () => acheter(b), `Acheter ${b.nom} pour ${monnaie(b.prix)}`)));
   const themes = THEMES.map((t) => {
@@ -763,12 +789,13 @@ function boutique() {
   const decors = collectionObjets(DECORS, 'decor', 'decors', (t) => h('span', { class: `pastille decor-${t.id}` }));
   montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, 'La boutique'),
     h('p', { class: 'page-sous' }, estRose() ? 'Tes canettes de Ratio se gagnent en finissant des épreuves.' : 'Tes jetons de présence se gagnent en finissant des épreuves.'),
-    h('ul', { class: 'articles' }, objets), h('h2', {}, 'Mini-jeux'), h('ul', { class: 'articles' }, miniJeux()),
     h('h2', {}, 'Skins de Lexou'), skinsDuHibou(),
     h('h2', {}, 'Garde-robe de Lexou'), gardeRobe(),
-    h('h2', {}, 'Tenues'), h('ul', { class: 'articles' }, themes),
+    h('h2', {}, 'Couleurs de l’appli'), h('ul', { class: 'articles' }, themes),
+    h('h2', {}, 'Décors du Palais'), h('ul', { class: 'articles' }, decors),
     h('h2', {}, 'Insignes'), h('ul', { class: 'articles' }, insignes),
-    h('h2', {}, 'Décors du Palais'), h('ul', { class: 'articles' }, decors)));
+    h('h2', {}, 'Mini-jeux'), h('ul', { class: 'articles' }, miniJeux()),
+    h('h2', {}, 'Aides'), h('ul', { class: 'articles' }, objets)));
 }
 
 // PROFIL -----------------------------------------------------------------------------
@@ -871,6 +898,7 @@ function profil() {
       interrupteur('Retour tactile', 'vibration', () => vibrer(16)),
       interrupteur('Ouvrir toutes les chambres', 'toutOuvert')),
     h('button', { class: 'bouton-fantome ecouter', onClick: () => son('grade') }, icone('son', 18), 'Écouter la signature sonore'),
+    blocSignalements(),
     h('h2', {}, 'Sauvegarde'),
     cloudActif() ? blocCloud() : null,
     h('p', { class: 'aide-claire' }, cloudActif() ? 'Copie manuelle, si tu préfères garder ton propre code.' : 'Ta progression reste sur ce téléphone. Garde une copie de ce code avant de changer d’appareil ou de supprimer l’appli.'),

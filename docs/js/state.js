@@ -41,7 +41,10 @@ export const matiereDe = (id) => MATIERES.find((m) => m.id === id);
 // Pièces : au plus 2 par épreuve, soit 10 pour une séance de cinq minutes, et 30 par jour et par matière.
 export const PLAFOND_JOUR = 30;
 export const PIECES_EPREUVE = 2;
-export const PRIX_DUNK = { cinq: 100, infini: 300 };
+export const PRIX_DUNK = { infini: 300 };
+// Le sceau du jour : assez de réussite, ou assez de fiches reprises.
+export const SCEAU_REUSSITE = 0.6;
+export const SCEAU_FICHES = 5;
 
 export const ETAPES_SERIE = [7, 30, 100];
 export const INTERVALLES = [0, 1, 2, 4, 9, 21, 45];
@@ -78,7 +81,7 @@ export const TROPHEES = [
 export const BOUTIQUE = [
   { id: 'sursis', nom: 'Sursis', prix: 60, txt: 'Protège ta série un jour sans jouer. Cinq au maximum.', max: 5 },
   { id: 'recusation', nom: 'Récusation', prix: 15, txt: 'Retire une mauvaise réponse d’une question.' },
-  { id: 'indice', nom: 'Note du rapporteur', prix: 10, txt: 'Affiche un indice sur la question.' },
+  { id: 'indice', nom: 'Note du rapporteur', prix: 10, txt: 'Affiche un indice sur la question, en droit administratif.', admin: true },
   { id: 'prorogation', nom: 'Prorogation', prix: 10, txt: 'Ajoute 15 secondes quand il faut relier.' },
   { id: 'passe', nom: 'Passe-droit', prix: 120, txt: 'Ouvre la prochaine chambre sans gagner l’audience.' },
 ];
@@ -128,7 +131,8 @@ function etatInitial() {
     v: 1, cree: jour(), xp: 0, jetons: 30,
     matiere: 'admin', equipe: 2, equipeChoisie: false, gains: { jour: null, n: 0 },
     oblig: matiereVierge(),
-    dunk: { cinq: false, infini: false, record: 0, parties: 0, paniers: 0 },
+    signalements: [],
+    dunk: { infini: false, record: 0, parties: 0, paniers: 0 },
     serie: { n: 0, dernier: null, record: 0 },
     jours: {}, rompue: null, coffres: {},
     arrets: {},
@@ -314,12 +318,23 @@ export function crediter(n, m = etat.matiere) {
 }
 
 // Répétition espacée : chaque arrêt monte d'une boîte quand il est réussi, et redescend quand il est raté.
-export function noter(id, ok, confonduAvec = null) {
-  const fiches = M().arrets;
-  const a = fiches[id] || (fiches[id] = { b: 0, d: jour(), ok: 0, ko: 0, c: {} });
-  if (ok) { a.ok++; a.b = Math.min(5, a.b + 1); } else { a.ko++; a.b = Math.max(a.b === 0 ? 0 : 1, a.b - 2); }
-  a.d = jour() + (ok ? INTERVALLES[a.b] : 0);
-  if (!ok && confonduAvec && confonduAvec !== id) a.c[confonduAvec] = (a.c[confonduAvec] || 0) + 1;
+// Une fiche ne progresse qu'une fois par jour, quand elle est due et sans aide. Une erreur ne compte
+// qu'une fois par jour et ferme la progression jusqu'au lendemain. Renvoie vrai si la fiche a progressé.
+export function noter(id, ok, confonduAvec = null, aide = false) {
+  const fiches = M().arrets; const j = jour();
+  const a = fiches[id] || (fiches[id] = { b: 0, d: j, ok: 0, ko: 0, c: {} });
+  if (!ok) {
+    a.ko++;
+    if (a.rate !== j) { a.b = Math.max(a.b === 0 ? 0 : 1, a.b - 2); a.rate = j; }
+    a.d = j;
+    if (confonduAvec && confonduAvec !== id) a.c[confonduAvec] = (a.c[confonduAvec] || 0) + 1;
+    return false;
+  }
+  a.ok++;
+  if (aide || a.d > j || a.monte === j || a.rate === j) return false;
+  const palier = a.b === 5 ? 6 : a.b + 1;
+  a.b = Math.min(5, a.b + 1); a.d = j + INTERVALLES[palier]; a.monte = j;
+  return true;
 }
 export const niveau = (id) => M().arrets[id]?.b || 0;
 

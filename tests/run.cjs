@@ -19,7 +19,9 @@ async function textePropre(p) {
 async function toucher(e) { try { await e.click({ timeout: 900 }); return true; } catch { return false; } }
 
 // Joue jusqu'à l'écran de résultats, en touchant ce qui est disponible.
-async function jouer(p, { capture = false } = {}) {
+// Le sceau du jour demande une séance réussie : le robot joue juste, sauf demande contraire.
+async function jouer(p, { capture = false, auHasard = false } = {}) {
+  if (!auHasard && !capture) return jouerParfait(p);
   const vus = new Set();
   for (let n = 0; n < 1500; n++) {
     await textePropre(p);
@@ -120,7 +122,8 @@ async function debordement(p, nom) {
 
   // 1. Défi du jour complet.
   await p.tap('text=Défi du jour');
-  await jouer(p, { capture: 'defi' });
+  await jouerParfait(p);
+  await jouer(p, { capture: 'defi' }).catch(() => {});
   await p.waitForTimeout(1200);
   await p.screenshot({ path: CAP + 'resultats.png' });
   let e = await etat(p);
@@ -443,12 +446,10 @@ async function debordement(p, nom) {
   log('obligations ok');
 
   // 16. Dunk shot : achat en boutique, cinq paniers, puis partie infinie.
-  await o.evaluate(() => { const e = window.__app.etat(); e.jetons = 400; window.__app.ouvrirMatiere('oblig'); window.__app.aller('boutique'); });
-  assert(await o.locator('.article', { hasText: 'Dunk shot infini' }).locator('button').isDisabled(), 'infini bloqué avant les cinq paniers');
-  await o.locator('.article', { hasText: 'Cinq paniers' }).locator('button').click();
+  await o.evaluate(() => { const e = window.__app.etat(); e.jetons = 300; window.__app.ouvrirMatiere('oblig'); window.__app.aller('boutique'); });
   await o.locator('.article', { hasText: 'Dunk shot infini' }).locator('button').click();
   oe = await etat(o);
-  assert.equal(oe.jetons, 0, '100 puis 300 pièces'); assert(oe.dunk.cinq && oe.dunk.infini, 'mini-jeux débloqués');
+  assert.equal(oe.jetons, 0, '300 pièces'); assert(oe.dunk.infini, 'infini débloqué');
   await o.evaluate(() => window.__app.aller('palais'));
   await debordement(o, 'accueil avec dunk');
   const panier = async (ok) => {
@@ -801,6 +802,62 @@ async function debordement(p, nom) {
   await u.screenshot({ path: CAP + 'palais-entrees.png', fullPage: true });
   await pa.close();
   log('palais ok');
+
+  // La mesure juste : progression, tirage, aides, série, signalement, boutique.
+  const mj = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const w = await mj.newPage(); w.on('pageerror', (x) => erreurs.push(x.message));
+  await w.goto(URLB + '?test&choix'); await w.waitForSelector('.portes');
+  await w.locator('.porte-oblig').click(); await w.waitForSelector('.tribune');
+  const mesure = await w.evaluate(async () => {
+    const m = await import('./js/state.js'); const e = window.__app.etat(); const a = () => e.oblig.arrets.dol;
+    const r = {}; const j = m.jour();
+    for (let i = 0; i < 5; i++) m.noter('dol', true);
+    r.unJour = a().b; r.d = a().d - j;
+    a().d = j; m.noter('dol', false); m.noter('dol', false); r.apresErreurs = a().b; r.ko = a().ko; r.du = a().d - j;
+    m.noter('dol', true); r.remonte = a().b;
+    a().rate = null; a().monte = null; a().d = j; r.aide = m.noter('dol', true, null, true); r.aideB = a().b;
+    a().b = 5; a().d = j; a().monte = null; m.noter('dol', true); r.grand = a().b; r.grandD = a().d - j;
+    return r;
+  });
+  assert.equal(mesure.unJour, 1, 'une seule montée par jour'); assert.equal(mesure.d, 1, 'revue demain');
+  assert.equal(mesure.apresErreurs, 1); assert.equal(mesure.ko, 2); assert.equal(mesure.du, 0, 'une fiche ratée reste due');
+  assert.equal(mesure.remonte, 1, 'pas de remontée le jour d’une erreur');
+  assert.equal(mesure.aide, false); assert.equal(mesure.aideB, 1, 'une réponse aidée ne fait pas monter');
+  assert.equal(mesure.grand, 5); assert.equal(mesure.grandD, 45, 'dernier intervalle utilisé');
+  const tirage = await w.evaluate(async () => {
+    const en = await import('./js/engine.js'); const ix = window.__app.ix; const cible = ix.cas[20];
+    const z = ix.zones.filter((x) => !x.travaux).map((x) => x.id);
+    const pris = en.tirerRound(ix, 'cas', z, [cible.liens[0]], Math.random, new Set());
+    const lie = ix.cas.filter((c) => c.liens.includes(cible.liens[0])).map((c) => c.id);
+    return { lie: lie.includes(pris.id), vus: Object.keys(window.__app.etat().oblig.exos || {}).length };
+  });
+  assert(tirage.lie, 'le cas tiré travaille la fiche due'); assert(tirage.vus >= 1, 'exercice mémorisé');
+  await w.evaluate(() => { const e = window.__app.etat(); e.serie.dernier = null; e.serie.n = 3; window.__app.aller('role'); });
+  await w.locator('.role-ligne[data-mode="remede"]').click();
+  await w.waitForSelector('.quitter'); await w.waitForSelector('.palais-portes', { state: 'detached' });
+  for (let i = 0; i < 400; i++) {
+    if (await w.$('.resultats')) break;
+    await w.evaluate(() => { const suite = document.querySelector('.scene .pied button'); (suite || document.querySelector('.scene .option[data-ok="false"]'))?.click(); });
+    await w.waitForTimeout(60);
+  }
+  await w.waitForSelector('.resultats');
+  assert.match(await w.locator('.resultats').innerText(), /Sceau du jour non obtenu/, 'séance ratée sans sceau');
+  assert.equal((await etat(w)).serie.dernier, null, 'la série n’est pas validée');
+  await w.evaluate(() => window.__app.aller('boutique'));
+  const titres = await w.$$eval('.page h2', (l) => l.map((x) => x.textContent));
+  assert.deepEqual(titres.slice(0, 2), ['Skins de Lexou', 'Garde-robe de Lexou']); assert.equal(titres.at(-1), 'Aides');
+  assert.equal(await w.locator('.article', { hasText: 'Note du rapporteur' }).count(), 0, 'pas d’indice à vendre en obligations');
+  await w.evaluate(() => window.__app.aller('role'));
+  await w.locator('.dunk-choix button').first().click(); await w.waitForSelector('.dunk-question');
+  await w.locator('.quitter').click().catch(() => {});
+  await w.evaluate(() => window.__app.aller('arrets')); await w.locator('.carte-arret').first().click();
+  await w.locator('.signaler').click(); await w.locator('.boite textarea').fill('La date me semble fausse.');
+  await w.locator('.boite .bouton-or').click();
+  assert.equal((await etat(w)).signalements.length, 1, 'signalement gardé');
+  await w.evaluate(() => window.__app.aller('profil'));
+  assert.match(await w.locator('.ecran-page, main, body').first().innerText(), /Mes signalements/);
+  await mj.close();
+  log('mesure ok');
 
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }

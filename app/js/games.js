@@ -23,6 +23,7 @@ function barreJokers(ctx, { recuser, indice, prolonger }) {
     const b = h('button', { class: 'joker', 'aria-label': `${nom}, ${inv[id]} restants`, onClick: () => {
       if (!inv[id] || b.disabled) return;
       inv[id]--; sauver(); son('jeton'); vibrer(8); action(); b.disabled = true;
+      if (id !== 'prorogation') ctx.aide?.();
       const c = b.querySelector('b'); if (c) c.textContent = inv[id];
     } }, icone(id, 18), h('span', {}, nom), h('b', {}, inv[id]));
     items.push(b);

@@ -208,13 +208,21 @@ export function roundFrise(x, rng = Math.random) {
   };
 }
 
-function tirerOblig(ix, type, zones, rng, deja) {
+// Les fiches qu'un exercice fait travailler.
+const fichesDe = (t, x) => (t === 'qualif' ? x.m.map((m) => m.carte) : t === 'frise' ? x.e.map((e) => e.carte).filter(Boolean) : x.liens || []);
+
+function tirerOblig(ix, type, zones, dus, rng, deja) {
   const dans = dansZones(zones);
   const listes = { qualif: ix.qualifs.filter(dans), cas: ix.cas.filter(dans), remede: ix.remedes.filter(dans), frise: ix.frises.filter(dans), plan: ix.sujets.filter(dans) };
   const t = listes[type]?.length ? type : ['qualif', 'cas', 'remede', 'frise', 'plan'].find((k) => listes[k].length);
   const frais = listes[t].filter((x) => !deja.has(x.id));
-  const pris = choix(frais.length ? frais : listes[t], rng);
-  deja.add(pris.id);
+  // D'abord ce qui touche les fiches dues, puis ce qu'on n'a pas vu depuis le plus longtemps.
+  const vus = ix.vus?.() ?? {};
+  const rangs = new Map(dus.map((id, i) => [id, i]));
+  const priorite = (x) => Math.min(Infinity, ...fichesDe(t, x).filter((id) => rangs.has(id)).map((id) => rangs.get(id)));
+  const tries = melange(frais.length ? frais : listes[t], rng).sort((a, b) => priorite(a) - priorite(b) || (vus[a.id] || 0) - (vus[b.id] || 0));
+  const pris = choix(tries.slice(0, 3).filter((x) => priorite(x) === priorite(tries[0]) && (vus[x.id] || 0) === (vus[tries[0].id] || 0)), rng);
+  deja.add(pris.id); vus[pris.id] = Date.now();
   switch (t) {
     case 'qualif': return { type: t, grille: grilleQualif(pris, rng) };
     case 'cas': return { type: t, id: pris.id };
@@ -270,7 +278,7 @@ export function tirerDunk(liste, tir, dus, deja, rng = Math.random) {
 }
 
 export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new Set()) {
-  if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, rng, deja);
+  if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, dus, rng, deja);
   const d = dispo(ix, zones);
   const prendre = (liste) => {
     const frais = liste.filter((x) => !deja.has(x.id));

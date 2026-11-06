@@ -17,6 +17,7 @@ export async function jouerCas(zone, ctx, round, ix) {
   ouverture();
   let bons = 0;
   const n = x.etapes.length;
+  const reussites = [];
   for (let i = 0; i < n; i++) {
     const e = x.etapes[i];
     const options = melange([{ t: e.t, ok: true }, ...e.x.map((o) => ({ ...o, ok: false }))]);
@@ -26,10 +27,18 @@ export async function jouerCas(zone, ctx, round, ix) {
       : { surtitre: titre, question: e.q, options, pourquoiBon: e.w, classe: 'cas', frappe: i === n - 1,
         avant: h('details', { class: 'rappel-dossier' }, h('summary', {}, 'Relire le dossier', icone('chevron', 16)), h('p', {}, x.c)) });
     if (r.ok) bons++;
+    reussites.push(r.ok);
   }
   const ok = bons === n;
   const score = bons / n;
-  for (const id of x.liens) ctx.noter(id, ok);
+  // Chaque fiche suit les étapes qui la citent. Une fiche qu'aucune étape ne cite n'est jamais pénalisée.
+  for (const id of x.liens) {
+    const c = ix.parId.get(id);
+    const cite = (e) => { const t = `${e.q} ${e.t} ${e.w}`; return c?.article ? new RegExp(`(^|[^\\d-])${c.num}(?![\\d-])`).test(t) : t.includes(c?.court); };
+    const etapes = x.etapes.map((e, i) => (cite(e) ? i : -1)).filter((i) => i >= 0);
+    if (etapes.length) ctx.noter(id, etapes.every((i) => reussites[i]));
+    else if (ok) ctx.noter(id, true);
+  }
   if (ok) etat.stats.cas++;
   ctx.gain(Math.round(34 * score) + (ok ? 8 : 0));
   finEpreuve(zone, ctx, { score, parfait: ok },
