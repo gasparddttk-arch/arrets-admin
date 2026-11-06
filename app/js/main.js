@@ -3,7 +3,7 @@ import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
-import {
+import { changerEquipe,
   etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
@@ -19,6 +19,7 @@ import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } 
 const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise };
 let ix = null; // Le contenu de la matière ouverte.
 const CONTENUS = {};
+const PAR_EQUIPE = {};
 const racine = document.getElementById('app');
 const onglets = document.getElementById('onglets');
 let ongletCourant = 'palais';
@@ -57,6 +58,27 @@ function ouvrirMatiere(id) {
   etat.matiere = id; ix = CONTENUS[id]; filtre = { texte: '', zone: 0, type: 'arrets' };
   sauver(); son('carte'); vibrer(8);
   aller('palais');
+}
+
+// Le groupe se choisit une fois. Il décide du cours et des exercices de droit des obligations.
+const indexerObligations = () => { CONTENUS.oblig = indexer(PAR_EQUIPE[etat.equipe], etat.equipe); };
+function rejoindreEquipe(n) {
+  changerEquipe(n); indexerObligations(); filtre = { texte: '', zone: 0, type: 'arrets' };
+  if (etat.matiere === 'oblig') ix = CONTENUS.oblig;
+}
+function apresRestauration() {
+  appliquerTheme(); indexerObligations(); ix = CONTENUS[etat.matiere];
+}
+
+function choisirEquipe() {
+  afficherOnglets(false);
+  const choix = (n, detail) => h('button', { class: 'porte porte-equipe', 'data-equipe': n, onClick: () => { son('carte'); vibrer(8); rejoindreEquipe(n); matieres(); } },
+    h('span', { class: 'porte-icone' }, icone('balance', 34)),
+    h('span', { class: 'porte-txt' }, h('b', {}, `Équipe ${n}`), detail ? h('small', {}, detail) : null));
+  montrer(h('section', { class: 'choix' },
+    h('div', { class: 'choix-tete' }, h('h1', {}, 'Quelle est ton équipe ?'), chouette('debout', { taille: 128, vivante: true, classe: 'chouette-guide' })),
+    h('p', { class: 'page-sous' }, 'Tu ne verras que le cours et les exercices de ton équipe en droit des obligations. Tu pourras changer dans Profil.'),
+    h('div', { class: 'portes' }, choix(1, 'Cours du Pr Molfessis'), choix(2, null))));
 }
 
 function matieres() {
@@ -457,7 +479,7 @@ const pointSalle = (i) => ({ x: i === 0 ? 195 : i % 2 ? 300 : 90, y: i === 0 ? D
 function carte() {
   const ouvertes = zonesOuvertes(ix);
   const gagnees = M().zones.gagnees;
-  const parcours = ix.zones.filter((z) => z.id !== 10 && !z.travaux);
+  const parcours = ix.zones.filter((z) => !z.bonus && !z.travaux);
   const enCours = (etat.reglages.toutOuvert ? parcours.find((z) => !gagnees.includes(z.id)) : [...parcours].reverse().find((z) => ouvertes.includes(z.id) && !gagnees.includes(z.id)))?.id;
   const n = ix.zones.length;
   const hauteur = pointSalle(n - 1).y + 110;
@@ -476,7 +498,7 @@ function carte() {
     const marque = !ouvert ? h('span', { class: 'salle-marque' }, icone('cadenas', 30))
       : z.travaux ? h('span', { class: 'salle-marque' }, icone('travaux', 30))
       : z.id === enCours ? h('span', { class: 'salle-marque' }, String(z.id))
-        : h('span', { class: 'salle-marque' }, laurier(92), gagne ? icone('juste', 30) : h('span', {}, z.id === 10 ? '+' : String(z.id)));
+        : h('span', { class: 'salle-marque' }, laurier(92), gagne ? icone('juste', 30) : h('span', {}, z.bonus ? '+' : String(z.id)));
     return h('li', { class: `salle ${cote} ${ouvert ? 'ouverte' : 'fermee'} ${gagne ? 'gagnee' : ''} ${z.id === enCours ? 'courante' : ''}`, style: `left:${(pt.x / LARGEUR) * 100}%;top:${pt.y}px` },
       h('button', { onClick: () => { son('tap'); if (ouvert) chambre(z.id); else chambreFermee(z); }, 'aria-label': `${z.titre}, ${p.acquis} arrêts acquis sur ${p.total}${ouvert ? '' : ', fermée'}` },
         marque,
@@ -515,7 +537,7 @@ const niveauTag = (b) => h('span', { class: 'niveau', 'aria-label': TITRES_CARTE
 const carteArret = (a) => {
   const b = niveau(a.id);
   return h('li', {}, h('button', { class: `carte-arret n${b}`, onClick: () => fiche(a.id) },
-    h('span', { class: 'carte-an' }, a.article ? a.num.replace(/^1242-/, '1242 al. ') : a.an), h('i', { class: 'losange', 'aria-hidden': 'true' }), h('b', {}, a.article ? a.titre : a.court),
+    h('span', { class: 'carte-an' }, a.article ? (a.etiquette || a.num.replace(/^1242-/, '1242 al. ')) : a.an), h('i', { class: 'losange', 'aria-hidden': 'true' }), h('b', {}, a.article ? a.titre : a.court),
     h('span', { class: 'carte-bas' }, niveauTag(b), ICONES_NIVEAU[b] ? icone(ICONES_NIVEAU[b], 20) : null)));
 };
 
@@ -526,10 +548,10 @@ function chambre(zid) {
   montrer(
     h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller('carte') }, icone('retour', 22)), h('span', {}, `${p.acquis} acquis sur ${p.total}`)),
     h('section', { class: 'page' }, h('h1', {}, z.titre), h('p', { class: 'page-sous' }, z.lieu),
-      z.travaux ? h('p', { class: 'avis-travaux' }, icone('travaux', 20), 'En travaux : ce chapitre n’est pas encore arrivé au cours. Les exercices restent généraux, tirés du Code civil et des grands arrêts.') : null,
+      z.travaux ? h('p', { class: 'avis-travaux' }, icone('travaux', 20), liste.length ? 'En travaux : ce chapitre n’est pas encore arrivé au cours. Les exercices restent généraux, tirés du Code civil et des grands arrêts.' : 'En travaux : ce chapitre n’est pas encore arrivé au cours. Ses fiches et ses exercices arriveront avec lui.') : null,
       h('div', { class: 'actions gauche' },
-        h('button', { class: 'cta', onClick: () => reviserZone(zid) }, 'Réviser cette chambre'),
-        zid !== 10 && !z.travaux ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(zid) }, M().zones.gagnees.includes(zid) ? 'Rejouer l’audience solennelle' : 'Audience solennelle : 6 épreuves, 3 vies, sans joker') : null),
+        liste.length ? h('button', { class: 'cta', onClick: () => reviserZone(zid) }, 'Réviser cette chambre') : null,
+        !z.bonus && !z.travaux ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(zid) }, M().zones.gagnees.includes(zid) ? 'Rejouer l’audience solennelle' : 'Audience solennelle : 6 épreuves, 3 vies, sans joker') : null),
       h('ul', { class: 'grille-cartes' }, liste.map(carteArret))));
 }
 
@@ -538,7 +560,7 @@ let filtre = { texte: '', zone: 0, type: 'arrets' };
 function collection() {
   const articles = estOblig() && filtre.type === 'articles';
   const champ = h('input', { type: 'search', class: 'recherche', placeholder: articles ? 'Chercher un article ou un mot' : 'Chercher un arrêt ou une année', value: filtre.texte, 'aria-label': 'Chercher', onInput: (e) => { filtre.texte = e.target.value; rendre(); } });
-  const zonesBtns = [{ id: 0, titre: 'Tous' }, ...ix.zones].map((z) => h('button', { class: `filtre ${filtre.zone === z.id ? 'actif' : ''}`, onClick: () => { son('tap'); filtre.zone = z.id; collection(); } }, z.id ? `${z.id === 10 ? 'Bonus' : z.id}` : 'Tous'));
+  const zonesBtns = [{ id: 0, titre: 'Tous' }, ...ix.zones].map((z) => h('button', { class: `filtre ${filtre.zone === z.id ? 'actif' : ''}`, onClick: () => { son('tap'); filtre.zone = z.id; collection(); } }, z.id ? `${z.bonus ? 'Bonus' : z.id}` : 'Tous'));
   const grille = h('ul', { class: 'grille-cartes' });
   const norm = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   function rendre() {
@@ -751,9 +773,8 @@ function profil() {
     h('h2', {}, 'Rappel quotidien'), blocRappel,
     h('h2', {}, 'Images personnelles'), blocImages(),
     h('h2', {}, 'Équipe de droit des obligations'),
-    h('div', { class: 'bascule' },
-      h('button', { disabled: true }, icone('cadenas', 15), 'Équipe 1, bientôt'),
-      h('button', { class: 'actif' }, 'Équipe 2')),
+    h('div', { class: 'bascule' }, [1, 2].map((n) => h('button', { class: etat.equipe === n ? 'actif' : '', 'aria-pressed': etat.equipe === n ? 'true' : 'false', onClick: () => { if (etat.equipe === n) return; son('tap'); rejoindreEquipe(n); toast(`Équipe ${n} : tes chambres et tes exercices sont prêts.`); profil(); } }, `Équipe ${n}`))),
+    h('p', { class: 'aide-claire' }, 'Le droit des obligations suit le cours de ton équipe. Tes pièces, ta série, tes tenues et les fiches communes te suivent.'),
     h('h2', {}, 'Réglages'),
     h('div', { class: 'reglages' },
       interrupteur('Sons', 'son'),
@@ -767,7 +788,7 @@ function profil() {
     h('p', { class: 'aide-claire' }, cloudActif() ? 'Copie manuelle, si tu préfères garder ton propre code.' : 'Ta progression reste sur ce téléphone. Garde une copie de ce code avant de changer d’appareil ou de supprimer l’appli.'),
     h('button', { class: 'bouton-or', onClick: async () => { const c = exporter(); try { await navigator.clipboard.writeText(c); toast('Sauvegarde copiée.'); } catch { champSauvegarde.value = c; toast('Copie le code affiché.'); } } }, 'Copier ma sauvegarde'),
     champSauvegarde,
-    h('button', { class: 'bouton-lien', onClick: () => { try { importer(champSauvegarde.value); appliquerTheme(); toast('Progression restaurée.'); aller('palais'); } catch { toast('Ce code de sauvegarde est illisible.'); } } }, 'Restaurer ce code'),
+    h('button', { class: 'bouton-lien', onClick: () => { try { importer(champSauvegarde.value); apresRestauration(); toast('Progression restaurée.'); aller('palais'); } catch { toast('Ce code de sauvegarde est illisible.'); } } }, 'Restaurer ce code'),
     h('p', { class: 'version' }, `Contenu du ${ix.version}`)));
   rendreRappel();
 }
@@ -782,7 +803,7 @@ function blocCloud() {
     h('p', { class: 'code-recup' }, code),
     h('button', { class: 'bouton-or', onClick: async () => { try { await navigator.clipboard.writeText(code); toast('Code copié.'); } catch { toast('Recopie le code affiché.'); } } }, 'Copier le code de récupération'),
     champ,
-    h('button', { class: 'bouton-lien', onClick: async () => { try { await restaurerEnLigne(champ.value); appliquerTheme(); toast('Progression restaurée.'); aller('palais'); } catch (err) { toast(err.message); } } }, 'Restaurer avec ce code'));
+    h('button', { class: 'bouton-lien', onClick: async () => { try { await restaurerEnLigne(champ.value); apresRestauration(); toast('Progression restaurée.'); aller('palais'); } catch (err) { toast(err.message); } } }, 'Restaurer avec ce code'));
 }
 
 function guideInstallation() {
@@ -814,11 +835,14 @@ async function demarrer() {
   // Une ouverture lente : la chouette patiente, montre en main.
   const attente = setTimeout(() => racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Le Palais ouvre ses portes'))), 700);
   if (params.has('decalage')) fixerDecalage(+params.get('decalage'));
-  const [admin, oblig] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), charger().then(chargerImages)]);
+  const [admin, oblig2, oblig1] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), charger().then(chargerImages)]);
   clearTimeout(attente);
   // Une ancienne sauvegarde connaît déjà le jour de la dernière séance.
   if (etat.chouette.seance === null) etat.chouette.seance = etat.serie.dernier;
-  CONTENUS.admin = indexer(admin); CONTENUS.oblig = indexer(oblig, etat.equipe);
+  // ?equipe=1 : les tests ouvrent directement une équipe, sans passer par la question.
+  if (params.has('equipe')) changerEquipe(+params.get('equipe'));
+  PAR_EQUIPE[1] = oblig1; PAR_EQUIPE[2] = oblig2;
+  CONTENUS.admin = indexer(admin); indexerObligations();
   if (params.has('test') && !params.has('choix')) etat.matiere = params.get('matiere') === 'oblig' ? 'oblig' : etat.matiere;
   ix = CONTENUS[etat.matiere];
   appliquerTheme();
@@ -827,7 +851,9 @@ async function demarrer() {
   for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click']) document.addEventListener(ev, reveillerAudio, { passive: true });
   const evenement = verifierSerie();
   // L'appli s'ouvre sur le choix de la matière. Les tests vont droit à la matière demandée.
-  if (params.has('test') && !params.has('choix')) aller('palais'); else matieres();
+  if (params.has('test') && !params.has('choix')) aller('palais');
+  else if (!etat.equipeChoisie && (!params.has('test') || params.has('groupe'))) choisirEquipe();
+  else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
   if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, rendreSon, NOMS_SONS, appliquerTheme };
@@ -850,7 +876,7 @@ async function demarrer() {
         recevoirCadeaux().then((n) => {
           if (!n) return;
           if (document.querySelector('.tribune')) accueil();
-          else if (document.querySelector('.portes')) matieres();
+          else if (document.querySelector('.porte-oblig')) matieres();
           toast(`${monnaie(n)} offerts, ils sont dans ta réserve.`);
         });
       }

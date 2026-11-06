@@ -1,0 +1,234 @@
+# Quel remède ? équipe 1.
+# %id | chambres | équipe     =id | chambres : reprend un remède de l'équipe 2.
+# c: situation   d: bon remède   dx: mauvais remède || pourquoi   r: bonne justification   rx: mauvaise justification || pourquoi   a: fiches
+
+%inondation-frais | 1 | 1
+c: Pendant les vacances de son voisin, un étudiant coupe l'eau, appelle un plombier et paie 400 euros pour limiter une inondation. Le voisin répond qu'il n'a rien demandé.
+d: Lui réclamer le remboursement des dépenses utiles
+dx: Agir contre lui en responsabilité pour faute, en invoquant l'article 1240 || Le voisin n'a commis aucune faute.
+dx: Invoquer un contrat de réparation conclu tacitement avec lui || Le voisin absent n'a exprimé aucune volonté.
+r: La gestion d'affaires oblige le maître à indemniser celui qui a géré utilement son affaire.
+rx: Tout service rendu à autrui oblige à payer, même si personne n'en avait besoin ni ne l'a demandé. || La gestion doit être utile, consciente et faite sans opposition du maître.
+rx: La loi interdit de refuser une aide reçue. || Le texte ne dit rien de tel : il encadre la gestion utile.
+a: a1301, a1300
+
+%promesse-2012 | 2 | 1
+c: Une promesse unilatérale de vente est signée en 2012. Le promettant se rétracte en 2015, puis le bénéficiaire lève l'option dans le délai. Le litige arrive aujourd'hui devant le juge.
+d: Demander la réalisation forcée de la vente
+dx: Demander seulement des dommages et intérêts, car le contrat est ancien || La Cour a abandonné cette solution, même pour le droit antérieur.
+dx: Invoquer directement l'article 1124 al. 2 devant le juge || Le contrat date d'avant la réforme : ce texte ne s'y applique pas.
+r: Le promettant s'oblige définitivement dès la promesse, même en droit ancien.
+rx: L'ordonnance de 2016 s'applique à tous les contrats en cours. || L'article 9 impose la survie de la loi ancienne.
+rx: Un revirement ne peut jamais s'appliquer à un litige né avant lui, sous peine de rétroactivité. || Il n'existe pas de droit acquis à une jurisprudence constante.
+a: a9-ord, revirement2021, morgane
+
+%faux-interpretatif | 2 | 1
+c: Pour un contrat de 2017, une partie invoque une disposition modifiée en 2018 et présentée par la loi comme interprétative. L'autre soutient qu'elle change en réalité le droit.
+d: Demander au juge de vérifier la qualification
+dx: S'incliner, puisque le législateur a tranché par son texte || Le juge contrôle la qualification.
+dx: Saisir le Conseil d'État pour avis sur le texte || C'est le juge du litige qui vérifie la qualification.
+r: Une disposition interprétative précise un texte existant, sans rien y ajouter.
+rx: Toute loi postérieure à un texte le précise forcément. || Interpréter n'est pas modifier.
+rx: Une loi interprétative ne s'applique jamais aux contrats en cours, car elle serait rétroactive. || Elle fait corps avec le texte interprété et s'applique depuis son entrée en vigueur.
+a: a16-loi, interpretative, a1143
+
+%regret-vente | 3 | 1
+c: Un vendeur a conclu oralement la vente de sa montre pour 500 euros. Le lendemain, il regrette et prétend qu'aucun contrat n'existe faute d'écrit.
+d: Exiger l'exécution de la vente conclue oralement
+dx: Demander des dommages et intérêts sans contrat || Un contrat existe : on peut en demander l'exécution.
+dx: Faire constater la vente par un notaire avant toute action || Aucune forme n'est requise pour conclure.
+r: L'échange des consentements forme le contrat, qui tient lieu de loi.
+rx: Tout contrat suppose un écrit signé des deux parties, sinon il n'existe pas. || Les contrats sont par principe consensuels.
+rx: Le regret ouvre un droit de rétractation dans tous les contrats. || Un tel droit suppose un texte ou une clause.
+a: a1172, a1103
+
+%contrat-tiers | 3 | 1
+c: Un artisan a signé un devis avec un client, qui ne paie pas. L'artisan veut faire payer le frère du client, qui habite la maison mais n'a rien signé.
+d: Agir contre le seul client, qui a signé le devis
+dx: Assigner le frère en exécution du devis || Le frère n'est pas partie au contrat.
+dx: Agir contre les deux, puisque le frère profite des travaux || Profiter du contrat n'en fait pas une partie.
+r: Le contrat ne crée d'obligations qu'entre les parties.
+rx: Le contrat oblige toutes les personnes qui vivent sous le même toit. || Seules les parties sont liées.
+rx: Toute personne qui connaît le contrat est tenue de l'exécuter. || La connaissance ne crée pas d'obligation.
+a: a1199, a1103
+
+%assistant-blesse | 4 | 1
+c: Un ami vient aider Léo à déménager, gratuitement. Le lave-vaisselle tombe sur la main de l'ami, qui n'a commis aucune faute.
+d: Une indemnisation contractuelle de son dommage corporel
+dx: Une action délictuelle, en prouvant la faute de Léo || Il n'a pas à prouver de faute : c'est tout l'intérêt de la convention.
+dx: Aucune réparation, car l'aide était gratuite || La gratuité n'exclut pas la convention.
+r: L'assisté indemnise le dommage corporel de l'assistant non fautif.
+rx: L'assisté doit réparer tout dommage de l'assistant, y compris matériel. || Le dommage matériel reste hors du champ de cette indemnisation.
+rx: L'aide entre amis ne peut jamais être un contrat, faute de volonté de s'engager en droit. || La jurisprudence y voit une convention, pour protéger l'assistant.
+a: a1231-1, servouse, pioche
+
+%assistant-voisine | 4 | 1
+c: Le lave-vaisselle masque la vue d'un ami venu aider Léo à déménager. Sans faute de sa part, il renverse la voisine du 4e, qui le fait condamner.
+d: Léo doit garantir son ami de cette condamnation
+dx: Il supporte seul sa condamnation envers la voisine || L'assisté doit garantir l'assistant non fautif.
+dx: La voisine doit agir directement contre l'assureur de Léo || Elle a obtenu condamnation : la question porte sur la garantie.
+r: La convention comporte nécessairement cette garantie quand l'assistant n'a pas commis de faute.
+rx: Il ne peut y avoir de garantie que si les parties l'ont stipulée dans un écrit, même bref, avant le déménagement. || Le juge l'impose : c'est le mot « nécessairement ».
+rx: La garantie ne vise que le cas où la victime est un autre assistant. || Elle joue que la victime soit ou non un assistant.
+a: pioche, a1231-1
+
+%assistant-imprudent | 4 | 1
+c: Venu aider gratuitement à réparer un toit, un ami met le feu à la maison par imprudence. Le propriétaire veut être indemnisé par lui et son assureur.
+d: Agir en responsabilité contractuelle contre l'assistant
+dx: Rien, car l'assistant bénévole ne répond jamais de son imprudence || La commune intention ne l'exonère pas par principe.
+dx: Agir sur l'article 1240 contre l'assistant || Un contrat les lie : la voie est contractuelle.
+r: Toute faute de l'assistant est susceptible d'engager sa responsabilité.
+rx: Seule une faute lourde engage celui qui aide gratuitement, comme dans tout service entre amis. || L'arrêt refuse toute graduation de principe.
+rx: L'assisté garantit toujours ses propres biens. || C'est ce raisonnement de la cour d'appel que la Cour a censuré.
+a: lampe, a1231-1
+
+%geste-non-livre | 5 | 1
+c: Après la livraison, un fournisseur promet par courriel un lot gratuit à son client, à titre de geste commercial. Il ne le livre jamais.
+d: Exiger le lot, sur le fondement de l'engagement unilatéral
+dx: Rien, puisque le contrat était déjà exécuté || Une promesse postérieure peut obliger par elle-même.
+dx: Demander la résolution de la vente || La vente a été exécutée : c'est le geste qui est en cause.
+r: La promesse peut obliger son auteur par sa seule volonté, hors de tout contrat.
+rx: Une promesse n'oblige que si elle figure dans le contrat initial. || C'est le motif censuré en 2018.
+rx: Tout courriel commercial vaut contrat de vente. || Il faut une volonté de s'engager, et le lot est gratuit.
+a: geste, a1100-1
+
+%gain-annonce | 5 | 1
+c: Un particulier reçoit un courrier d'une société : « Vous avez gagné 8 000 euros ». Aucun aléa n'apparaît. La société refuse de payer.
+d: Exiger le paiement du gain annoncé dans le courrier
+dx: Demander seulement le remboursement de ses frais de timbre || La Chambre mixte impose de délivrer le gain.
+dx: Faire annuler le courrier pour erreur || Il veut au contraire obtenir l'exécution.
+r: L'annonce d'un gain sans aléa apparent oblige son auteur à le délivrer.
+rx: Le courrier est une offre acceptée, donc un contrat. || La Chambre mixte retient le quasi-contrat.
+rx: Le droit français consacre l'engagement unilatéral sans limite. || Il s'en méfie : c'est pour cela que la Cour passe par le quasi-contrat.
+a: loteries, a1300
+
+%clause-magasin | 6 | 1
+c: Les conditions générales d'un magasin, que le client ne peut pas négocier, prévoient que le magasin n'est jamais responsable. Le client invoque le déséquilibre.
+d: Faire réputer la clause non écrite devant le juge
+dx: Demander la nullité de tout le contrat || Seule la clause tombe.
+dx: Renégocier le prix de la commande devant le juge || Le contrôle ne porte pas sur l'adéquation du prix.
+r: La clause non négociable qui crée un déséquilibre significatif est réputée non écrite.
+rx: Le client qui signe accepte tout, puisque le contrat est sa loi. || L'article 1171 protège justement l'adhérent.
+rx: Toute clause défavorable à un client est nulle de plein droit, quel que soit le contrat qu'il a signé. || Il faut un déséquilibre significatif.
+a: a1171, a1110
+
+%clause-ambigue | 6 | 1
+c: Une clause d'un contrat d'assurance type peut se lire de deux façons. L'assureur retient celle qui exclut sa garantie.
+d: Demander l'interprétation favorable à l'assuré
+dx: Demander la nullité de toute la police || Une ambiguïté se résout par l'interprétation.
+dx: Accepter la lecture de l'assureur, rédacteur du texte || Il l'a proposé : le doute joue contre lui.
+r: Dans le doute, le contrat d'adhésion s'interprète contre celui qui l'a proposé.
+rx: Le doute profite toujours au créancier. || Il profite à l'adhérent, ici contre le proposant.
+rx: Le juge doit écarter toute clause ambiguë. || Il l'interprète.
+a: a1190, a1110
+
+=offre-retiree | 7
+=promesse-violee | 7
+
+%tiers-promesse | 7 | 1
+c: Pendant le délai d'option, un promettant vend sa maison à un tiers, qui connaissait la promesse. Le bénéficiaire veut la maison.
+d: Demander la nullité du contrat conclu avec le tiers
+dx: Se contenter de dommages et intérêts contre le promettant || Ce serait le cas si le tiers ignorait la promesse.
+dx: Attaquer le tiers pour dol || Le tiers n'a trompé personne : le texte vise sa connaissance.
+r: Le contrat conclu avec un tiers qui connaissait la promesse est nul.
+rx: Le tiers est protégé dès qu'il a payé le prix. || Sa connaissance de la promesse suffit à la nullité.
+rx: Une promesse n'a aucun effet sur un tiers. || L'article 1124 al. 3 prévoit le contraire.
+a: a1124
+
+%conditions-croisees | 8 | 1
+c: Un acheteur et un vendeur se sont échangé leurs conditions générales respectives. Elles se contredisent sur le lieu de livraison.
+d: Écarter les deux clauses incompatibles
+dx: Appliquer les conditions envoyées en dernier || La dernière réponse n'a pas de priorité.
+dx: Annuler tout le contrat pour défaut d'accord || Les clauses incompatibles sont seules sans effet.
+r: En cas de discordance, les clauses incompatibles sont sans effet.
+rx: Les conditions générales de l'acheteur l'emportent toujours. || Aucune des deux n'a priorité.
+rx: Le contrat ne se forme jamais sans conditions communes. || Il se forme sur les éléments essentiels.
+a: a1119
+
+%acte-signe | 8 | 1
+c: Deux sociétés signent un acte de cession mentionnant la chose et le prix, puis continuent à discuter une garantie de passif que l'acheteur tient pour essentielle. L'acheteur invoque l'acte.
+d: Plaider qu'aucun accord définitif n'existe : les négociations continuent
+dx: Soutenir que la vente est parfaite, puisque l'acte est signé || La signature ne suffit pas si les parties restent en pourparlers.
+dx: Demander la révision du prix pour tenir compte de la garantie || Le litige porte sur la formation.
+r: Les parties peuvent rendre essentiel un élément qui ne l'est pas par nature.
+rx: La chose et le prix suffisent dans tous les cas. || Pas si les parties subordonnent leur accord à d'autres éléments.
+rx: Le juge du fond ne peut jamais rechercher la commune intention. || Il l'apprécie souverainement.
+a: akol, a1583
+
+=pourparlers | 9
+
+%data-room | 9 | 1
+c: Pendant des négociations, un repreneur reçoit des fichiers clients confidentiels. Il rompt, puis s'en sert pour démarcher les clients.
+d: Engager sa responsabilité pour usage d'informations confidentielles
+dx: Exiger la conclusion de la cession || La liberté de ne pas conclure reste entière.
+dx: Réclamer les gains que la cession aurait rapportés || L'article 1112 al. 2 l'interdit pour la faute dans les négociations.
+r: Utiliser sans autorisation une information confidentielle engage la responsabilité.
+rx: Rompre des négociations est fautif par nature. || La rupture reste libre, c'est l'utilisation qui est fautive.
+rx: Toute information échangée devient librement utilisable une fois les négociations rompues, faute de contrat. || Le texte protège l'information confidentielle.
+a: a1112-2, a1112
+
+=info-oubli | 10
+
+%clause-information | 10 | 1
+c: Le contrat prévoit que le vendeur ne doit à l'acheteur aucune information sur le bien. Le vendeur a tu une servitude déterminante, que l'acheteur ignorait légitimement.
+d: Écarter la clause et engager sa responsabilité
+dx: Respecter la clause, puisque le contrat tient lieu de loi || La clause ne peut pas écarter ce devoir.
+dx: Demander la nullité pour dol, l'intention se déduisant de la clause || La clause ne prouve pas l'intention de tromper.
+r: Les parties ne peuvent ni limiter ni exclure le devoir d'information.
+rx: Le devoir d'information ne pèse que sur les professionnels. || Il pèse sur toute partie qui connaît l'information.
+rx: L'acheteur devait se renseigner seul, puisqu'il a signé la clause. || Son ignorance reste légitime.
+a: a1112-1, a1103
+
+%preuve-information | 10 | 1
+c: Un acheteur prétend qu'une information lui était due et qu'il ne l'a pas reçue. Le vendeur répond qu'il n'a rien à prouver.
+d: Montrer que l'information était due, puis laisser le vendeur prouver qu'il l'a donnée
+dx: Prouver seul qu'il n'a rien reçu, même si c'est impossible || La preuve de la remise pèse sur le vendeur.
+dx: Laisser le vendeur tout prouver, y compris le devoir || C'est au demandeur de montrer que l'information lui était due.
+r: Il prouve que l'information lui était due, l'autre prouve qu'il l'a donnée.
+rx: Le texte renverse les règles habituelles de la preuve. || Il applique la logique de l'article 1353.
+rx: Le doute profite au vendeur. || Le texte répartit la preuve en deux temps.
+a: a1112-1, a1353
+
+%bon-commande | 10 | 1
+c: Un consommateur découvre que son bon de commande de panneaux solaires n'indique ni les caractéristiques essentielles ni le délai de livraison. Il veut sortir du contrat.
+d: Demander la nullité du contrat
+dx: Demander la seule réduction du prix || Il veut sortir du contrat, et la nullité est possible.
+dx: Se rétracter sans limite de temps pour ce seul motif || La question posée est celle de la nullité pour défaut d'information.
+r: Le défaut d'information sur des éléments essentiels entraîne l'annulation du contrat.
+rx: Sans texte prévoyant la nullité, le droit de la consommation interdit de l'obtenir devant le juge. || Le droit commun fournit la sanction.
+rx: Il faut prouver l'intention de tromper du vendeur. || La Cour retient ici l'erreur, sans intention.
+a: panneaux, a1112-1
+
+=erreur-valeur | 11
+
+%epoux-forcat | 11 | 1
+c: Une épouse découvre, trois ans après le mariage et par la presse, que son mari avait été condamné avant de l'épouser. Elle veut demander la nullité pour erreur.
+d: Agir sur l'article 180, en invoquant une qualité essentielle
+dx: Se fonder sur Berthon pour agir || Berthon refusait justement cette action.
+dx: Renoncer, la preuve étant postérieure au mariage || Une preuve postérieure peut révéler un fait qui existait au mariage.
+r: Depuis 1975, l'erreur sur les qualités essentielles de la personne permet de demander la nullité.
+rx: Seule l'erreur sur l'identité compte encore aujourd'hui, comme le jugeaient les Chambres réunies en 1862. || C'était la règle de 1862.
+rx: Le mariage échappe à toute théorie de l'erreur. || L'article 180 prévoit expressément cette nullité.
+a: a180, berthon
+
+=dol-garder | 12
+
+%agent-menteur | 12 | 1
+c: Un agent immobilier, mandataire du vendeur, ment sur l'absence de travaux à prévoir. L'acheteur veut annuler la vente. Le vendeur dit qu'il n'a rien fait.
+d: Demander la nullité de la vente pour dol
+dx: Agir seulement contre l'agent, la vente restant intacte || Le dol du représentant atteint le contrat.
+dx: Invoquer l'erreur sur la valeur du bien, sans autre précision || Une telle erreur seule n'annule pas.
+r: Le dol peut émaner du représentant du contractant.
+rx: Le dol doit toujours venir du contractant lui-même. || L'article 1138 vise son représentant.
+rx: Tout tiers qui ment entraîne la nullité. || Il faut un représentant, un préposé ou un tiers de connivence.
+a: a1138, a1137
+
+%dolus-bonus | 12 | 1
+c: Une poissonnière affirme que son poisson est « le meilleur de Paris ». Déçu, un client veut faire annuler son achat pour dol.
+d: Rejeter la demande
+dx: Annuler l'achat pour mensonge || Vanter n'est pas tromper.
+dx: Accorder des dommages et intérêts pour publicité || Il n'y a pas de tromperie à réparer.
+r: L'exagération banale, le bon dol, n'entraîne pas la nullité.
+rx: Tout propos commercial inexact est un dol. || La tromperie doit être réelle : personne ne prend cela au pied de la lettre.
+rx: Le dol suppose un écrit. || Le mensonge oral suffit, mais il n'y a pas ici de tromperie réelle.
+a: a1137, a1130

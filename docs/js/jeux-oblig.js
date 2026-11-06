@@ -22,7 +22,7 @@ export async function jouerCas(zone, ctx, round, ix) {
     const options = melange([{ t: e.t, ok: true }, ...e.x.map((o) => ({ ...o, ok: false }))]);
     const titre = `Étape ${i + 1} sur ${n} : ${e.label}`;
     const r = await qcm(zone, ctx, i === 0
-      ? { dossier: true, surtitre: x.titre, question: x.c, sousQuestion: `${e.label} : ${e.q}`, options, pourquoiBon: e.w, classe: 'cas' }
+      ? { dossier: true, surtitre: x.source === 'Création' ? `Cas d’entraînement : ${x.titre}` : x.titre, question: x.c, sousQuestion: `${e.label} : ${e.q}`, options, pourquoiBon: e.w, classe: 'cas' }
       : { surtitre: titre, question: e.q, options, pourquoiBon: e.w, classe: 'cas', frappe: i === n - 1,
         avant: h('details', { class: 'rappel-dossier' }, h('summary', {}, 'Relire le dossier', icone('chevron', 16)), h('p', {}, x.c)) });
     if (r.ok) bons++;

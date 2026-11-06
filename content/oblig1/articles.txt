@@ -1,0 +1,87 @@
+# Articles de l'équipe 1 (cours du Pr Molfessis, fiches 1 à 4).
+# numéro | chambres | importance | titre | règle reformulée
+# Sans titre ni règle, la ligne reprend le texte déjà écrit pour l'équipe 2 : même fiche, même progression.
+
+# 1. L'obligation
+1100 | 1,5 | 3
+1100-2 | 1 | 2
+1240 | 1,9,12 | 3
+1246 | 1 | 2 | Préjudice écologique | Toute personne responsable d'un préjudice écologique est tenue de le réparer.
+1247 | 1 | 1 | Définition du préjudice écologique | Est réparable le préjudice écologique, c'est-à-dire l'atteinte non négligeable aux éléments ou aux fonctions des écosystèmes, ou aux bénéfices collectifs que l'homme tire de l'environnement.
+1300 | 1,5 | 2 | Quasi-contrats | Les quasi-contrats sont des faits purement volontaires, comme la gestion d'affaires, le paiement de l'indu ou l'enrichissement injustifié, dont naît un engagement de celui qui en profite sans y avoir droit, et parfois de leur auteur.
+1301 | 1,4 | 3 | Gestion d'affaires | Celui qui, sans y être tenu, gère sciemment et utilement l'affaire d'autrui, à son insu ou sans son opposition, est soumis aux obligations d'un mandataire.
+1302 | 1 | 2 | Paiement de l'indu | Tout paiement suppose une dette : ce qui a été reçu sans être dû se restitue. Ce qui a été volontairement payé au titre d'une obligation naturelle ne se restitue pas.
+
+# 2. La réforme dans le temps
+2 | 2 | 3 | Non-rétroactivité | La loi ne dispose que pour l'avenir, elle n'a point d'effet rétroactif.
+9-ord | 2 | 3 | Application de l'ordonnance de 2016 | L'ordonnance entre en vigueur le 1er octobre 2016. Les contrats conclus avant cette date restent soumis à la loi ancienne, même pour leurs effets légaux et les dispositions d'ordre public. Seules les actions interrogatoires s'appliquent tout de suite.
+16-loi | 2 | 3 | Application de la loi de ratification | La loi entre en vigueur le 1er octobre 2018. Certaines de ses modifications ne visent que les actes conclus depuis cette date. D'autres ont un caractère interprétatif.
+1143 | 2 | 2
+
+# 3. Le fondement du contrat
+1102 | 3 | 3
+1103 | 3 | 3
+1104 | 3,9 | 3
+1162 | 3 | 2
+1172 | 3,6 | 3 | Consensualisme | Les contrats sont par principe consensuels. Par exception, la validité des contrats solennels dépend de formes fixées par la loi, et la formation de certains contrats suppose la remise d'une chose.
+1199 | 3 | 3 | Effet relatif | Le contrat ne crée d'obligations qu'entre les parties. Les tiers ne peuvent ni en demander l'exécution ni être contraints de l'exécuter, sauf exception légale.
+
+# 4. La notion de contrat
+1101 | 4 | 3
+1231-1 | 1,4 | 2
+
+# 5. L'acte unilatéral
+1100-1 | 5 | 3
+
+# 6. Les classifications
+1105 | 6 | 2 | Droit commun et règles spéciales | Tous les contrats, nommés ou non, obéissent à des règles générales. Les règles propres à certains contrats figurent dans leurs dispositions particulières, et les règles générales s'appliquent sous réserve de celles-ci.
+1106 | 6 | 3
+1107 | 6 | 3
+1108 | 6 | 3
+1109 | 6 | 3
+1110 | 6 | 3
+1111 | 6 | 1
+1111-1 | 6 | 1
+1171 | 6 | 3 | Clause abusive | Dans un contrat d'adhésion, la clause non négociable, déterminée à l'avance par une partie, qui crée un déséquilibre significatif est réputée non écrite. Le contrôle ne porte ni sur l'objet principal du contrat ni sur l'adéquation du prix.
+1190 | 6 | 2 | Interprétation en cas de doute | Dans le doute, le contrat de gré à gré s'interprète contre le créancier et en faveur du débiteur, le contrat d'adhésion contre celui qui l'a proposé.
+
+# 7. L'offre et la promesse
+1114 | 7 | 3
+1115 | 7 | 3
+1116 | 7 | 3
+1117 | 7 | 3
+1124 | 7 | 3
+
+# 8. L'acceptation
+1113 | 7,8 | 3
+1118 | 8 | 3
+1119 | 8 | 2
+1120 | 8 | 3
+1121 | 8 | 3
+1583 | 8 | 3
+
+# 9. Les pourparlers
+1112 | 2,9 | 3
+1112-2 | 9 | 2
+
+# 10. L'information
+1112-1 | 10 | 3
+1122 | 10 | 2
+1353 | 10 | 2 | Charge de la preuve | Celui qui réclame l'exécution d'une obligation doit la prouver. Celui qui se prétend libéré doit justifier le paiement ou le fait qui a éteint son obligation.
+
+# 11. L'erreur
+180 | 11 | 2 | Erreur dans le mariage | L'époux victime d'une erreur dans la personne, ou sur des qualités essentielles de la personne, peut demander la nullité du mariage.
+1128 | 11 | 3
+1129 | 11 | 2
+1130 | 11,12 | 3
+1131 | 11,12 | 3
+1132 | 11 | 3
+1133 | 11 | 3
+1134 | 11 | 3
+1135 | 11 | 3
+1136 | 11 | 3
+
+# 12. Le dol
+1137 | 10,12 | 3
+1138 | 12 | 3
+1139 | 12 | 3

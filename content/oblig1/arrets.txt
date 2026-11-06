@@ -1,0 +1,193 @@
+# Arrêts de l'équipe 1 (cours du Pr Molfessis, fiches 1 à 4).
+# @id | nom | référence | juge | année | importance | chambres
+# =id | chambres | importance : reprend une fiche de l'équipe 2, les lignes suivantes la complètent.
+# ap : apport   f : faits   q : problème de droit   s : solution   po : portée
+# nf : faits non donnés par le cours ni par les fiches, et non vérifiés.
+
+# 2. La réforme dans le temps
+@interpretative | Loi interprétative | Ass. plén., 23 janv. 2004, n° 03-13.617 | Cass. | 2004 | 3 | 2
+ap: Le mot « interprétatif » ne suffit pas : le juge contrôle la qualification retenue par le législateur
+nf: 1
+q: Le législateur peut-il imposer une loi nouvelle aux procès en cours en la présentant comme interprétative ?
+s: Non, sauf impérieux motifs d'intérêt général. La règle joue quelle que soit la qualification formelle donnée à la loi.
+po: C'est la grille de lecture de l'article 16 de la loi de 2018 : une loi vraiment interprétative fait corps avec le texte qu'elle précise, une fausse loi interprétative ne peut pas modifier le droit après coup.
+
+@climatiseur | Climatiseur | Civ. 1re, 19 sept. 2018, n° 17-24.347 | Cass. | 2018 | 2 | 2
+ap: Un contrat conclu avant le 1er octobre 2016 ne se juge pas avec un texte de la réforme
+f: En 2013, une cliente souscrit un contrat d'entretien de son climatiseur. En 2015, la société annonce qu'elle ne le renouvellera pas. Le juge rejette ses demandes en appliquant la caducité de l'article 1186, issu de la réforme.
+q: Un article issu de l'ordonnance de 2016 peut-il s'appliquer à un contrat conclu avant son entrée en vigueur ?
+s: Non. Cassation au visa de l'article 9 de l'ordonnance : les contrats conclus avant le 1er octobre 2016 demeurent soumis à la loi ancienne.
+po: La Cour contrôle de près la survie de la loi ancienne. Il ne faut pas confondre ce cas avec l'anticipation, où le juge applique bien le droit ancien, mais à la lumière du nouveau.
+
+@rugby | Joueur de rugby | Soc., 21 sept. 2017, n° 16-20.103 | Cass. | 2017 | 3 | 2,7
+ap: L'évolution du droit des obligations conduit à distinguer l'offre et la promesse de contrat de travail
+f: En 2012, un club de rugby envoie à un joueur une proposition d'engagement fixant l'emploi, la rémunération et la date d'entrée. Il renonce par courriel. Le joueur renvoie ensuite le contrat signé et réclame une indemnité de rupture.
+q: L'acte qui précise l'emploi, la rémunération et la date d'entrée vaut-il contrat de travail dès que le salarié l'accepte ?
+s: Non. Ce peut être une offre, que l'employeur peut rétracter, ou une promesse, si le salarié a le droit d'opter. La cour d'appel devait constater ce droit d'option : cassation.
+po: L'affaire date de 2012, mais la Cour reprend les définitions de la réforme en visant l'article 1134 ancien. C'est un exemple d'anticipation jurisprudentielle.
+
+@morgane | Promesse de cession d'actions | Com., 15 mars 2023, n° 21-20.399 | Cass. | 2023 | 3 | 2,7
+ap: Le promettant ne peut pas se rétracter, même dans une promesse antérieure à la réforme, et le revirement s'applique au litige
+f: En 2012, une société promet de céder 13 % des actions d'une filiale. Elle se rétracte le 8 mars 2016, avant l'ouverture du délai d'option. Le bénéficiaire lève l'option le 28 juin 2016 et demande l'exécution forcée.
+q: La rétractation du promettant fait-elle obstacle au contrat promis, même avant l'ouverture de l'option ? Le revirement peut-il s'appliquer tout de suite ?
+s: Non, puis oui. Le promettant s'oblige définitivement dès la promesse, sauf stipulation contraire. Il n'existe pas de droit acquis à une jurisprudence constante.
+po: La chambre commerciale rejoint la troisième chambre civile, au visa de l'article 1134 ancien et compte tenu de l'évolution du droit des obligations. La survie de la loi ancienne reste respectée : c'est l'interprétation du droit ancien qui change.
+
+# 4. La notion de contrat
+@autostop | Transport bénévole | Ch. mixte, 20 déc. 1968 | Cass. | 1968 | 2 | 4
+ap: Le transport bénévole ne fait pas naître de contrat : la responsabilité du conducteur est délictuelle
+nf: 1
+q: Le conducteur qui transporte gratuitement un passager est-il lié à lui par un contrat ?
+s: Non. Sa responsabilité envers le passager est délictuelle.
+po: Depuis la loi Badinter du 5 juillet 1985, la question a perdu l'essentiel de son intérêt pour les accidents de la route. Le passager n'a pas besoin du contrat pour être indemnisé.
+
+@servouse | Servouse | Civ. 1re, 27 mai 1959, n° 57-12.126 | Cass. | 1959 | 2 | 4
+ap: Origine de la convention d'assistance bénévole
+nf: 1
+q: Celui qui aide gratuitement autrui peut-il se prévaloir d'un contrat ?
+s: Oui. Un contrat d'assistance peut se former entre celui qui aide et celui qui reçoit l'aide.
+po: Le juge passe par le contrat pour indemniser celui qui vient aider. C'est le point de départ d'une construction que la doctrine juge divinatoire.
+
+@inconscient | L'assisté inconscient | Civ. 1re, 1er déc. 1969, n° 68-12.140 | Cass. | 1969 | 2 | 4
+ap: L'offre faite dans l'intérêt exclusif de son destinataire est présumée acceptée, même s'il est inconscient
+f: Un homme porte secours à une personne qui gît sans connaissance près de son vélomoteur.
+q: Une convention d'assistance peut-elle se former avec une personne hors d'état d'accepter ?
+s: Oui. Celui à qui l'aide profite exclusivement est présumé l'avoir acceptée.
+po: L'échange des consentements est ici une construction plus qu'un constat : il sert à fonder l'indemnisation de l'assistant.
+
+@pioche | La pioche | Civ. 1re, 17 déc. 1996, n° 94-21.838 | Cass. | 1996 | 3 | 4
+ap: La convention oblige nécessairement l'assisté à garantir l'assistant de sa responsabilité sans faute envers un tiers
+f: Une propriétaire convie des amis pour niveler le sol de sa propriété. L'une d'eux blesse un autre avec une pioche et se retourne contre la propriétaire et son assureur.
+q: La convention d'assistance bénévole oblige-t-elle l'assisté à garantir l'assistant des condamnations prononcées au profit d'un tiers ?
+s: Oui. La convention comporte nécessairement cette obligation, sans faute de l'assistant, que la victime soit ou non un autre assistant. Rejet.
+po: Le mot « nécessairement » dit tout : le contenu ne vient pas de la volonté des parties, le juge l'impose. Ton cours parle de divination, voire d'invention du contrat.
+
+@lampe | La lampe à souder | Civ. 1re, 5 janv. 2022, n° 20-20.331 | Cass. | 2022 | 3 | 4
+ap: Toute faute de l'assistant, fût-elle d'imprudence, est susceptible d'engager sa responsabilité envers l'assisté
+f: Un homme répare bénévolement la toiture de la maison d'un autre. Un incendie se déclare, attribué à l'usage d'une lampe à souder. La cour d'appel écarte sa responsabilité au nom de la commune intention des parties.
+q: L'assistant bénévole répond-il envers l'assisté d'une simple imprudence ?
+s: Oui, cela reste possible. Cassation au visa de l'article 1147 ancien : la commune intention ne permet pas d'exclure par principe la faute d'imprudence.
+po: Le contrat inventé pour protéger l'assistant le rend aussi débiteur. La Cour écrit « susceptible » : elle n'impose pas une condamnation automatique, et la gratuité n'exonère pas.
+
+@sollicitee | L'aide sollicitée | Civ. 1re, 18 janv. 2023, n° 20-18.114 | Cass. | 2023 | 3 | 4
+ap: L'assistance peut être spontanément apportée par l'assistant ou sollicitée par l'assisté
+f: Un homme en convainc un autre de lui prêter son concours, et celui-ci subit un dommage. La cour d'appel écarte la convention : l'aide n'a pas été offerte spontanément, et l'autorité de l'assisté excluait la rencontre d'une offre et d'une acceptation.
+q: La convention d'assistance bénévole suppose-t-elle une offre spontanée de l'assistant ?
+s: Non. Cassation au visa de l'article 1101 ancien : l'offre peut venir de l'assistant comme de l'assisté.
+po: L'initiative est indifférente. La Cour élargit le champ de la convention, donc la protection de l'assistant, ce qui confirme sa finalité.
+
+# 5. L'acte unilatéral
+=naturelle | 1,5 | 3
+f: Un parieur gagne au tiercé avec un ami et promet de lui reverser une part du gain. Il refuse ensuite de payer.
+
+@geste | Geste commercial | Com., 12 déc. 2018, n° 17-22.268 | Cass. | 2018 | 3 | 5
+ap: Un geste commercial promis après le contrat peut obliger son auteur par engagement unilatéral
+f: Un grossiste promet par courriel un geste commercial de 30 000 flashs à une cliente, après la commande et sa livraison. Il ne les livre pas. Le tribunal rejette la demande : ce geste ne fait pas partie du contrat.
+q: Une promesse faite après la formation du contrat, et qui n'en fait pas partie, peut-elle obliger son auteur ?
+s: Oui. Ces motifs ne suffisent pas à exclure un engagement unilatéral : cassation pour manque de base légale.
+po: L'engagement unilatéral devient une source autonome d'obligation. Le visa de l'article 1134 ancien lui applique déjà la force obligatoire du contrat.
+
+@loteries | Loteries publicitaires | Ch. mixte, 6 sept. 2002, n° 98-22.981 | Cass. | 2002 | 3 | 5
+ap: Celui qui annonce un gain sans aléa apparent doit le délivrer, sur le fondement du quasi-contrat
+f: Une société de vente par correspondance annonce à un particulier qu'il a gagné une forte somme, sans mettre en évidence le moindre aléa. Il en réclame le paiement.
+q: Sur quel fondement l'organisateur qui annonce un gain doit-il le délivrer ?
+s: Le quasi-contrat : ce fait purement volontaire oblige son auteur à délivrer le gain annoncé.
+po: La Chambre mixte préfère le quasi-contrat à l'engagement unilatéral. C'est le signe de la réticence du droit français à le consacrer franchement.
+
+# 7. L'offre et la promesse
+=cruz | 7 | 3
+=revirement2021 | 7 | 3
+=gerstaecker | 7 | 3
+
+@maltzkorn | Maltzkorn | Civ. 3e, 28 nov. 1968, n° 67-10.935 | Cass. | 1968 | 2 | 7
+ap: L'offre faite au public lie son auteur envers le premier acceptant
+nf: 1
+q: L'offre adressée au public oblige-t-elle son auteur ?
+s: Oui, envers le premier acceptant, dans les mêmes conditions qu'une offre à personne déterminée.
+po: L'article 1114 vise la personne déterminée ou indéterminée. C'est la clé du cas de Mme Michel : l'affiche est une offre au public.
+
+@offre1997 | Offre et décès | Civ. 3e, 10 déc. 1997, n° 95-16.461 | Cass. | 1997 | 2 | 7
+ap: Avant la réforme, le décès de l'offrant n'a pas rendu caduque l'offre assortie d'un délai
+f: Des époux s'engagent à vendre leur maison à des conditions fixées, jusqu'à une date donnée. L'un d'eux meurt avant cette date, puis le bénéficiaire accepte. La cour d'appel juge l'offre caduque.
+q: Le décès de l'offrant rend-il caduque l'offre assortie d'un délai ?
+s: Non, dit alors la Cour. Les époux s'étaient engagés à maintenir leur offre jusqu'à cette date : cassation.
+po: L'article 1117 al. 2 écarte cette solution : le législateur refuse de voir dans l'offre un engagement qui survivrait à son auteur.
+
+# 8. L'acceptation
+@akol | Acte de cession signé | Com., 10 oct. 2018, n° 17-12.527 | Cass. | 2018 | 3 | 8
+ap: Un acte signé sur la chose et le prix ne forme pas le contrat si les parties restent en pourparlers sur des éléments essentiels
+f: Deux sociétés signent fin 2010 un acte de cession de parts. Elles restent en pourparlers, prévoient une garantie de passif, une contre-garantie, un nouvel audit, puis échangent des projets. Le vendeur demande que l'acte soit dit sans effet.
+q: Un acte portant accord sur la chose et le prix forme-t-il la vente quand les parties continuent de négocier des éléments essentiels ?
+s: Non. Les juges du fond apprécient souverainement la commune intention et peuvent en déduire l'absence de consentement réel. Rejet.
+po: La signature ne prouve pas tout. Les parties peuvent rendre essentiel un élément qui ne l'est pas par nature : le contrat attend alors l'accord sur ce point.
+
+@sweethome | Sweethome | Civ. 3e, 7 mai 2026, n° 24-22.425 | Cass. | 2026 | 3 | 8
+ap: L'accord ferme et sans réserve sur une offre précise forme la vente, même si l'objet diffère du mandat de vente
+f: Une société offre 830 000 euros pour un appartement et deux emplacements de stationnement. La SCI accepte par courriel, puis renonce. La cour d'appel refuse la vente : les emplacements ne figuraient ni au mandat de vente ni dans l'acceptation.
+q: L'acceptation ferme d'une offre précise forme-t-elle la vente si l'objet ne correspond pas exactement au mandat donné à l'intermédiaire ?
+s: Oui. Cassation au visa des articles 1114, 1118 al. 1 et 1583 : la SCI a accepté sans réserve une offre précisant l'objet et le prix.
+po: On compare l'offre et l'acceptation entre elles, pas avec un document extérieur. La vente est parfaite dès l'accord sur la chose et le prix.
+
+# 9. Les pourparlers
+=manoukian | 9 | 3
+
+@samsoe | Samsoë & Samsoë | Com., 5 juin 2024, n° 23-14.904 | Cass. | 2024 | 3 | 9
+ap: Après une rupture fautive, la perte de chance d'acquérir à de bonnes conditions n'est pas réparable
+f: Après la rupture de pourparlers sur la vente d'un fonds de commerce, une cour d'appel accorde 90 000 euros pour la perte de chance de l'acquérir à des conditions économiques satisfaisantes.
+q: La faute commise dans les négociations permet-elle d'indemniser la perte de chance d'obtenir les avantages du contrat non conclu ?
+s: Non. Cassation au visa de l'article 1112 : la réparation ne peut compenser ni ces avantages ni la perte de chance de les obtenir.
+po: La Cour applique à la lettre l'article 1112 al. 2, qui consacre Manoukian. La solution est désormais bien ancrée.
+
+# 10. L'information
+=baldus | 10,12 | 3
+=fastfood | 10 | 3
+po: Les deux critères sont cumulatifs : le lien direct ne suffit pas. La troisième chambre civile reprend la solution le 27 novembre 2025.
+
+@bailcache | Le locataire parti | Civ. 3e, 19 janv. 2022, n° 20-13.951 | Cass. | 2022 | 3 | 10,12
+ap: L'acquéreur qui cache la libération des lieux manque à la loyauté, à la bonne foi et à la sincérité
+f: Une propriétaire promet de vendre des lots occupés. Avant la vente, le bénéficiaire obtient en secret du locataire qu'il parte contre indemnité, ce qui augmente la valeur du bien. Elle vend au prix d'un bien occupé, l'apprend et demande réparation.
+q: L'acquéreur peut-il taire un fait de nature à augmenter significativement la valeur du bien ?
+s: Non. Cette dissimulation manifeste l'absence de loyauté, de bonne foi et de sincérité, et ouvre droit à dommages et intérêts. Rejet.
+po: À comparer à Baldus : l'acheteur ne taisait pas une estimation, mais un fait qu'il avait lui-même créé. Le fondement n'est ni le dol ni l'article 1112-1, le contrat étant ancien, mais la loyauté.
+
+@panneaux | Panneaux photovoltaïques | Civ. 1re, 20 déc. 2023, n° 22-18.928 | Cass. | 2023 | 3 | 10
+ap: Le manquement à l'information de l'article L. 111-1 du Code de la consommation entraîne la nullité s'il porte sur des éléments essentiels
+f: Un couple achète des panneaux lors d'une foire. Le bon de commande ne précise ni leurs caractéristiques essentielles ni le délai de livraison et d'installation. Le contrat est annulé et le vendeur se pourvoit.
+q: Le manquement à une obligation spéciale d'information entraîne-t-il la nullité, alors que le texte ne la prévoit pas ?
+s: Oui, dans les conditions des articles 1130 et suivants, si le défaut d'information porte sur des éléments essentiels. Le consentement procédait ici nécessairement d'une erreur. Rejet.
+po: Le droit commun fournit au droit spécial la sanction qui lui manque. L'erreur se déduit presque du manquement, ce que le pourvoi contestait.
+
+@hawai | Voyage à Hawaï | Civ. 1re, 25 sept. 2024, n° 23-10.560 | Cass. | 2024 | 3 | 10
+ap: Le professionnel en règle avec le droit spécial reste tenu par l'article 1112-1
+f: Une agence conçoit pour un couple un voyage à Hawaï, avec un départ seize jours plus tard. L'autorisation d'entrée est refusée à cause d'un voyage en Iran mentionné au passeport, et il n'y a plus le temps d'obtenir un visa.
+q: Celui qui a satisfait à l'information du droit spécial peut-il encore manquer au devoir général d'information ?
+s: Oui. En n'alertant pas ses clients sur ce risque, vu le départ rapproché, l'agence a tu une information déterminante et commis une faute. Rejet, par substitution de motif.
+po: Le droit commun s'ajoute ici au droit spécial, car la directive de 2015 réserve le droit général des contrats. L'adage specialia generalibus ne suffit donc pas à régler la question.
+
+# 11. L'erreur
+=poussin | 11 | 3
+=fragonard | 11 | 3
+
+@poussin1983 | Poussin, second arrêt | Civ. 1re, 13 déc. 1983, n° 82-12.237 | Cass. | 1983 | 2 | 11
+ap: L'erreur s'apprécie au jour de la vente, mais elle peut se prouver par des éléments postérieurs
+nf: 1
+q: Peut-on utiliser des éléments postérieurs à la vente pour établir l'erreur ?
+s: Oui. Ils peuvent prouver ce qu'était la chose et l'erreur de la partie au moment de la vente.
+po: L'authenticité est appréciée au jour du contrat, mais la preuve peut venir après. Pour les vendeurs, qui croyaient certaine l'absence d'authenticité, le doute suffit à établir l'erreur.
+
+@berthon | Berthon | Ch. réun., 24 avr. 1862 | Cass. | 1862 | 3 | 11
+ap: Avant 1975, seule l'erreur sur l'identité annule le mariage, pas l'erreur sur les qualités
+f: Une femme découvre après le mariage que son époux est un ancien forçat. Elle en demande la nullité pour erreur sur la personne.
+q: L'erreur sur les qualités de l'époux permet-elle d'annuler le mariage ?
+s: Non. L'erreur dans la personne ne vise que son identité, comme épouser un jumeau pour l'autre.
+po: La loi du 11 juillet 1975 renverse la solution : l'article 180 vise désormais les qualités essentielles de la personne.
+
+# 12. Le dol
+@reticence1971 | Réticence dolosive | Civ. 3e, 15 janv. 1971, n° 69-12.180 | Cass. | 1971 | 2 | 12
+ap: Le silence qui dissimule un fait déterminant peut constituer un dol
+nf: 1
+q: Le simple silence d'un contractant peut-il être un dol ?
+s: Oui, s'il dissimule à l'autre un fait qui, connu de lui, l'aurait empêché de contracter.
+po: À partir des années 1970, le silence qui trompe est sanctionné. Exiger de ne pas se taire, c'est exiger d'informer : l'obligation d'information naît du dol.
+
+=parsys | 12 | 3

@@ -117,15 +117,16 @@ export function jour(d = new Date()) {
 
 // Les obligations ont leur propre progression ; l'administratif garde la sienne à la racine de l'état,
 // ce qui laisse intactes les progressions et les sauvegardes déjà faites.
+const zonesVierges = () => ({ ouvertes: [1, 2], gagnees: [], parfaites: [] });
 const matiereVierge = () => ({
   xp: 0, arrets: {}, enCours: null, gains: { jour: null, n: 0 },
-  zones: { ouvertes: [1, 2], gagnees: [], parfaites: [] },
+  zones: zonesVierges(), parEquipe: {},
 });
 
 function etatInitial() {
   return {
     v: 1, cree: jour(), xp: 0, jetons: 30,
-    matiere: 'admin', equipe: 2, gains: { jour: null, n: 0 },
+    matiere: 'admin', equipe: 2, equipeChoisie: false, gains: { jour: null, n: 0 },
     oblig: matiereVierge(),
     dunk: { cinq: false, infini: false, record: 0, parties: 0, paniers: 0 },
     serie: { n: 0, dernier: null, record: 0 },
@@ -154,6 +155,21 @@ function fusion(base, x) {
   o.oblig = { ...base.oblig, ...ob, gains: { ...base.oblig.gains, ...(ob.gains || {}) }, zones: { ...base.oblig.zones, ...(ob.zones || {}) } };
   if (!['admin', 'oblig'].includes(o.matiere)) o.matiere = 'admin';
   return o;
+}
+
+// Chaque équipe a ses chambres : on range celles qu'on quitte et on retrouve celles qu'on rejoint.
+// Les fiches, les pièces, la série et les tenues restent communes.
+export function changerEquipe(n) {
+  const o = etat.oblig;
+  if (n !== etat.equipe) {
+    o.parEquipe = { ...o.parEquipe, [etat.equipe]: { zones: o.zones, enCours: o.enCours } };
+    const suite = o.parEquipe[n];
+    o.zones = suite?.zones || zonesVierges();
+    o.enCours = suite?.enCours || null;
+    etat.equipe = n;
+  }
+  etat.equipeChoisie = true;
+  sauver();
 }
 
 export let etat = etatInitial();
@@ -332,7 +348,7 @@ export const zonesDuJour = (ix) => {
 };
 
 // Dernière chambre du parcours, sans les chapitres en travaux ni le bonus.
-const derniereChambre = (ix) => Math.max(...ix.zones.filter((z) => !z.travaux && z.id !== 10).map((z) => z.id));
+const derniereChambre = (ix) => Math.max(...ix.zones.filter((z) => !z.travaux && !z.bonus).map((z) => z.id));
 export function ouvrirSuivante(ix) {
   const o = M().zones.ouvertes; const m = Math.max(...o);
   if (m < derniereChambre(ix)) o.push(m + 1);

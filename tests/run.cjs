@@ -581,6 +581,75 @@ async function debordement(p, nom) {
   await pc.close();
   log('chouette ok');
 
+  // Les deux équipes : la question d'ouverture, le filtre et la progression propre à chacune.
+  const eq = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const e1 = await eq.newPage(); e1.on('pageerror', (x) => erreurs.push(x.message));
+  await e1.goto(URLB + '?test&choix&groupe'); await e1.waitForSelector('.porte-equipe');
+  assert.equal(await e1.locator('.porte-equipe').count(), 2, 'deux équipes proposées');
+  await debordement(e1, 'choix de l’équipe');
+  await e1.screenshot({ path: CAP + 'equipe-choix.png' });
+  await e1.locator('.porte-equipe[data-equipe="1"]').click();
+  await e1.waitForSelector('.porte-oblig');
+  let et = await etat(e1);
+  assert.equal(et.equipe, 1); assert.equal(et.equipeChoisie, true);
+  assert.match(await e1.locator('.porte-oblig').innerText(), /équipe 1/);
+  // La question ne revient pas à la réouverture.
+  await e1.reload(); await e1.waitForSelector('.porte-oblig');
+  assert.equal(await e1.locator('.porte-equipe').count(), 0, 'question posée une seule fois');
+  await e1.locator('.porte-oblig').click(); await e1.waitForSelector('.tribune');
+  let ixe = await e1.evaluate(() => ({ eq: window.__app.ix.equipe, zones: window.__app.ix.zones.length, cas: window.__app.ix.cas.map((c) => c.id), travaux: window.__app.ix.zones.filter((z) => z.travaux).map((z) => z.id), arrets: window.__app.ix.arrets.map((a) => a.id) }));
+  assert.equal(ixe.eq, 1); assert.equal(ixe.zones, 13); assert.deepEqual(ixe.travaux, [13]);
+  assert.ok(!ixe.arrets.includes('mixte2006'), 'pas d’arrêt propre à l’équipe 2');
+  assert.ok(!ixe.cas.includes('michel'), 'pas de cas propre à l’équipe 2');
+  // Douze chambres, puis la violence en travaux, sans bouton de révision.
+  await e1.evaluate(() => window.__app.aller('carte')); await e1.waitForSelector('.salle');
+  assert.equal(await e1.locator('.salle').count(), 13);
+  await debordement(e1, 'chambres équipe 1');
+  await e1.screenshot({ path: CAP + 'equipe-chambres.png', fullPage: true });
+  await e1.locator('.salle', { hasText: 'La violence' }).locator('button').click();
+  await e1.waitForSelector('.avis-travaux');
+  assert.equal(await e1.locator('.cta').count(), 0, 'aucun exercice en travaux');
+  await e1.locator('.quitter').click(); await e1.waitForSelector('.salle');
+  // Chaque chambre du parcours compose une audience et une révision.
+  for (const z of [1, 3, 6, 10, 12]) {
+    const r = await e1.evaluate((id) => { const ix = window.__app.ix; return ix.cartes.filter((a) => a.zones.includes(id)).length; }, z);
+    assert.ok(r > 0, `chambre ${z} vide`);
+  }
+  // Une séance se joue en équipe 1.
+  await e1.evaluate(() => window.__app.aller('palais')); await e1.waitForSelector('.tribune');
+  await e1.evaluate(() => window.__app.lancerDefi()); await jouer(e1);
+  et = await etat(e1);
+  assert.equal(et.stats.seances, 1, 'séance terminée en équipe 1');
+  await e1.evaluate(() => window.__app.etat().oblig.zones.gagnees.push(1)); 
+  // Changer d'équipe range les chambres et garde les fiches communes.
+  await e1.evaluate(() => { window.__app.etat().oblig.arrets.manoukian = { b: 3, d: 0, ok: 3, ko: 0, c: {} }; window.__app.aller('profil'); });
+  await e1.waitForSelector('.bascule');
+  await e1.locator('.bascule button', { hasText: 'Équipe 2' }).click();
+  await e1.waitForFunction(() => window.__app.etat().equipe === 2);
+  et = await etat(e1);
+  assert.deepEqual(et.oblig.zones.gagnees, [], 'les chambres de l’équipe 2 sont à part');
+  assert.equal(et.oblig.arrets.manoukian.b, 3, 'la fiche commune reste acquise');
+  assert.equal(await e1.evaluate(() => window.__app.ix.zones.length), 9);
+  await e1.locator('.bascule button', { hasText: 'Équipe 1' }).click();
+  await e1.waitForFunction(() => window.__app.etat().equipe === 1);
+  et = await etat(e1);
+  assert.deepEqual(et.oblig.zones.gagnees, [1], 'les chambres de l’équipe 1 reviennent');
+  await e1.evaluate(() => window.__app.aller('arrets')); await e1.waitForSelector('.grille-cartes, .liste-cartes, .filtre');
+  await debordement(e1, 'fiches équipe 1');
+  await eq.close();
+  // Une progression déjà installée reçoit la question, et garde tout le reste.
+  const anc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const a2 = await anc.newPage(); a2.on('pageerror', (x) => erreurs.push(x.message));
+  await a2.addInitScript(() => { if (!sessionStorage.getItem('pose')) { sessionStorage.setItem('pose', '1'); localStorage.setItem('arrets-admin.v1', JSON.stringify({ v: 1, m: 2, xp: 500, jetons: 777, matiere: 'oblig', equipe: 2, oblig: { xp: 900, arrets: { manoukian: { b: 4, d: 0, ok: 4, ko: 0, c: {} } }, zones: { ouvertes: [1, 2, 3], gagnees: [1, 2], parfaites: [] } }, serie: { n: 12, dernier: null, record: 12 } })); } });
+  await a2.goto(URLB + '?groupe'); await a2.waitForSelector('.porte-equipe');
+  await a2.locator('.porte-equipe[data-equipe="1"]').click(); await a2.waitForSelector('.porte-oblig');
+  const ancien = await a2.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')));
+  assert.equal(ancien.jetons, 777); assert.equal(ancien.oblig.xp, 900); assert.equal(ancien.oblig.arrets.manoukian.b, 4);
+  assert.deepEqual(ancien.oblig.parEquipe['2'].zones.gagnees, [1, 2], 'la progression de l’équipe 2 est gardée');
+  assert.deepEqual(ancien.oblig.zones.ouvertes, [1, 2], 'l’équipe 1 commence à ses premières chambres');
+  await anc.close();
+  log('équipes ok');
+
   // Le son doit survivre à une interruption : l'iPhone peut figer le contexte sans rien dire.
   const audio = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
   await audio.addInitScript(() => {

@@ -1,5 +1,5 @@
 // Contrôle du contenu : références, champs obligatoires et règles anti-devinette.
-import { lireContenu, lireObligations } from './parse.mjs';
+import { lireContenu, lireObligations, lireObligations1 } from './parse.mjs';
 import { indexer, creerRng, optionsProbleme, blocsPuzzle, casJuge, roundPlan, planOf, roundArchitecte, grillePaires, composerDefi, composerBoss, questionsDunk, tirerDunk } from '../app/js/engine.js';
 
 const c = indexer(lireContenu());
@@ -108,9 +108,8 @@ for (let i = 0; i < 600; i++) {
 }
 
 // DROIT DES OBLIGATIONS -----------------------------------------------------------
-const ob = indexer(lireObligations());
-{
-  const notesO = []; const err2 = (m) => erreurs.push(`obligations : ${m}`);
+function controlerObligations(ob, equipe) {
+  const notesO = []; const err2 = (m) => erreurs.push(`obligations, équipe ${equipe} : ${m}`);
   const idsO = new Set(ob.cartes.map((a) => a.id));
   if (idsO.size !== ob.cartes.length) err2('identifiants en double');
   const lien = (id, ou) => { if (!idsO.has(id)) err2(`${ou} : fiche ${id} inconnue`); };
@@ -156,9 +155,13 @@ const ob = indexer(lireObligations());
   statsO('Justifications', ob.remedes.map((r) => [{ t: r.r, ok: true }, ...r.rx.map((x) => ({ t: x.t }))]), 0.46);
   statsO('Questions rapides', ob.questions.map((q) => [{ t: q.bonne, ok: true }, ...q.faux.map((t) => ({ t }))]), 0.46);
   // Génération : ni plantage, ni question sans réponse, quelles que soient les chambres.
+  // Un chapitre en travaux peut rester vide : il ne compose alors aucune séance.
   const rngO = creerRng(7);
+  const zonesPleines = ob.zones.map((z) => z.id).filter((id) => ob.cartes.some((a) => a.zones.includes(id)));
+  for (const id of [...new Set(['cas', 'remedes', 'frises', 'qualifs', 'sujets'].flatMap((k) => ob[k].flatMap((x) => x.zones)))]) if (!zonesPleines.includes(id)) err2(`exercice dans la chambre vide ${id}`);
+  for (const k of ['cas', 'remedes', 'frises', 'qualifs', 'sujets']) if (new Set(ob[k].map((x) => x.id)).size !== ob[k].length) err2(`identifiant en double dans ${k}`);
   for (let i = 0; i < 300; i++) {
-    const zs = ob.zones.map((z) => z.id).filter(() => rngO() > 0.5); if (!zs.length) zs.push(1);
+    const zs = zonesPleines.filter(() => rngO() > 0.5); if (!zs.length) zs.push(1);
     for (const r of composerDefi(ob, zs, [], rngO)) if (!r?.type) err2('défi vide');
     for (const z of zs) composerBoss(ob, z, rngO);
     const q = questionsDunk(ob, zs, rngO); const deja = new Set();
@@ -167,11 +170,23 @@ const ob = indexer(lireObligations());
       if (x.options.filter((o) => o.ok).length !== 1 || new Set(x.options.map((o) => o.t)).size !== x.options.length) err2(`question de dunk mal formée : ${x.q}`);
     }
   }
-  const ad = questionsDunk(c, c.zones.map((z) => z.id), rngO);
-  if (ad.length < 300) err2('trop peu de questions de dunk en administratif');
-  console.log(`\n${ob.arrets.length} arrêts, ${ob.articles.length} articles, ${ob.cas.length} cas, ${ob.qualifs.length} familles, ${ob.remedes.length} remèdes, ${ob.frises.length} frises, ${ob.sujets.length} sujets, ${ob.questions.length} questions`);
+  console.log(`\nÉquipe ${equipe} : ${ob.arrets.length} arrêts, ${ob.articles.length} articles, ${ob.cas.length} cas, ${ob.qualifs.length} familles, ${ob.remedes.length} remèdes, ${ob.frises.length} frises, ${ob.sujets.length} sujets, ${ob.questions.length} questions`);
   console.log(notesO.join('\n'));
 }
+controlerObligations(indexer(lireObligations(), 2), 2);
+{
+  // L'équipe 1 : chaque chambre du parcours doit fournir une audience complète.
+  const un = indexer(lireObligations1(), 1);
+  controlerObligations(un, 1);
+  for (const z of un.zones) {
+    const dans = (x) => x.zones.includes(z.id);
+    const n = { qualifs: un.qualifs.filter(dans).length, cas: un.cas.filter(dans).length, remedes: un.remedes.filter(dans).length, frises: un.frises.filter(dans).length, sujets: un.sujets.filter(dans).length };
+    if (z.travaux) { if (Object.values(n).some(Boolean) || un.cartes.some(dans)) erreurs.push(`équipe 1 : la chambre ${z.id} en travaux doit rester vide`); continue; }
+    for (const [k, v] of Object.entries(n)) if (!v) erreurs.push(`équipe 1, chambre ${z.id} : aucun exercice de type ${k}`);
+    if (n.cas < 2) erreurs.push(`équipe 1, chambre ${z.id} : deux cas au moins pour l'audience`);
+  }
+}
+if (questionsDunk(c, c.zones.map((z) => z.id), Math.random).length < 300) erreurs.push('trop peu de questions de dunk en administratif');
 
 if (erreurs.length) { console.error(`\n${erreurs.length} erreur(s) :\n- ` + [...new Set(erreurs)].slice(0, 60).join('\n- ')); process.exit(1); }
 console.log('\nContenu valide.');

@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { lireContenu, lireObligations } from './parse.mjs';
+import { lireContenu, lireObligations, lireObligations1 } from './parse.mjs';
 
 const SORTIE = 'docs';
 rmSync(SORTIE, { recursive: true, force: true });
@@ -30,6 +30,7 @@ const contenu = lireContenu();
 const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeZone: 'Europe/Paris' }).format(new Date());
 writeFileSync(join(SORTIE, 'content.json'), JSON.stringify({ ...contenu, version: date }));
 writeFileSync(join(SORTIE, 'oblig.json'), JSON.stringify({ ...lireObligations(), version: date }));
+writeFileSync(join(SORTIE, 'oblig1.json'), JSON.stringify({ ...lireObligations1(), version: date }));
 
 const fichiers = [];
 (function parcourir(d) {

@@ -1,0 +1,154 @@
+# Questions rapides de Dunk shot, équipe 1.
+# chambres | niveau (1 à 3) | question || bonne réponse || fausse || fausse
+
+1 | 1 | L'obligation est un lien de droit entre... || des personnes || une personne et une chose || des choses
+1 | 1 | Celui qui peut exiger la prestation est... || le créancier || le débiteur || le garant
+1 | 1 | Le droit de propriété est un droit... || réel || personnel || naturel
+1 | 1 | Une obligation peut naître d'un acte, d'un fait ou... || de la loi || de la coutume seule || d'une émotion
+1 | 2 | La livraison de la voiture promise est une exécution... || en nature || par équivalent || par compensation
+1 | 2 | Des dommages et intérêts sont une exécution... || par équivalent || en nature || forcée sur ordre du juge
+1 | 2 | L'étudiant qui limite l'inondation chez son voisin fait... || une gestion d'affaires || un contrat tacite de réparation || une donation
+1 | 2 | Avant le Code, Domat défend... || un principe général de responsabilité || le formalisme romain || la liste des délits
+1 | 2 | En droit romain, le contrat existe par... || le respect des formes || le seul échange des consentements || la bonne foi
+1 | 2 | Le droit canonique met en avant... || le respect de la parole donnée || le formalisme || la lésion du droit romain
+1 | 3 | Dans le Code de 1804, le contrat figure au livre... || III || I || II
+1 | 3 | L'ancien article 1382 est aujourd'hui l'article... || 1240 || 1103 || 1231-1
+1 | 3 | La loi sur le contrat d'assurance date de... || 1930 || 1898 || 1958
+1 | 3 | L'assurance automobile devient obligatoire en... || 1958 || 1930 || 1985
+1 | 3 | Qui propose de donner des droits à la nature en 1972 ? || Christopher Stone || Fouillée || Roubier
+1 | 3 | Le préjudice écologique entre au Code civil par la loi du... || 8 août 2016 || 10 février 2016 || 27 mars 2017
+
+2 | 1 | L'ordonnance réformant le droit des contrats date de... || 2016 || 2008 || 2023
+2 | 1 | Elle entre en vigueur le... || 1er octobre 2016 || 10 février 2016 || 1er janvier 2017
+2 | 1 | La loi de ratification entre en vigueur le... || 1er octobre 2018 || 20 avril 2018 || 1er octobre 2016
+2 | 1 | Un contrat de 2014 est soumis à... || la loi ancienne || l'ordonnance du 10 février 2016 || la loi de 2018
+2 | 2 | Qui pose le principe de survie de la loi ancienne ? || Paul Roubier || Alfred Fouillée || Jean Domat
+2 | 2 | Quel article de l'ordonnance fixe son application dans le temps ? || L'article 9 || L'article 2 || L'article 16
+2 | 2 | Une disposition interprétative... || fait corps avec le texte || crée une règle nouvelle || abroge le texte
+2 | 2 | Qui contrôle la qualification d'interprétative ? || Le juge || Le seul législateur || Le ministre
+2 | 2 | Les actions interrogatoires s'appliquent... || dès l'entrée en vigueur || seulement aux contrats neufs || à partir de 2018
+2 | 3 | L'article 1112 modifié en 2018 est dit... || interprétatif || applicable à l'avenir seulement || abrogé
+2 | 3 | L'article 1117 modifié en 2018 s'applique... || aux actes conclus depuis le 1er octobre 2018 || depuis le 1er octobre 2016 || à tous les contrats en cours
+2 | 3 | La loi de ratification est-elle sèche ? || Non, elle modifie une vingtaine d'articles || Oui, elle ratifie sans rien changer || Elle remplace toute l'ordonnance
+2 | 3 | Quel mot a été ajouté à l'article 1143 en 2018 ? || « à son égard » || « manifestement » || « en tant que de raison »
+2 | 3 | Le juge qui lit le droit ancien à la lumière du nouveau fait... || une anticipation || une rétroactivité || une ratification
+
+3 | 1 | Qui dit contractuel dit... || juste || libre || légal
+3 | 1 | Le contrat formé par le seul consentement relève du... || consensualisme || formalisme || dirigisme contractuel
+3 | 1 | Seules les parties sont liées : c'est... || l'effet relatif || la force obligatoire || le consensualisme
+3 | 2 | Art. 1103 : les contrats légalement formés tiennent lieu de... || loi || preuve || règlement
+3 | 2 | L'autonomie de la volonté se rattache à... || Kant || Pothier || Domat
+3 | 2 | Le contrat légalement formé doit respecter... || l'ordre public || le juste prix fixé par la loi || un formulaire
+3 | 3 | Quel était l'ancien article sur la force obligatoire ? || 1134 || 1382 || 1101
+3 | 3 | Le vrai fondement du contrat selon le cours ? || La volonté et la loi || La seule volonté individuelle || La seule loi
+3 | 3 | Le contrat formé par la remise d'une chose est... || réel || solennel || consensuel
+
+4 | 1 | Un dîner promis et manqué est... || un engagement non contractuel || un contrat de restauration tacite et gratuit || un quasi-contrat
+4 | 1 | Le contrat est un accord destiné à produire... || des effets de droit || des effets moraux et sociaux || des effets fiscaux
+4 | 2 | L'auto-stoppeur blessé agit sur le terrain... || délictuel || contractuel || quasi-contractuel
+4 | 2 | L'assistance bénévole indemnise l'assistant de son dommage... || corporel || matériel || moral seulement
+4 | 2 | L'assistance peut être sollicitée par... || l'assisté || le seul juge || le seul assistant
+4 | 2 | Qui garantit l'assistant envers les tiers ? || L'assisté || L'État || La victime
+4 | 3 | L'origine de la convention d'assistance remonte à... || 1959 || 1804 || 2016
+4 | 3 | L'assisté inconscient : arrêt de... || 1969 || 1959 || 1996
+4 | 3 | En 2022, la faute de l'assistant est dite... || susceptible d'engager sa responsabilité || toujours exonérée || présumée
+4 | 3 | Quelle loi a réduit l'intérêt du débat sur l'autostop ? || La loi Badinter || La loi sur le contrat d'assurance || La loi Spinetta
+
+5 | 1 | Un testament est un acte... || unilatéral || conventionnel || collectif
+5 | 1 | L'engagement unilatéral naît de... || la volonté d'une seule personne || deux volontés qui se rencontrent || un fait involontaire
+5 | 2 | Art. 1100-1 : les actes obéissent aux règles des contrats... || en tant que de raison || sans exception || à titre d'exemple
+5 | 2 | Soumettre le genre à l'espèce, c'est... || un renvoi inversé || une novation || une anticipation jurisprudentielle
+5 | 2 | Les loteries publicitaires relèvent du... || quasi-contrat || contrat de vente || mandat
+5 | 2 | Le contrat unilatéral suppose... || deux volontés || une seule volonté || aucune volonté
+5 | 3 | La chambre du geste commercial de 2018 ? || Commerciale || Sociale || Troisième civile
+5 | 3 | La notion d'acte unilatéral a été élaborée par... || les juristes allemands || Pothier || les rédacteurs du Code de 1804
+5 | 3 | La promesse de récompense se trouve dans le BGB au... || § 657 || § 242 || § 1
+5 | 3 | Le tiercé et la part promise à l'ami : arrêt de... || 1995 || 2002 || 2018
+
+6 | 1 | Une vente est un contrat... || synallagmatique || unilatéral || aléatoire
+6 | 1 | Une donation est un contrat... || à titre gratuit || à titre onéreux || aléatoire
+6 | 1 | Un pari est un contrat... || aléatoire || commutatif || solennel
+6 | 2 | Le prêt d'un livre se forme par la remise : il est... || réel || solennel || consensuel
+6 | 2 | Les conditions générales d'un magasin : contrat... || d'adhésion || de gré à gré || aléatoire
+6 | 2 | Le cautionnement est un contrat... || unilatéral || synallagmatique || réel
+6 | 2 | La clause abusive dans un contrat d'adhésion est... || réputée non écrite || nulle avec tout le contrat || valable
+6 | 3 | Le gage n'est plus un contrat réel depuis... || 2006 || 1804 || 2016
+6 | 3 | La vente immobilière est en principe... || consensuelle || solennelle || réelle
+6 | 3 | La donation est solennelle en vertu de l'article... || 931 || 1582 || 1109
+6 | 3 | Art. 1171 : le contrôle ne porte pas sur... || l'adéquation du prix || les clauses de responsabilité || les clauses non négociables
+
+7 | 1 | L'offre comprend les éléments essentiels et... || la volonté d'être lié || une signature || un délai
+7 | 1 | Dans la vente, les éléments essentiels sont... || la chose et le prix || le prix et le lieu || la chose, le prix et la date de livraison
+7 | 1 | La promesse unilatérale est déjà... || un contrat || une simple offre || une vente
+7 | 2 | Sans délai fixé, l'offre doit être maintenue... || un délai raisonnable || un mois || huit jours ouvrables à compter de sa réception
+7 | 2 | La rétractation fautive de l'offre... || empêche le contrat || forme le contrat || n'a aucun effet
+7 | 2 | La révocation de la promesse... || n'empêche pas le contrat promis || empêche le contrat promis || annule la promesse
+7 | 2 | Le décès de l'offrant rend l'offre... || caduque || nulle || irrévocable
+7 | 2 | Rétracter son offre avant qu'elle parvienne au destinataire est... || libre || fautif || impossible
+7 | 3 | Le tiers qui connaissait la promesse : son contrat est... || nul || valable || inopposable au seul promettant
+7 | 3 | Depuis 2021, le promettant s'oblige... || dès la promesse || à la levée de l'option || à la signature notariée
+7 | 3 | Le décès de l'offrant : article... || 1117 al. 2 || 1116 al. 2 || 1124 al. 2
+7 | 3 | L'offre n'est pas un engagement unilatéral car... || sa rétractation produit effet || elle suppose deux volontés || elle est toujours écrite
+
+8 | 1 | Le silence, en principe... || ne vaut pas acceptation || vaut acceptation || vaut refus définitif de l'offre
+8 | 1 | Une réponse qui change le prix est... || une offre nouvelle || une acceptation || une rétractation
+8 | 2 | Le contrat est conclu quand l'acceptation... || parvient à l'offrant || est envoyée || est rédigée
+8 | 2 | L'article 1121 consacre la théorie de... || la réception || l'émission || la déclaration
+8 | 2 | L'acceptation peut résulter... || d'un comportement non équivoque || du seul silence gardé par le destinataire || d'un simple doute
+8 | 2 | Les conditions générales doivent avoir été... || connues et acceptées || imprimées || enregistrées
+8 | 3 | Conditions particulières et générales discordantes : priment... || les particulières || les générales || les dernières reçues
+8 | 3 | Le Parisien, le Marseillais : le contrat est conclu à... || Paris || Marseille || mi-chemin
+8 | 3 | Sweethome : la vente est parfaite malgré... || un mandat différent || un prix non fixé || une réserve de l'acceptant
+8 | 3 | Akol : pas de consentement réel car... || les pourparlers continuaient || l'acte n'était pas signé || le prix manquait
+
+9 | 1 | Peut-on rompre des pourparlers ? || Oui, c'est une liberté || Non, jamais || Seulement avec l'accord d'un juge
+9 | 1 | La responsabilité dans les pourparlers est... || délictuelle || contractuelle || pénale
+9 | 2 | Qu'est-ce qui est réparé après une rupture fautive ? || Les frais engagés || Les gains espérés || La perte de chance
+9 | 2 | Les pourparlers doivent respecter... || la bonne foi || un écrit || un délai légal
+9 | 2 | Négocier sans vouloir conclure, c'est bercer l'autre... || d'illusions || de promesses tenues || de contrats
+9 | 2 | L'information confidentielle est protégée par l'article... || 1112-2 || 1112-1 || 1112
+9 | 3 | Manoukian date de... || 2003 || 2016 || 1993
+9 | 3 | La perte de chance figure à l'article 1112 depuis... || 2018 || 2016 || 2003
+9 | 3 | Le tiers qui contracte engage sa responsabilité s'il y a... || intention de nuire || simple connaissance || simple profit
+
+10 | 1 | Le devoir général d'information est à l'article... || 1112-1 || 1137 || 1103
+10 | 1 | Ce devoir ne porte pas sur... || l'estimation de la valeur || les qualités substantielles du bien || le contenu du contrat
+10 | 2 | Peut-on exclure ce devoir par une clause ? || Non || Oui || Seulement entre professionnels
+10 | 2 | Du moins au plus exigeant : renseignement, conseil, puis... || mise en garde || réflexion || confidentialité
+10 | 2 | Le délai pour revenir sur son engagement : délai... || de rétractation || de réflexion || de préavis
+10 | 2 | Le délai avant lequel on ne peut pas accepter : délai... || de réflexion || de rétractation || de carence
+10 | 2 | Le manquement seul engage la responsabilité... || extracontractuelle || contractuelle de plein droit || pénale
+10 | 3 | Baldus date de... || 2000 || 1996 || 2016
+10 | 3 | Le lien direct ne suffit pas : il faut aussi... || une importance déterminante || un écrit || une clause
+10 | 3 | Le code de la consommation prévoit cette information à l'article... || L. 111-1 || L. 212-1 || L. 145-46-1
+10 | 3 | Les panneaux photovoltaïques : la nullité repose sur... || l'erreur || la violence || la lésion
+10 | 3 | L'acquéreur qui cache la libération des lieux manque à... || la loyauté || la force obligatoire || l'effet relatif
+
+11 | 1 | L'erreur est... || une fausse représentation de la réalité || une tromperie || une contrainte
+11 | 1 | L'authenticité d'une œuvre d'art est... || une qualité essentielle || un simple motif || une question de valeur marchande
+11 | 1 | Les vices du consentement entraînent une nullité... || relative || absolue || partielle
+11 | 2 | L'erreur sur le motif est en principe... || indifférente || une cause de nullité || un dol
+11 | 2 | L'erreur sur la valeur est... || indifférente || une cause de nullité || toujours un dol
+11 | 2 | L'aléa chasse... || l'erreur || le dol || le contrat
+11 | 2 | Pothier voit la substance dans... || la matière de la chose || la qualité voulue par les parties || la valeur
+11 | 2 | Le contrat en considération de la personne est dit... || intuitu personae || ad nutum || ab initio
+11 | 2 | L'erreur inexcusable... || n'est pas une cause de nullité || annule toujours le contrat || devient un dol
+11 | 3 | L'erreur sur le motif d'une libéralité est... || une cause de nullité || indifférente || un dol
+11 | 3 | La date de Fragonard ? || 24 mars 1987 || 22 février 1978 || 13 décembre 1983
+11 | 3 | Berthon concerne... || un ancien forçat || un tableau || un marchand de blé
+11 | 3 | La loi qui renverse Berthon date de... || 1975 || 1862 || 2016
+11 | 3 | L'erreur si grave qu'il n'y a pas de rencontre des volontés est... || l'erreur-obstacle || l'erreur-motif || l'erreur-valeur
+
+12 | 1 | Le dol est une erreur... || provoquée || spontanée || indifférente
+12 | 1 | Le silence qui trompe est... || une réticence dolosive || un dolus bonus du commerçant || une lésion
+12 | 2 | Le dol suppose l'intention de... || tromper || vendre || nuire à un tiers
+12 | 2 | L'erreur provoquée par un dol est... || toujours excusable || jamais excusable || parfois excusable
+12 | 2 | La poissonnière qui vante son poisson : c'est... || le bon dol || la réticence || le dol principal
+12 | 2 | Le dol doit émaner... || du cocontractant ou de son représentant || de n'importe quel tiers || du seul notaire
+12 | 2 | Taire son estimation de la valeur est... || permis || un dol || une faute pénale
+12 | 2 | Le dol engage aussi une responsabilité... || délictuelle || contractuelle || administrative
+12 | 3 | Art. 1137 al. 3 vient de... || la loi de 2018 || l'ordonnance de 2016 || la loi de 1975
+12 | 3 | Si l'on aurait contracté à d'autres conditions, on parlait de dol... || incident || principal || collectif
+12 | 3 | Sans nullité, on répare la perte de chance... || de meilleures conditions || de ne pas contracter || des gains attendus du contrat
+12 | 3 | Le dolus bonus vient du droit... || romain || canonique || allemand
+12 | 3 | L'erreur sur la valeur peut annuler le contrat si elle résulte... || d'un dol || d'une négligence || d'un simple oubli

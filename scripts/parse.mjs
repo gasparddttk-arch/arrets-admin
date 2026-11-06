@@ -24,7 +24,7 @@ export const ZONES = [
   { id: 7, titre: 'Pouvoir réglementaire', lieu: 'Titulaires, lignes directrices, hiérarchie' },
   { id: 8, titre: 'Normes jurisprudentielles', lieu: 'Auteurs, méthode, contenu, autorité des PGD' },
   { id: 9, titre: "L'administration et ses juges", lieu: 'Juge naturel, liens fonctionnels, juridiction' },
-  { id: 10, titre: 'Bonus TD', lieu: 'Arrêts des fiches 2 et 3 absents de la carte' },
+  { id: 10, titre: 'Bonus TD', lieu: 'Arrêts des fiches 2 et 3 absents de la carte', bonus: true },
 ].map((z) => ({ ...z, titre: typo(z.titre) }));
 
 export const DEFAUTS = {
@@ -41,13 +41,24 @@ export const DEFAUTS = {
   PRETEXTE: ['Arrêt prétexte', 'Le texte disparaît derrière le cours récité.'],
 };
 
-function parseArrets(fichiers = ['arrets-1.txt', 'arrets-2.txt', 'arrets-3.txt']) {
+function parseArrets(fichiers = ['arrets-1.txt', 'arrets-2.txt', 'arrets-3.txt'], heritage = null) {
   const out = [];
   for (const file of fichiers) {
     let cur = null;
     for (const raw of D(file).split('\n')) {
       const l = raw.trim();
       if (!l || l.startsWith('#')) continue;
+      // « =id | chambres | importance » reprend une fiche de l'équipe 2 : même identifiant, donc même progression.
+      if (l.startsWith('=')) {
+        const [id, zones, imp] = l.slice(1).split('|').map((s) => s.trim());
+        const b = heritage?.get(id);
+        if (!b) throw new Error(`Fiche à reprendre inconnue : ${id}`);
+        const z = zones.split(',').map(Number);
+        const ap = Object.values(b.ap)[0];
+        cur = { ...b, zones: z, imp: imp ? +imp : b.imp, ap: Object.fromEntries(z.map((k) => [k, ap])), x: [...b.x] };
+        out.push(cur);
+        continue;
+      }
       if (l.startsWith('@')) {
         const [id, nom, ref, juge, an, imp, zones] = l.slice(1).split('|').map((s) => s.trim());
         cur = { id, nom: typo(nom), ref: typo(ref), juge, an: +an, imp: +imp,
@@ -100,12 +111,18 @@ function parseJuges() {
   return out;
 }
 
-function parseSujets(fichier = 'sujets.txt') {
+function parseSujets(fichier = 'sujets.txt', heritage = null) {
   const out = []; let cur = null;
   const titreIds = (v) => { const [t, ids = ''] = v.split('|').map((s) => s.trim()); return { t: typo(t), ids: ids ? ids.split(',').map((s) => s.trim()) : [] }; };
   for (const raw of D(fichier).split('\n')) {
     const l = raw.trim();
     if (!l || l.startsWith('#')) continue;
+    if (l.startsWith('=')) {
+      const [id, zones] = l.slice(1).split('|').map((x) => x.trim());
+      const b = heritage?.find((x) => x.id === id);
+      if (!b) throw new Error(`sujet à reprendre inconnu : ${id}`);
+      cur = null; out.push({ ...b, zones: zones.split(',').map(Number), herite: true }); continue;
+    }
     if (l.startsWith('&')) {
       const [id, type, titre, zones] = l.slice(1).split('|').map((s) => s.trim());
       cur = { id, type, titre: typo(titre), zones: zones.split(',').map(Number), bon: {}, mauvais: [] };
@@ -145,19 +162,49 @@ export const ZONES_OBLIG = [
   { id: 9, titre: 'La responsabilité civile', lieu: 'Exercices généraux, en attendant le cours', travaux: true },
 ].map((z) => ({ ...z, titre: typo(z.titre) }));
 
-const labelArticle = (n) => (/^1242-/.test(n) ? `Art. 1242 al. ${n.slice(5)}` : `Art. ${n}`);
-function parseArticles() {
-  return lignes('oblig/articles.txt').map((l) => {
+// L'équipe 1 suit son propre cours : ses chambres ont leur ordre, et leur progression reste à part.
+export const ZONES_OBLIG1 = [
+  { id: 1, titre: "L'obligation", lieu: 'Lien de droit, sources, évolution de la matière' },
+  { id: 2, titre: 'La réforme dans le temps', lieu: 'Ordonnance, ratification, anticipation' },
+  { id: 3, titre: 'Le fondement du contrat', lieu: 'La volonté, la loi, leurs conséquences' },
+  { id: 4, titre: 'La notion de contrat', lieu: 'Courtoisie, autostop, assistance bénévole' },
+  { id: 5, titre: "L'acte unilatéral", lieu: 'Renvoi au contrat, engagement unilatéral' },
+  { id: 6, titre: 'Les classifications', lieu: 'Les distinctions du Code civil' },
+  { id: 7, titre: "L'offre et la promesse", lieu: 'Rétractation, caducité, avant-contrat' },
+  { id: 8, titre: "L'acceptation", lieu: 'Silence, conditions générales, moment du contrat' },
+  { id: 9, titre: 'Les pourparlers', lieu: 'Liberté, bonne foi, préjudice réparable' },
+  { id: 10, titre: "L'information", lieu: 'Devoir général, droits spéciaux, formalisme' },
+  { id: 11, titre: "L'erreur", lieu: 'Substance, personne, erreurs indifférentes' },
+  { id: 12, titre: 'Le dol', lieu: 'Tromperie, intention, domaine, sanctions' },
+  { id: 13, titre: 'La violence', lieu: 'Pas encore arrivée au cours', travaux: true },
+].map((z) => ({ ...z, titre: typo(z.titre) }));
+
+const ARTICLES_TEXTES = { '9-ord': ["Art. 9 de l'ordonnance", 'Ord. 9'], '16-loi': ['Art. 16 de la loi de 2018', 'Loi 16'] };
+const labelArticle = (n) => (ARTICLES_TEXTES[n]?.[0] ?? (/^1242-/.test(n) ? `Art. 1242 al. ${n.slice(5)}` : `Art. ${n}`));
+function parseArticles(fichier = 'oblig/articles.txt', heritage = null) {
+  return lignes(fichier).map((l) => {
     const [num, zones, imp, titre, regle] = cases(l);
-    if (!regle) throw new Error('article incomplet : ' + l);
     const z = listeZones(zones);
-    return { id: `a${num}`, num, nom: labelArticle(num), zones: z, imp: +imp, titre: typo(titre), regle: typo(regle), ap: Object.fromEntries(z.map((k) => [k, typo(regle)])), article: 1 };
+    // Sans titre ni règle, l'article reprend le texte déjà écrit pour l'équipe 2.
+    const base = regle ? null : heritage?.get(`a${num}`);
+    if (!regle && !base) throw new Error('article incomplet : ' + l);
+    const t = base ? base.titre : typo(titre); const r = base ? base.regle : typo(regle);
+    return { id: `a${num}`, num, nom: typo(labelArticle(num)), etiquette: ARTICLES_TEXTES[num]?.[1], zones: z, imp: +imp, titre: t, regle: r, ap: Object.fromEntries(z.map((k) => [k, r])), article: 1 };
   });
 }
 
-function parseCas() {
+// « =id | chambres » reprend un exercice de l'équipe 2 dans les chambres de l'équipe 1.
+function repris(l, heritage, nature) {
+  const [id, zones] = cases(l.slice(1));
+  const b = heritage?.find((x) => x.id === id);
+  if (!b) throw new Error(`${nature} à reprendre inconnu : ${id}`);
+  return { ...b, zones: listeZones(zones), eq: '1', herite: true };
+}
+
+function parseCas(fichier = 'oblig/cas.txt', heritage = null) {
   const out = []; let cur = null; let etape = null;
-  for (const l of lignes('oblig/cas.txt')) {
+  for (const l of lignes(fichier)) {
+    if (l.startsWith('=')) { cur = null; out.push(repris(l, heritage, 'cas')); continue; }
     if (l.startsWith('%')) {
       const [id, titre, zones, eq, source] = cases(l.slice(1));
       cur = { id, titre: typo(titre), zones: listeZones(zones), eq, source, etapes: [], liens: [] }; out.push(cur); continue;
@@ -181,21 +228,23 @@ function parseCas() {
   return out;
 }
 
-function parseQualifs() {
+function parseQualifs(fichier = 'oblig/qualif.txt', heritage = null) {
   const out = []; let cur = null;
-  for (const l of lignes('oblig/qualif.txt')) {
+  for (const l of lignes(fichier)) {
+    if (l.startsWith('=')) { cur = null; out.push(repris(l, heritage, 'famille')); continue; }
     if (l.startsWith('%')) { const [id, titre, zones] = cases(l.slice(1)); cur = { id, titre: typo(titre), zones: listeZones(zones), m: [] }; out.push(cur); continue; }
     if (!l.startsWith('m:')) throw new Error('qualif : ' + l);
     const [n, a, t, w] = cases(l.slice(2));
     if (!w) throw new Error('qualif incomplète : ' + l);
-    cur.m.push({ n: typo(n), a: typo(a), t: typo(t), w: typo(w), carte: `a${a.match(/\d+(-\d+)?/)[0]}` });
+    cur.m.push({ n: typo(n), a: typo(a.replace('9-ord', "9 de l'ordonnance").replace('16-loi', '16 de la loi de 2018')), t: typo(t), w: typo(w), carte: `a${a.match(/\d+(-(\d+|ord|loi))?/)[0]}` });
   }
   return out;
 }
 
-function parseRemedes() {
+function parseRemedes(fichier = 'oblig/remedes.txt', heritage = null) {
   const out = []; let cur = null;
-  for (const l of lignes('oblig/remedes.txt')) {
+  for (const l of lignes(fichier)) {
+    if (l.startsWith('=')) { cur = null; out.push(repris(l, heritage, 'remède')); continue; }
     if (l.startsWith('%')) { const [id, zones, eq] = cases(l.slice(1)); cur = { id, zones: listeZones(zones), eq, dx: [], rx: [], liens: [] }; out.push(cur); continue; }
     const m = l.match(/^(c|d|dx|r|rx|a): ?(.*)$/);
     if (!m) throw new Error('remède : ' + l);
@@ -206,9 +255,10 @@ function parseRemedes() {
   return out;
 }
 
-function parseFrises() {
+function parseFrises(fichier = 'oblig/frises.txt', heritage = null) {
   const out = []; let cur = null;
-  for (const l of lignes('oblig/frises.txt')) {
+  for (const l of lignes(fichier)) {
+    if (l.startsWith('=')) { cur = null; out.push(repris(l, heritage, 'frise')); continue; }
     if (l.startsWith('%')) { const [id, titre, zones, eq] = cases(l.slice(1)); cur = { id, titre: typo(titre), zones: listeZones(zones), eq, e: [] }; out.push(cur); continue; }
     const m = l.match(/^(p|e|q): ?(.*)$/);
     if (!m) throw new Error('frise : ' + l);
@@ -219,8 +269,8 @@ function parseFrises() {
   return out;
 }
 
-function parseQuestions() {
-  return lignes('oblig/questions.txt').map((l) => {
+function parseQuestions(fichier = 'oblig/questions.txt') {
+  return lignes(fichier).map((l) => {
     const i = l.indexOf('|'); const j = l.indexOf('|', i + 1);
     const [q, bonne, ...faux] = paire(l.slice(j + 1));
     if (faux.length < 2) throw new Error('question incomplète : ' + l);
@@ -237,6 +287,39 @@ export function lireObligations() {
     familles: [], juges: [],
     cas: parseCas(), qualifs: parseQualifs(), remedes: parseRemedes(), frises: parseFrises(), questions: parseQuestions(),
     sujets: parseSujets('oblig/sujets.txt'),
+    defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
+  };
+}
+
+// L'équipe 1 reprend ce qui est commun aux deux programmes. Les fiches gardent leur identifiant :
+// un arrêt déjà travaillé reste acquis quand on change d'équipe.
+export function lireObligations1() {
+  const b = lireObligations();
+  const parId = new Map([...b.arrets, ...b.articles].map((a) => [a.id, a]));
+  const arrets = parseArrets(['oblig1/arrets.txt'], parId);
+  const articles = parseArticles('oblig1/articles.txt', parId);
+  const connues = new Set([...arrets, ...articles].map((a) => a.id));
+  // Un exercice repris ne garde que les liens vers des fiches du programme de l'équipe.
+  const lier = (x) => (x.herite ? { ...x, liens: x.liens.filter((id) => connues.has(id)) } : x);
+  const frise = (f) => (f.herite ? { ...f, e: f.e.map((e) => ({ ...e, carte: connues.has(e.carte) ? e.carte : null })) } : f);
+  const sujet = (s) => {
+    if (!s.herite) return s;
+    const bon = { ...s.bon };
+    for (const k of ['1a', '1b', '2a', '2b']) bon[k] = { ...bon[k], ids: bon[k].ids.filter((id) => connues.has(id)) };
+    return { ...s, bon };
+  };
+  return {
+    matiere: 'oblig',
+    equipe: 1,
+    zones: ZONES_OBLIG1,
+    arrets, articles,
+    familles: [], juges: [],
+    cas: parseCas('oblig1/cas.txt', b.cas).map(lier),
+    qualifs: parseQualifs('oblig1/qualif.txt', b.qualifs),
+    remedes: parseRemedes('oblig1/remedes.txt', b.remedes).map(lier),
+    frises: parseFrises('oblig1/frises.txt', b.frises).map(frise),
+    questions: parseQuestions('oblig1/questions.txt'),
+    sujets: parseSujets('oblig1/sujets.txt', b.sujets).map(sujet),
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
   };
 }

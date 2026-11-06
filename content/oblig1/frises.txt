@@ -1,0 +1,88 @@
+# Frises, équipe 1.
+# %id | titre | chambres | équipe     =id | chambres : reprend une frise de l'équipe 2.
+# p: ce que montre la frise
+# e: année | nom | ce qu'il dit, sans date | ce que ça change | fiche liée (facultatif)
+# q: question | rang de la bonne étape
+
+%code | Du Code de 1804 à la nature | 1 | 1
+p: Une matière qui change avec la société.
+e: 1804 | Code civil | Le contrat est rangé parmi les manières d'acquérir la propriété | Cinq articles suffisent à la responsabilité | a1240
+e: 1930 | Loi sur le contrat d'assurance | La collectivité des assurés contribue à l'indemnisation | La société entre dans le rapport d'obligation
+e: 1958 | Assurance automobile obligatoire | Le conducteur doit s'assurer | La réparation se détache du patrimoine du responsable
+e: 2016 | Préjudice écologique | Le responsable doit réparer l'atteinte à l'environnement | La nature entre dans le Code civil | a1246
+e: 2017 | Devoir de vigilance | Les grandes entreprises répondent de leurs chaînes d'activité | L'environnement entre dans la vie des contrats
+q: Quelle étape fait entrer la nature dans le Code civil ? | 4
+
+%reforme | Les trois temps de la réforme | 2 | 1
+p: Une réforme par ordonnance, puis un contentieux sur son application.
+e: 2015 | Loi d'habilitation | Le Gouvernement est autorisé à réformer par ordonnance | Le recours à l'article 38 est choisi
+e: 2016 | Ordonnance du 10 février | Près de 300 articles sont réécrits | Un nouveau droit s'applique aux contrats conclus dès le 1er octobre | a9-ord
+e: 2018 | Loi de ratification | L'ordonnance est ratifiée avec une vingtaine de changements | Certains changements se disent interprétatifs | a16-loi
+e: 2021 | Civ. 3e, 23 juin | Le promettant s'oblige définitivement dès la promesse | La Cour fait évoluer le droit ancien | revirement2021
+e: 2023 | Com., 15 mars | La chambre commerciale rejoint la troisième chambre civile | Le revirement s'applique au litige en cours | morgane
+q: Quelle étape ratifie l'ordonnance en la modifiant ? | 3
+
+%assistance | La convention d'assistance bénévole | 4 | 1
+p: Un contrat inventé pour protéger, qui finit par obliger.
+e: 1959 | Servouse | Un contrat peut naître de l'aide gratuite | La convention d'assistance apparaît | servouse
+e: 1969 | L'assisté inconscient | L'offre dans l'intérêt exclusif du destinataire est présumée acceptée | L'acceptation devient une construction | inconscient
+e: 1996 | La pioche | L'assisté garantit nécessairement l'assistant envers les tiers | Le juge fixe le contenu du contrat | pioche
+e: 2022 | La lampe à souder | L'imprudence de l'assistant peut engager sa responsabilité | L'assistant devient aussi débiteur | lampe
+e: 2023 | L'aide sollicitée | L'assistance peut être demandée par l'assisté | L'initiative n'importe plus | sollicitee
+q: Quelle étape retourne la convention contre l'assistant ? | 4
+
+%engagement | L'engagement unilatéral | 5 | 1
+p: Une source d'obligation admise au cas par cas.
+e: 1995 | Civ. 1re, 10 octobre | La promesse d'exécuter un devoir moral oblige | L'engagement unilatéral transforme l'obligation naturelle | naturelle
+e: 2002 | Ch. mixte, 6 septembre | L'annonce d'un gain oblige à le délivrer | La Cour préfère le quasi-contrat | loteries
+e: 2016 | Article 1100-1 | Les actes juridiques sont conventionnels ou unilatéraux | L'acte unilatéral entre dans le Code | a1100-1
+e: 2018 | Com., 12 décembre | Un geste commercial peut obliger son auteur | L'engagement unilatéral s'étend aux relations d'affaires | geste
+q: Quelle étape choisit le quasi-contrat plutôt que l'engagement unilatéral ? | 2
+
+%volonte | La volonté et le contrat | 3 | 1
+p: Une idée philosophique devenue règle de droit, puis discutée.
+e: 1785 | Kant | L'individu libre se donne à lui-même sa loi | L'autonomie de la volonté prend forme
+e: 1804 | Article 1134 ancien | Les conventions légalement formées tiennent lieu de loi | La force obligatoire entre au Code
+e: 1880 | Fouillée | Qui dit contractuel dit juste | Le contrat serait juste parce qu'il est voulu
+e: 2016 | Article 1102 | La liberté contractuelle a pour limite l'ordre public | La réforme écrit la liberté et sa limite | a1102
+q: Quelle étape associe le contrat à la justice ? | 3
+
+%adhesion | Classer les contrats | 6 | 1
+p: Des catégories qui bougent avec les textes.
+e: 1804 | Code civil | Le contrat est synallagmatique ou unilatéral | La distinction entre au Code
+e: 2006 | Ordonnance du 23 mars | Le gage se forme par un écrit | Il cesse d'être un contrat réel
+e: 2016 | Article 1110 | Le contrat d'adhésion entre au Code | Une distinction selon la négociation apparaît | a1110
+e: 2018 | Loi de ratification | Le contrat d'adhésion comporte un ensemble de clauses non négociables | La définition change, pour les actes conclus depuis le 1er octobre | a16-loi
+q: Quelle étape redéfinit le contrat d'adhésion ? | 4
+
+=promesse | 7
+
+%retractation | La rétractation de l'offre | 7 | 1
+p: Du délai imposé à l'offrant à l'efficacité de sa rétractation.
+e: 2008 | Civ. 3e, 7 mai | L'offrant ne peut pas retirer l'offre avant le délai qu'il a fixé | L'article 1134 ancien fonde ce maintien
+e: 2009 | Civ. 3e, 20 mai | L'offre sans délai doit être maintenue un délai raisonnable | Le délai raisonnable s'installe
+e: 2016 | Article 1116 | La rétractation dans le délai est fautive mais empêche le contrat | Le Code aligne les deux hypothèses | a1116
+e: 2017 | Joueur de rugby | L'offre rétractée dans le délai fait obstacle au contrat de travail | La Cour anticipe sur le droit nouveau | rugby
+e: 2026 | Gerstaecker | L'offre du bailleur rétractée dans le délai légal n'expose qu'à une réparation | L'article 1116 gagne les droits spéciaux | gerstaecker
+q: Quelle étape prive d'exécution forcée la victime d'un bailleur commercial ? | 5
+
+=silence | 8
+
+%manoukian | La rupture des pourparlers | 9 | 1
+p: Une solution jurisprudentielle devenue loi, puis appliquée à la lettre.
+e: 2003 | Manoukian | Seuls les frais de la négociation sont réparés | Les gains espérés sont exclus | manoukian
+e: 2016 | Article 1112 | Les négociations sont libres mais soumises à la bonne foi | La réforme consacre l'arrêt | a1112
+e: 2018 | Loi de ratification | La perte de chance est ajoutée au texte | La précision est dite interprétative | a16-loi
+e: 2024 | Samsoë & Samsoë | La perte de chance d'acquérir à bonnes conditions n'est pas réparable | La Cour casse un arrêt qui l'indemnisait | samsoe
+q: Quelle étape ajoute la perte de chance au Code civil ? | 3
+
+=information | 10,12
+
+=erreur | 11
+
+%personne | L'erreur sur la personne | 11 | 1
+p: Du seul jumeau trompeur aux qualités essentielles.
+e: 1862 | Berthon | Seule l'erreur sur l'identité annule le mariage | L'ancien forçat reste l'époux | berthon
+e: 1975 | Loi du 11 juillet | L'erreur sur les qualités essentielles de la personne est admise | L'article 180 renverse la solution | a180
+e: 2016 | Article 1134 | L'erreur sur le cocontractant n'annule que le contrat conclu en considération de la personne | Le droit commun des contrats a sa règle | a1134
+q: Quelle étape renverse la solution de l'ancien forçat ? | 2

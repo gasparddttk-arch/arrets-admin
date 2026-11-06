@@ -1,0 +1,104 @@
+# Qualifier les faits, équipe 1. Une famille réunit des notions voisines.
+# %id | titre | chambres
+# m: notion | texte | fait | pourquoi
+# =id | chambres : reprend une famille de l'équipe 2.
+
+%sources | D'où vient l'obligation ? | 1
+m: Contrat | art. 1100 | Un étudiant achète une voiture : il doit le prix, le vendeur doit transférer la propriété. | Les deux parties ont voulu se rendre créancière et débitrice l'une de l'autre.
+m: Fait illicite | art. 1240 | Un cycliste renverse un piéton et le blesse. | L'obligation de réparer naît d'un dommage causé par une faute, sans aucune volonté de s'engager.
+m: Gestion d'affaires | art. 1301 | Un étudiant limite une inondation chez son voisin absent et engage des frais. | L'obligation repose sur un acte altruiste, sans accord préalable.
+m: Paiement de l'indu | art. 1302 | Une assurée rembourse par erreur une dette qu'elle n'a jamais eue. | Ce qui a été reçu sans être dû doit être restitué.
+m: Obligation naturelle | art. 1100 | Un frère promet par écrit d'aider sa sœur dans le besoin, sans qu'aucun texte l'y oblige. | Le devoir de conscience devient obligation civile par la promesse de l'exécuter.
+m: Préjudice écologique | art. 1246 | Une usine pollue une rivière et atteint durablement son écosystème. | Le Code civil impose de réparer l'atteinte à l'environnement.
+
+%temps | Quelle version du droit ? | 2
+m: Survie de la loi ancienne | art. 9-ord | Un bail signé en 2014 pose une question de caducité en 2026. | Le contrat conclu avant le 1er octobre 2016 reste soumis à la loi ancienne.
+m: Action interrogatoire | art. 9-ord | En 2017, un tiers demande au bénéficiaire d'un pacte signé en 2012 s'il entend s'en prévaloir. | Ces actions s'appliquent dès l'entrée en vigueur, y compris aux contrats en cours.
+m: Modification interprétative | art. 16-loi | Un contrat de 2017 pose la question de l'abus de dépendance : on lit l'article 1143 avec les mots ajoutés en 2018. | Le texte interprétatif fait corps avec celui qu'il précise.
+m: Modification pour l'avenir | art. 16-loi | Une offre émise en 2017 tombe sur le décès de son destinataire : on lit l'article 1117 sans l'ajout de 2018. | Cette modification ne vise que les actes conclus depuis le 1er octobre 2018.
+m: Non-rétroactivité | art. 2 | Une loi nouvelle ne dit rien de son application aux situations passées. | Sans disposition transitoire, elle ne dispose que pour l'avenir.
+m: Anticipation jurisprudentielle | art. 9-ord | Pour une promesse de 2012, la Cour vise l'article 1134 ancien, mais retient la solution de l'article 1124. | Le juge applique le droit ancien, interprété à la lumière du nouveau.
+
+%consequences | Quelle conséquence de la volonté ? | 3
+m: Consensualisme | art. 1172 | « Je te vends ma montre 500 euros. » « Je te l'achète. » Rien n'est écrit, le contrat est formé. | Le seul échange des consentements suffit, sans forme.
+m: Force obligatoire | art. 1103 | Une fois engagé, le vendeur voudrait reprendre sa parole parce qu'il regrette le prix. | Le contrat tient lieu de loi à ceux qui l'ont fait.
+m: Effet relatif | art. 1199 | Un fournisseur réclame le prix au colocataire de son client, qui n'a rien signé. | Seules les parties sont liées par le contrat.
+m: Liberté contractuelle | art. 1102 | Une propriétaire refuse de vendre à un acheteur, comme elle en a le droit. | Chacun est libre de contracter ou de ne pas contracter.
+m: Limite de l'ordre public | art. 1162 | Deux personnes signent un contrat de vente de drogue. | Le contrat « légalement formé » doit respecter l'ordre public.
+m: Bonne foi | art. 1104 | Une partie exécute le contrat de façon à gêner l'autre autant qu'elle le peut. | Le contrat se négocie, se forme et s'exécute de bonne foi.
+
+%accord | Contrat ou pas contrat ? | 4
+m: Pas de contrat | art. 1101 | Un homme invite une amie à dîner et ne vient pas. | Il y a accord, mais aucune volonté de produire des effets de droit.
+m: Contrat de transport | art. 1101 | Un voyageur achète un ticket de métro. | L'accord vise bien à créer des obligations.
+m: Transport bénévole | art. 1240 | Une conductrice prend un auto-stoppeur et a un accident. | Pas de contrat : la jurisprudence retient la voie délictuelle.
+m: Assistance bénévole | art. 1231-1 | Un ami vient aider à déménager et se blesse au dos. | Le juge reconnaît un contrat, pour indemniser l'assistant.
+m: Gestion d'affaires | art. 1301 | Une voisine fait réparer le toit d'un absent après une tempête, sans qu'on le lui demande. | Elle gère l'affaire d'autrui à son insu, sans accord : c'est un quasi-contrat.
+m: Convention née d'une demande | art. 1231-1 | Un employeur convainc un salarié de l'aider dans son verger, à titre gracieux. | L'assistance peut être sollicitée par l'assisté.
+
+=actes | 5
+
+%unilateral | Une ou deux volontés ? | 5
+m: Engagement unilatéral | art. 1100-1 | Une société affiche publiquement qu'elle offrira 500 euros à qui retrouvera son chien, et le trouveur n'a pas vu l'affiche. | Seule la volonté de son auteur peut alors fonder l'obligation.
+m: Contrat unilatéral | art. 1106 | Une caution s'engage envers une banque à payer si le débiteur ne paie pas. | Deux volontés s'accordent, mais une seule partie s'oblige.
+m: Contrat synallagmatique | art. 1106 | Un vendeur et un acheteur s'obligent réciproquement. | Chacun est créancier et débiteur de l'autre.
+m: Quasi-contrat | art. 1300 | Une société annonce à un client qu'il a gagné 10 000 euros, sans aucun aléa apparent. | Depuis 2002, ce fait purement volontaire l'oblige à délivrer le gain.
+m: Acte juridique unilatéral | art. 1100-1 | Un créancier renonce seul à un droit qu'il détenait. | Une seule volonté produit un effet de droit, sans créer d'obligation à sa charge.
+m: Devoir de conscience | art. 1100 | Un gagnant du tiercé promet à son ami une part de ses gains. | La promesse transforme l'obligation naturelle en obligation civile.
+
+=contrats | 6
+
+%regimes-contrats | Quelle règle pour ce contrat ? | 6
+m: Règles spéciales | art. 1105 | Un litige sur un bail appelle d'abord les textes propres au bail. | Les règles générales s'appliquent sous réserve des règles particulières.
+m: Clause abusive | art. 1171 | Les conditions générales d'un magasin prévoient qu'il ne répond jamais de ses retards. | Clause non négociable et déséquilibre significatif : elle est réputée non écrite.
+m: Interprétation contre le proposant | art. 1190 | Une clause ambiguë figure dans un contrat d'assurance type. | Dans le doute, le contrat d'adhésion se lit contre celui qui l'a proposé.
+m: Contrat à titre gratuit | art. 1107 | Un ami prête 500 euros sans intérêt. | L'un procure un avantage sans en attendre de contrepartie.
+m: Contrat à exécution successive | art. 1111-1 | Un abonnement à une salle de sport court sur douze mois. | Les prestations s'échelonnent dans le temps.
+
+=offre | 7
+
+%promesse-offre | Offre, promesse ou vente ? | 7
+m: Offre avec délai | art. 1116 | « Je vous vends ma maison 300 000 euros, vous avez dix jours pour répondre. » Le destinataire n'a encore rien dit. | Une seule volonté : la rétractation serait fautive, mais efficace.
+m: Promesse unilatérale | art. 1124 | Le propriétaire consent à vendre, et l'acheteur accepte par écrit le droit d'opter pendant deux mois. | C'est déjà un contrat, il ne manque que le consentement du bénéficiaire.
+m: Contrat définitif | art. 1583 | Vendeur et acheteur s'accordent sur la maison et le prix. | La vente est parfaite dès l'accord sur la chose et le prix.
+m: Offre au public | art. 1114 | Un particulier publie une annonce précise pour vendre son terrain à un prix fixé. | L'offre peut s'adresser à une personne indéterminée. Elle lie envers le premier acceptant.
+m: Levée de l'option | art. 1124 | Le bénéficiaire notifie dans le délai sa décision d'acheter. | Le contrat promis est formé.
+m: Vente à un tiers de mauvaise foi | art. 1124 | Le promettant vend à un tiers qui connaissait l'existence de la promesse. | Le contrat conclu avec ce tiers est nul.
+
+=silence | 8
+
+%acceptation | Y a-t-il acceptation ? | 8
+m: Acceptation conforme | art. 1118 | L'acheteur répond : « J'accepte votre offre à 2 000 euros. » | Il veut être lié dans les termes de l'offre.
+m: Acceptation par comportement | art. 1113 | Sans répondre, un client reçoit la marchandise commandée et la revend. | La volonté peut résulter d'un comportement non équivoque.
+m: Contre-offre | art. 1118 | L'acheteur répond : « D'accord, mais à 1 800 euros. » | L'acceptation non conforme ne vaut au plus qu'offre nouvelle.
+m: Conditions générales inopposables | art. 1119 | Un fournisseur invoque des conditions que son client n'a jamais vues. | Elles doivent avoir été portées à sa connaissance et acceptées.
+m: Accord sur la chose et le prix | art. 1583 | Une société accepte sans réserve une offre d'achat précise, par courriel. | La vente est parfaite, même sans acte notarié.
+m: Contrat formé à réception | art. 1121 | Un Marseillais accepte par lettre une offre venue de Paris. La lettre arrive à Paris trois jours plus tard. | Le contrat naît quand et où l'acceptation parvient à l'offrant.
+
+=pourparlers | 9
+
+%information | Quel degré d'information ? | 10
+m: Renseignement | art. 1112-1 | Un vendeur indique le prix, les délais et les caractéristiques d'un bien. | Il donne des données objectives sur la prestation.
+m: Conseil | art. 1112-1 | Un informaticien oriente son client vers le logiciel adapté à ses besoins. | Il tient compte des besoins de l'autre partie.
+m: Mise en garde | art. 1112-1 | Une mention rappelle : « Un crédit vous engage et doit être remboursé. » | Elle refrène les ardeurs du contractant et montre les risques.
+m: Délai de réflexion | art. 1122 | Un texte interdit d'accepter une offre avant l'expiration d'un délai. | Le contractant dispose du temps de l'engagement.
+m: Délai de rétractation | art. 1122 | Un consommateur revient sur le contrat qu'il a signé, dans le délai légal. | Il dispose du temps du désengagement.
+m: Preuve de l'information | art. 1353 | Le vendeur doit montrer qu'il a bien fourni l'information qu'il devait. | Celui qui se prétend libéré doit justifier du fait qui a éteint son obligation.
+
+%determinante | L'article 1112-1 joue-t-il ? | 10
+m: Information due | art. 1112-1 | Un vendeur sait que la maison est inconstructible, ce que l'acheteur ignore, et le projet de construire est connu. | Information connue, déterminante, liée au contrat, légitimement ignorée.
+m: Valeur de la prestation | art. 1112-1 | Une acheteuse sait qu'un meuble vaut bien plus que son prix et n'en dit rien. | Le devoir d'information ne porte pas sur l'estimation de la valeur.
+m: Dissimulation intentionnelle | art. 1137 | Un cédant cache volontairement une dette qu'il sait déterminante. | L'intention de tromper fait basculer le silence dans le dol.
+m: Devoir exclu par clause | art. 1112-1 | Un contrat prévoit que le vendeur ne doit aucune information. | Les parties ne peuvent ni limiter ni exclure ce devoir.
+m: Dommages et intérêts | art. 1240 | L'information n'a pas été donnée, sans intention de tromper, et l'acheteur a perdu de l'argent. | Le manquement engage la responsabilité, hors contrat, de celui qui devait informer.
+
+=erreurs | 11
+
+=dol | 12
+
+%erreur-ou-dol | Erreur ou dol ? | 11,12
+m: Erreur spontanée | art. 1132 | Un collectionneur achète une copie en la croyant d'époque, sans que personne ne l'ait trompé. | Fausse représentation sans faute de l'autre partie.
+m: Erreur provoquée | art. 1139 | Un vendeur ment sur l'année d'une voiture, et l'acheteur n'a pas vérifié. | L'erreur provoquée par un dol est toujours excusable.
+m: Erreur inexcusable | art. 1132 | Un professionnel achète un stock sans lire la fiche technique jointe. | Celui qui ne s'est pas renseigné n'obtient pas le concours du droit.
+m: Erreur sur la valeur | art. 1136 | Un vendeur cède un fonds trop bon marché, et personne ne l'a trompé. | Une appréciation économique inexacte ne justifie pas la nullité.
+m: Valeur et manœuvre | art. 1139 | Un acheteur fabrique une fausse expertise pour faire baisser le prix. | L'erreur sur la valeur provoquée par un dol est une cause de nullité.
+m: Motif provoqué | art. 1139 | Un vendeur invente une future gare pour convaincre d'acheter. | L'erreur sur un simple motif est une cause de nullité si elle résulte d'un dol.

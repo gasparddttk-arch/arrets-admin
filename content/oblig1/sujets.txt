@@ -1,0 +1,135 @@
+# Sujets, équipe 1.
+# &id | D ou C | intitulé | chambres     =id | chambres : reprend un sujet de l'équipe 2.
+# pb: problématique   1: titre du I   1a: titre I.A | fiches   1b  2  2a  2b
+# m: pourquoi ce plan fonctionne
+# b: CODE || pourquoi ce plan pèche || I || I.A || I.B || II || II.A || II.B
+
+&dis-code | D | Le plan du Code civil de 1804 | 1
+pb: Que révèle la place donnée aux obligations dans le Code de 1804 de la société qui l'a écrit ?
+1: Un code bâti autour de la propriété
+1a: Le contrat, manière d'acquérir la propriété | a1103
+1b: Une société agraire, sans place pour les services |
+2: Une confiance dans quelques principes généraux
+2a: Trois cents articles pour le contrat, fondés sur la volonté | a1102
+2b: Cinq articles pour la responsabilité, fondés sur la faute | a1240
+m: Le sujet vient du cours. Le plan part de ce que le Code montre, la propriété, puis de ce qu'il suppose, des principes généraux assez forts pour se passer de listes.
+b: RECIT || Le plan récite les livres du Code sans dire ce qu'ils révèlent. || Les deux premiers livres || Les personnes || Les biens || Le troisième livre || Le titre III || Le titre IV
+b: HORS || Le plan parle de la réforme de 2016 au lieu du Code de 1804. || L'ordonnance de 2016 || Son adoption || Son contenu || La loi de ratification || Son adoption || Son contenu
+
+&com-2023 | C | Com., 15 mars 2023, promesse et revirement | 2,7
+pb: Comment appliquer à une promesse ancienne une solution nouvelle sans méconnaître la survie de la loi ancienne ni la sécurité juridique ?
+1: Une solution nouvelle pour le droit ancien
+1a: L'abandon de la jurisprudence antérieure | morgane, cruz
+1b: Une interprétation de l'article 1134 à la lumière de la réforme | a1124, revirement2021
+2: Un revirement immédiatement applicable
+2a: L'absence de droit acquis à une jurisprudence constante | morgane
+2b: Un revirement prévisible et proportionné | a9-ord
+m: L'arrêt répond à deux questions : le fond, puis l'application dans le temps du revirement. Le plan les reprend et explique ce qu'est l'anticipation.
+b: COMPROC || Le plan reprend les étapes de la décision au lieu d'en dégager le sens. || La procédure || Les faits || L'arrêt d'appel || La décision || Le moyen || La cassation
+b: PRETEXTE || L'arrêt disparaît derrière une question de cours sur la réforme. || La réforme de 2016 || L'ordonnance || La ratification || Le droit transitoire || L'article 9 || L'article 16
+
+&dis-anticipation | D | L'anticipation jurisprudentielle | 2
+pb: Le juge qui lit le droit ancien à la lumière du nouveau trahit-il la survie de la loi ancienne, ou compose-t-il avec elle ?
+1: Une technique qui respecte la lettre de la survie de la loi ancienne
+1a: Le juge vise toujours le texte ancien | a9-ord, climatiseur
+1b: Il en renouvelle seulement l'interprétation | rugby
+2: Une technique qui en réduit la portée
+2a: Le droit nouveau s'impose en fait aux contrats anciens | morgane, revirement2021
+2b: La sécurité juridique, limite de l'anticipation | morgane
+m: La question vient de la fiche de TD 1. Le plan répond par une thèse nuancée : la règle est respectée dans sa lettre, mais atteinte dans ses effets.
+b: CONTRESENS || Le plan confond l'anticipation et l'application directe du droit nouveau. || L'application directe de l'ordonnance || Aux contrats anciens || Sans visa du droit ancien || La rétroactivité de la réforme || Son principe || Ses effets
+b: DESCR || Les intitulés nomment des thèmes sans énoncer d'idée. || La notion || La définition || Les exemples || Le régime || Les finalités || Les risques
+
+&dis-fouillee | D | « Qui dit contractuel dit juste » | 3
+pb: La rencontre de deux volontés suffit-elle à garantir la justice du contrat ?
+1: Une formule fondée sur la volonté libre
+1a: L'individu, seul juge de ses intérêts | a1102
+1b: La force obligatoire, conséquence de la liberté | a1103
+2: Une formule démentie par l'inégalité des contractants
+2a: Quand la contrainte remplace la volonté | a1171
+2b: L'intervention de la loi pour rétablir l'équilibre | a1162, a1104
+m: Le plan prend la formule au sérieux, puis montre ce qu'elle suppose : des individus libres et égaux. Le cours demande de ne pas la plaquer : ici, elle est le sujet.
+b: BANAL || Le plan juxtapose deux auteurs sans répondre au sujet. || Fouillée || Sa vie || Son œuvre || Kant || L'autonomie || La liberté
+b: REDITE || Les deux parties disent que le contrat est juste parce qu'il est voulu. || La justice du contrat voulu || Le consentement || La liberté || Le contrat juste par nature || La rencontre des volontés || L'absence de contrainte
+
+&dis-consensualisme | D | Le recul du consensualisme | 3,6
+pb: Le retour des formes est-il un archaïsme, ou la protection d'une volonté devenue fragile ?
+1: Le consensualisme, principe maintenu
+1a: L'échange des consentements suffit | a1172, a1109
+1b: La souplesse et la rapidité des échanges | a1583
+2: Le formalisme, instrument de protection
+2a: Les formes qui font le contrat solennel | a1109
+2b: Les mentions et les délais qui éclairent le consentement | a1122
+m: La formule vient du cours. Le plan rattache le formalisme moderne à son fondement : quand l'égalité des volontés disparaît, la loi reprend la main.
+b: CHRONO || Le plan raconte des périodes au lieu de démontrer. || Du droit romain à 1804 || Le formalisme romain || Le consensualisme du Code || De 1804 à nos jours || Le XIXe siècle || Le XXe siècle
+b: NIVEAU || La première partie est générale et la seconde se réduit à un exemple. || Le consensualisme en droit des contrats || Sa définition || Ses fondements || La donation || Sa forme || Sa sanction
+
+&com-2022 | C | Civ. 1re, 5 janv. 2022, la faute de l'assistant | 4
+pb: La commune intention des parties peut-elle exonérer l'assistant bénévole de sa simple imprudence ?
+1: L'assistant bénévole, débiteur contractuel de l'assisté
+1a: Le terrain contractuel de la responsabilité | lampe, a1231-1
+1b: Une convention à double sens qui interroge sa nature | pioche
+2: Une faute appréciée sans indulgence de principe
+2a: Le rejet d'une exonération tirée de la commune intention | lampe
+2b: Une solution à mesurer : « susceptible » d'engager | sollicitee
+m: Le plan part du visa et du motif censuré, puis pèse le mot « susceptible ». C'est ce que le corrigé du TD 2 reproche au commentaire de l'IA d'avoir manqué.
+b: PRETEXTE || L'histoire de la convention remplace l'analyse de l'arrêt. || La naissance de la convention || Les années 1950 || La jurisprudence ancienne || L'assurance || Les assureurs || Leur recours
+b: COMPROC || Le plan suit l'ordre de la décision. || Les faits et la procédure || L'incendie || L'arrêt de Rouen || Le moyen et la cassation || Le visa || Le dispositif
+
+&dis-assistance | D | La convention d'assistance bénévole, contrat ou fiction ? | 4
+pb: Peut-on encore parler de contrat quand le juge en décide l'existence et le contenu ?
+1: Une convention construite par le juge
+1a: Une volonté présumée, parfois impossible | inconscient, servouse
+1b: Un contenu imposé pour protéger l'assistant | pioche
+2: Un contrat qui produit tous ses effets
+2a: Un champ étendu à l'aide sollicitée | sollicitee
+2b: Un assistant devenu débiteur | lampe
+m: La question reprend le débat du cours. Le plan montre où loge la fiction, la volonté et le contenu, puis pourquoi le contrat, une fois créé, vit sa vie.
+b: HORS || Le plan traite de la responsabilité délictuelle en général. || La faute délictuelle || L'article 1240 || L'article 1241 || La réparation || Le préjudice || Le lien de causalité
+b: DESEQ || Le I porte tout le sujet et le II ne contient qu'une remarque. || La convention d'assistance dans toute sa jurisprudence || La formation || Les effets || Une critique || Une note || Un mot
+
+&dis-euv | D | L'engagement unilatéral de volonté | 5
+pb: Pourquoi le droit français, qui admet qu'une volonté seule oblige, refuse-t-il d'en faire un principe ?
+1: Une source d'obligation admise au cas par cas
+1a: L'obligation naturelle et le geste commercial | naturelle, geste
+1b: L'apport de l'article 1100-1 | a1100-1
+2: Une méfiance entretenue
+2a: Le risque d'un engagement pris à la légère | a1117
+2b: Le recours à d'autres qualifications | loteries, maltzkorn
+m: Le plan répond à la méfiance que décrit le cours : le dialogue du contrat responsabilise, la volonté isolée non. L'offre et les loteries en sont les preuves.
+b: CONTRESENS || Le plan soutient que l'offre est un engagement unilatéral. || L'offre, engagement unilatéral || Sa force || Sa transmission || Son maintien après le décès || Aux héritiers || Sans caducité
+b: BANAL || Le plan liste les actes unilatéraux sans thèse. || Les actes du droit de la famille || Le testament || La reconnaissance d'enfant || Les actes du droit des biens || La renonciation || L'abandon
+
+=com-2021 | 7
+=dis-offre-promesse | 7
+=dis-silence | 8
+=com-manoukian | 9
+=dis-bonnefoi | 9,10
+=com-baldus | 10,12
+=dis-info-dol | 10,12
+
+&dis-info | D | L'obligation d'information précontractuelle | 10
+pb: Le devoir général de l'article 1112-1 rétablit-il l'égalité des contractants, ou ajoute-t-il une strate à des protections déjà nombreuses ?
+1: Un devoir général strictement encadré
+1a: Un devoir né du dol et des droits spéciaux | a1137, reticence1971
+1b: Des conditions resserrées par la Cour de cassation | a1112-1, fastfood
+2: Un devoir à l'efficacité incertaine
+2a: Une articulation délicate avec les droits spéciaux | hawai, panneaux
+2b: Une sanction dépendante des vices du consentement | a1130, panneaux
+m: La fiche de TD 4 reproche au devoir de Claude un A hors sujet et une articulation mal traitée. Ce plan part de l'origine pour aller à l'efficacité, et il traite les droits spéciaux.
+b: DESCR || Les intitulés nomment des thèmes sans énoncer d'idée. || Le principe || Les fondements || Le domaine || La mise en œuvre || La preuve || Les sanctions
+b: CONTRESENS || Le plan voit dans le devoir une garantie de la valeur. || Un devoir portant sur la valeur || L'estimation de la prestation || La bonne affaire interdite || Une réparation des gains || Les avantages attendus || La perte de chance
+
+=dis-erreur | 11
+
+&dis-erreur-dol | D | Erreur et dol | 11,12
+pb: Pourquoi la même fausse représentation de la réalité reçoit-elle deux traitements si différents ?
+1: Une même atteinte au consentement
+1a: Une fausse représentation déterminante | a1130
+1b: Une même sanction, la nullité relative | a1131
+2: Une faveur pour la victime du dol
+2a: Un domaine élargi à la valeur et au motif | a1139
+2b: Une faute qui ouvre aussi la réparation | a1137, parsys
+m: Le cours annonce cette distinction pour l'interrogation de la séance 7. Le plan part du point commun, puis explique que la faute de l'auteur justifie la faveur faite à la victime.
+b: RECIT || Le plan récite deux chapitres sans les comparer. || L'erreur || Ses conditions || Ses effets || Le dol || Ses conditions || Ses effets
+b: REDITE || Les deux parties reviennent à dire que dol et erreur annulent le contrat. || La nullité pour erreur || Le vice || La sanction || La nullité pour dol || Le vice || La sanction
