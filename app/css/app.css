@@ -887,3 +887,18 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .connexion-code { margin-top: 14px; }
 .connexion-erreur { margin-bottom: 12px; color: var(--texte); background: rgba(200, 60, 60, .25); border-radius: 10px; padding: 8px 10px; }
 .connexion-note { margin-top: auto; padding-top: 18px; }
+/* Administration */
+.admin-comptes li { list-style: none; }
+.admin-compte { width: 100%; text-align: left; color: inherit; font: inherit; }
+.admin-compte b { font-size: 22px; overflow-wrap: anywhere; }
+.admin-compte p { overflow-wrap: anywhere; color: var(--texte-2); }
+.statut { flex: none; align-self: flex-start; font-size: 15px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--carte-bas); box-shadow: inset 0 0 0 1px var(--carte-bord); }
+.statut-admin { color: var(--or-texte); background: linear-gradient(180deg, var(--or-1), var(--or-2)); box-shadow: none; }
+.statut-paye { color: #0E3B2A; background: #7FD8B0; box-shadow: none; }
+.statut-aucun { color: var(--texte-2); }
+.admin-signal b { font-size: 21px; }
+.admin-signal.traite { opacity: .6; }
+.admin-fiche { max-height: 88dvh; overflow-y: auto; }
+.admin-fiche h2 { font-weight: 700; font-size: 28px; line-height: 1.1; color: var(--titre-or); overflow-wrap: anywhere; }
+.admin-fiche h3 { font-weight: 700; font-size: 21px; margin-top: 16px; }
+.admin-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }

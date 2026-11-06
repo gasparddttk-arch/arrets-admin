@@ -15,7 +15,7 @@ import { lancerDunk } from './dunk.js';
 import { activerRappel, etatRappel, testerNotification, estInstallee, abonnementActuel } from './notif.js';
 import { cloudActif, inscrireAbonnement } from './cloud.js';
 import { SUPABASE_URL } from './config.js';
-import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo } from './compte.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
 const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise };
@@ -123,7 +123,8 @@ function afficherOnglets(vis) {
 function aller(id, p) {
   ongletCourant = id === 'role' || id === 'examen' ? 'palais' : id;
   afficherOnglets(true);
-  ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen }[id])(p);
+  if (id === 'admin') ongletCourant = 'profil';
+  ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen, admin: ecranAdmin }[id])(p);
 }
 
 // PALAIS -----------------------------------------------------------------------
@@ -941,11 +942,82 @@ function blocCompte() {
   const dateSync = c.sync ? new Date(c.sync).toLocaleString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : null;
   return h('div', { class: 'cloud compte' },
     h('p', { class: 'aide-claire' }, `Connecté : ${c.email || 'compte Gdroit'}.`),
+    estAdmin() ? h('button', { class: 'bouton-or', 'data-admin': '', onClick: () => aller('admin') }, 'Administration') : null,
     h('p', { class: 'aide-claire' }, dateSync ? `Progression copiée sur ton compte le ${dateSync}.` : 'Ta progression se copie sur ton compte après chaque séance.'),
     champ,
     h('button', { class: 'bouton-fantome', onClick: async () => { const v = champ.value.trim(); if (!v) return toast('Choisis un pseudo.'); try { await changerPseudo(v); etat.compte.pseudo = v; sauver(); toast('Pseudo enregistré.'); } catch { toast('Pas de connexion. Réessaie plus tard.'); } } }, 'Changer de pseudo'),
     h('button', { class: 'bouton-lien', onClick: () => confirmerDeconnexion() }, 'Se déconnecter'));
 }
+// ADMINISTRATION ----------------------------------------------------------------------
+// Réservé au compte administrateur : le serveur refuse toute autre personne.
+const NOMS_STATUT = { admin: 'Admin', testeur: 'Testeur', paye: 'Payé', aucun: 'Sans accès' };
+const quand = (d) => (d ? 'le ' + new Date(d).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'jamais');
+async function ecranAdmin() {
+  const corps = h('div', { class: 'admin-corps' }, h('p', { class: 'aide-claire' }, 'Chargement…'));
+  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => aller('profil') }, icone('retour', 18), 'Retour au profil'),
+    h('section', { class: 'page admin' }, h('h1', {}, 'Administration'), h('p', { class: 'page-sous' }, 'Visible par toi seul.'), corps));
+  let comptes; let signalements; let reglage;
+  try { [comptes, signalements, reglage] = await Promise.all([adminComptes(), adminSignalements(), adminReglage()]); } catch {
+    corps.replaceChildren(h('p', { class: 'aide-claire' }, 'Impossible de charger les comptes. Vérifie ta connexion.')); return;
+  }
+  const filtre = h('input', { class: 'code', type: 'search', placeholder: 'Chercher un pseudo ou un email', 'aria-label': 'Chercher un compte' });
+  const liste = h('ul', { class: 'articles admin-comptes' });
+  const rendreListe = () => {
+    const q = filtre.value.trim().toLowerCase();
+    liste.replaceChildren(...comptes.filter((c) => !q || `${c.pseudo} ${c.email}`.toLowerCase().includes(q)).map((c) => h('li', {},
+      h('button', { class: 'article admin-compte', 'data-compte': c.id, onClick: () => ficheCompte(c) },
+        h('div', {},
+          h('b', {}, c.pseudo || c.email),
+          h('p', {}, `${c.email}`),
+          h('small', {}, `${fmt(c.jetons ?? 0)} jetons, ${fmt((c.xp ?? 0) + (c.xp_oblig ?? 0))} points, ${pluriel(c.seances ?? 0, 'séance')}. Vu ${quand(c.vu_le)}.`),
+          c.en_attente ? h('small', {}, `En attente : ${c.en_attente > 0 ? '+' : ''}${fmt(c.en_attente)} jetons à la prochaine ouverture.`) : null),
+        h('span', { class: `statut statut-${c.acces}` }, NOMS_STATUT[c.acces])))));
+  };
+  filtre.addEventListener('input', rendreListe); rendreListe();
+  const bascule = h('div', { class: 'bascule' }, [['testeur', 'Testeur'], ['aucun', 'Sans accès']].map(([v, nom]) => h('button', { class: reglage === v ? 'actif' : '', 'aria-pressed': String(reglage === v), onClick: async () => {
+    if (reglage === v) return;
+    try { await adminChangerReglage(v); toast(v === 'aucun' ? 'Les nouveaux comptes arrivent sans accès.' : 'Les nouveaux comptes arrivent en testeurs.'); ecranAdmin(); } catch { toast('Changement refusé.'); }
+  } }, nom)));
+  const ouverts = signalements.filter((x) => !x.traite);
+  const lignesSignal = signalements.map((x) => h('li', { class: `article admin-signal${x.traite ? ' traite' : ''}` }, h('div', {},
+    h('b', {}, x.nom || x.carte), h('p', {}, x.texte),
+    h('small', {}, `${x.pseudo || x.email || 'compte supprimé'}, ${quand(x.cree_le)}${x.equipe ? `, équipe ${x.equipe}` : ''}`),
+    h('button', { class: 'bouton-lien', onClick: async () => { try { await adminTraiter(x.id, !x.traite); ecranAdmin(); } catch { toast('Pas de connexion.'); } } }, x.traite ? 'Rouvrir' : 'Marquer comme traité'))));
+  corps.replaceChildren(
+    h('h2', {}, 'Nouveaux comptes'),
+    h('p', { class: 'aide-claire' }, 'Le statut donné à chaque nouvelle inscription. Passe à « Sans accès » le jour où l’appli devient payante : les comptes existants gardent leur statut.'),
+    bascule,
+    h('h2', {}, `Comptes (${comptes.length})`), filtre, liste,
+    h('h2', {}, `Signalements à traiter (${ouverts.length})`),
+    signalements.length ? h('ul', { class: 'articles' }, lignesSignal) : h('p', { class: 'aide-claire' }, 'Aucun signalement pour l’instant.'));
+}
+
+function ficheCompte(c) {
+  const moi = c.id === etat.compte?.id;
+  const montant = h('input', { class: 'code', type: 'number', inputmode: 'numeric', min: 1, max: 100000, placeholder: 'Nombre de jetons', 'aria-label': 'Nombre de jetons' });
+  const motif = h('input', { class: 'code', maxlength: 200, placeholder: 'Motif (facultatif)', 'aria-label': 'Motif' });
+  const jetons = (signe) => async () => {
+    const n = Math.round(+montant.value);
+    if (!(n > 0)) return toast('Indique un nombre de jetons.');
+    try { await adminJetons(c.id, signe * n, motif.value.trim()); voile.remove(); toast(signe > 0 ? `${monnaie(n)} envoyés à ${c.pseudo || c.email}.` : `${monnaie(n)} retirés à ${c.pseudo || c.email}.`); ecranAdmin(); } catch { toast('Opération refusée.'); }
+  };
+  const statut = moi ? null : h('div', { class: 'bascule' }, ['testeur', 'paye', 'aucun'].map((v) => h('button', { class: c.acces === v ? 'actif' : '', 'aria-pressed': String(c.acces === v), onClick: async () => {
+    if (c.acces === v) return;
+    try { await adminStatut(c.id, v); voile.remove(); toast(`${c.pseudo || c.email} : ${NOMS_STATUT[v].toLowerCase()}.`); ecranAdmin(); } catch { toast('Changement refusé.'); }
+  } }, NOMS_STATUT[v])));
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite admin-fiche', role: 'dialog', 'aria-label': `Compte de ${c.pseudo || c.email}` },
+    h('h2', {}, c.pseudo || c.email), h('p', { class: 'aide-claire' }, c.email),
+    h('p', { class: 'aide-claire' }, `Inscrit ${quand(c.cree_le)}. Dernière copie de progression : ${quand(c.maj)}.${c.equipe ? ` Équipe ${c.equipe}.` : ''}`),
+    h('h3', {}, 'Jetons'),
+    h('p', { class: 'aide-claire' }, `${fmt(c.jetons ?? 0)} à la dernière copie. Le changement s’applique à sa prochaine ouverture de l’appli, sans descendre sous zéro.`),
+    montant, motif,
+    h('div', { class: 'admin-duo' }, h('button', { class: 'bouton-or', onClick: jetons(1) }, 'Ajouter'), h('button', { class: 'bouton-fantome', onClick: jetons(-1) }, 'Retirer')),
+    h('h3', {}, 'Statut'),
+    moi ? h('p', { class: 'aide-claire' }, 'Ton compte reste administrateur.') : statut,
+    h('div', { class: 'boite-actions' }, h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Fermer'))));
+  document.body.append(voile);
+}
+
 function confirmerDeconnexion() {
   const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite', role: 'dialog', 'aria-label': 'Se déconnecter' },
     h('p', {}, 'Ta progression est copiée sur ton compte puis effacée de ce téléphone. Tu la retrouves en te reconnectant.'),
@@ -1074,7 +1146,7 @@ async function demarrer() {
       if (!n) return;
       if (document.querySelector('.tribune')) accueil();
       else if (document.querySelector('.porte-oblig')) matieres();
-      toast(`${monnaie(n)} offerts, ils sont dans ta réserve.`);
+      toast(n > 0 ? `${monnaie(n)} offerts, ils sont dans ta réserve.` : `${monnaie(-n)} retirés de ta réserve.`);
     });
   }
 }

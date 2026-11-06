@@ -895,7 +895,7 @@ async function debordement(p, nom) {
 
   // Le compte : connexion obligatoire, copie en ligne, reprise sur un autre téléphone. Supabase est simulé.
   const SUPA = 'https://jhpgxisxayceixmppxuu.supabase.co';
-  const faux = { progression: null, envois: [], signalements: [], otp: [] };
+  const faux = { progression: null, envois: [], signalements: [], otp: [], rpc: [] };
   const simuler = async (ctx) => ctx.route(SUPA + '/**', async (route) => {
     const r = route.request(); const u = new URL(r.url()); const corps = r.postData() ? JSON.parse(r.postData()) : null;
     const json = (x, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(x) });
@@ -908,7 +908,14 @@ async function debordement(p, nom) {
     assert.equal(r.headers().authorization, 'Bearer jeton', 'appel authentifié');
     if (u.pathname === '/rest/v1/progressions' && r.method() === 'GET') return json(faux.progression ? [faux.progression] : []);
     if (u.pathname === '/rest/v1/progressions') { faux.progression = { donnees: corps.donnees, maj: corps.maj }; faux.envois.push(corps); return route.fulfill({ status: 201 }); }
-    if (u.pathname === '/rest/v1/profils' && r.method() === 'GET') return json([{ pseudo: 'Testeur', equipe: null, acces: 'testeur' }]);
+    if (u.pathname === '/rest/v1/profils' && r.method() === 'GET') return json([{ pseudo: 'Testeur', equipe: null, acces: 'admin' }]);
+    if (u.pathname.startsWith('/rest/v1/rpc/')) {
+      const nom = u.pathname.split('/').pop(); faux.rpc.push([nom, corps]);
+      if (nom === 'admin_comptes') return json([{ id: 'u-1', email: 'test@exemple.fr', pseudo: 'Testeur', acces: 'admin', jetons: 50, xp: 10, xp_oblig: 0, seances: 1, vu_le: new Date().toISOString(), en_attente: 0 }, { id: 'u-2', email: 'camille.tres.longue.adresse@exemple.fr', pseudo: 'Camille', acces: 'testeur', jetons: 120, xp: 300, xp_oblig: 40, seances: 9, vu_le: null, en_attente: -20 }]);
+      if (nom === 'admin_signalements') return json([{ id: 1, nom: 'Blanco', carte: 'blanco', texte: 'Date fausse', pseudo: 'Camille', cree_le: new Date().toISOString(), traite: false, equipe: 1 }]);
+      if (nom === 'admin_lire_reglage') return json('testeur');
+      return route.fulfill({ status: 204 });
+    }
     if (u.pathname === '/rest/v1/profils') return route.fulfill({ status: 204 });
     if (u.pathname === '/rest/v1/signalements') { faux.signalements.push(...corps); return route.fulfill({ status: 201 }); }
     if (u.pathname === '/rest/v1/cadeaux') return json([{ id: 'cadeau-1', jetons: 7 }]);
@@ -939,6 +946,21 @@ async function debordement(p, nom) {
   const xp1 = (await etat(k1)).xp;
   await k1.evaluate(() => window.__app.aller('profil')); await k1.waitForSelector('.compte');
   await k1.screenshot({ path: CAP + 'compte-profil.png' });
+  // L'administration : comptes, jetons, statut, signalements.
+  await k1.locator('[data-admin]').click(); await k1.waitForSelector('.admin-compte');
+  assert.equal(await k1.locator('.admin-compte').count(), 2);
+  await k1.screenshot({ path: CAP + 'admin.png', fullPage: true }); await debordement(k1, 'administration');
+  await k1.locator('.admin-compte[data-compte="u-2"]').click(); await k1.waitForSelector('.admin-fiche');
+  await k1.screenshot({ path: CAP + 'admin-fiche.png' });
+  await k1.fill('.admin-fiche input[type="number"]', '25'); await k1.locator('.admin-duo .bouton-fantome').click();
+  await k1.waitForSelector('.admin-fiche', { state: 'detached' });
+  assert.deepEqual(faux.rpc.find(([n]) => n === 'admin_jetons')[1], { cible: 'u-2', montant: -25, raison: null }, 'retrait de jetons');
+  await k1.locator('.admin-compte[data-compte="u-2"]').click(); await k1.locator('.admin-fiche .bascule button', { hasText: 'Payé' }).click();
+  await k1.waitForSelector('.admin-fiche', { state: 'detached' });
+  assert.deepEqual(faux.rpc.find(([n]) => n === 'admin_statut')[1], { cible: 'u-2', statut: 'paye' }, 'statut changé');
+  await k1.locator('.admin-compte[data-compte="u-1"]').click(); assert.equal(await k1.locator('.admin-fiche .bascule').count(), 0, 'pas de statut pour soi'); await k1.locator('.admin-fiche .bouton-lien').click();
+  await k1.locator('text=Marquer comme traité').click(); await k1.waitForTimeout(300);
+  assert(faux.rpc.some(([n, c]) => n === 'admin_traiter' && c.fait === true), 'signalement traité');
   // Un autre téléphone, connecté par Google : il retrouve la progression.
   const t2 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' }); await simuler(t2);
   const k2 = await t2.newPage(); k2.on('pageerror', (x) => erreurs.push(x.message));

@@ -86,6 +86,7 @@ export async function deconnexion() {
 
 // PROFIL ------------------------------------------------------------------------------
 export async function lireProfil() {
+  api(`profils?id=eq.${session.user.id}`, { method: 'PATCH', corps: { vu_le: new Date().toISOString(), equipe: etat.equipe || null } }).catch(() => {});
   const l = await api(`profils?id=eq.${session.user.id}&select=pseudo,equipe,acces`);
   const p = l?.[0] || null;
   if (p) { etat.compte = { ...etat.compte, pseudo: p.pseudo, acces: p.acces }; sauver(); }
@@ -134,7 +135,7 @@ export async function synchroniser(delai = {}) {
   if (delai.depasse) return 'trop-tard';
   const pseudo = etat.compte?.pseudo;
   if (choix === 'distant') remplacerEtat({ ...distant.donnees, enCours: null });
-  etat.compte = { id, email: session.user.email, pseudo, sync: choix === 'distant' ? Date.parse(distant.maj) : etat.compte?.sync || 0 };
+  etat.compte = { id, email: session.user.email, pseudo, acces: etat.compte?.acces || null, sync: choix === 'distant' ? Date.parse(distant.maj) : etat.compte?.sync || 0 };
   sauver();
   if (choix === 'local') await envoyerProgression();
   return choix === 'distant' ? 'en-ligne' : 'telephone';
@@ -159,7 +160,20 @@ export async function recevoirCadeauxCompte() {
     if (!nouveaux.length) return 0;
     let total = 0;
     for (const c of nouveaux) { total += c.jetons; etat.cadeaux.push(c.id); }
-    etat.jetons += total; sauver();
+    // Un retrait ne descend jamais sous zéro.
+    etat.jetons = Math.max(0, etat.jetons + total); sauver();
     return total;
   } catch { return 0; }
 }
+
+// ADMINISTRATION ----------------------------------------------------------------------
+// Chaque fonction vérifie côté serveur que le compte est administrateur.
+const rpc = (nom, corps = {}) => api(`rpc/${nom}`, { method: 'POST', corps });
+export const estAdmin = () => etat.compte?.acces === 'admin';
+export const adminComptes = () => rpc('admin_comptes');
+export const adminJetons = (cible, montant, raison) => rpc('admin_jetons', { cible, montant, raison: raison || null });
+export const adminStatut = (cible, statut) => rpc('admin_statut', { cible, statut });
+export const adminSignalements = () => rpc('admin_signalements');
+export const adminTraiter = (signalement, fait) => rpc('admin_traiter', { signalement, fait });
+export const adminReglage = () => rpc('admin_lire_reglage');
+export const adminChangerReglage = (statut) => rpc('admin_reglage_nouveaux', { statut });
