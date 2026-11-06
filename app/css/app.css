@@ -925,3 +925,21 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .amis .reglages { margin-top: 6px; }
 .defis-attente { display: grid; gap: 8px; margin-bottom: 12px; }
 .defi-attente { width: 100%; }
+
+/* Frise : les années posées, les décisions à placer */
+.frise-consigne { margin: -2px 0 10px; }
+.jalons { list-style: none; margin: 0; padding: 0 0 4px 0; position: relative; display: grid; gap: 10px; }
+.jalons::before { content: ''; position: absolute; left: 31px; top: 12px; bottom: 12px; width: 2px; background: var(--carte-bord); }
+.jalon { position: relative; display: grid; grid-template-columns: 64px 1fr; gap: 10px; align-items: start; }
+.jalon-an { position: relative; z-index: 1; justify-self: center; padding: 3px 6px; border-radius: 10px; font-weight: 700; font-size: 20px; line-height: 1.1; color: var(--titre-or); background: var(--fond-plat); box-shadow: inset 0 0 0 1px var(--carte-bord); }
+.jalon-corps { min-width: 0; }
+.jalon-nom { display: block; font-weight: 700; font-size: 19px; line-height: 1.15; margin-bottom: 4px; }
+.jalon-decision.fixe { font-size: 17px; line-height: 1.2; color: var(--texte-2); padding: 8px 11px; border-radius: 12px; background: rgba(255, 255, 255, .05); }
+.jalon-case { display: block; width: 100%; min-height: 46px; padding: 8px 11px; border-radius: 12px; text-align: left; font: inherit; font-size: 17px; line-height: 1.2; color: var(--texte-2); font-style: italic; box-shadow: inset 0 0 0 1px var(--carte-bord); }
+.jalon-case.pleine { font-style: normal; color: var(--texte); background: linear-gradient(180deg, var(--carte-haut), var(--carte-bas)); }
+.jalon-case.cible { box-shadow: inset 0 0 0 2px var(--or-2); background: rgba(231, 193, 104, .08); }
+.jalon-case.choisie { box-shadow: inset 0 0 0 2px var(--or-2), 0 0 0 3px rgba(231, 193, 104, .25); }
+.decisions { display: grid; gap: 7px; max-height: 42dvh; overflow-y: auto; padding: 2px; }
+.decision { width: 100%; padding: 10px 13px; border-radius: 13px; text-align: left; font: inherit; font-size: 17px; line-height: 1.2; color: var(--papier-texte, #2A1E0B); background: linear-gradient(180deg, var(--papier-1, #FCF5E3), var(--papier-2, #F3E7C8)); box-shadow: inset 0 0 0 1px var(--papier-bord, #E2D2A6), 0 3px 8px var(--ombre); }
+.frise-vraie p { font-size: 17px; line-height: 1.2; margin: 2px 0; }
+.frise-mis { color: var(--texte) !important; text-decoration: line-through; opacity: .75; }

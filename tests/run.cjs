@@ -39,7 +39,7 @@ async function jouer(p, { capture = false, auHasard = false } = {}) {
     // Dans la séance seulement : le pied des résultats ramènerait au Palais avant que le test ne les voie.
     const pied = await p.$('.scene .pied button');
     if (pied) { await toucher(pied); await p.waitForTimeout(15); continue; }
-    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)', 'button.case-frise:not(.pleine)'];
+    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)', 'button.decision'];
     let fait = false;
     for (const s of sel) {
       const e = await p.$(s);
@@ -73,8 +73,8 @@ async function jouerParfait(p) {
         return cible ? clic(cible) : false;
       }
       const opt = document.querySelector('.option[data-ok="true"]:not([disabled])'); if (opt) return clic(opt);
-      const etape = document.querySelector('.tuile-frise');
-      if (etape) return clic(document.querySelector(`.case-frise[data-i="${etape.dataset.rang}"]`));
+      const decision = document.querySelector('.decision');
+      if (decision) { const c = document.querySelector(`.jalon-case[data-i="${decision.dataset.rang}"]`); return clic(c.classList.contains('cible') ? decision : c); }
       const ecarter = document.querySelector('.dock-bas .bouton-fantome');
       const piece = document.querySelector('.carte-piece');
       if (piece) return piece.dataset.cle === 'piege' ? clic(ecarter) : clic(document.querySelector(`.vers[data-k="${piece.dataset.cle}"]`));
@@ -893,6 +893,32 @@ async function debordement(p, nom) {
   }
   await cm.close();
   log('commentaire ok');
+
+  // La frise : on place les décisions dans le désordre, puis on les remet en échangeant.
+  const fr = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const f = await fr.newPage(); f.on('pageerror', (x) => erreurs.push(x.message));
+  await f.goto(URLB + '?test&matiere=oblig'); await f.waitForSelector('.tribune');
+  await f.evaluate(() => window.__app.aller('role')); await f.locator('.role-ligne[data-mode="frise"]').click();
+  await f.waitForSelector('.jalons'); await f.waitForSelector('.palais-portes', { state: 'detached' });
+  await f.screenshot({ path: CAP + 'frise-debut.png' }); await debordement(f, 'frise');
+  while (await f.$('.decision')) await f.locator('.decision').last().click();
+  await f.screenshot({ path: CAP + 'frise-placee.png' });
+  // Les bons rangs sont connus du jeu : on échange jusqu'à ce que chaque décision soit à sa date.
+  for (let k = 0; k < 10; k++) {
+    const mal = await f.evaluate(() => {
+      const r = window.__frise; if (!r) return null;
+      const i = r.place.findIndex((d, n) => n > 0 && d.rang !== n);
+      if (i < 0) return null;
+      return [i, r.place.findIndex((d) => d.rang === i)];
+    });
+    if (!mal) break;
+    await f.locator(`.jalon-case[data-i="${mal[0]}"]`).click(); await f.locator(`.jalon-case[data-i="${mal[1]}"]`).click();
+  }
+  await f.locator('.scene .pied button').click(); await f.waitForSelector('.frise-vraie');
+  assert.match(await f.locator('.frise .question').innerText(), /Toute la frise est juste/, 'échanges qui remettent la frise en ordre');
+  await f.screenshot({ path: CAP + 'frise-corrige.png' });
+  await fr.close();
+  log('frise ok');
 
   // Le compte : connexion obligatoire, copie en ligne, reprise sur un autre téléphone. Supabase est simulé.
   const SUPA = 'https://jhpgxisxayceixmppxuu.supabase.co';

@@ -67,50 +67,86 @@ export async function jouerRemede(zone, ctx, round, ix) {
   ctx.fin({ score, parfait: ok });
 }
 
-// FRISE DE LA JURISPRUDENCE : on place les étapes, puis on dit ce qui change ---------------
+// FRISE DE LA JURISPRUDENCE : les années sont posées, on place ce que chaque étape a décidé ------
+// La première étape sert de point de départ. Une fois tout placé, on peut échanger deux décisions.
 export async function jouerFrise(zone, ctx, round) {
-  const n = round.etapes.length;
-  const place = Array(n).fill(null);
-  let pile = round.etapes.map((e) => ({ ...e }));
+  const etapes = [...round.etapes].sort((a, b) => a.rang - b.rang);
+  const n = etapes.length;
+  const place = etapes.map((e, i) => (i === 0 ? e : null));
+  let pile = melange(etapes.slice(1), Math.random);
+  let cible = 1; let choisie = null;
+  const premiereVide = () => place.findIndex((x) => x === null);
+  if (window.__app) window.__frise = { place };
   await new Promise((suite) => {
     function rendre() {
-      const carte = pile[0];
-      const cases = place.map((e, i) => h('button', {
-        class: `case-frise ${e ? 'pleine' : ''} ${carte && !e ? 'cible' : ''}`, 'data-i': repere(i),
-        'aria-label': e ? `Étape ${i + 1} : ${e.n}` : `Étape ${i + 1}, vide`,
-        onClick: () => {
-          if (carte) { pile.shift(); if (e) pile.push(e); place[i] = carte; son('carte'); vibrer(8); } else if (e) { place[i] = null; pile.unshift(e); son('retour'); }
-          rendre();
-        },
-      }, h('span', { class: 'case-rang' }, i + 1), e ? h('span', { class: 'case-t' }, h('b', {}, e.n), h('small', {}, e.t)) : h('span', { class: 'vide' }, 'À placer')));
+      const complet = premiereVide() === -1;
+      if (!complet && (cible === null || place[cible])) cible = premiereVide();
+      if (complet) cible = null;
+      const jalons = etapes.map((e, i) => {
+        const d = place[i];
+        const depart = i === 0;
+        return h('li', { class: `jalon${depart ? ' depart' : ''}` },
+          h('span', { class: 'jalon-an' }, e.an),
+          h('div', { class: 'jalon-corps' },
+            h('b', { class: 'jalon-nom' }, e.n),
+            depart ? h('p', { class: 'jalon-decision fixe' }, d.t)
+              : h('button', {
+                class: `jalon-case${d ? ' pleine' : ''}${cible === i ? ' cible' : ''}${choisie === i ? ' choisie' : ''}`, 'data-i': repere(i),
+                'aria-label': d ? `${e.an} : ${d.t}. Touche pour échanger` : `${e.an} : décision à placer`,
+                onClick: () => {
+                  if (!d) { cible = i; choisie = null; son('tap'); return rendre(); }
+                  if (choisie === null) { choisie = i; son('tap'); return rendre(); }
+                  if (choisie === i) { pile.unshift(d); place[i] = null; cible = i; choisie = null; son('retour'); return rendre(); }
+                  [place[choisie], place[i]] = [place[i], place[choisie]]; choisie = null; son('carte'); vibrer(8); return rendre();
+                },
+              }, d ? d.t : 'Quelle décision ?')));
+      });
+      const consigne = complet
+        ? (choisie !== null ? 'Touche une autre décision pour les échanger, ou la même pour la retirer.' : 'Tout est placé. Touche deux décisions pour les échanger, puis vérifie.')
+        : choisie !== null ? 'Touche une autre décision placée pour les échanger, ou la même pour la retirer.'
+          : `Que décide-t-on en ${etapes[cible].an} ? Choisis ci-dessous.`;
       zone.replaceChildren(h('div', { class: 'ecran frise' },
-        h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, round.titre), h('h2', { class: 'question' }, 'Remets ces étapes dans l’ordre'),
-          h('div', { class: 'frise-rail' }, cases)),
+        h('div', { class: 'ecran-corps' },
+          h('p', { class: 'surtitre' }, round.titre),
+          h('h2', { class: 'question' }, 'Place chaque décision à sa date'),
+          h('p', { class: 'aide frise-consigne' }, consigne),
+          h('ol', { class: 'jalons' }, jalons)),
         h('div', { class: 'dock' },
-          carte ? h('article', { class: 'tuile tuile-frise', 'data-rang': repere(carte.rang) }, h('b', {}, carte.n), h('span', {}, carte.t)) : null,
-          carte && pile.length > 1 ? h('div', { class: 'dock-bas seul' }, fantome('plusTard', 'Plus tard', () => { pile.push(pile.shift()); son('carte'); rendre(); })) : null,
-          !carte ? barrePied(continuer('Vérifier la frise', suite)) : null)));
+          pile.length ? h('div', { class: 'decisions' }, pile.map((d) => h('button', { class: 'decision', 'data-rang': repere(d.rang), onClick: () => {
+            const k = choisie !== null && !complet ? choisie : cible;
+            if (k === null || k === undefined) return;
+            pile = pile.filter((x) => x !== d);
+            if (place[k]) pile.push(place[k]);
+            place[k] = d; choisie = null; son('carte'); vibrer(8); rendre();
+          } }, d.t))) : null,
+          complet ? barrePied(continuer('Vérifier la frise', suite)) : null)));
     }
     rendre();
     window.scrollTo(0, 0);
   });
-  const justes = place.filter((e, i) => e.rang === i).length;
-  const tout = justes === n;
+  const aPlacer = n - 1;
+  const justes = place.filter((d, i) => i > 0 && d.rang === i).length;
+  const tout = justes === aPlacer;
   ctx.combo(tout);
-  const ordre = [...place].sort((a, b) => a.rang - b.rang);
   await new Promise((suite) => {
     zone.replaceChildren(h('div', { class: 'ecran frise' },
       h('p', { class: 'surtitre' }, round.p),
-      h('h2', { class: 'question' }, justes === 0 ? `Aucune étape sur ${n} à sa place` : justes === 1 ? `1 étape sur ${n} à sa place` : `${justes} étapes sur ${n} à leur place`),
-      h('ol', { class: 'frise-vraie' }, ordre.map((e) => h('li', { class: place[e.rang]?.rang === e.rang ? 'juste' : 'faux' },
-        h('span', { class: 'frise-an' }, e.an), h('span', {}, h('b', {}, e.n), h('small', {}, e.ch))))),
+      h('h2', { class: 'question' }, tout ? 'Toute la frise est juste' : justes === 0 ? `Aucune décision sur ${aPlacer} à sa place` : `${justes} décision${justes > 1 ? 's' : ''} sur ${aPlacer} à sa place`),
+      h('ol', { class: 'frise-vraie' }, etapes.map((e, i) => {
+        const bon = i === 0 || place[i].rang === i;
+        return h('li', { class: bon ? 'juste' : 'faux' },
+          h('span', { class: 'frise-an' }, e.an),
+          h('span', {}, h('b', {}, e.n), h('p', {}, e.t),
+            bon ? null : h('small', { class: 'frise-mis' }, `Tu avais mis : ${place[i].t}`),
+            h('small', {}, `Ce que ça change : ${e.ch}`)));
+      })),
       barrePied(continuer('Dernière question', suite))));
     window.scrollTo(0, 0);
   });
   const r = await qcm(zone, ctx, { surtitre: round.titre, question: round.q, options: round.options.map((o) => ({ ...o })), pourquoiBon: round.pourquoiBon, classe: 'frise-q' });
   const ok = tout && r.ok;
-  const score = (justes / n) * 0.7 + (r.ok ? 0.3 : 0);
-  for (const e of round.etapes) if (e.carte) ctx.noter(e.carte, ok || place[e.rang]?.rang === e.rang);
+  const score = (justes / aPlacer) * 0.7 + (r.ok ? 0.3 : 0);
+  for (const e of etapes) if (e.carte) ctx.noter(e.carte, ok || place[e.rang]?.rang === e.rang);
   if (ok) etat.stats.frise++;
   ctx.gain(Math.round(30 * score) + (ok ? 8 : 0));
   ctx.fin({ score, parfait: ok });
