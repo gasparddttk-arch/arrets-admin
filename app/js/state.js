@@ -45,6 +45,8 @@ export const PRIX_DUNK = { infini: 300 };
 // Le sceau du jour : assez de réussite, ou assez de fiches reprises.
 export const SCEAU_REUSSITE = 0.6;
 export const SCEAU_FICHES = 5;
+// La prime de maîtrise : une fois par fiche, hors plafond, après quatre montées sur quatre jours.
+export const PRIME_MAITRISE = 10;
 
 export const ETAPES_SERIE = [7, 30, 100];
 export const INTERVALLES = [0, 1, 2, 4, 9, 21, 45];
@@ -319,7 +321,8 @@ export function crediter(n, m = etat.matiere) {
 
 // Répétition espacée : chaque arrêt monte d'une boîte quand il est réussi, et redescend quand il est raté.
 // Une fiche ne progresse qu'une fois par jour, quand elle est due et sans aide. Une erreur ne compte
-// qu'une fois par jour et ferme la progression jusqu'au lendemain. Renvoie vrai si la fiche a progressé.
+// qu'une fois par jour et ferme la progression jusqu'au lendemain. Renvoie vrai si la fiche a progressé,
+// et 'prime' si elle décroche la prime de maîtrise.
 export function noter(id, ok, confonduAvec = null, aide = false) {
   const fiches = M().arrets; const j = jour();
   const a = fiches[id] || (fiches[id] = { b: 0, d: j, ok: 0, ko: 0, c: {} });
@@ -334,6 +337,8 @@ export function noter(id, ok, confonduAvec = null, aide = false) {
   if (aide || a.d > j || a.monte === j || a.rate === j) return false;
   const palier = a.b === 5 ? 6 : a.b + 1;
   a.b = Math.min(5, a.b + 1); a.d = j + INTERVALLES[palier]; a.monte = j;
+  a.m = (a.m || 0) + 1;
+  if (a.b >= 4 && a.m >= 4 && !a.prime) { a.prime = true; etat.jetons += PRIME_MAITRISE; return 'prime'; }
   return true;
 }
 export const niveau = (id) => M().arrets[id]?.b || 0;

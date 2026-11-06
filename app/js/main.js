@@ -4,7 +4,7 @@ import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import { changerEquipe,
-  SCEAU_REUSSITE, SCEAU_FICHES, etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
+  SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
 } from './state.js';
@@ -342,7 +342,9 @@ function lancer({ rounds, titre, type, zone, reprise, mode }) {
     decor: (el) => decor.replaceChildren(el),
     aide() { S.aide = true; },
     noter(id, ok, conf) {
-      if (noter(id, ok, conf, S.aide)) S.montees = (S.montees || 0) + 1;
+      const monte = noter(id, ok, conf, S.aide);
+      if (monte) S.montees = (S.montees || 0) + 1;
+      if (monte === 'prime') (S.primes ||= []).push(id);
       const t = S.touches.get(id) || { ok: 0, ko: 0 };
       t[ok ? 'ok' : 'ko']++; S.touches.set(id, t);
     },
@@ -460,6 +462,7 @@ function resultats(S, reussi) {
       h('div', {}, h('dt', {}, 'Réussite'), h('dd', {}, `${pourcent} %`)),
       h('div', {}, h('dt', {}, 'Expérience'), h('dd', {}, `+${fmt(S.xp)}`)),
       h('div', {}, h('dt', {}, estRose() ? 'Canettes' : 'Jetons'), nombrePieces)),
+    S.primes?.length ? h('p', { class: 'res-coffre' }, `Dossier clos : ${S.primes.map((id) => { const a = ix.parId.get(id); return a.article ? a.nom : a.court; }).join(', ')}. Prime de maîtrise : ${monnaie(S.primes.length * PRIME_MAITRISE)}.`) : null,
     sceauManque ? h('p', { class: 'res-texte' }, `Sceau du jour non obtenu : il faut ${Math.round(SCEAU_REUSSITE * 100)} % de réussite ou ${SCEAU_FICHES} fiches reprises.`) : null,
     pieces < S.jetons ? h('p', { class: 'res-texte' }, `Plafond du jour atteint dans cette matière : ${monnaie(PLAFOND_JOUR)}.`) : null,
     v.coffre ? h('p', { class: 'res-coffre' }, `Coffre de série : ${v.etape ?? v.coffre.etape} jours tenus, ${monnaie(v.coffre.jetons)} et ${pluriel(v.coffre.sursis, 'sursis', 'sursis')}.`) : null,

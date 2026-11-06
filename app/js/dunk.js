@@ -1,9 +1,9 @@
 // Dunk shot : un mini-jeu à part. Chaque bonne réponse envoie le ballon dans le panier suivant,
 // et la première erreur ou le temps écoulé met fin à la partie.
-import { h, svg, confettis, duree } from './ui.js';
+import { h, svg, confettis, duree, toast } from './ui.js';
 import { icone } from './visuels.js';
 import { son, vibrer } from './sons.js';
-import { etat, sauver, noter, crediter, M, PLAFOND_JOUR } from './state.js';
+import { etat, sauver, noter, crediter, M, PLAFOND_JOUR, PRIME_MAITRISE } from './state.js';
 import { questionsDunk, tirerDunk } from './engine.js';
 import { repere } from './games.js';
 
@@ -103,7 +103,7 @@ export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
     const repondre = (o, el) => {
       if (fin || el.closest('.dunk-question').dataset.fini) return;
       el.closest('.dunk-question').dataset.fini = '1';
-      if (q.carte) noter(q.carte, o.ok);
+      if (q.carte && noter(q.carte, o.ok) === 'prime') toast(`Dossier clos : prime de maîtrise de ${PRIME_MAITRISE} ${nom.toLowerCase()}.`);
       if (o.ok) { el.classList.add('juste'); reussi(performance.now() - t0 < total * 500); } else { el.classList.add('faux'); rate(q, el); }
     };
     delete zoneQ.dataset.fini;

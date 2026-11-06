@@ -824,6 +824,18 @@ async function debordement(p, nom) {
   assert.equal(mesure.remonte, 1, 'pas de remontée le jour d’une erreur');
   assert.equal(mesure.aide, false); assert.equal(mesure.aideB, 1, 'une réponse aidée ne fait pas monter');
   assert.equal(mesure.grand, 5); assert.equal(mesure.grandD, 45, 'dernier intervalle utilisé');
+  const prime = await w.evaluate(async () => {
+    const m = await import('./js/state.js'); const e = window.__app.etat(); const a = () => e.oblig.arrets.baldus; const j = m.jour();
+    const jour = () => { if (a()) { a().d = j; a().monte = null; a().rate = null; } };
+    const avant = e.jetons; const r = [];
+    for (let i = 0; i < 4; i++) { jour(); r.push(m.noter('baldus', true)); }
+    const apres = e.jetons; a().b = 2; jour(); m.noter('baldus', true); jour(); const bis = m.noter('baldus', true);
+    e.oblig.arrets.dol.b = 5; e.oblig.arrets.dol.m = 0; e.oblig.arrets.dol.d = j; e.oblig.arrets.dol.monte = null; e.oblig.arrets.dol.rate = null;
+    return { r, gagne: apres - avant, bis, total: e.jetons - apres, ancienne: m.noter('dol', true) };
+  });
+  assert.deepEqual(prime.r, [true, true, true, 'prime'], 'prime à la quatrième montée');
+  assert.equal(prime.gagne, 10, 'dix jetons'); assert.equal(prime.bis, true); assert.equal(prime.total, 0, 'une seule prime par fiche');
+  assert.equal(prime.ancienne, true, 'un ancien niveau ne suffit pas');
   const tirage = await w.evaluate(async () => {
     const en = await import('./js/engine.js'); const ix = window.__app.ix; const cible = ix.cas[20];
     const z = ix.zones.filter((x) => !x.travaux).map((x) => x.id);
