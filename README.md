@@ -1,8 +1,8 @@
-# Arrêts
+# Gdroit
 
-Appli installable pour réviser les arrêts de droit administratif en jouant, sans réseau.
+Appli installable pour réviser le droit administratif et le droit des obligations en jouant, sans réseau.
 
-- `content/` : le contenu, en texte simple (arrêts, faux jumeaux, cas du juge, sujets).
+- `content/` : le contenu, en texte simple (droit administratif à la racine, obligations dans `oblig/` pour l'équipe 2 et `oblig1/` pour l'équipe 1).
 - `app/` : le code de l'appli.
 - `docs/` : la version publiée, générée par `npm run build`. GitHub Pages sert ce dossier.
 - `scripts/check.mjs` : le contrôle du contenu et des règles anti-devinette.
