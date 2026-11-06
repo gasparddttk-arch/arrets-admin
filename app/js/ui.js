@@ -84,8 +84,8 @@ export function bebew() {
 }
 
 // Tenue rose : chaque épreuve à 100 % a droit à son grand message.
-export function slayDiva() {
-  const t = h('div', { class: 'slay', role: 'status' }, h('strong', {}, 'Slay Diva'));
+export function slayDiva(figure = null) {
+  const t = h('div', { class: 'slay', role: 'status' }, figure, h('strong', {}, 'Slay Diva'));
   document.body.append(t);
   confettis();
   setTimeout(() => t.remove(), 1250);

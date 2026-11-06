@@ -190,6 +190,10 @@ const SONS = {
     bois(b, 190, t, 0.62, 0.16, 0.9);
     const g = env(b, t, 0.38, 0.002, 0.3); osc(b, 'sine', 110, t, t + 0.3, g, 52); sortir(b, g, 0.8);
   },
+  porte(b, t) {
+    bois(b, 96, t, 0.7, 0.2, 0.9);
+    const g = env(b, t, 0.3, 0.002, 0.22); osc(b, 'sine', 78, t, t + 0.24, g, 44); sortir(b, g, 0.7);
+  },
   audience(b, t) {
     [0, 0.34, 0.68].forEach((d, i) => { bois(b, 170 + i * 12, t + d, 0.42 + i * 0.1, 0.14, 0.9); });
     const g = env(b, t + 0.68, 0.06, 0.2, 1.4); osc(b, 'sine', 146.83, t + 0.68, t + 2.1, g); sortir(b, g, 0.8);

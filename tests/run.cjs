@@ -330,7 +330,8 @@ async function debordement(p, nom) {
   await r.evaluate(() => { const e = window.__app.etat(); e.jetons = 200; window.__app.aller('boutique'); });
   await r.locator('.theme-rose button').click();
   await r.evaluate(() => window.__app.aller('palais'));
-  assert(await r.locator('.figure-rose .mascotte').count(), 'chat juge à l’accueil');
+  assert(await r.locator('.figure-chouette .chouette').count(), 'chouette à l’accueil');
+  assert(await r.locator('.figure-chouette img[src$="debout-livre.webp"]').count(), 'livre rose en tenue rose');
   await r.screenshot({ path: CAP + 'rose-accueil.png' }); await debordement(r, 'accueil rose');
   await r.tap('.role-ligne[data-mode="paires"]'); await r.waitForSelector('.chip');
   await r.evaluate(() => document.querySelectorAll('.chip')[0].click());
@@ -382,7 +383,7 @@ async function debordement(p, nom) {
   const n = await nuage.newPage(); n.on('pageerror', (x) => erreurs.push(x.message));
   await n.goto(URLB + '?test&cloud'); await n.waitForSelector('.tribune');
   await n.tap('text=Juste trois minutes'); await jouer(n);
-  await n.waitForFunction(() => window.__app.etat().serie.n === 1 && window.__app.etat().cloud.dernier !== null, null, { timeout: 8000 });
+  await n.waitForFunction(() => window.__app?.etat().serie.n === 1 && window.__app.etat().cloud.dernier !== null, null, { timeout: 8000 });
   const avantC = await etat(n);
   for (let i = 0; i < 40 && !(base.has(avantC.cloud.code) && JSON.parse(base.get(avantC.cloud.code)).xp === avantC.xp); i++) await n.waitForTimeout(100);
   assert(base.has(avantC.cloud.code), 'copie envoyée');
@@ -390,7 +391,7 @@ async function debordement(p, nom) {
   assert(!JSON.parse(base.get(avantC.cloud.code)).enCours, 'pas de séance dans la copie');
   const avantCadeau = (await etat(n)).jetons;
   await n.waitForTimeout(300);
-  await n.reload(); await n.waitForFunction((j) => window.__app.etat().jetons >= j + 200, avantCadeau, { timeout: 8000 });
+  await n.reload(); await n.waitForFunction((j) => window.__app?.etat().jetons >= j + 200, avantCadeau, { timeout: 8000 });
   await n.waitForTimeout(400); await n.reload(); await n.waitForSelector('.tribune'); await n.waitForTimeout(800);
   assert.equal((await etat(n)).jetons, avantCadeau + 200, 'cadeau reçu une seule fois');
   const autre = await nuage.browser().newContext({ ...devices['iPhone 13'] });
@@ -488,6 +489,97 @@ async function debordement(p, nom) {
   }
   await po.close();
   log('petit écran obligations ok');
+
+  // 18. La chouette : portes, poses, réactions, tenues, image personnelle.
+  const ch = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const c = await ch.newPage(); c.on('pageerror', (x) => erreurs.push(x.message));
+  await c.goto(URLB + '?test&choix'); await c.waitForSelector('.portes');
+  assert(await c.locator('.chouette-guide').count(), 'chouette au choix de la matière');
+  await c.locator('.porte-admin').click(); await c.waitForSelector('.tribune');
+  assert.equal(await c.locator('.figure-chouette .chouette').first().getAttribute('data-pose'), 'debout', 'chouette à l’accueil en tenue bleue');
+  assert.equal(await c.locator('.sceau-vivant').count(), 0, 'le sceau cède sa place');
+  // Une pose différente par exercice.
+  const poses = {};
+  for (const [matiere, modes] of [['admin', ['paires', 'puzzle', 'juge', 'plan', 'architecte']], ['oblig', ['cas', 'qualif', 'remede', 'frise', 'plan']]]) {
+    await c.evaluate((m) => window.__app.ouvrirMatiere(m), matiere); await c.waitForSelector('.tribune');
+    for (const m of modes) {
+      await c.locator(`.role-ligne[data-mode="${m}"]`).click();
+      await c.waitForSelector('.palais-portes .chouette', { state: 'attached' });
+      poses[m] = await c.getAttribute('.palais-portes .chouette', 'data-pose');
+      await c.waitForSelector('.quitter'); await c.waitForSelector('.palais-portes', { state: 'detached' });
+      await c.tap('.quitter'); await c.tap('.boite .bouton-or'); await c.waitForSelector('.tribune');
+    }
+  }
+  assert.deepEqual(poses, { paires: 'reflexion', puzzle: 'piles', juge: 'marteau', plan: 'notes', architecte: 'tableau', cas: 'serment', qualif: 'lunettes', remede: 'balance', frise: 'echelle' }, 'une chouette par exercice');
+  // Un appui ouvre les portes tout de suite, un double appui n'en lance pas deux.
+  await c.evaluate(() => { window.__portes = 0; window.__reactions = 0; new MutationObserver((l) => { for (const x of l) for (const n of x.addedNodes) { if (n.classList?.contains('palais-portes')) window.__portes++; if (n.classList?.contains('reaction')) window.__reactions++; } }).observe(document.body, { childList: true }); });
+  await c.evaluate(() => { const b = document.querySelector('.cta.brille'); b.click(); b.click(); });
+  await c.waitForSelector('.palais-portes.ferme');
+  await c.evaluate(() => { const v = document.querySelector('.palais-portes'); const t0 = performance.now(); v.click(); new MutationObserver((_, o) => { if (v.classList.contains('ouvre')) { window.__ouvert = performance.now() - t0; o.disconnect(); } }).observe(v, { attributes: true }); });
+  await c.waitForSelector('.palais-portes', { state: 'detached' });
+  assert(await c.evaluate(() => window.__ouvert) < 330, 'un appui passe l’animation');
+  await jouer(c);
+  assert.equal(await c.evaluate(() => window.__portes), 1, 'les portes ne jouent qu’en début de séance');
+  assert(await c.evaluate(() => window.__reactions) >= 3, 'une réaction à chaque fin d’épreuve');
+  assert(await c.locator('.res-scene .res-chouette').count(), 'chouette aux résultats');
+  await debordement(c, 'résultats chouette');
+  await c.screenshot({ path: CAP + 'chouette-resultats.png' });
+  await c.tap('text=Retour au Palais');
+  // Le retour après une absence, et le réveil une seule fois par jour.
+  await c.evaluate(() => { const e = window.__app.etat(); e.chouette.seance -= 5; e.chouette.reveil = -1; e.chouette.retour = null; window.__app.aller('palais'); });
+  const heure = await c.evaluate(() => new Date().getHours());
+  if (heure >= 12) await c.waitForSelector('.bulle-accueil');
+  await c.evaluate(() => { window.__app.etat().chouette.retour = -1; window.__app.etat().chouette.reveil = 99999; window.__app.etat().chouette.seance = 99999; window.__app.aller('palais'); });
+  assert.equal(await c.locator('.bulle-accueil').count(), 0, 'pas de bulle sans absence');
+  // Dix touches sur la chouette : le geste rare.
+  for (let i = 0; i < 9; i++) await c.evaluate(() => document.querySelector('.figure-chouette').click());
+  await c.waitForTimeout(40);
+  await c.evaluate(() => document.querySelector('.figure-chouette').click());
+  await c.waitForSelector('.chouette.pirouette'); await c.waitForSelector('.plumes', { state: 'attached' });
+  // La garde-robe.
+  await c.evaluate(() => { const e = window.__app.etat(); e.jetons = 1000; window.__app.aller('boutique'); });
+  await c.locator('[data-tenue="toque"] .prix').click();
+  await c.waitForSelector('.essayage .acc-toque');
+  await c.waitForSelector('.adjuge', { state: 'attached' });
+  await c.locator('[data-tenue="laurier"] .prix').click();
+  await c.waitForSelector('.essayage .acc-laurier');
+  assert.equal(await c.locator('.essayage .acc-toque').count(), 0, 'une seule coiffe à la fois');
+  await c.locator('[data-tenue="robe"] .prix').click();
+  await c.waitForSelector('.essayage img[src$="debout-robe.webp"]');
+  await c.locator('[data-tenue="robe"] .prix').click();
+  assert.equal(await c.locator('.essayage img[src$="debout-robe.webp"]').count(), 0, 'retirer une tenue');
+  assert.equal((await etat(c)).jetons, 1000 - 180 - 250 - 400, 'prix des tenues');
+  await c.reload(); await c.waitForSelector('.portes');
+  await c.locator('.porte-admin').click(); await c.waitForSelector('.figure-chouette .acc-laurier');
+  // Effets coupés : ni portes ni réaction.
+  await c.evaluate(() => { window.__app.etat().reglages.effets = false; window.__app.appliquerTheme(); window.__app.aller('palais'); });
+  await c.locator('.role-ligne[data-mode="paires"]').click(); await c.waitForSelector('.chip');
+  assert.equal(await c.locator('.palais-portes').count(), 0, 'pas de portes sans effets');
+  await c.tap('.quitter'); await c.tap('.boite .bouton-or'); await c.waitForSelector('.tribune');
+  await c.evaluate(() => { window.__app.etat().reglages.effets = true; window.__app.appliquerTheme(); window.__app.aller('palais'); });
+  // L'image personnelle remplace la chouette, jusque dans les portes.
+  await c.evaluate(() => window.__app.aller('profil'));
+  const png = await c.evaluate(() => { const k = document.createElement('canvas'); k.width = 200; k.height = 200; const g = k.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, 200, 200); g.fillStyle = '#0a0'; g.fillRect(50, 50, 100, 100); return k.toDataURL('image/png').split(',')[1]; });
+  await c.locator('.ligne-image[data-type="mascotte"] input[type=file]').setInputFiles({ name: 'moi.png', mimeType: 'image/png', buffer: Buffer.from(png, 'base64') });
+  await c.waitForSelector('.ligne-image[data-type="mascotte"] img');
+  await c.evaluate(() => window.__app.aller('palais'));
+  await c.waitForSelector('.figure-chouette .mascotte-perso');
+  assert.equal(await c.locator('.figure-chouette [data-pose]').count(), 0, 'image personnelle à l’accueil');
+  await c.locator('.role-ligne[data-mode="paires"]').click();
+  await c.waitForSelector('.palais-portes .mascotte-perso', { state: 'attached' });
+  await c.waitForSelector('.quitter'); await c.waitForSelector('.palais-portes', { state: 'detached' });
+  await c.tap('.quitter'); await c.tap('.boite .bouton-or'); await c.waitForSelector('.tribune');
+  await ch.close();
+  // 320 px : la chouette garde sa place.
+  const pc = await b.newContext({ ...devices['iPhone 13'], viewport: { width: 320, height: 568 }, serviceWorkers: 'block' });
+  const c2 = await pc.newPage(); c2.on('pageerror', (x) => erreurs.push(x.message));
+  await c2.goto(URLB + '?test&choix'); await c2.waitForSelector('.portes');
+  await debordement(c2, 'choix 320'); await c2.screenshot({ path: CAP + 'chouette-choix-petit.png' });
+  await c2.locator('.porte-oblig').click(); await c2.waitForSelector('.tribune'); await debordement(c2, 'accueil 320');
+  await c2.evaluate(() => window.__app.aller('boutique')); await debordement(c2, 'boutique 320');
+  await c2.evaluate(() => window.__app.aller('profil')); await debordement(c2, 'profil 320');
+  await pc.close();
+  log('chouette ok');
 
   await b.close(); s.close();
   if (erreurs.length) { console.error('ERREURS CONSOLE', [...new Set(erreurs)]); process.exit(1); }

@@ -288,23 +288,14 @@ export async function jouerPuzzle(zone, ctx, round, ix) {
 }
 
 // LE JUGE, C'EST TOI : on entre dans la salle d'audience ------------------------------
-export function ouverture(ctx) {
-  return new Promise((ok) => {
-    let fini = false;
-    const fin = () => { if (fini) return; fini = true; v.classList.add('fin'); setTimeout(() => { v.remove(); ok(); }, duree(240)); };
-    const v = h('div', { class: 'ouverture', role: 'status', onClick: fin }, h('p', {}, 'L’audience est ouverte'));
-    document.body.append(v);
-    son('audience');
-    ctx.nettoyage(() => { fini = true; v.remove(); });
-    setTimeout(fin, duree(1350));
-  });
-}
+// Les trois coups : les portes du Palais ont remplacé le lever de rideau.
+export function ouverture() { son('audience'); }
 
 export async function jouerJuge(zone, ctx, round, ix) {
   const a = ix.parId.get(round.id);
   ctx.decor(salleAudience());
   zone.classList.add('en-audience');
-  await ouverture(ctx);
+  ouverture();
   const r1 = await qcm(zone, ctx, {
     dossier: true, frappe: true, surtitre: 'Le dossier', question: round.c, options: round.decisions.map((o) => ({ ...o })),
     pourquoiBon: 'C’est ce que le juge a décidé.',

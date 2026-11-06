@@ -1,6 +1,7 @@
 // Point d'entrée : écrans, séances, récompenses.
 import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
-import { icone, sceau, petitSceau, laurier, mascotte, medaille } from './visuels.js';
+import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
+import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES } from './chouette.js';
 import { son, reveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import {
   etat, M, charger, sauver, jour, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
@@ -61,9 +62,10 @@ function ouvrirMatiere(id) {
 function matieres() {
   afficherOnglets(false);
   const g = rangGeneral(); const s = etat.serie;
+  const guide = chouette('debout', { taille: 128, vivante: true, classe: 'chouette-guide' });
   const porte = (m) => {
     const r = rang(m.id); const gagnes = gainsDuJour(m.id);
-    return h('button', { class: `porte porte-${m.id}`, 'data-matiere': m.id, onClick: () => ouvrirMatiere(m.id) },
+    return h('button', { class: `porte porte-${m.id}`, 'data-matiere': m.id, onPointerdown: () => { guide.dataset.vers = m.id; }, onClick: () => ouvrirMatiere(m.id) },
       h('span', { class: 'porte-icone' }, icone(m.id === 'admin' ? 'palais' : 'balance', 34)),
       h('span', { class: 'porte-txt' },
         h('b', {}, m.nom),
@@ -79,7 +81,7 @@ function matieres() {
         h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${g.part.toFixed(3)})` }))),
       h('span', { class: 'haut-jetons' }, h('i', { class: 'jeton' }), fmt(etat.jetons))),
     h('section', { class: 'choix' },
-      h('h1', {}, 'Que révises-tu aujourd’hui ?'),
+      h('div', { class: 'choix-tete' }, h('h1', {}, 'Que révises-tu aujourd’hui ?'), guide),
       h('p', { class: 'page-sous' }, s.n ? `${pluriel(s.n, 'jour')} de série. Une séance dans l’une ou l’autre matière la garde.` : 'Termine une séance pour poser ton premier sceau.'),
       h('div', { class: 'portes' }, MATIERES.map(porte))));
 }
@@ -113,13 +115,32 @@ function semaine() {
   return h('div', { class: 'semaine', 'aria-label': 'Sept derniers jours' }, cases);
 }
 
-// Le centre de l'accueil : le sceau en bleu, le chat juge en rose.
+// Le centre de l'accueil : la chouette, ou ton image si tu en as choisi une, et le sceau de la série.
 function figureSerie(s, fait) {
   const etincelles = [1, 2, 3].map((i) => h('i', { class: `etincelle e${i}`, 'aria-hidden': 'true' }));
-  if (!estRose()) return h('div', { class: 'sceau-vivant' }, sceau(s.n, { taille: 158, eteint: !fait && s.n === 0 }), etincelles);
-  return h('div', { class: 'figure-rose' }, laurier(196),
-    images.mascotte ? h('img', { class: 'mascotte-perso', src: images.mascotte, alt: 'Ta mascotte' }) : mascotte(150),
-    h('span', { class: 'mini-sceau' }, sceau(s.n, { taille: 58, lauriers: false, eteint: !fait && s.n === 0 })), etincelles);
+  const j = jour(); const c = etat.chouette;
+  const reveil = c.reveil !== j && new Date().getHours() < 12;
+  const retour = !reveil && c.seance !== null && j - c.seance >= 3 && c.retour !== j;
+  if (reveil) c.reveil = j;
+  if (retour) c.retour = j;
+  if (reveil || retour) sauver();
+  const bete = chouette(retour ? 'serment' : 'debout', { taille: 236, vivante: true, classe: `sur-accueil ${reveil ? 'reveil' : ''}` });
+  let enScene = bete;
+  const reagirTape = () => {
+    if (!effets()) return;
+    c.tapes++;
+    son('tap');
+    const dixieme = c.tapes % 10 === 0;
+    const pose = dixieme ? 'tribune' : 'clin';
+    const copie = chouette(pose, { taille: 236, classe: `sur-accueil ${dixieme ? 'pirouette' : 'saute'}` });
+    enScene.replaceWith(copie); enScene = copie;
+    if (dixieme) { plumes(24); son('deblocage'); }
+    setTimeout(() => { if (enScene === copie) { copie.replaceWith(bete); enScene = bete; } }, dixieme ? 1500 : 800);
+  };
+  return h('div', { class: 'figure-chouette', onClick: reagirTape },
+    h('span', { class: 'aura', 'aria-hidden': 'true' }), bete,
+    retour ? h('p', { class: 'bulle bulle-accueil' }, 'Content de te revoir') : null,
+    h('span', { class: 'mini-sceau' }, sceau(s.n, { taille: 62, lauriers: false, eteint: !fait && s.n === 0 })), etincelles);
 }
 
 function accueil() {
@@ -171,8 +192,13 @@ function blocDunk() {
   // Les obligations puisent dans tout le cours, chapitres en travaux compris.
   const jouer = (mode) => {
     const zones = estOblig() ? ix.zones.map((z) => z.id) : zonesOuvertes(ix);
-    afficherOnglets(false);
-    lancerDunk({ ix, zones, dus: aRevoir(ix, zones).filter((id) => M().arrets[id]), mode, montrer, nom: estRose() ? 'Canettes' : 'Jetons', sortir: () => aller('palais') });
+    if (document.querySelector('.palais-portes')) return;
+    const p = portes({ pose: POSE_MODE.dunk, titre: 'Dunk shot', sonFerme: () => son('porte') });
+    p.pret.then(() => {
+      afficherOnglets(false);
+      lancerDunk({ ix, zones, dus: aRevoir(ix, zones).filter((id) => M().arrets[id]), mode, montrer, nom: estRose() ? 'Canettes' : 'Jetons', sortir: () => aller('palais') });
+      p.ouvrir();
+    });
   };
   const entete = h('span', { class: 'role-icone' }, icone('dunk', 28));
   if (!d.cinq) {
@@ -202,12 +228,12 @@ function lancerMode(m) {
   const dus = aRevoir(ix, zones);
   const n = m === 'paires' || m === 'qualif' ? 3 : 2;
   const deja = new Set();
-  lancer({ type: 'mode', titre: nomsModes()[m][0], rounds: Array.from({ length: n }, () => tirerRound(ix, m, zones, dus, Math.random, deja)) });
+  lancer({ type: 'mode', mode: m, titre: nomsModes()[m][0], rounds: Array.from({ length: n }, () => tirerRound(ix, m, zones, dus, Math.random, deja)) });
 }
 
 // SÉANCE ------------------------------------------------------------------------
-function lancer({ rounds, titre, type, zone, reprise }) {
-  afficherOnglets(false);
+function lancer({ rounds, titre, type, zone, reprise, mode }) {
+  if (document.querySelector('.palais-portes')) return;
   const S = reprise
     ? { ...reprise, rounds: JSON.parse(JSON.stringify(reprise.rounds)), touches: new Map(reprise.touches), nettoyer: [] }
     : { rounds, titre, type, zone, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0 };
@@ -282,13 +308,14 @@ function lancer({ rounds, titre, type, zone, reprise }) {
       if (S.vies !== null && res.score < 0.6) S.vies--;
       S.i++;
       const derniere = S.i >= S.rounds.length || S.vies === 0;
+      // Mémorisé avant l'animation : une coupure pendant la réaction ne fait rien perdre.
+      if (!derniere) memoriser();
       if (res.parfait) {
         majEntete();
-        if (estRose()) { son('slay'); vibrer([20, 60, 20]); await slayDiva(); } else { son('parfait'); retardEpreuve = 0.7; }
-      } else if (!derniere) { son('valide'); retardEpreuve = 0.55; }
+        if (estRose()) { son('slay'); vibrer([20, 60, 20]); await slayDiva(effets() ? chouette('clin', { taille: 210 }) : null); } else { son('parfait'); retardEpreuve = 0.7; if (!derniere) await reagir(res.score); }
+      } else if (!derniere) { son('valide'); retardEpreuve = 0.55; await reagir(res.score); }
       if (S.vies === 0) return finir(false);
       if (S.i >= S.rounds.length) return finir(true);
-      memoriser();
       suivant();
     },
   };
@@ -301,6 +328,8 @@ function lancer({ rounds, titre, type, zone, reprise }) {
     retardEpreuve = 0; finEnCours = false;
     scene.className = 'scene'; scene.replaceChildren(); decor.replaceChildren();
     window.scrollTo(0, 0);
+    // Entre deux épreuves, un simple glissement, sans chouette.
+    if (S.i > 0 && effets() && scene.animate) scene.animate([{ transform: 'translateX(26px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 300, easing: 'cubic-bezier(.2,.7,.2,1)' });
     Promise.resolve(TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
       console.error(e);
       scene.replaceChildren(h('div', { class: 'erreur' }, h('p', {}, 'Cette épreuve n’a pas pu s’afficher. Passe à la suivante.'), continuer('Continuer', () => ctx.fin({ score: 0, parfait: false }))));
@@ -309,9 +338,16 @@ function lancer({ rounds, titre, type, zone, reprise }) {
 
   let retardEpreuve = 0; let finEnCours = false;
   function finir(reussi) { M().enCours = null; resultats(S, reussi); }
-  montrer(decor, entete, scene);
-  memoriser();
-  suivant();
+  // Les portes ne jouent qu'en début de séance. Le chrono de la première épreuve part à leur ouverture.
+  const juridiction = S.rounds[S.i].type === 'juge' || S.rounds[S.i].type === 'cas';
+  const p = portes({ pose: POSE_MODE[reprise ? 'reprise' : mode || type] || 'debout', titre: juridiction ? 'L’audience est ouverte' : titre, sonFerme: () => son('porte') });
+  p.pret.then(() => {
+    afficherOnglets(false);
+    montrer(decor, entete, scene);
+    memoriser();
+    suivant();
+    p.ouvrir();
+  });
 }
 
 function resultats(S, reussi) {
@@ -319,6 +355,7 @@ function resultats(S, reussi) {
   const avant = rang(); const avantGeneral = rangGeneral();
   const moyenne = S.scores.reduce((a, b) => a + b, 0) / (S.scores.length || 1);
   etat.stats.seances++;
+  etat.chouette.seance = jour();
   etat.stats.comboMax = Math.max(etat.stats.comboMax, S.comboMax);
   const parfaite = S.parfaites === S.rounds.length && reussi;
   if (parfaite) etat.stats.parfaites++;
@@ -348,15 +385,24 @@ function resultats(S, reussi) {
   const aRevoirListe = [...S.touches.entries()].filter(([, t]) => t.ko > 0).map(([id]) => ix.parId.get(id));
   const zoneSceau = h('div', { class: 'tampon' });
   const pourcent = Math.round(moyenne * 100);
+  const nouveauGrade = apres.i > avant.i || apresGeneral.i > avantGeneral.i;
+  const audienceGagnee = S.type === 'boss' && reussi;
+  const grandeVictoire = parfaite || audienceGagnee;
+  const palier = v.nouveau && v.n > 0 && v.n % 7 === 0;
+  // Une seule chouette, celle du moment le plus fort de la séance.
+  const poseFin = nouveauGrade ? 'serment' : grandeVictoire ? 'tribune' : palier ? 'debout' : S.type === 'defi' && reussi ? 'tribune'
+    : !reussi || moyenne < 0.4 ? 'pause' : moyenne < 0.8 ? 'piles' : 'clin';
+  const figureFin = chouette(poseFin, { taille: 188, classe: `res-chouette ${nouveauGrade || grandeVictoire ? 'grande' : ''}`, vivante: true });
+  const nombrePieces = h('dd', {}, `+${fmt(pieces)}`);
 
   const contenu = h('main', { class: 'resultats' },
-    zoneSceau,
+    h('div', { class: 'res-scene' }, figureFin, zoneSceau),
     h('h1', {}, S.type === 'boss' ? (reussi ? 'Audience gagnée' : 'Audience perdue') : pourcent === 100 ? 'Sans faute' : pourcent >= 70 ? 'Bien jugé' : 'À réviser'),
     textBoss ? h('p', { class: 'res-texte' }, textBoss) : null,
     h('dl', { class: 'res-chiffres' },
       h('div', {}, h('dt', {}, 'Réussite'), h('dd', {}, `${pourcent} %`)),
       h('div', {}, h('dt', {}, 'Expérience'), h('dd', {}, `+${fmt(S.xp)}`)),
-      h('div', {}, h('dt', {}, estRose() ? 'Canettes' : 'Jetons'), h('dd', {}, `+${fmt(pieces)}`))),
+      h('div', {}, h('dt', {}, estRose() ? 'Canettes' : 'Jetons'), nombrePieces)),
     pieces < S.jetons ? h('p', { class: 'res-texte' }, `Plafond du jour atteint dans cette matière : ${monnaie(PLAFOND_JOUR)}.`) : null,
     v.coffre ? h('p', { class: 'res-coffre' }, `Coffre de série : ${v.etape ?? v.coffre.etape} jours tenus, ${monnaie(v.coffre.jetons)} et ${pluriel(v.coffre.sursis, 'sursis', 'sursis')}.`) : null,
     apres.i > avant.i ? h('div', { class: 'decret' }, h('p', {}, 'Par décret, tu es nommé'), h('strong', {}, apres.nom)) : null,
@@ -369,6 +415,19 @@ function resultats(S, reussi) {
       S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null),
   );
   montrer(contenu);
+  if (effets()) {
+    if (palier && !nouveauGrade && !grandeVictoire) figureFin.append(h('span', { class: 'chiffre-livre' }, String(v.n)));
+    if (poseFin === 'tribune' && !images.mascotte) figureFin.append(codeEnvole());
+    if (pieces > 0) {
+      const t0 = performance.now();
+      requestAnimationFrame(function compter(t) {
+        const p = Math.min(1, (t - t0) / 800);
+        nombrePieces.textContent = `+${fmt(Math.round(pieces * p))}`;
+        if (p < 1) requestAnimationFrame(compter);
+      });
+    }
+  }
+  if (grandeVictoire) plumes();
 
   // Le moment fort : le sceau du jour s'abat sur le registre.
   if (v.nouveau) {
@@ -376,10 +435,10 @@ function resultats(S, reussi) {
     zoneSceau.append(s);
     s.classList.add('frappe');
     setTimeout(() => son('sceau'), 330);
-    if (apres.i > avant.i || parfaite || v.coffre) setTimeout(() => { confettis(); son(v.coffre ? 'coffre' : 'grade'); }, 900);
+    if (apres.i > avant.i || parfaite || v.coffre) setTimeout(() => { if (apres.i > avant.i || v.coffre) confettis(); son(v.coffre ? 'coffre' : 'grade'); }, 900);
   } else {
     zoneSceau.append(sceau(etat.serie.n, { taille: 96, lauriers: false, eteint: etat.serie.n === 0 }));
-    if (apres.i > avant.i || parfaite) { confettis(); son('grade'); } else son(reussi ? 'valide' : 'ko');
+    if (apres.i > avant.i || parfaite) { if (apres.i > avant.i) confettis(); son('grade'); } else son(reussi ? 'valide' : 'ko');
   }
   if (S.type === 'boss' && reussi) setTimeout(() => son('deblocage'), 1300);
 }
@@ -434,7 +493,7 @@ function chambreFermee(z) {
   const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite' },
     h('p', {}, `« ${z.titre} » s’ouvre quand tu gagnes l’audience précédente.`),
     h('div', { class: 'boite-actions' },
-      etat.inv.passe > 0 ? h('button', { class: 'bouton-or', onClick: () => { etat.inv.passe--; const n = ouvrirSuivante(ix); voile.remove(); son('deblocage'); toast(`Chambre ${n} ouverte.`); carte(); } }, `Utiliser un passe-droit (${etat.inv.passe})`)
+      etat.inv.passe > 0 ? h('button', { class: 'bouton-or', onClick: () => { etat.inv.passe--; const n = ouvrirSuivante(ix); voile.remove(); son('deblocage'); plumes(12); toast(`Chambre ${n} ouverte.`); carte(); } }, `Utiliser un passe-droit (${etat.inv.passe})`)
         : h('button', { class: 'bouton-or', onClick: () => { voile.remove(); aller('boutique'); } }, 'Voir la boutique'),
       h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Fermer'))));
   document.body.append(voile);
@@ -486,7 +545,7 @@ function collection() {
     const q = norm(filtre.texte);
     const source = articles ? ix.articles : ix.arrets;
     const res = source.filter((a) => (!filtre.zone || a.zones.includes(filtre.zone)) && (!q || norm(`${a.nom} ${a.an ?? ''} ${a.titre ?? ''} ${Object.values(a.ap).join(' ')}`).includes(q))).sort(ordreFiches);
-    grille.replaceChildren(...(res.length ? res.map(carteArret) : [h('li', { class: 'vide' }, 'Rien ne correspond à cette recherche.')]));
+    grille.replaceChildren(...(res.length ? res.map(carteArret) : [h('li', { class: 'vide' }, chouette('echelle', { taille: 150 }), h('p', {}, 'Rien ne correspond à cette recherche.'))]));
   }
   const fiches = M().arrets;
   const acquis = ix.arrets.filter((a) => fiches[a.id]?.b >= 5).length;
@@ -535,13 +594,13 @@ function acheter(item) {
   if (etat.jetons < item.prix) return toast(`Pas assez de ${estRose() ? 'canettes' : 'jetons'}.`);
   if (item.max && etat.inv[item.id] >= item.max) return toast(`${item.max} au maximum.`);
   etat.jetons -= item.prix; etat.inv[item.id] = (etat.inv[item.id] || 0) + 1;
-  sauver(); son('jeton'); vibrer(10); boutique();
+  sauver(); son('jeton'); vibrer(10); adjuge(); boutique();
 }
 const boutonPrix = (prix, action, label) => h('button', { class: 'prix', disabled: etat.jetons < prix, onClick: action, 'aria-label': label }, h('i', { class: 'jeton' }), prix);
 
 function miniJeux() {
   const d = etat.dunk;
-  const achat = (cle) => () => { etat.jetons -= PRIX_DUNK[cle]; d[cle] = true; sauver(); son('deblocage'); vibrer(12); boutique(); };
+  const achat = (cle) => () => { etat.jetons -= PRIX_DUNK[cle]; d[cle] = true; sauver(); son('deblocage'); vibrer(12); adjuge(); boutique(); };
   const ligne = (cle, nom, txt, bloque) => h('li', { class: 'article' },
     h('div', {}, h('b', {}, nom), h('p', {}, txt)),
     d[cle] ? h('button', { class: 'prix actif', disabled: true }, 'Débloqué')
@@ -550,6 +609,25 @@ function miniJeux() {
   return [
     ligne('cinq', 'Dunk shot', 'Cinq paniers à réussir sur les articles, les arrêts et le cours, dans les deux matières.', false),
     ligne('infini', 'Dunk shot infini', 'La partie continue jusqu’à ta première erreur, de plus en plus vite.', !d.cinq),
+  ];
+}
+
+// La garde-robe : un seul accessoire par place, et l'aperçu montre la chouette telle qu'elle sera.
+function gardeRobe() {
+  const c = etat.chouette;
+  const ligne = (t) => {
+    const a = c.tenues.includes(t.id); const portee = c.porte[t.place] === t.id;
+    const reafficher = () => { const y = window.scrollY; boutique(); window.scrollTo(0, y); };
+    const changer = () => { c.porte[t.place] = portee ? null : t.id; sauver(); son('tap'); vibrer(8); reafficher(); };
+    return h('li', { class: 'article', 'data-tenue': t.id },
+      h('div', {}, h('b', {}, t.nom), h('p', {}, t.txt)),
+      a ? h('button', { class: `prix ${portee ? 'actif' : ''}`, onClick: changer }, portee ? 'Retirer' : 'Porter')
+        : boutonPrix(t.prix, () => { etat.jetons -= t.prix; c.tenues.push(t.id); c.porte[t.place] = t.id; sauver(); son('jeton'); vibrer(10); adjuge(); reafficher(); }, `Acheter ${t.nom} pour ${monnaie(t.prix)}`));
+  };
+  return [
+    h('div', { class: 'essayage' }, h('span', { class: 'aura', 'aria-hidden': 'true' }), chouette('debout', { taille: 230, vivante: true })),
+    images.mascotte ? h('p', { class: 'aide-claire' }, 'Ton image personnelle remplace la chouette : retire-la dans Profil pour voir ses tenues.') : null,
+    h('ul', { class: 'articles' }, TENUES.map(ligne)),
   ];
 }
 
@@ -570,13 +648,14 @@ function boutique() {
     const a = etat[cleListe].includes(t.id); const actif = etat[cle] === t.id;
     return h('li', { class: 'article' }, visuel(t), h('div', {}, h('b', {}, t.nom), h('p', {}, t.txt)),
       a ? h('button', { class: `prix ${actif ? 'actif' : ''}`, disabled: actif, onClick: () => { etat[cle] = t.id; sauver(); son('tap'); boutique(); } }, actif ? 'Choisi' : 'Choisir')
-        : boutonPrix(t.prix, () => { etat.jetons -= t.prix; etat[cleListe].push(t.id); etat[cle] = t.id; sauver(); son('jeton'); boutique(); }, `Acheter ${t.nom} pour ${monnaie(t.prix)}`));
+        : boutonPrix(t.prix, () => { etat.jetons -= t.prix; etat[cleListe].push(t.id); etat[cle] = t.id; sauver(); son('jeton'); adjuge(); boutique(); }, `Acheter ${t.nom} pour ${monnaie(t.prix)}`));
   });
   const insignes = collectionObjets(INSIGNES, 'insigne', 'insignes', (t) => (t.id === 'aucun' ? h('span', { class: 'pastille vide-p' }) : icone(t.id, 26)));
   const decors = collectionObjets(DECORS, 'decor', 'decors', (t) => h('span', { class: `pastille decor-${t.id}` }));
   montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, 'La boutique'),
     h('p', { class: 'page-sous' }, estRose() ? 'Tes canettes de Ratio se gagnent en finissant des épreuves.' : 'Tes jetons de présence se gagnent en finissant des épreuves.'),
     h('ul', { class: 'articles' }, objets), h('h2', {}, 'Mini-jeux'), h('ul', { class: 'articles' }, miniJeux()),
+    h('h2', {}, 'Garde-robe de la chouette'), gardeRobe(),
     h('h2', {}, 'Tenues'), h('ul', { class: 'articles' }, themes),
     h('h2', {}, 'Insignes'), h('ul', { class: 'articles' }, insignes),
     h('h2', {}, 'Décors du Palais'), h('ul', { class: 'articles' }, decors)));
@@ -602,7 +681,7 @@ const BONUS_AUDIENCE = 15;
 const interrupteur = (label, cle, apres) => h('label', { class: 'reglage' }, h('span', {}, label),
   h('input', { type: 'checkbox', role: 'switch', checked: etat.reglages[cle], onChange: (e) => { etat.reglages[cle] = e.target.checked; sauver(); son('tap'); apres?.(); } }));
 
-// Images personnelles : elles remplacent le chat juge et la canette, sur ce téléphone seulement.
+// Images personnelles : elles remplacent la chouette et la canette, sur ce téléphone seulement.
 function blocImages() {
   const ligne = (type, nom, aide, visuel) => {
     const entree = h('input', { type: 'file', accept: 'image/*', class: 'cache-fichier', 'aria-label': `Choisir ${nom}`, onChange: async (e) => {
@@ -619,8 +698,8 @@ function blocImages() {
   };
   return h('div', { class: 'images-perso' },
     h('p', { class: 'aide-claire' }, 'Ces images restent sur ce téléphone. Elles ne sont ni publiées ni copiées en ligne.'),
-    ligne('mascotte', 'Mascotte', 'Remplace le chat juge à l’accueil', () => mascotte(44)),
-    ligne('jeton', 'Jetons', 'Remplace la canette partout', () => h('img', { src: 'img/canette.svg', alt: '' })));
+    ligne('mascotte', 'Mascotte', 'Remplace la chouette dans toute l’appli', () => chouette('debout', { taille: 56, tenue: false })),
+    etat.themes.includes('rose') ? ligne('jeton', 'Jetons', 'Remplace la canette partout', () => h('img', { src: 'img/canette.svg', alt: '' })) : null);
 }
 
 let carriereVue = null;
@@ -656,7 +735,7 @@ function profil() {
   const champSauvegarde = h('textarea', { class: 'code', rows: 3, placeholder: 'Colle ici un code de sauvegarde', 'aria-label': 'Code de sauvegarde' });
   const pct = Math.round(r.part * 100);
   montrer(barreHaut(), h('section', { class: 'page page-profil' },
-    h('div', { class: 'profil-tete' }, laurier(116)),
+    h('div', { class: 'profil-tete' }, chouette('assise', { taille: 150, vivante: true })),
     h('h1', {}, r.nom),
     h('div', { class: 'xp', role: 'img', 'aria-label': `${pct} % du grade suivant` }, h('span', {}, 'XP'), h('span', { class: 'xp-rail' }, h('i', { style: `width:${Math.max(pct, 3)}%` }))),
     h('p', { class: 'page-sous xp-txt' }, r.suivant ? `${fmt(r.xp)} points. Encore ${fmt(r.suivant.xp - r.xp)} pour devenir ${r.suivant.nom}.` : 'Dernier grade atteint.'),
@@ -670,7 +749,7 @@ function profil() {
     h('h2', {}, 'Trophées'),
     h('ul', { class: 'trophees' }, TROPHEES.map((t) => { const g = !!etat.trophees[t.id]; return h('li', {}, h('button', { 'aria-label': `${t.nom}, ${g ? 'gagné' : 'à gagner'}`, onClick: () => montrerTrophee(t, g) }, medaille(metalDe(t.id), g))); })),
     h('h2', {}, 'Rappel quotidien'), blocRappel,
-    etat.themes.includes('rose') ? [h('h2', {}, 'Images de la tenue rose'), blocImages()] : null,
+    h('h2', {}, 'Images personnelles'), blocImages(),
     h('h2', {}, 'Équipe de droit des obligations'),
     h('div', { class: 'bascule' },
       h('button', { disabled: true }, icone('cadenas', 15), 'Équipe 1, bientôt'),
@@ -732,8 +811,13 @@ function surveillerFluidite() {
 
 async function demarrer() {
   const params = new URLSearchParams(location.search);
+  // Une ouverture lente : la chouette patiente, montre en main.
+  const attente = setTimeout(() => racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Le Palais ouvre ses portes'))), 700);
   if (params.has('decalage')) fixerDecalage(+params.get('decalage'));
   const [admin, oblig] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), charger().then(chargerImages)]);
+  clearTimeout(attente);
+  // Une ancienne sauvegarde connaît déjà le jour de la dernière séance.
+  if (etat.chouette.seance === null) etat.chouette.seance = etat.serie.dernier;
   CONTENUS.admin = indexer(admin); CONTENUS.oblig = indexer(oblig, etat.equipe);
   if (params.has('test') && !params.has('choix')) etat.matiere = params.get('matiere') === 'oblig' ? 'oblig' : etat.matiere;
   ix = CONTENUS[etat.matiere];
@@ -745,8 +829,9 @@ async function demarrer() {
   if (params.has('test') && !params.has('choix')) aller('palais'); else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
-  if (params.has('test')) window.__app = { etat: () => etat, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, rendreSon, NOMS_SONS, appliquerTheme };
+  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, rendreSon, NOMS_SONS, appliquerTheme };
   setTimeout(surveillerFluidite, 1200);
+  precharger();
 
   if ('serviceWorker' in navigator) {
     try {

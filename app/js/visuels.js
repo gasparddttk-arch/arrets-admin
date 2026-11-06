@@ -1,4 +1,4 @@
-// Les visuels dessinés en code : sceaux, lauriers, icônes, chat juge, salle d'audience.
+// Les visuels dessinés en code : sceaux, lauriers, icônes, salle d'audience.
 import { h, svg } from './ui.js';
 
 // Contour de cire : un cercle festonné, comme un cachet pressé à la main.
@@ -103,42 +103,6 @@ export const icone = (nom, taille = 24) => svg(`<svg class="ic" viewBox="0 0 24 
 
 // Médaille de trophée : le métal dépend du trophée, le cadenas disparaît quand il est gagné.
 export const medaille = (metal, gagne) => h('span', { class: `medaille ${metal} ${gagne ? 'gagnee' : ''}`, 'aria-hidden': 'true' }, laurier(52), icone(gagne ? 'juste' : 'cadenas', 20));
-
-// Mascotte de la tenue rose : un chat roux en robe de magistrat, dessiné pour cette appli.
-export const mascotte = (taille = 190) => svg(`<svg class="mascotte" viewBox="0 0 240 262" width="${taille}" height="${(taille * 262) / 240}" role="img" aria-label="Le chat juge">
-  <g class="m-queue"><path d="M66 226c-30 8-52-8-50-34 1-14 18-18 22-6 3 9-7 11-6 21 1 12 16 14 32 8z" fill="#DE9050"/><path d="M19 180c4-7 15-6 19 5l-16 8c-3-3-5-8-3-13z" fill="#B96A31"/></g>
-  <path d="M74 150c-18 16-30 50-32 88-1 11 7 20 18 20h120c11 0 19-9 18-20-2-38-14-72-32-88z" fill="url(#gRobe)"/>
-  <path d="M92 148l26 44-16 62H60c-3-40 8-84 32-106zM148 148l-26 44 16 62h42c3-40-8-84-32-106z" fill="#fff" fill-opacity=".06"/>
-  <path d="M120 164l-17-16-10 8 13 50 14-13 14 13 13-50-10-8z" fill="#FFF8F1"/><path d="M120 193v-24" stroke="#D8C8BC" stroke-width="2"/>
-  <g class="m-tete">
-    <path d="M60 62 50 12c-1-6 5-9 10-6l44 32zM180 62l10-50c1-6-5-9-10-6l-44 32z" fill="#DE9050"/>
-    <path d="M67 50l-7-29 27 20zM173 50l7-29-27 20z" fill="#F8B7B0"/>
-    <ellipse cx="120" cy="96" rx="79" ry="64" fill="url(#gFourrure)"/>
-    <path d="M120 36v24M100 39l4 21M140 39l-4 21M44 92l20 3M47 110l18-3M196 92l-20 3M193 110l-18-3" stroke="#B96A31" stroke-width="6" stroke-linecap="round"/>
-    <ellipse cx="120" cy="125" rx="40" ry="28" fill="#FCE5CF"/>
-    <g class="m-yeux">
-      <path d="M76 92c7-15 30-15 37 2-9 11-29 11-37-2z" fill="#fff"/><path d="M127 94c7-17 30-17 37-2-8 13-28 13-37 2z" fill="#fff"/>
-      <circle cx="95" cy="93" r="11" fill="#3E9B6E"/><circle cx="145" cy="93" r="11" fill="#3E9B6E"/>
-      <ellipse cx="95" cy="93" rx="4.500" ry="9.500" fill="#1C2B25"/><ellipse cx="145" cy="93" rx="4.500" ry="9.500" fill="#1C2B25"/>
-      <circle cx="99" cy="88" r="3" fill="#fff"/><circle cx="149" cy="88" r="3" fill="#fff"/>
-    </g>
-    <g class="m-paupieres" fill="#DE9050"><path d="M74 92c7-17 33-17 40 2-9 12-31 12-40-2z"/><path d="M126 94c7-19 33-19 40-2-9 14-31 14-40 2z"/></g>
-    <path d="M71 101c2 19 40 19 44 1M125 102c4 18 42 18 44-1M115 102h10" fill="none" stroke="#C78B2B" stroke-width="3.500" stroke-linecap="round"/>
-    <path d="M112 118h16l-8 9z" fill="#E4708B"/>
-    <path d="M120 127v5c0 8-15 10-20 3M120 132c0 8 15 10 20 3" fill="none" stroke="#7A3B2A" stroke-width="3" stroke-linecap="round"/>
-    <path d="M60 122l-34-7M60 134l-34 6M180 122l34-7M180 134l34 6" stroke="#7A3B2A" stroke-opacity=".55" stroke-width="2.200" stroke-linecap="round"/>
-  </g>
-  <g transform="rotate(-7 120 30)">
-    <path d="M84 40l6-37c20-7 42-7 62 0l6 37c-24 7-50 7-74 0z" fill="#3A1830"/>
-    <path d="M86 28c22 6 48 6 70 0l2 12c-24 7-50 7-74 0z" fill="#C89A3E"/>
-  </g>
-  <g class="m-balance">
-    <path d="M196 150v82M178 240h36M170 164h52" stroke="#C89A3E" stroke-width="4.500" stroke-linecap="round" fill="none"/>
-    <path d="M170 164l-11 26h22zM222 164l-11 26h22z" fill="none" stroke="#C89A3E" stroke-width="2.500"/>
-    <path d="M157 190a13 11 0 0 0 26 0zM209 190a13 11 0 0 0 26 0z" fill="#E7BC62"/>
-    <ellipse cx="190" cy="218" rx="15" ry="12" fill="#F0B071"/><path d="M180 212v12M188 208v18M197 209v15" stroke="#B96A31" stroke-width="2" stroke-linecap="round"/>
-  </g>
-</svg>`);
 
 // Le marteau du président.
 export const marteau = () => svg(`<svg class="marteau" viewBox="0 0 96 86" width="82" height="74" aria-hidden="true">

@@ -14,7 +14,7 @@ export async function jouerCas(zone, ctx, round, ix) {
   const x = ix.cas.find((c) => c.id === round.id);
   ctx.decor(salleAudience());
   zone.classList.add('en-audience');
-  await ouverture(ctx);
+  ouverture();
   let bons = 0;
   const n = x.etapes.length;
   for (let i = 0; i < n; i++) {

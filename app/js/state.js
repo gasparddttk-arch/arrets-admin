@@ -86,7 +86,7 @@ export const BOUTIQUE = [
 // Chaque tenue change l'habillage de toute l'appli. Une nouvelle tenue s'ajoute ici et dans le CSS.
 export const THEMES = [
   { id: 'palais', nom: 'Bleu', prix: 0, txt: 'Le bleu du Palais, l’or et la cire' },
-  { id: 'rose', nom: 'Rose', prix: 200, txt: 'Le chat juge, les canettes de Ratio, et Slay Diva' },
+  { id: 'rose', nom: 'Rose', prix: 200, txt: 'Le livre rose de la chouette, les canettes de Ratio, et Slay Diva' },
 ];
 const ANCIENNES_TENUES = { tapis: 150, robe: 150, pourpre: 300 };
 
@@ -143,12 +143,13 @@ function etatInitial() {
     defi: { jour: null, fini: false },
     cloud: { code: null, dernier: null },
     cadeaux: [],
+    chouette: { tenues: [], porte: { tete: null, visage: null, buste: null, robe: null }, reveil: null, retour: null, seance: null, tapes: 0 },
   };
 }
 
 function fusion(base, x) {
   const o = { ...base, ...x };
-  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud', 'gains', 'dunk']) o[k] = { ...base[k], ...(x[k] || {}) };
+  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud', 'gains', 'dunk', 'chouette']) o[k] = { ...base[k], ...(x[k] || {}) };
   const ob = x.oblig || {};
   o.oblig = { ...base.oblig, ...ob, gains: { ...base.oblig.gains, ...(ob.gains || {}) }, zones: { ...base.oblig.zones, ...(ob.zones || {}) } };
   if (!['admin', 'oblig'].includes(o.matiere)) o.matiere = 'admin';

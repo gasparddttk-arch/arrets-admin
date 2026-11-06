@@ -1,4 +1,4 @@
-// Images personnelles de la tenue rose : elles restent sur le téléphone, jamais dans une sauvegarde.
+// Images personnelles : elles restent sur le téléphone, jamais dans une sauvegarde.
 import { lireImage, ecrireImage } from './state.js';
 
 export const images = { mascotte: null, jeton: null };
