@@ -923,3 +923,5 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .comparer thead th { font-weight: 700; color: var(--titre-or); }
 .comparer tbody th { font-weight: 500; color: var(--texte-2); width: 34%; }
 .amis .reglages { margin-top: 6px; }
+.defis-attente { display: grid; gap: 8px; margin-bottom: 12px; }
+.defi-attente { width: 100%; }

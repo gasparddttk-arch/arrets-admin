@@ -974,6 +974,7 @@ async function debordement(p, nom) {
   assert(faux.rpc.some(([n, c]) => n === 'admin_traiter' && c.fait === true), 'signalement traité');
   // Les amis : nouvelles, classement, demande, défi lancé puis relevé, lien d'invitation.
   await k1.evaluate(() => window.__app.aller('palais')); await k1.waitForSelector('.haut-amis .pastille');
+  await k1.waitForSelector('.defi-attente'); assert.match(await k1.locator('.defi-attente').innerText(), /Camille te défie/, 'défi reçu visible au Palais');
   await k1.locator('.haut-amis').click(); await k1.waitForSelector('.classement');
   assert.equal(await k1.locator('.classement li').count(), 2, 'toi et Camille');
   assert.match(await k1.locator('.classement li').first().innerText(), /Camille[\s\S]*240/, 'Camille en tête de la semaine');

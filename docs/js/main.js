@@ -55,9 +55,15 @@ function barreHaut() {
     connecte() ? h('button', { class: 'haut-amis', onClick: () => aller('amis'), 'aria-label': nonLus ? `Amis, ${pluriel(nonLus, 'nouvelle')}` : 'Amis' }, icone('equipe', 26), nonLus ? h('span', { class: 'pastille' }, nonLus > 9 ? '9+' : String(nonLus)) : null) : null,
     h('button', { class: 'haut-jetons', onClick: () => aller('boutique'), 'aria-label': monnaie(etat.jetons) }, h('i', { class: 'jeton' }), fmt(etat.jetons)));
 }
-let nonLus = 0;
+let nonLus = 0; let defisEnAttente = [];
 async function compterNouvelles() {
-  try { nonLus = (await mesNotifications()).filter((n) => !n.lu).length; } catch { return; }
+  try {
+    const [n, d] = await Promise.all([mesNotifications(), mesDefis()]);
+    nonLus = n.filter((x) => !x.lu).length;
+    const avant = defisEnAttente.length;
+    defisEnAttente = d.filter((x) => x.recu && x.statut === 'ouvert');
+    if (defisEnAttente.length !== avant && document.querySelector('.tribune')) accueil();
+  } catch { return; }
   const b = document.querySelector('.haut-amis');
   if (b) b.replaceWith(barreHaut().querySelector('.haut-amis') || '');
 }
@@ -214,6 +220,8 @@ function accueil() {
       encours ? h('div', { class: 'reprise' },
         h('button', { class: 'bouton-or', onClick: () => lancer({ reprise: encours }) }, `Reprendre : ${encours.titre}, épreuve ${encours.i + 1} sur ${encours.rounds.length}`),
         h('button', { class: 'bouton-lien', onClick: () => { M().enCours = null; sauver(); accueil(); } }, 'Abandonner cette séance')) : null,
+      defisEnAttente.length ? h('div', { class: 'defis-attente' }, defisEnAttente.slice(0, 2).map((d) => h('button', { class: 'bouton-or defi-attente', onClick: () => releverDefi(d.id) },
+        `${d.pseudo || 'Un ami'} te défie : bats ses ${pct(d.score_auteur)}`))) : null,
       h('button', { class: 'cta brille', onClick: lancerDefi }, 'Défi du jour'),
       h('p', { class: 'cta-sous' }, dus ? `5 épreuves, ${pluriel(dus, estOblig() ? 'fiche' : 'arrêt')} à revoir` : '5 épreuves, environ 5 minutes'),
       ),
@@ -1109,7 +1117,7 @@ function ficheAmi(a) {
       ligne('Séances', fmt(moi.seances), fmt(r.seances))))
       : h('p', { class: 'aide-claire' }, a.masque ? 'Cet ami garde sa progression pour lui.' : 'Pas encore de progression à comparer.'),
     h('h3', {}, 'Lancer un défi'),
-    h('p', { class: 'aide-claire' }, 'Tu joues un défi, puis ton ami reçoit les mêmes questions et doit battre ton score.'),
+    h('p', { class: 'aide-claire' }, `Tu joues d’abord cinq épreuves. À la fin, ${a.pseudo || 'ton ami'} reçoit les mêmes questions et doit battre ton score. Si tu quittes avant la fin, rien n’est envoyé.`),
     h('div', { class: 'admin-duo' },
       h('button', { class: 'bouton-or', onClick: () => { voile.remove(); lancerDefiAmi(a, 'admin'); } }, 'Administratif'),
       h('button', { class: 'bouton-or', disabled: !memeEquipe, onClick: () => { voile.remove(); lancerDefiAmi(a, 'oblig'); } }, 'Obligations')),
@@ -1127,6 +1135,7 @@ function lancerDefiAmi(a, matiere) {
   const zones = zonesDuJour(ix);
   const rounds = composerDefi(ix, zones, aRevoir(ix, zones));
   lancer({ type: 'defi-ami', titre: `Défi pour ${a.pseudo}`, rounds, defiAmi: { cible: a.id, pseudo: a.pseudo, matiere, rounds: JSON.parse(JSON.stringify(rounds)) } });
+  setTimeout(() => toast(`Va jusqu’au bout : ${a.pseudo} reçoit le défi à la fin, avec ton score à battre.`), 1200);
 }
 async function releverDefi(id) {
   let d;
@@ -1144,6 +1153,7 @@ function suiteDefiAmi(S, moyenne) {
       .then(() => toast(`Défi envoyé à ${d.pseudo}.`)).catch(() => toast('Le défi n’a pas pu partir. Vérifie ta connexion.'));
     return h('p', { class: 'res-texte' }, `${d.pseudo} va recevoir les mêmes questions. À lui de battre tes ${pct(moyenne)}.`);
   }
+  defisEnAttente = defisEnAttente.filter((x) => x.id !== d.id);
   repondreDefi(d.id, Math.round(moyenne * 1000) / 1000).catch(() => toast('Ton score n’a pas pu partir. Vérifie ta connexion.'));
   const gagne = moyenne > d.score; const egal = Math.round(moyenne * 100) === Math.round(d.score * 100);
   return h('p', { class: 'res-coffre' }, egal ? `Égalité avec ${d.pseudo} : ${pct(moyenne)}.` : gagne ? `Tu bats ${d.pseudo} : ${pct(moyenne)} contre ${pct(d.score)}.` : `${d.pseudo} garde l’avantage : ${pct(d.score)} contre ${pct(moyenne)}.`);
@@ -1349,7 +1359,7 @@ async function demarrer() {
     if (invite) proposerAmi(invite);
     else if (params.has('amis')) aller('amis');
     window.addEventListener('online', () => { envoyerProgression(); envoyerSignalements(); });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) envoyerProgression(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) envoyerProgression(); else compterNouvelles(); });
     recevoirCadeauxCompte().then((n) => {
       if (!n) return;
       if (document.querySelector('.tribune')) accueil();
