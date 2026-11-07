@@ -15,7 +15,7 @@ import { lancerDunk } from './dunk.js';
 import { activerRappel, etatRappel, testerNotification, estInstallee, abonnementActuel } from './notif.js';
 import { cloudActif, inscrireAbonnement } from './cloud.js';
 import { SUPABASE_URL } from './config.js';
-import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume } from './compte.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
 const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise };
@@ -514,7 +514,8 @@ function resultats(S, reussi) {
       h('ul', {}, aRevoirListe.slice(0, 6).map((a) => h('li', {}, h('button', { onClick: () => { afficherOnglets(true); ongletCourant = 'arrets'; fiche(a.id); } }, h('b', {}, a.court), a.an ? ` ${a.an}` : ` ${a.titre}`))))) : null,
     h('div', { class: 'pied' },
       continuer('Retour au Palais', () => aller('palais')),
-      S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null),
+      S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null,
+      connecte() ? h('button', { class: 'bouton-lien', onClick: () => faireRetour(`Résultats : ${S.titre}`) }, 'Faire un retour') : null),
   );
   montrer(contenu);
   if (effets()) {
@@ -962,6 +963,7 @@ function blocCompte() {
   return h('div', { class: 'cloud compte' },
     h('p', { class: 'aide-claire' }, `Connecté : ${c.email || 'compte Gdroit'}.`),
     estAdmin() ? h('button', { class: 'bouton-or', 'data-admin': '', onClick: () => aller('admin') }, 'Administration') : null,
+    h('button', { class: 'bouton-fantome', 'data-retour': '', onClick: () => faireRetour('Profil') }, 'Faire un retour'),
     h('p', { class: 'aide-claire' }, dateSync ? `Progression copiée sur ton compte le ${dateSync}.` : 'Ta progression se copie sur ton compte après chaque séance.'),
     champ,
     h('button', { class: 'bouton-fantome', onClick: async () => { const v = champ.value.trim(); if (!v) return toast('Choisis un pseudo.'); try { await changerPseudo(v); etat.compte.pseudo = v; sauver(); toast('Pseudo enregistré.'); } catch { toast('Pas de connexion. Réessaie plus tard.'); } } }, 'Changer de pseudo'),
@@ -1167,8 +1169,8 @@ async function ecranAdmin() {
   const corps = h('div', { class: 'admin-corps' }, h('p', { class: 'aide-claire' }, 'Chargement…'));
   montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => aller('profil') }, icone('retour', 18), 'Retour au profil'),
     h('section', { class: 'page admin' }, h('h1', {}, 'Administration'), h('p', { class: 'page-sous' }, 'Visible par toi seul.'), corps));
-  let comptes; let signalements; let reglage;
-  try { [comptes, signalements, reglage] = await Promise.all([adminComptes(), adminSignalements(), adminReglage()]); } catch {
+  let comptes; let signalements; let reglage; let quota; let retours;
+  try { [comptes, signalements, reglage, quota, retours] = await Promise.all([adminComptes(), adminSignalements(), adminReglage(), adminQuota(), adminRetours()]); } catch {
     corps.replaceChildren(h('p', { class: 'aide-claire' }, 'Impossible de charger les comptes. Vérifie ta connexion.')); return;
   }
   const filtre = h('input', { class: 'code', type: 'search', placeholder: 'Chercher un pseudo ou un email', 'aria-label': 'Chercher un compte' });
@@ -1194,7 +1196,19 @@ async function ecranAdmin() {
     h('b', {}, x.nom || x.carte), h('p', {}, x.texte),
     h('small', {}, `${x.pseudo || x.email || 'compte supprimé'}, ${quand(x.cree_le)}${x.equipe ? `, équipe ${x.equipe}` : ''}`),
     h('button', { class: 'bouton-lien', onClick: async () => { try { await adminTraiter(x.id, !x.traite); ecranAdmin(); } catch { toast('Pas de connexion.'); } } }, x.traite ? 'Rouvrir' : 'Marquer comme traité'))));
+  const champQuota = h('input', { class: 'code', type: 'number', inputmode: 'numeric', min: 0, max: 10000, value: quota.quota ?? 28, 'aria-label': 'Nombre de places de test' });
+  const NOMS_RETOUR = Object.fromEntries(GENRES_RETOUR);
+  const ouvertsR = retours.filter((x) => !x.traite);
   corps.replaceChildren(
+    h('h2', {}, 'Places de test'),
+    h('p', { class: 'aide-claire' }, `${quota.testeurs} testeurs sur ${quota.quota} places, ${Math.max(0, quota.quota - quota.testeurs)} restantes. ${quota.sans_acces ? `${pluriel(quota.sans_acces, 'compte')} sans accès.` : ''} Au-delà du quota, un nouveau compte arrive sans accès ; tu peux l’ouvrir depuis sa fiche.`),
+    champQuota,
+    h('button', { class: 'bouton-fantome', onClick: async () => { const n = Math.round(+champQuota.value); if (!(n >= 0)) return toast('Nombre invalide.'); try { await adminChangerQuota(n); toast(`Quota : ${n} testeurs.`); ecranAdmin(); } catch { toast('Changement refusé.'); } } }, 'Changer le quota'),
+    h('h2', {}, `Retours des testeurs (${ouvertsR.length})`),
+    retours.length ? h('ul', { class: 'articles' }, retours.map((x) => h('li', { class: `article admin-signal${x.traite ? ' traite' : ''}` }, h('div', {},
+      h('b', {}, NOMS_RETOUR[x.genre] || x.genre), h('p', {}, x.texte),
+      h('small', {}, `${x.pseudo || x.email || 'compte supprimé'}, ${quand(x.cree_le)}${x.ecran ? `, depuis ${x.ecran}` : ''}`),
+      h('button', { class: 'bouton-lien', onClick: async () => { try { await adminTraiterRetour(x.id, !x.traite); ecranAdmin(); } catch { toast('Pas de connexion.'); } } }, x.traite ? 'Rouvrir' : 'Marquer comme traité'))))) : h('p', { class: 'aide-claire' }, 'Aucun retour pour l’instant.'),
     h('h2', {}, 'Nouveaux comptes'),
     h('p', { class: 'aide-claire' }, 'Le statut donné à chaque nouvelle inscription. Passe à « Sans accès » le jour où l’appli devient payante : les comptes existants gardent leur statut.'),
     bascule,
@@ -1286,11 +1300,60 @@ async function ouvrirCompte(params) {
     await completerUtilisateur();
     const r = await Promise.race([synchroniser(delai), new Promise((ok) => setTimeout(() => { delai.depasse = true; ok('delai'); }, 6000))]);
     if (r === 'en-ligne') setTimeout(() => toast('Progression de ton compte récupérée.'), 600);
-    lireProfil().catch(() => {});
+    await Promise.race([lireProfil(), new Promise((ok) => setTimeout(ok, 4000))]).catch(() => {});
   } catch (e) {
     if (!connecte()) { ecranConnexion(e.message); return false; }
   }
+  if (etat.compte?.acces === 'aucun') { ecranPlacesPrises(); return false; }
   return true;
+}
+
+// Au-delà des places de test, le compte existe mais l'appli reste fermée.
+function ecranPlacesPrises() {
+  afficherOnglets(false);
+  racine.replaceChildren(h('main', { class: 'connexion' },
+    chouette('pause', { taille: 170, tenue: false }),
+    h('h1', {}, 'Les places de test sont prises'),
+    h('p', { class: 'connexion-sous' }, 'Gdroit est en test fermé, et les places sont toutes occupées. Ton compte est bien créé : tu pourras entrer dès l’ouverture.'),
+    h('p', { class: 'aide-claire' }, `Connecté : ${etat.compte?.email || 'ton compte'}.`),
+    h('button', { class: 'bouton-fantome', onClick: () => location.reload() }, 'Réessayer'),
+    h('button', { class: 'bouton-lien', onClick: async () => { await deconnexion(); remplacerEtat({}); location.reload(); } }, 'Se déconnecter')));
+}
+
+// Le mot d'accueil des testeurs, une seule fois.
+function accueilTesteur() {
+  if (etat.compte?.acces !== 'testeur' || etat.reglages.accueilTesteur) return;
+  etat.reglages.accueilTesteur = true; sauver();
+  const voile = h('div', { class: 'voile' }, h('div', { class: 'boite accueil-testeur', role: 'dialog', 'aria-label': 'Bienvenue, testeur' },
+    chouette('clin', { taille: 120, tenue: false }),
+    h('h2', {}, 'Tu es testeur'),
+    h('p', {}, 'Tu fais partie des 28 premiers testeurs de Gdroit. Le but, c’est d’abord de t’amuser en révisant.'),
+    h('p', {}, 'Mais tu as aussi un rôle : repérer ce qui cloche. Une erreur de droit, un écran confus, un bouton qui ne marche pas, une idée : touche « Faire un retour », dans ton profil ou en fin de séance. C’est lu par le créateur de l’appli.'),
+    h('div', { class: 'boite-actions' }, h('button', { class: 'bouton-or', onClick: () => voile.remove() }, 'C’est parti'))));
+  document.body.append(voile);
+}
+
+// Faire un retour : erreur de droit, interface, bug, idée.
+const GENRES_RETOUR = [['droit', 'Erreur de droit'], ['interface', 'Interface'], ['bug', 'Bug'], ['idee', 'Idée'], ['autre', 'Autre']];
+function faireRetour(ecran) {
+  let genre = null;
+  const texte = h('textarea', { class: 'code retour-texte', rows: 5, maxlength: 3000, placeholder: 'Ce que tu as vu, où, et ce qui serait mieux.', 'aria-label': 'Ton retour' });
+  const puces = h('div', { class: 'puces-retour', role: 'radiogroup', 'aria-label': 'Type de retour' }, GENRES_RETOUR.map(([v, nom]) => h('button', { class: 'puce', role: 'radio', 'aria-checked': 'false', 'data-genre': v, onClick: (e) => {
+    genre = v; puces.querySelectorAll('.puce').forEach((b) => b.setAttribute('aria-checked', String(b === e.currentTarget)));
+  } }, nom)));
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite admin-fiche', role: 'dialog', 'aria-label': 'Faire un retour' },
+    h('h2', {}, 'Faire un retour'),
+    h('p', { class: 'aide-claire' }, 'Lu par le créateur de Gdroit. L’écran où tu es est joint automatiquement.'),
+    puces, texte,
+    h('div', { class: 'boite-actions' },
+      h('button', { class: 'bouton-or', onClick: async (e) => {
+        if (!genre) return toast('Choisis le type de retour.');
+        if (texte.value.trim().length < 3) return toast('Écris ton retour.');
+        const b = e.currentTarget; b.disabled = true;
+        try { await envoyerRetour(genre, texte.value.trim(), ecran); voile.remove(); toast('Merci, ton retour est envoyé.'); } catch { b.disabled = false; toast('Pas de connexion. Réessaie.'); }
+      } }, 'Envoyer'),
+      h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Annuler'))));
+  document.body.append(voile); texte.focus();
 }
 
 function guideInstallation() {
@@ -1354,6 +1417,7 @@ async function demarrer() {
   if (connecte()) {
     envoyerSignalements();
     compterNouvelles();
+    setTimeout(accueilTesteur, 900);
     navigator.serviceWorker?.addEventListener('message', (e) => { if (e.data === 'amis') aller('amis'); });
     let invite = null; try { invite = localStorage.getItem('gdroit-ami'); localStorage.removeItem('gdroit-ami'); } catch { /* rien */ }
     if (invite) proposerAmi(invite);

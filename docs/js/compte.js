@@ -214,3 +214,10 @@ export async function pousser() {
   try { const t = await jeton(); await fetch(`${SUPABASE_URL}/functions/v1/pousser`, { method: 'POST', headers: { apikey: SUPABASE_CLE, Authorization: `Bearer ${t}` } }); } catch { /* l'appli les montrera à l'ouverture */ }
 }
 export const inscrireAppareil = (abonnement) => api('appareils?on_conflict=point', { method: 'POST', corps: { point: abonnement.endpoint, abonnement }, prefer: 'resolution=merge-duplicates,return=minimal' });
+
+// TESTEURS -----------------------------------------------------------------------------
+export const envoyerRetour = (genre, texte, ecran) => api('retours', { method: 'POST', corps: { genre, texte: texte.slice(0, 3000), ecran: (ecran || '').slice(0, 200), version: (window.__version || '').slice(0, 40) }, prefer: 'return=minimal' });
+export const adminQuota = () => rpc('admin_quota');
+export const adminChangerQuota = (n) => rpc('admin_changer_quota', { n });
+export const adminRetours = () => rpc('admin_retours');
+export const adminTraiterRetour = (retour, fait) => rpc('admin_traiter_retour', { retour, fait });

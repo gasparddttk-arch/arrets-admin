@@ -929,7 +929,7 @@ async function debordement(p, nom) {
 
   // Le compte : connexion obligatoire, copie en ligne, reprise sur un autre téléphone. Supabase est simulé.
   const SUPA = 'https://jhpgxisxayceixmppxuu.supabase.co';
-  const faux = { progression: null, envois: [], signalements: [], otp: [], rpc: [], pousse: 0, defi: null };
+  const faux = { progression: null, envois: [], signalements: [], otp: [], rpc: [], pousse: 0, defi: null, retours: [], acces: 'admin' };
   const jourParis = (() => { const t = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).split('-').map(Number); return Math.floor(Date.UTC(t[0], t[1] - 1, t[2]) / 864e5); })();
   const lundiT = jourParis - ((new Date(jourParis * 864e5).getUTCDay() + 6) % 7);
   const simuler = async (ctx) => ctx.route(SUPA + '/**', async (route) => {
@@ -945,12 +945,14 @@ async function debordement(p, nom) {
     if (u.pathname === '/rest/v1/progressions' && r.method() === 'GET') return json(faux.progression ? [faux.progression] : []);
     if (u.pathname === '/rest/v1/progressions') { faux.progression = { donnees: corps.donnees, maj: corps.maj }; faux.envois.push(corps); return route.fulfill({ status: 201 }); }
     if (u.pathname === '/functions/v1/pousser') { faux.pousse++; return json({ envoyees: 0 }); }
-    if (u.pathname === '/rest/v1/profils' && r.method() === 'GET') return json([{ pseudo: 'Testeur', equipe: null, acces: 'admin', code_ami: 'TEST-2345', masquer: false, notifs: { demandes: true, defis: true, revisions: false } }]);
+    if (u.pathname === '/rest/v1/profils' && r.method() === 'GET') return json([{ pseudo: 'Testeur', equipe: null, acces: faux.acces, code_ami: 'TEST-2345', masquer: false, notifs: { demandes: true, defis: true, revisions: false } }]);
     if (u.pathname.startsWith('/rest/v1/rpc/')) {
       const nom = u.pathname.split('/').pop(); faux.rpc.push([nom, corps]);
       if (nom === 'admin_comptes') return json([{ id: 'u-1', email: 'test@exemple.fr', pseudo: 'Testeur', acces: 'admin', jetons: 50, xp: 10, xp_oblig: 0, seances: 1, vu_le: new Date().toISOString(), en_attente: 0 }, { id: 'u-2', email: 'camille.tres.longue.adresse@exemple.fr', pseudo: 'Camille', acces: 'testeur', jetons: 120, xp: 300, xp_oblig: 40, seances: 9, vu_le: null, en_attente: -20 }]);
       if (nom === 'admin_signalements') return json([{ id: 1, nom: 'Blanco', carte: 'blanco', texte: 'Date fausse', pseudo: 'Camille', cree_le: new Date().toISOString(), traite: false, equipe: 1 }]);
       if (nom === 'admin_lire_reglage') return json('testeur');
+      if (nom === 'admin_quota') return json({ quota: 28, testeurs: 4, sans_acces: 0 });
+      if (nom === 'admin_retours') return json([{ id: 1, genre: 'interface', texte: 'Le bouton est trop petit', ecran: 'Profil', pseudo: 'Camille', cree_le: new Date().toISOString(), traite: false }]);
       if (nom === 'mes_amis') return json([{ id: 'u-2', pseudo: 'Camille', equipe: 1, lien: 'ami', masque: false, resume: { jour: jourParis, serie: 3, sceau: true, grade: 'Licencié en droit', xp: 900, xpAdmin: 500, xpOblig: 400, semaine: lundiT, xpSemaine: 5240, maitrises: 12, equipe: 1, seances: 20 } }, { id: 'u-3', pseudo: 'Léa', lien: 'recue' }]);
       if (nom === 'mes_notifications') return json([{ id: 1, type: 'demande', pseudo: 'Léa', donnees: {}, cree_le: new Date().toISOString(), lu: false }, { id: 2, type: 'defi_recu', pseudo: 'Camille', donnees: { defi: 'd-1' }, cree_le: new Date().toISOString(), lu: false }]);
       if (nom === 'mes_defis') return json([{ id: 'd-1', recu: true, autre: 'u-2', pseudo: 'Camille', matiere: 'admin', score_auteur: 0.5, statut: 'ouvert', cree_le: new Date().toISOString() }]);
@@ -961,6 +963,7 @@ async function debordement(p, nom) {
       return route.fulfill({ status: 204 });
     }
     if (u.pathname === '/rest/v1/profils') return route.fulfill({ status: 204 });
+    if (u.pathname === '/rest/v1/retours') { faux.retours.push(corps); return route.fulfill({ status: 201 }); }
     if (u.pathname === '/rest/v1/signalements') { faux.signalements.push(...corps); return route.fulfill({ status: 201 }); }
     if (u.pathname === '/rest/v1/cadeaux') return json([{ id: 'cadeau-1', jetons: 7 }]);
     return json({});
@@ -990,6 +993,12 @@ async function debordement(p, nom) {
   const xp1 = (await etat(k1)).xp;
   await k1.evaluate(() => window.__app.aller('profil')); await k1.waitForSelector('.compte');
   await k1.screenshot({ path: CAP + 'compte-profil.png' });
+  // Faire un retour depuis le profil.
+  await k1.locator('[data-retour]').click(); await k1.waitForSelector('.puces-retour');
+  await k1.locator('.puce[data-genre="droit"]').click(); await k1.fill('.retour-texte', 'La date de Blanco est fausse');
+  await k1.locator('.boite .bouton-or', { hasText: 'Envoyer' }).click();
+  for (let i = 0; i < 20 && !faux.retours.length; i++) await k1.waitForTimeout(100);
+  assert.deepEqual([faux.retours[0].genre, faux.retours[0].texte, faux.retours[0].ecran], ['droit', 'La date de Blanco est fausse', 'Profil'], 'retour envoyé');
   // L'administration : comptes, jetons, statut, signalements.
   await k1.locator('[data-admin]').click(); await k1.waitForSelector('.admin-compte');
   assert.equal(await k1.locator('.admin-compte').count(), 2);
@@ -1003,7 +1012,7 @@ async function debordement(p, nom) {
   await k1.waitForSelector('.admin-fiche', { state: 'detached' });
   assert.deepEqual(faux.rpc.find(([n]) => n === 'admin_statut')[1], { cible: 'u-2', statut: 'paye' }, 'statut changé');
   await k1.locator('.admin-compte[data-compte="u-1"]').click(); assert.equal(await k1.locator('.admin-fiche .bascule').count(), 0, 'pas de statut pour soi'); await k1.locator('.admin-fiche .bouton-lien').click();
-  await k1.locator('text=Marquer comme traité').click(); await k1.waitForTimeout(300);
+  await k1.locator('text=Marquer comme traité').last().click(); await k1.waitForTimeout(300);
   assert(faux.rpc.some(([n, c]) => n === 'admin_traiter' && c.fait === true), 'signalement traité');
   // Les amis : nouvelles, classement, demande, défi lancé puis relevé, lien d'invitation.
   await k1.evaluate(() => window.__app.aller('palais')); await k1.waitForSelector('.haut-amis .pastille');
@@ -1053,7 +1062,20 @@ async function debordement(p, nom) {
   await k2.waitForSelector('.connexion');
   const apres = await k2.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')));
   assert.equal(apres.xp, 0, 'téléphone effacé après déconnexion');
-  await t1.close(); await t2.close();
+  // Au-delà des places de test : l'appli reste fermée.
+  faux.acces = 'aucun';
+  const t3 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' }); await simuler(t3);
+  const k3 = await t3.newPage(); k3.on('pageerror', (x) => erreurs.push(x.message));
+  await k3.goto(URLB + '?test&compte#access_token=jeton&refresh_token=renouveau&expires_in=3600&token_type=bearer');
+  await k3.waitForSelector('text=Les places de test sont prises'); assert.equal(await k3.$('.tribune'), null, 'appli fermée sans accès');
+  await k3.screenshot({ path: CAP + 'places-prises.png' });
+  // Un testeur voit le mot d'accueil une fois.
+  faux.acces = 'testeur';
+  await k3.goto(URLB + '?test&compte'); await k3.waitForSelector('.accueil-testeur');
+  await k3.screenshot({ path: CAP + 'accueil-testeur.png' });
+  await k3.locator('.accueil-testeur .bouton-or').click(); await k3.reload(); await k3.waitForSelector('.tribune'); await k3.waitForTimeout(1500);
+  assert.equal(await k3.$('.accueil-testeur'), null, 'accueil une seule fois');
+  await t1.close(); await t2.close(); await t3.close();
   log('compte ok');
 
   await b.close(); s.close();
