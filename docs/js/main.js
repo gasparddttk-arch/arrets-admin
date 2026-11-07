@@ -1382,7 +1382,7 @@ async function ecranAdmin() {
         h('div', {},
           h('b', {}, c.pseudo || c.email),
           h('p', {}, `${c.email}`),
-          h('small', {}, `${fmt(c.jetons ?? 0)} jetons, ${fmt((c.xp ?? 0) + (c.xp_oblig ?? 0))} points, ${pluriel(c.seances ?? 0, 'séance')}. Vu ${quand(c.vu_le)}.`),
+          h('small', {}, `${c.annee ? `${c.annee}${c.annee === 'L1' && c.equipe_l1 ? `, équipe ${c.equipe_l1}` : ''}. ` : ''}${fmt(c.jetons ?? 0)} jetons, ${fmt((c.xp ?? 0) + (c.xp_oblig ?? 0))} points, ${pluriel(c.seances ?? 0, 'séance')}. Vu ${quand(c.vu_le)}.`),
           c.en_attente ? h('small', {}, `En attente : ${c.en_attente > 0 ? '+' : ''}${fmt(c.en_attente)} jetons à la prochaine ouverture.`) : null),
         h('span', { class: `statut statut-${c.acces}` }, NOMS_STATUT[c.acces])))));
   };
