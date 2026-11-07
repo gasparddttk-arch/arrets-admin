@@ -162,6 +162,24 @@ function parseSujets(fichier = 'sujets.txt', heritage = null) {
 
 // DROIT DES OBLIGATIONS -----------------------------------------------------------
 const lignes = (f) => D(f).split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#'));
+
+// Syllogismes : majeure, mineure, conclusion, chacune avec son leurre.
+function parseSyllogismes(matiere) {
+  const out = []; let cur = null;
+  for (const l of lignes('syllogismes.txt')) {
+    if (l.startsWith('%')) { const [id, m, zones, carte] = l.slice(1).split('|').map((x) => x.trim()); cur = { id, mat: m, zones: listeZones(zones), carte }; out.push(cur); continue; }
+    const k = l.slice(0, 2); const [bon, faux] = l.slice(2).split('||').map((x) => typo(x.trim()));
+    if (!['M:', 'm:', 'C:'].includes(k) || !bon || !faux) throw new Error('syllogisme : ' + l);
+    cur[{ 'M:': 'majeure', 'm:': 'mineure', 'C:': 'conclusion' }[k]] = [bon, faux];
+  }
+  return out.filter((x) => x.mat === matiere).map(({ mat, ...x }) => x);
+}
+
+// Lexique : les termes expliqués dans les exercices, par matière.
+function parseLexique(matiere) {
+  return lignes('lexique.txt').map((l) => { const [t, m, d, formes] = l.split('|').map((x) => x.trim()); return { t, m, d: typo(d), formes: formes ? formes.split(',').map((x) => x.trim()).filter(Boolean) : [] }; })
+    .filter((x) => x.m === matiere || x.m === 'tous').map(({ t, d, formes }) => ({ t, d, formes }));
+}
 const cases = (l) => l.split('|').map((s) => s.trim());
 const paire = (l) => l.split('||').map((s) => typo(s.trim()));
 const listeZones = (s) => s.split(',').map(Number);
@@ -302,7 +320,7 @@ export function lireObligations() {
     arrets: parseArrets(['oblig/arrets.txt']),
     articles: parseArticles(),
     familles: [], juges: [],
-    cas: parseCas(), qualifs: parseQualifs(), remedes: parseRemedes(), frises: parseFrises(), questions: parseQuestions(),
+    cas: parseCas(), qualifs: parseQualifs(), remedes: parseRemedes(), frises: parseFrises(), questions: parseQuestions(), lexique: parseLexique('oblig'), syllogismes: parseSyllogismes('oblig'),
     sujets: avecArret(parseSujets('oblig/sujets.txt')),
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
   };
@@ -336,6 +354,8 @@ export function lireObligations1() {
     remedes: parseRemedes('oblig1/remedes.txt', b.remedes).map(lier),
     frises: parseFrises('oblig1/frises.txt', b.frises).map(frise),
     questions: parseQuestions('oblig1/questions.txt'),
+    lexique: b.lexique,
+    syllogismes: b.syllogismes,
     sujets: avecArret(parseSujets('oblig1/sujets.txt', b.sujets)).map(sujet),
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
   };
@@ -349,6 +369,8 @@ export function lireContenu() {
     familles: parseFamilles(),
     juges: parseJuges(),
     frises: parseFrises('frises.txt'),
+    lexique: parseLexique('admin'),
+    syllogismes: parseSyllogismes('admin'),
     sujets: avecArret(parseSujets(), 'commentaires.txt'),
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
   };

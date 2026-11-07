@@ -325,7 +325,7 @@ const feuillePlan = (p, classe = '', attrs = {}) => h('div', { class: `feuille-p
   h('p', { class: 'p2' }, h('b', {}, 'B'), p['2b']));
 
 // Le bandeau de l'arrêt : le texte reste à portée de main pendant tout le commentaire.
-function bandeauArret(s, ouvert = false) {
+export function bandeauArret(s, ouvert = false) {
   const a = s.arret;
   return h('details', { class: 'bandeau-arret', open: ouvert },
     h('summary', {}, h('span', {}, h('b', {}, 'Lire l’arrêt'), h('small', {}, `${a.ref}, ${a.date}`)), icone('chevron', 18)),

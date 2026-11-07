@@ -1,0 +1,74 @@
+# Lexique : un terme par ligne, souligné dans les exercices, avec sa définition d'une ligne.
+# terme | matière (admin, oblig ou tous) | définition | autres formes (facultatif, séparées par des virgules)
+
+acte de gouvernement | admin | Acte de l'exécutif lié aux relations avec le Parlement ou à la conduite des relations internationales, qu'aucun juge ne contrôle. | actes de gouvernement
+acte administratif unilatéral | admin | Décision prise par l'administration seule, qui s'impose à ses destinataires sans leur consentement. | actes administratifs unilatéraux
+acte réglementaire | admin | Acte administratif de portée générale et impersonnelle, comme un décret ou un arrêté qui vise tout le monde. | actes réglementaires, règlement, règlements
+acte individuel | admin | Acte administratif qui vise une ou plusieurs personnes nommément désignées, comme une nomination ou une expulsion. | actes individuels, acte non réglementaire
+recours pour excès de pouvoir | admin | Recours ouvert contre tout acte administratif pour en obtenir l'annulation parce qu'il est illégal. | REP
+loi-écran | admin | Théorie selon laquelle le juge administratif refuse de contrôler un acte conforme à une loi, pour ne pas juger la loi elle-même. | loi écran
+contrôle de conventionnalité | admin | Contrôle de la conformité d'une loi ou d'un acte aux traités internationaux, exercé par les juges ordinaires. |
+contrôle de constitutionnalité | admin | Contrôle de la conformité d'une loi à la Constitution, réservé au Conseil constitutionnel. |
+question prioritaire de constitutionnalité | admin | Moyen par lequel un justiciable demande, au cours d'un procès, de vérifier qu'une loi respecte les droits et libertés de la Constitution. | QPC
+principe général du droit | admin | Règle dégagée par le juge administratif sans texte, qui s'impose à l'administration. | principes généraux du droit, PGD
+principe fondamental reconnu par les lois de la République | admin | Principe de valeur constitutionnelle tiré d'une législation républicaine antérieure à 1946. | principes fondamentaux reconnus par les lois de la République, PFRLR
+bloc de constitutionnalité | admin | Ensemble des normes de valeur constitutionnelle : la Constitution, son préambule, la Déclaration de 1789, le préambule de 1946 et la Charte de l'environnement. |
+effet direct | admin | Qualité d'une norme internationale que les particuliers peuvent invoquer directement devant le juge. |
+directive | admin | Acte de l'Union qui fixe un résultat à atteindre et laisse aux États le choix de la forme et des moyens. | directives
+transposition | admin | Adoption par l'État des règles nationales qui donnent effet à une directive. |
+question préjudicielle | admin | Question posée par un juge national à la Cour de justice sur l'interprétation ou la validité du droit de l'Union. |
+théorie de l'acte clair | admin | Pratique par laquelle un juge national interprète seul une norme qu'il estime claire, sans interroger la Cour de justice. | acte clair
+identité constitutionnelle | admin | Ensemble des principes propres à la France que le droit de l'Union ne peut pas faire écarter. |
+pouvoir réglementaire autonome | admin | Pouvoir du Premier ministre de prendre des règlements dans les matières que l'article 37 ne réserve pas à la loi. |
+ordonnance | admin | Acte du Gouvernement pris, sur habilitation du Parlement, dans le domaine de la loi (article 38). | ordonnances
+ratification | admin | Acte qui donne valeur législative à une ordonnance, ou qui engage l'État dans un traité. |
+lignes directrices | admin | Orientations générales qu'une autorité se donne pour exercer son pouvoir d'appréciation, sans renoncer à examiner chaque cas. | directive Crédit foncier
+circulaire | admin | Texte par lequel un chef de service explique à ses agents comment appliquer une règle. | circulaires
+mesure d'ordre intérieur | admin | Petite mesure interne à l'administration, trop peu importante pour être attaquée devant le juge. | mesures d'ordre intérieur
+police administrative | admin | Activité de l'administration qui prévient les troubles à l'ordre public. |
+ordre public | admin | Ensemble de la sécurité, de la tranquillité et de la salubrité publiques, auquel s'ajoute la dignité de la personne humaine. |
+service public | admin | Activité d'intérêt général assurée ou contrôlée par une personne publique. | services publics
+service public industriel et commercial | admin | Service public géré comme une entreprise privée, qui relève en principe du droit privé et du juge judiciaire. | SPIC
+Tribunal des conflits | admin | Juridiction qui tranche les conflits de compétence entre les juges administratifs et judiciaires. |
+élever le conflit | admin | Procédure par laquelle le préfet conteste la compétence du juge judiciaire et saisit le Tribunal des conflits. | conflit positif, arrêté de conflit
+ministre-juge | admin | Ancienne théorie selon laquelle le ministre jugeait les litiges de son administration avant le Conseil d'État. |
+détournement de pouvoir | admin | Illégalité d'un acte pris dans un autre but que celui pour lequel le pouvoir a été donné. |
+sécurité juridique | admin | Exigence qui impose à l'autorité de ne pas bouleverser brutalement les situations en cours, par exemple en prévoyant des mesures transitoires. |
+modulation dans le temps | admin | Pouvoir du juge de différer ou de limiter les effets de sa décision pour éviter des conséquences excessives. | annulation différée
+sursis à statuer | admin | Décision du juge de suspendre l'examen d'une affaire, le temps d'obtenir une réponse à une question. |
+
+obligation | oblig | Lien de droit par lequel une personne, le débiteur, est tenue envers une autre, le créancier, de faire ou de ne pas faire quelque chose. | obligations
+acte juridique | oblig | Manifestation de volonté destinée à produire des effets de droit, comme un contrat. | actes juridiques
+fait juridique | oblig | Événement auquel la loi attache des effets de droit qui n'ont pas été voulus, comme un accident. | faits juridiques
+contrat | oblig | Accord de volontés entre deux ou plusieurs personnes destiné à créer, modifier, transmettre ou éteindre des obligations. | contrats
+offre | oblig | Proposition ferme et précise de conclure un contrat, qui suffit à le former si elle est acceptée. | pollicitation
+acceptation | oblig | Manifestation de la volonté d'être lié dans les termes de l'offre. |
+promesse unilatérale | oblig | Contrat par lequel le promettant accorde au bénéficiaire le droit d'opter pour la conclusion d'un contrat dont tout est déjà déterminé. | promesse unilatérale de vente
+pacte de préférence | oblig | Contrat par lequel une partie s'engage à proposer en priorité à l'autre de traiter avec elle si elle décide de contracter. |
+rétractation | oblig | Retrait par son auteur d'une offre ou d'un consentement avant que le contrat soit formé. |
+caducité | oblig | Fin d'un acte valable qui perd un élément essentiel à son existence, comme une offre au décès de son auteur. | caduc, caduque
+vice du consentement | oblig | Défaut qui altère le consentement d'une partie : l'erreur, le dol ou la violence. | vices du consentement
+erreur | oblig | Fausse représentation de la réalité qui a déterminé le consentement d'une partie. |
+dol | oblig | Tromperie, par manœuvres, mensonges ou silence, qui pousse l'autre partie à contracter. | dolosif, dolosive
+réticence dolosive | oblig | Silence volontaire sur une information dont on sait le caractère déterminant pour l'autre partie. |
+violence | oblig | Contrainte qui pousse une partie à contracter sous l'effet d'une crainte. |
+abus de dépendance | oblig | Violence qui consiste à exploiter l'état de dépendance d'une partie pour obtenir un engagement qu'elle n'aurait pas pris autrement. | état de dépendance
+devoir d'information | oblig | Obligation de révéler à l'autre partie une information déterminante qu'on connaît et qu'elle ignore légitimement (article 1112-1). | obligation d'information
+nullité | oblig | Sanction qui anéantit rétroactivement un contrat formé sans respecter ses conditions de validité. | nul, nulle
+nullité relative | oblig | Nullité qui protège un intérêt privé et que seule la partie protégée peut invoquer. |
+nullité absolue | oblig | Nullité qui protège l'intérêt général et que toute personne intéressée peut invoquer. |
+clause abusive | oblig | Clause qui crée un déséquilibre significatif entre les droits et obligations des parties ; elle est réputée non écrite. | clauses abusives
+réputé non écrit | oblig | Se dit d'une clause effacée du contrat, qui continue de produire ses effets sans elle. | réputée non écrite
+contrat d'adhésion | oblig | Contrat dont les conditions générales sont fixées à l'avance par une partie, sans négociation. |
+force obligatoire | oblig | Règle selon laquelle le contrat tient lieu de loi à ceux qui l'ont conclu (article 1103). |
+effet relatif | oblig | Règle selon laquelle le contrat ne crée d'obligations qu'entre les parties (article 1199). |
+imprévision | oblig | Changement de circonstances imprévisible qui rend l'exécution excessivement onéreuse et permet de demander une renégociation (article 1195). |
+inexécution | oblig | Manquement d'une partie à ce qu'elle a promis dans le contrat. |
+exception d'inexécution | oblig | Droit de refuser d'exécuter sa propre obligation tant que l'autre partie n'exécute pas la sienne. |
+résolution | oblig | Anéantissement du contrat pour inexécution grave d'une partie. |
+quasi-contrat | oblig | Fait purement volontaire dont naît un engagement de celui qui en profite sans y avoir droit. | quasi-contrats
+gestion d'affaires | oblig | Fait de gérer utilement l'affaire d'autrui sans y être tenu ; le maître de l'affaire doit alors rembourser. |
+enrichissement injustifié | oblig | Enrichissement d'une personne au détriment d'une autre sans cause juridique, qui oblige à indemniser. |
+obligation naturelle | oblig | Devoir de conscience qui devient une obligation civile quand son débiteur promet ou commence de l'exécuter. |
+engagement unilatéral de volonté | oblig | Obligation qu'une personne se crée par sa seule volonté, sans contrepartie ni acceptation. | engagement unilatéral
+convention d'assistance | oblig | Contrat que le juge reconnaît entre celui qui aide bénévolement et celui qu'il aide. |

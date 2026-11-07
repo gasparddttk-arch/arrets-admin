@@ -59,7 +59,7 @@ self.addEventListener('push', (e) => {
   let d = { title: 'Ta série t’attend', body: 'Une séance aujourd’hui, et ton sceau reste en place.', question: '' };
   try { d = { ...d, ...e.data.json() }; } catch { /* message par défaut */ }
   // Les nouvelles des amis s'affichent telles quelles et ouvrent la page Amis.
-  if (d.ami) { e.waitUntil(self.registration.showNotification(d.title, { body: d.body, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: d.tag, data: { url: './?amis' } })); return; }
+  if (d.ami) { e.waitUntil(self.registration.showNotification(d.title, { body: d.body, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: d.tag, data: { url: d.url || './?amis' } })); return; }
   e.waitUntil((async () => {
     const s = await lireSerie();
     let { title, body } = d;

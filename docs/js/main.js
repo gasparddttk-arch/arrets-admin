@@ -3,26 +3,66 @@ import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
-import { remplacerEtat, ajouterSemaine, changerEquipe,
+import { remplacerEtat, ajouterSemaine, gagnerAppel, erreursOuvertes, carnetVisible, changerEquipe,
   SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, lundi, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
 } from './state.js';
-import { indexer, composerDefi, composerBoss, tirerRound, jumeaux, melange } from './engine.js';
-import { JEUX, NOMS_MODES, NOMS_MODES_OBLIG, continuer } from './games.js';
+import { indexer, questionsDunk, composerDefi, composerBoss, tirerRound, jumeaux, melange } from './engine.js';
+import { JEUX, NOMS_MODES, NOMS_MODES_OBLIG, continuer, qcm } from './games.js';
+import { preparerLexique, souligner } from './lexique.js';
+import { roundExamen, jouerFlash, jouerPlaide, jouerTrous, jouerExpress, jouerSyllogisme, jouerCasNu } from './examen.js';
 import { jouerCas, jouerRemede, jouerFrise } from './jeux-oblig.js';
 import { lancerDunk } from './dunk.js';
-import { activerRappel, etatRappel, testerNotification, estInstallee, abonnementActuel } from './notif.js';
-import { cloudActif, inscrireAbonnement } from './cloud.js';
+import { activerRappel, etatRappel, estInstallee, abonnementActuel } from './notif.js';
 import { SUPABASE_URL } from './config.js';
-import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
-const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise };
+const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu };
+
+// FAIRE APPEL : chaque fiche ratée revient sous une autre forme, une question rapide.
+async function jouerAppel(zone, ctx, r) {
+  const res = await qcm(zone, ctx, { surtitre: `En appel : ${r.nom}`, question: r.q, options: r.options.map((o) => ({ ...o })), pourquoiBon: r.pourquoi, classe: 'appel' });
+  ctx.noter(r.carte, res.ok);
+  if (res.ok) gagnerAppel(r.carte);
+  ctx.gain(res.ok ? 6 : 0);
+  ctx.fin({ score: res.ok ? 1 : 0, parfait: res.ok });
+}
+function roundsAppel(ids) {
+  const toutes = questionsDunk(ix, ix.zones.map((z) => z.id));
+  const out = [];
+  for (const id of ids) {
+    const qs = toutes.filter((q) => q.carte === id).sort((a, b) => a.n - b.n);
+    const q = qs[Math.floor(Math.random() * Math.min(qs.length, 2))];
+    if (!q) continue;
+    const a = ix.parId.get(id);
+    out.push({ type: 'appel', carte: id, nom: a.article ? a.nom : a.court, q: q.q, pourquoi: a.article ? a.titre : `${a.court}, ${a.an}`,
+      options: [{ t: q.bonne, ok: true }, ...q.faux.map((t) => ({ t, ok: false }))].sort(() => Math.random() - 0.5) });
+    if (out.length >= 5) break;
+  }
+  return out;
+}
+function faireAppel(ids) {
+  const rounds = roundsAppel(ids);
+  if (!rounds.length) return toast('Rien à rejouer en appel pour l’instant.');
+  lancer({ type: 'appel', titre: 'Faire appel', rounds });
+}
 let ix = null; // Le contenu de la matière ouverte.
 const CONTENUS = {};
 const PAR_EQUIPE = {};
 const racine = document.getElementById('app');
+// Les termes juridiques soulignés : chaque nouvel écran est relu, avec le lexique de la matière ouverte.
+let lexiquePret = null; let relecture = 0;
+new MutationObserver(() => {
+  if (relecture) return;
+  relecture = requestAnimationFrame(() => {
+    relecture = 0;
+    if (!ix) return;
+    if (lexiquePret !== ix.lexique) { preparerLexique(ix.lexique); lexiquePret = ix.lexique; }
+    souligner(racine);
+  });
+}).observe(racine, { childList: true, subtree: true });
 const onglets = document.getElementById('onglets');
 let ongletCourant = 'palais';
 
@@ -135,8 +175,9 @@ function aller(id, p) {
   ongletCourant = id === 'role' || id === 'examen' ? 'palais' : id;
   afficherOnglets(true);
   if (id === 'admin' || id === 'progression') ongletCourant = 'profil';
+  if (id === 'carnet' || id === 'lexique') ongletCourant = 'arrets';
   if (id === 'amis') ongletCourant = 'palais';
-  ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen, admin: ecranAdmin, amis: ecranAmis, progression: ecranProgression }[id])(p);
+  ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen, admin: ecranAdmin, amis: ecranAmis, progression: ecranProgression, carnet: ecranCarnet, lexique: ecranLexique }[id])(p);
 }
 
 // PALAIS -----------------------------------------------------------------------
@@ -224,7 +265,7 @@ function accueil() {
       h('p', { class: 'cta-sous' }, dus ? `5 épreuves, ${pluriel(dus, estOblig() ? 'fiche' : 'arrêt')} à revoir` : '5 épreuves, environ 5 minutes'),
       ),
     h('section', { class: 'role' },
-      ligneEntree('vers-examen', 'balance', 'Vers l’examen', 'Trois niveaux, si tu veux te tester', () => aller('examen'), 0),
+      ligneEntree('vers-examen', 'balance', 'Vers l’examen', 'Trois degrés et un partiel blanc', () => aller('examen'), 0),
       ligneEntree('vers-role', 'plan', 'Le rôle', 'Choisis ton exercice', () => aller('role'), 2.2)),
   );
 }
@@ -244,16 +285,20 @@ function ecranRole() {
 
 // Vers l'examen : un enchaînement facultatif, sans rappel ni compte à rebours.
 const NIVEAUX_EXAMEN = [
-  { nom: 'Première instance', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'paires'] },
-  { nom: 'Appel', txt: 'Quatre épreuves sur les cas et les plans', oblig: ['cas', 'remede', 'cas', 'plan'], admin: ['puzzle', 'juge', 'plan', 'juge'] },
-  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['cas', 'plan', 'cas', 'frise', 'cas', 'plan'], admin: ['juge', 'architecte', 'puzzle', 'plan', 'juge', 'architecte'] },
+  { nom: 'Première instance', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'frise'] },
+  { nom: 'Appel', txt: 'Cinq épreuves : cas, plans, et des réponses à écrire soi-même', oblig: ['cas', 'flash', 'trous', 'syllogisme', 'plaide'], admin: ['puzzle', 'juge', 'flash', 'syllogisme', 'plaide'] },
+  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['casnu', 'express', 'cas', 'frise', 'plaide', 'plan'], admin: ['juge', 'architecte', 'express', 'frise', 'syllogisme', 'plaide'] },
+  { nom: 'Partiel blanc', txt: '20 minutes, une dizaine d’épreuves, puis ton bilan par chambre. Un repère, pas une note', partiel: true,
+    oblig: ['qualif', 'cas', 'flash', 'syllogisme', 'casnu', 'trous', 'remede', 'express', 'plaide', 'frise'], admin: ['paires', 'juge', 'flash', 'syllogisme', 'puzzle', 'express', 'plan', 'plaide', 'frise', 'architecte'] },
 ];
 function lancerExamen(i) {
   const n = NIVEAUX_EXAMEN[i];
   const zones = estOblig() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix);
   const dus = aRevoir(ix, zones); const deja = new Set();
   const types = estOblig() ? n.oblig : n.admin;
-  lancer({ type: 'examen', long: i === 2, titre: `Vers l’examen : ${n.nom.toLowerCase()}`, rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
+  // Les épreuves à réponse libre viennent du module d'examen ; à défaut de contenu, une épreuve classique les remplace.
+  const tirer = (t) => (['flash', 'plaide', 'trous', 'express', 'syllogisme', 'casnu'].includes(t) ? roundExamen(ix, t, zones, dus, deja) || tirerRound(ix, estOblig() ? 'cas' : 'puzzle', zones, dus, Math.random, deja) : tirerRound(ix, t, zones, dus, Math.random, deja));
+  lancer({ type: n.partiel ? 'partiel' : 'examen', long: i >= 2, titre: `Vers l’examen : ${n.nom.toLowerCase()}`, rounds: types.map(tirer) });
 }
 function ecranExamen() {
   montrer(barreHaut(), retourPalais(), h('section', { class: 'role' }, h('h1', {}, 'Vers l’examen'),
@@ -321,6 +366,7 @@ function lancerMode(m, genre = null) {
 }
 
 // SÉANCE ------------------------------------------------------------------------
+const DUREE_PARTIEL = 20 * 60000;
 function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAmi = null }) {
   if (document.querySelector('.palais-portes')) return;
   const S = reprise
@@ -340,7 +386,20 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
   const scene = h('main', { class: 'scene' });
   const decor = h('div', { class: 'decor-seance', 'aria-hidden': 'true' });
   const quitter = h('button', { class: 'quitter', 'aria-label': 'Quitter la séance', onClick: () => demanderQuitter() }, icone('fermer', 22));
-  const entete = h('header', { class: 'entete-seance' }, quitter, pips, S.vies !== null ? vies : compteur);
+  const chrono = h('div', { class: 'chrono-partiel', 'aria-live': 'off' });
+  const entete = h('header', { class: 'entete-seance' }, quitter, pips, S.vies !== null ? vies : type === 'partiel' ? chrono : compteur);
+  // Partiel blanc : 20 minutes au total, la séance s'arrête net à la fin du temps.
+  if (type === 'partiel') {
+    S.debut ||= Date.now();
+    const tic = setInterval(() => {
+      if (!chrono.isConnected && document.querySelector('.resultats, .palais')) { clearInterval(tic); return; }
+      const reste = Math.max(0, DUREE_PARTIEL - (Date.now() - S.debut));
+      const mn = Math.floor(reste / 60000); const sec = Math.floor((reste % 60000) / 1000);
+      chrono.textContent = `${mn}:${String(sec).padStart(2, '0')}`;
+      chrono.classList.toggle('presse', reste < 120000);
+      if (reste === 0) { clearInterval(tic); S.nettoyer.forEach((f) => f()); S.nettoyer = []; S.tempsEcoule = true; finir(true); }
+    }, 1000);
+  }
 
   function demanderQuitter() {
     const voile = h('div', { class: 'voile' }, h('div', { class: 'boite', role: 'dialog', 'aria-label': 'Quitter la séance' },
@@ -397,7 +456,8 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
       S.nettoyer.forEach((f) => f()); S.nettoyer = [];
       S.scores.push(res.score); if (res.parfait) S.parfaites++;
       // Deux pièces pour une épreuve réussie, une pour une épreuve à moitié réussie.
-      S.jetons += res.score >= 0.8 ? PIECES_EPREUVE : res.score >= 0.4 ? 1 : 0;
+      // En appel, des points seulement : rater exprès ne doit rien rapporter.
+      if (S.type !== 'appel') S.jetons += res.score >= 0.8 ? PIECES_EPREUVE : res.score >= 0.4 ? 1 : 0;
       if (S.vies !== null && res.score < 0.6) S.vies--;
       S.i++;
       const derniere = S.i >= S.rounds.length || S.vies === 0;
@@ -416,6 +476,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
   function suivant() {
     majEntete();
     const r = S.rounds[S.i];
+    setTimeout(() => bulleExercice(r.type), 900);
     // Le Juge a son propre lever de rideau : l'audience s'ouvre avec ses trois coups.
     if (r.type !== 'juge' && r.type !== 'cas') son(S.i === 0 ? 'lancement' : 'epreuve', { retard: retardEpreuve });
     retardEpreuve = 0; finEnCours = false; S.aide = false;
@@ -441,6 +502,26 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
     suivant();
     p.ouvrir();
   });
+}
+
+// Bilan du partiel blanc : ce qui a été réussi, chambre par chambre, d'après les fiches touchées.
+function bilanPartiel(S) {
+  const parZone = new Map();
+  for (const [id, t] of S.touches) {
+    const a = ix.parId.get(id); if (!a) continue;
+    const z = a.zones?.[0]; if (z === undefined) continue;
+    const c = parZone.get(z) || { ok: 0, ko: 0 }; c.ok += t.ok; c.ko += t.ko; parZone.set(z, c);
+  }
+  const lignes = [...parZone.entries()].sort((x, y) => x[0] - y[0]);
+  const joue = S.scores.length; const total = S.rounds.length;
+  return h('section', { class: 'res-bilan' }, h('h2', {}, 'Bilan par chambre'),
+    S.tempsEcoule ? h('p', { class: 'res-texte' }, `Temps écoulé : ${joue} épreuve${joue > 1 ? 's' : ''} sur ${total}.`) : null,
+    lignes.length ? h('ul', {}, lignes.map(([z, c]) => {
+      const p = Math.round((c.ok / (c.ok + c.ko || 1)) * 100);
+      const nom = ix.zones.find((x) => x.id === z)?.titre || `Chambre ${z}`;
+      return h('li', { class: p >= 70 ? 'solide' : p >= 40 ? 'moyen' : 'fragile' }, h('span', {}, nom), h('b', {}, `${p} %`), h('i', { style: `--p:${p}%` }));
+    })) : h('p', { class: 'res-texte' }, 'Pas assez de réponses pour un bilan.'),
+    h('p', { class: 'res-texte discret' }, 'Un repère pour savoir où travailler, pas une note.'));
 }
 
 function resultats(S, reussi) {
@@ -508,9 +589,11 @@ function resultats(S, reussi) {
     apres.i > avant.i ? h('div', { class: 'decret' }, h('p', {}, 'Par décret, tu es nommé'), h('strong', {}, apres.nom)) : null,
     apresGeneral.i > avantGeneral.i ? h('div', { class: 'decret' }, h('p', {}, 'Carrière générale, tu deviens'), h('strong', {}, apresGeneral.nom)) : null,
     nouveaux.length ? h('ul', { class: 'res-trophees' }, nouveaux.map((t) => h('li', {}, medaille(metalDe(t.id), true), h('span', {}, h('b', {}, t.nom), h('small', {}, t.txt))))) : null,
+    S.type === 'partiel' ? bilanPartiel(S) : null,
     aRevoirListe.length ? h('section', { class: 'res-revoir' }, h('h2', {}, 'À revoir'),
       h('ul', {}, aRevoirListe.slice(0, 6).map((a) => h('li', {}, h('button', { onClick: () => { afficherOnglets(true); ongletCourant = 'arrets'; fiche(a.id); } }, h('b', {}, a.court), a.an ? ` ${a.an}` : ` ${a.titre}`))))) : null,
     h('div', { class: 'pied' },
+      S.type !== 'appel' && aRevoirListe.length ? h('button', { class: 'bouton-or', 'data-appel': '', onClick: () => faireAppel(aRevoirListe.map((a) => a.id)) }, 'Faire appel') : null,
       continuer('Retour au Palais', () => aller('palais')),
       S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null,
       connecte() ? h('button', { class: 'bouton-lien', onClick: () => faireRetour(`Résultats : ${S.titre}`) }, 'Faire un retour') : null),
@@ -657,8 +740,74 @@ function collection() {
   }, l))) : null;
   montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, articles ? 'Les articles' : 'Les arrêts'),
     h('p', { class: 'page-sous' }, articles ? `${fmt(acquisArticles)} sur ${ix.articles.length} au niveau Conclusions. Chaque carte monte quand tu réussis.` : `${pluriel(acquis, 'grand arrêt')} sur ${ix.arrets.length}. Chaque carte monte de niveau quand tu réussis.`),
+    lienCarnet(),
     bascule, h('label', { class: 'cherche' }, icone('loupe', 22), champ), h('div', { class: 'filtres' }, zonesBtns), grille));
   rendre();
+}
+
+function lienCarnet() {
+  const n = erreursOuvertes().length;
+  return h('div', { class: 'entrees-arrets' },
+    h('button', { class: 'entree-carnet', 'data-carnet': '', onClick: () => aller('carnet') },
+      h('b', {}, 'Carnet d’erreurs'), h('span', {}, n ? pluriel(n, 'erreur ouverte', 'erreurs ouvertes') : 'Aucune erreur ouverte')),
+    h('button', { class: 'entree-carnet', 'data-lexique': '', onClick: () => aller('lexique') },
+      h('b', {}, 'Lexique'), h('span', {}, `${pluriel((ix.lexique || []).length, 'terme')} expliqués`)));
+}
+
+// LE LEXIQUE : les termes juridiques de la matière, et les mots du jeu avec leur effet.
+const motsDuJeu = () => [
+  ['Défi du jour', 'Une séance courte choisie pour toi. Réussie, elle pose ton sceau et fait grandir ta série.'],
+  ['Sceau', `Posé quand le Défi du jour est réussi à ${Math.round(SCEAU_REUSSITE * 100)} %, ou quand ${SCEAU_FICHES} fiches sont reprises.`],
+  ['Série', 'Le nombre de jours d’affilée avec au moins une séance, dans l’une ou l’autre matière.'],
+  ['Audience', 'Une épreuve qui ouvre la chambre suivante.'],
+  ['Le rôle', 'La liste des exercices, à choisir toi-même.'],
+  ['Vers l’examen', 'Des séances plus longues, en trois degrés : Première instance, Appel, Cassation. Et un partiel blanc de 20 minutes.'],
+  ['Dossier clos', `Une fiche maîtrisée : ${monnaie(PRIME_MAITRISE)} offerts, une seule fois par fiche.`],
+  ['Faire appel', 'Rejouer tes erreurs sous une autre forme. Des points, pas de jetons.'],
+  ...BOUTIQUE.filter((b) => !b.admin || !estOblig()).map((b) => [b.nom, b.txt]),
+];
+function ecranLexique() {
+  const termes = [...(ix.lexique || [])].sort((a, b) => a.t.localeCompare(b.t, 'fr'));
+  const champ = h('input', { type: 'search', class: 'recherche', placeholder: 'Chercher un terme', 'aria-label': 'Chercher un terme' });
+  const liste = h('dl', { class: 'lexique' });
+  const norm = (x) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const rendre = () => { const q = norm(champ.value); liste.replaceChildren(...termes.filter((t) => !q || norm(`${t.t} ${t.d}`).includes(q)).map((t) => h('div', {}, h('dt', {}, t.t), h('dd', {}, t.d)))); };
+  champ.addEventListener('input', rendre);
+  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => aller('arrets') }, icone('retour', 18), 'Les arrêts'), h('section', { class: 'page' },
+    h('h1', {}, 'Lexique'),
+    h('p', { class: 'page-sous' }, 'Dans les exercices, ces termes sont soulignés en pointillé : touche-les pour leur définition.'),
+    h('label', { class: 'cherche' }, icone('loupe', 22), champ), liste,
+    h('h2', {}, 'Les mots du jeu'),
+    h('dl', { class: 'lexique' }, motsDuJeu().map(([t, d]) => h('div', {}, h('dt', {}, t), h('dd', {}, d))))));
+  rendre();
+}
+
+// LE CARNET D'ERREURS : par chambre, les plus fréquentes en haut, jusqu'à leur correction.
+function ecranCarnet() {
+  const j = jour();
+  const liste = carnetVisible().filter((e) => ix.parId.get(e.id)).sort((a, b) => (a.corrige ? 1 : 0) - (b.corrige ? 1 : 0) || b.n - a.n || b.dernier - a.dernier);
+  const ouvertes = liste.filter((e) => !e.corrige);
+  const parZone = new Map();
+  for (const e of ouvertes) { const z = ix.parId.get(e.id).zones[0]; parZone.set(z, (parZone.get(z) || 0) + 1); }
+  const zonesTxt = [...parZone.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([z, n]) => `${pluriel(n, 'erreur')} en ${ix.zones.find((x) => x.id === z)?.titre || `chambre ${z}`}`);
+  const fiches = M().arrets;
+  const ligne = (e) => {
+    const a = ix.parId.get(e.id);
+    const conf = Object.entries(fiches[e.id]?.c || {}).sort((x, y) => y[1] - x[1])[0];
+    const avec = conf && ix.parId.get(conf[0]);
+    const quandTxt = j - e.dernier === 0 ? 'aujourd’hui' : j - e.dernier === 1 ? 'hier' : `il y a ${j - e.dernier} jours`;
+    const apport = a.article ? a.titre : (a.ap[a.zones[0]] || Object.values(a.ap)[0]);
+    return h('li', {}, h('button', { class: `article carnet-ligne${e.corrige ? ' corrige' : ''}`, onClick: () => { ongletCourant = 'arrets'; fiche(e.id); } }, h('div', {},
+      h('b', {}, a.article ? a.nom : `${a.court}, ${a.an}`),
+      h('p', {}, apport),
+      h('small', {}, e.corrige ? 'Corrigée' : `${e.n > 1 ? `Ratée ${e.n} fois` : 'Ratée une fois'}, la dernière ${quandTxt}${avec ? `. Confondue avec ${avec.article ? avec.nom : avec.court}` : ''}.`))));
+  };
+  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => aller('arrets') }, icone('retour', 18), 'Les arrêts'), h('section', { class: 'page carnet' },
+    h('h1', {}, 'Carnet d’erreurs'),
+    h('p', { class: 'page-sous' }, ouvertes.length ? `${pluriel(ouvertes.length, 'erreur ouverte', 'erreurs ouvertes')}. Une erreur sort du carnet après deux réussites sur deux jours différents, ou un appel gagné.` : 'Aucune erreur ouverte. Celles que tu commettras s’afficheront ici jusqu’à leur correction.'),
+    zonesTxt.length ? h('p', { class: 'aide-claire' }, `${zonesTxt.join(', ')}.`) : null,
+    ouvertes.length ? h('button', { class: 'cta', 'data-appel-carnet': '', onClick: () => faireAppel(ouvertes.map((e) => e.id)) }, 'Faire appel sur mes erreurs') : null,
+    liste.length ? h('ul', { class: 'articles' }, liste.map(ligne)) : chouette('echelle', { taille: 150 })));
 }
 
 function fiche(id) {
@@ -905,7 +1054,7 @@ function ecranProgression() {
     h('p', {}, g.suivant ? `${g.nom}, ${fmt(g.xp)} points dans les deux matières. Encore ${fmt(g.suivant.xp - g.xp)} avant ${g.suivant.nom}.` : `${g.nom} : dernier titre atteint.`),
     echelle(RANGS_GENERAL, g),
     h('h2', {}, 'Vers l’examen'),
-    h('p', { class: 'aide-claire' }, 'Trois degrés de difficulté, au choix, sans rien à débloquer : Première instance pour se mettre en route, Appel pour les cas et les plans, Cassation pour les épreuves les plus longues.')));
+    h('p', { class: 'aide-claire' }, 'Trois degrés de difficulté, au choix, sans rien à débloquer : Première instance pour se mettre en route, Appel pour les cas et les plans, Cassation pour les épreuves les plus longues. Le partiel blanc dure 20 minutes et finit par un bilan chambre par chambre.')));
 }
 
 let carriereVue = null;
@@ -914,29 +1063,24 @@ function profil() {
   const r = rang(vue); const g = rangGeneral(); const vals = Object.values(M(vue).arrets);
   const stats = [['Séances', etat.stats.seances], ['Record de série', etat.serie.record], ['Sans faute', etat.stats.parfaites], ['Grands arrêts', vals.filter((a) => a.b >= 5).length], ['Meilleur enchaînement', etat.stats.comboMax], [vue === 'oblig' ? 'Fiches vues' : 'Arrêts vus', vals.length], ...(etat.dunk.cinq ? [['Record Dunk shot', etat.dunk.record]] : [])];
   const blocRappel = h('div', { class: 'rappel' });
-  async function rendreRappel(code) {
-    const e = await etatRappel();
-    if (!estInstallee()) {
-      blocRappel.replaceChildren(h('p', {}, 'Le rappel de 9 h fonctionne une fois l’appli ajoutée à l’écran d’accueil.'), guideInstallation());
-      return;
-    }
-    if (e === 'refuse') { blocRappel.replaceChildren(h('p', {}, 'Les notifications sont bloquées. Autorise-les dans Réglages, Notifications, Arrêts.')); return; }
-    if (cloudActif()) {
-      const liste = [];
-      if (e === 'actif') liste.push(h('p', {}, 'Rappel activé sur ce téléphone, chaque jour vers 9 h.'), h('button', { class: 'bouton-lien', onClick: async () => { await testerNotification(); toast('Notification envoyée.'); } }, 'Tester sur ce téléphone'));
-      else liste.push(h('button', { class: 'bouton-or', onClick: async () => { try { await inscrireAbonnement(JSON.parse(await activerRappel())); toast('Rappel activé.'); rendreRappel(); } catch (err) { toast(err.message); } } }, 'Activer le rappel de 9 h'));
-      blocRappel.replaceChildren(...liste);
-      return;
-    }
-    const liste = [];
-    if (code) {
-      liste.push(h('p', {}, 'Copie ce code et colle-le dans le secret PUSH_SUBSCRIPTION du dépôt.'),
-        h('textarea', { class: 'code', readonly: true, rows: 4, 'aria-label': 'Code de notification' }, code),
-        h('button', { class: 'bouton-or', onClick: async () => { await navigator.clipboard.writeText(code); toast('Code copié.'); } }, 'Copier le code'));
-    }
-    liste.push(h('button', { class: 'bouton-or', onClick: async () => { try { rendreRappel(await activerRappel()); } catch (err) { toast(err.message); } } }, e === 'actif' ? 'Afficher le code du rappel' : 'Activer le rappel de 9 h'));
-    if (e === 'actif') liste.push(h('button', { class: 'bouton-lien', onClick: async () => { await testerNotification(); toast('Notification envoyée.'); } }, 'Tester sur ce téléphone'));
-    blocRappel.replaceChildren(...liste);
+  // Le rappel de Lexou : activé ici, à l'heure choisie, envoyé par le serveur.
+  async function rendreRappel() {
+    if (!connecte()) { blocRappel.replaceChildren(h('p', {}, 'Connecte-toi pour recevoir le rappel de Lexou.')); return; }
+    if (!estInstallee()) { blocRappel.replaceChildren(h('p', {}, 'Le rappel fonctionne une fois l’appli ajoutée à l’écran d’accueil.'), guideInstallation()); return; }
+    if (await etatRappel() === 'refuse') { blocRappel.replaceChildren(h('p', {}, 'Les notifications sont bloquées. Autorise-les dans Réglages, Notifications, Gdroit.')); return; }
+    let prof; try { prof = await monProfil(); } catch { blocRappel.replaceChildren(h('p', {}, 'Il faut du réseau pour régler le rappel.')); return; }
+    const r = { actif: false, heure: 9, ...(prof?.rappel || {}) };
+    const heure = h('select', { class: 'code', 'aria-label': 'Heure du rappel', onChange: async (e) => { r.heure = +e.target.value; try { await reglerProfil({ rappel: r }); toast(`Rappel à ${r.heure} h.`); } catch { toast('Pas de connexion.'); } } },
+      Array.from({ length: 16 }, (_, k) => k + 7).map((hh) => h('option', { value: hh, selected: hh === r.heure }, `${hh} h`)));
+    const inter = h('label', { class: 'reglage' }, h('span', {}, 'Rappel de Lexou'), h('input', { type: 'checkbox', role: 'switch', checked: r.actif, onChange: async (e) => {
+      const c = e.target;
+      try {
+        if (c.checked) { await activerRappel(); const ab = await abonnementActuel(); if (!ab) throw new Error('Notifications refusées.'); await inscrireAppareil(ab); }
+        r.actif = c.checked; await reglerProfil({ rappel: r }); toast(c.checked ? `Lexou t’écrira vers ${r.heure} h.` : 'Rappel coupé.');
+      } catch (err) { c.checked = !c.checked; toast(err.message || 'Pas de connexion.'); }
+    } }));
+    blocRappel.replaceChildren(inter, h('div', { class: 'rappel-heure' }, h('span', {}, 'Vers'), heure),
+      h('p', { class: 'aide-claire' }, 'Un message par jour, jamais quand ton sceau est déjà posé. Après dix jours d’absence, Lexou se calme : une fois par semaine, puis plus rien.'));
   }
   const champSauvegarde = h('textarea', { class: 'code', rows: 3, placeholder: 'Colle ici un code de sauvegarde', 'aria-label': 'Code de sauvegarde' });
   const pct = Math.round(r.part * 100);
@@ -948,6 +1092,7 @@ function profil() {
     h('div', { class: 'bascule' }, MATIERES.map((m) => h('button', { class: vue === m.id ? 'actif' : '', onClick: () => { son('tap'); carriereVue = m.id; profil(); } }, m.institution))),
     h('ol', { class: 'carriere' }, matiereDe(vue).rangs.map((x, i) => h('li', { class: `${i <= r.i ? 'atteint' : ''} ${i === r.i ? 'actuel' : ''}`, style: `--i:${i}` }, x.nom))),
     h('button', { class: 'bouton-fantome', onClick: () => aller('progression') }, 'Comprendre ma progression'),
+    h('button', { class: 'bouton-lien', onClick: () => priseEnMain(true) }, 'Revoir la prise en main'),
     h('div', { class: 'general' },
       h('p', {}, 'Carrière générale'), h('strong', {}, g.nom),
       h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${g.part.toFixed(3)})` })),
@@ -1311,6 +1456,7 @@ function logoG() {
 }
 
 // Au démarrage, un compte connecté récupère sa progression avant d'ouvrir le Palais.
+definirNommeur((id) => { const a = ix?.parId?.get(id); return a ? (a.article ? a.nom : a.court || a.nom) : null; });
 async function ouvrirCompte(params) {
   const requis = Boolean(SUPABASE_URL) && !(params.has('test') && !params.has('compte'));
   if (!requis) return true;
@@ -1342,6 +1488,72 @@ function ecranPlacesPrises() {
     h('p', { class: 'aide-claire' }, `Connecté : ${etat.compte?.email || 'ton compte'}.`),
     h('button', { class: 'bouton-fantome', onClick: () => location.reload() }, 'Réessayer'),
     h('button', { class: 'bouton-lien', onClick: async () => { await deconnexion(); remplacerEtat({}); location.reload(); } }, 'Se déconnecter')));
+}
+
+// Après deux jours sans séance, Lexou boude un instant, puis saute de joie.
+function retourDeLexou() {
+  const dernier = etat.serie?.dernier; if (!dernier || document.querySelector('.voile')) return;
+  const absent = jour() - dernier; if (absent < 2) return;
+  const figure = h('div', { class: 'retour-lexou-figure' }, chouette('pause', { taille: 150, tenue: false }));
+  const texte = h('p', {}, absent >= 7 ? `${pluriel(absent, 'jour')} sans toi. Lexou avait commencé une lettre très triste.` : `${pluriel(absent, 'jour')} sans toi. Lexou faisait semblant que ça allait.`);
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite retour-lexou', role: 'dialog', 'aria-label': 'Lexou' }, figure, texte,
+    h('div', { class: 'boite-actions' }, h('button', { class: 'bouton-or', onClick: () => voile.remove() }, 'Je suis là'))));
+  document.body.append(voile);
+  setTimeout(() => { figure.replaceChildren(chouette('clin', { taille: 150, tenue: false })); figure.classList.add('saute'); texte.textContent = 'Il te pardonne. Allez, une séance ?'; son('parfait'); }, 1600);
+}
+
+// PRISE EN MAIN : quatre écrans courts au premier lancement, puis une bulle à la découverte de chaque exercice.
+// En mode test, les guides restent muets, sauf demande expresse (?guide).
+const guidesMuets = () => { const p = new URLSearchParams(location.search); return p.has('test') && !p.has('guide'); };
+const PRISE_EN_MAIN = [
+  ['clin', 'Bienvenue sur Gdroit', 'Gdroit complète ton cours, sans pression. Un peu chaque jour suffit : cinq minutes, une séance, et c’est gagné.'],
+  ['tribune', 'Le Palais', 'Le Défi du jour pose ton sceau et fait grandir ta série. Vers l’examen et Le rôle sont là quand tu veux plus.'],
+  ['echelle', 'Les chambres', 'Une chambre par partie du cours. L’audience d’une chambre ouvre la suivante.'],
+  ['lunettes', 'Les fiches', 'Chaque arrêt monte de palier quand tu le réussis sur plusieurs jours. Les termes soulignés en pointillé s’expliquent d’un toucher.'],
+];
+function priseEnMain(depuisProfil = false) {
+  if (!depuisProfil && guidesMuets()) return accueilTesteur();
+  let i = 0;
+  const contenu = h('div', { class: 'boite prise-en-main', role: 'dialog', 'aria-label': 'Prise en main' });
+  const voile = h('div', { class: 'voile' }, contenu);
+  const fermer = () => { voile.remove(); etat.reglages.priseEnMain = true; sauver(); if (!depuisProfil) setTimeout(accueilTesteur, 300); };
+  const rendre = () => {
+    const [pose, titre, texte] = PRISE_EN_MAIN[i];
+    const dernier = i === PRISE_EN_MAIN.length - 1;
+    contenu.replaceChildren(chouette(pose, { taille: 130, tenue: false }), h('h2', {}, titre), h('p', {}, texte),
+      h('div', { class: 'pips-prise', 'aria-label': `Écran ${i + 1} sur ${PRISE_EN_MAIN.length}` }, PRISE_EN_MAIN.map((_, k) => h('i', { class: k === i ? 'actif' : '' }))),
+      h('div', { class: 'boite-actions' },
+        dernier ? h('button', { class: 'bouton-or', onClick: () => { fermer(); if (!depuisProfil && document.querySelector('.tribune')) lancerDefi(); } }, depuisProfil ? 'Terminer' : 'Faire mon premier défi')
+          : h('button', { class: 'bouton-or', onClick: () => { i++; son('tap'); rendre(); } }, 'Suivant'),
+        h('button', { class: 'bouton-lien', onClick: fermer }, dernier ? 'Plus tard' : 'Passer')));
+  };
+  rendre(); document.body.append(voile);
+}
+const BULLES = {
+  paires: 'Touche un élément, puis celui qui va avec. Contre la montre.',
+  puzzle: 'Remets chaque bloc de la fiche à sa place, puis trouve le problème de droit.',
+  juge: 'Lis l’affaire, tranche, puis choisis ta motivation.',
+  plan: 'Choisis le meilleur plan, puis dis ce qui cloche dans les autres.',
+  architecte: 'Construis le plan en plaçant les titres, puis range les arrêts dans les bonnes parties.',
+  cas: 'Suis la méthode étape par étape : qualification, règle, application, solution.',
+  qualif: 'Relie chaque situation à sa qualification.',
+  remede: 'Choisis la sanction, puis son fondement.',
+  frise: 'Les années sont posées : place chaque décision à sa date. Touche deux décisions pour les échanger.',
+  flash: 'Écris l’apport de mémoire, puis compare au corrigé et note-toi honnêtement.',
+  plaide: 'Réponds sans choix proposés, puis compare au corrigé.',
+  trous: 'Touche les mots dans l’ordre des trous.',
+  express: 'Trouve la phrase qui porte une partie, puis le bon plan.',
+  syllogisme: 'Pose la règle, les faits, puis la conclusion. Attention : chaque case a son leurre.',
+  casnu: 'Le cas sans les étapes nommées : à toi de savoir où tu en es. Le corrigé vient à la fin.',
+  appel: 'Tes erreurs reviennent sous une autre forme. Gagne l’appel pour les sortir du carnet.',
+};
+function bulleExercice(type) {
+  const vus = etat.reglages.bullesVues || (etat.reglages.bullesVues = {});
+  if (guidesMuets() || !BULLES[type] || vus[type] || !document.querySelector('.scene')) return;
+  vus[type] = true; sauver();
+  const b = h('div', { class: 'bulle-exercice', role: 'status' }, chouette('clin', { taille: 56, tenue: false }), h('p', {}, BULLES[type]), h('button', { class: 'bouton-lien', onClick: () => b.remove() }, 'Compris'));
+  document.body.append(b);
+  setTimeout(() => b.remove(), 9000);
 }
 
 // Le mot d'accueil des testeurs, une seule fois.
@@ -1441,7 +1653,8 @@ async function demarrer() {
   if (connecte()) {
     envoyerSignalements();
     compterNouvelles();
-    setTimeout(accueilTesteur, 900);
+    setTimeout(() => (etat.reglages.priseEnMain ? accueilTesteur() : priseEnMain()), 900);
+    setTimeout(retourDeLexou, 700);
     navigator.serviceWorker?.addEventListener('message', (e) => { if (e.data === 'amis') aller('amis'); });
     let invite = null; try { invite = localStorage.getItem('gdroit-ami'); localStorage.removeItem('gdroit-ami'); } catch { /* rien */ }
     if (invite) proposerAmi(invite);
@@ -1467,9 +1680,8 @@ async function enregistrerServiceWorker() {
         n?.addEventListener('statechange', () => { if (n.state === 'installed' && navigator.serviceWorker.controller) bandeauMiseAJour(reg); });
       });
       let recharge = false;
-      if (cloudActif()) {
-        abonnementActuel().then((s) => s && inscrireAbonnement(s)).catch(() => {});
-      }
+      // Le téléphone garde son abonnement aux notifications à jour sur le compte.
+      if (connecte()) abonnementActuel().then((s) => s && inscrireAppareil(s)).catch(() => {});
       navigator.serviceWorker.addEventListener('controllerchange', () => { if (!recharge && document.querySelector('.maj')) { recharge = true; location.reload(); } });
     } catch (e) { console.warn('Service worker indisponible', e); }
   }

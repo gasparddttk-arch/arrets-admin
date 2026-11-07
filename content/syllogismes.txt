@@ -1,0 +1,83 @@
+# Syllogismes : majeure (la règle), mineure (les faits), conclusion. Chaque pièce a son leurre.
+# %id | matière | chambres | fiche liée
+# M: majeure || leurre     m: mineure || leurre     C: conclusion || leurre
+
+%s-gestion | oblig | 1,4 | a1301
+M: Celui qui, sans y être tenu, gère sciemment et utilement l'affaire d'autrui est soumis aux obligations d'un mandataire, et le maître doit l'indemniser (art. 1301 et 1301-2). || Celui qui rend service à autrui sans contrat ne peut jamais rien lui réclamer.
+m: En l'absence de son voisin, Paul fait réparer une fuite qui inondait l'appartement de celui-ci. || Paul fait réparer la fuite à la demande écrite de son voisin, qui lui a promis de le payer.
+C: Le voisin doit rembourser à Paul les dépenses utiles qu'il a engagées. || Paul n'a droit à rien, faute de contrat.
+
+%s-retractation | oblig | 7 | a1116
+M: L'offre ne peut être rétractée avant l'expiration du délai fixé par son auteur ; la rétractation empêche la conclusion du contrat mais engage la responsabilité extracontractuelle de son auteur (art. 1116). || L'offre peut toujours être retirée tant qu'elle n'est pas acceptée, sans aucune conséquence.
+m: Un vendeur offre sa voiture avec un délai de huit jours, puis se rétracte au bout de deux jours. || Un vendeur offre sa voiture avec un délai de huit jours et se rétracte au bout de dix jours.
+C: Le contrat n'est pas conclu, mais le vendeur engage sa responsabilité. || La vente est conclue malgré la rétractation.
+
+%s-caducite | oblig | 7 | a1117
+M: L'offre est caduque à l'expiration du délai fixé ou d'un délai raisonnable, ainsi qu'en cas d'incapacité ou de décès de son auteur (art. 1117). || L'offre survit au décès de son auteur et oblige ses héritiers.
+m: L'auteur d'une offre décède avant que le destinataire ne l'accepte. || Le destinataire accepte l'offre, puis son auteur décède.
+C: L'offre est caduque : l'acceptation ne forme pas le contrat. || Les héritiers sont tenus de conclure le contrat.
+
+%s-promesse | oblig | 7 | a1124
+M: La révocation de la promesse pendant le temps laissé au bénéficiaire pour opter n'empêche pas la formation du contrat promis (art. 1124 al. 2). || La rétractation du promettant avant la levée de l'option se résout seulement en dommages et intérêts.
+m: Le promettant révoque sa promesse de vente, puis le bénéficiaire lève l'option dans le délai prévu. || Le bénéficiaire lève l'option un mois après l'expiration du délai prévu.
+C: La vente est formée : le bénéficiaire peut en obtenir l'exécution forcée. || Le bénéficiaire n'a droit qu'à des dommages et intérêts.
+
+%s-silence | oblig | 8 | a1120
+M: Le silence ne vaut pas acceptation, sauf si la loi, les usages, les relations d'affaires ou des circonstances particulières en disposent autrement (art. 1120). || Qui ne dit mot consent : le silence vaut toujours acceptation.
+m: Une entreprise reçoit l'offre d'un inconnu et n'y répond pas. || Deux commerçants traitent depuis des années en considérant le silence comme un accord.
+C: Aucun contrat n'est formé. || Le contrat est formé par le silence de l'entreprise.
+
+%s-reticence | oblig | 12 | a1137
+M: Constitue un dol la dissimulation intentionnelle par un contractant d'une information dont il sait le caractère déterminant pour l'autre (art. 1137 al. 2). || Un simple oubli d'information, même sans intention, suffit à caractériser le dol.
+m: Le cédant d'un fonds cache volontairement d'importantes dettes à l'acheteur, en sachant qu'elles l'auraient fait renoncer. || Le cédant oublie de mentionner une dette minime, sans importance pour l'acheteur.
+C: L'acheteur peut obtenir la nullité du contrat et des dommages et intérêts. || Le contrat reste valable faute de manœuvres.
+
+%s-baldus | oblig | 10,12 | baldus
+M: Ne constitue pas un dol le fait pour une partie de ne pas révéler à son cocontractant son estimation de la valeur de la prestation (art. 1137 al. 3). || L'acheteur doit toujours révéler au vendeur la vraie valeur du bien.
+m: Un acheteur averti achète à bas prix des photographies dont il connaît la grande valeur, sans le dire au vendeur. || L'acheteur ment au vendeur sur l'identité de l'auteur des photographies pour faire baisser le prix.
+C: Il n'y a pas de dol : la vente n'est pas annulée pour ce silence. || La vente est nulle pour réticence dolosive.
+
+%s-clause | oblig | 6 | a1171
+M: Dans un contrat d'adhésion, toute clause non négociable qui crée un déséquilibre significatif entre les droits et obligations des parties est réputée non écrite (art. 1171). || Une clause acceptée par la signature du contrat s'applique toujours.
+m: Les conditions générales, imposées au client sans négociation, permettent au seul prestataire de résilier à tout moment et sans contrepartie. || Les deux parties ont négocié ensemble chaque clause du contrat.
+C: La clause est réputée non écrite ; le reste du contrat s'applique. || Le contrat entier est nul.
+
+%s-nicolo | admin | 5 | nicolo
+M: Les traités régulièrement ratifiés ont une autorité supérieure à celle des lois (art. 55 de la Constitution). || La loi postérieure l'emporte toujours sur le traité antérieur.
+m: Une loi de 1977 est invoquée devant le Conseil d'État alors qu'elle serait contraire au traité de Rome de 1957. || Une loi est contestée devant le Conseil d'État parce qu'elle serait contraire à la Constitution.
+C: Le juge administratif confronte la loi au traité, même si elle lui est postérieure. || Le juge applique la loi postérieure sans la confronter au traité.
+
+%s-lamotte | admin | 2,8 | lamotte
+M: Le recours pour excès de pouvoir est ouvert même sans texte contre tout acte administratif. || Un recours n'existe que si un texte le prévoit expressément.
+m: Une loi dispose que l'octroi d'une concession « ne peut faire l'objet d'aucun recours administratif ou judiciaire ». || Une loi exclut expressément le recours pour excès de pouvoir devant le Conseil d'État.
+C: Le recours pour excès de pouvoir reste ouvert contre l'acte de concession. || Aucun recours n'est possible contre la concession.
+
+%s-aramu | admin | 8 | aramu
+M: Les droits de la défense s'imposent à l'administration, même sans texte, avant une sanction. || L'administration n'entend l'intéressé que si un texte le prévoit.
+m: Un fonctionnaire est sanctionné sans avoir eu connaissance des griefs retenus contre lui. || Un fonctionnaire est sanctionné après avoir pu présenter sa défense.
+C: La sanction est annulée. || La sanction est légale faute de texte.
+
+%s-arrighi | admin | 2 | arrighi
+M: Le juge administratif refuse de contrôler la conformité d'une loi à la Constitution. || Le juge administratif écarte toute loi contraire à la Constitution.
+m: Un décret pris en application d'une loi est attaqué au motif que cette loi serait inconstitutionnelle. || Un décret est attaqué parce qu'il méconnaît directement la Constitution, sans loi entre eux.
+C: Le moyen est écarté : la loi fait écran. || Le décret est annulé pour inconstitutionnalité de la loi.
+
+%s-blanco | admin | 1,9 | blanco
+M: La responsabilité de l'État pour les dommages causés par ses services a des règles spéciales, distinctes du Code civil, et l'autorité administrative en connaît. || Le Code civil régit toute responsabilité, y compris celle de l'État.
+m: Des employés d'une manufacture de l'État blessent une enfant avec un wagonnet. || Un particulier blesse une enfant avec sa propre charrette.
+C: Le juge administratif est compétent pour juger la responsabilité de l'État. || Le tribunal civil est compétent, Code civil à l'appui.
+
+%s-eloka | admin | 1 | bac-eloka
+M: Un service public exploité dans les mêmes conditions qu'un industriel ordinaire relève du juge judiciaire. || Tout service public relève du juge administratif.
+m: La colonie exploite un bac comme le ferait une entreprise privée, et un accident survient. || L'administration use de prérogatives de puissance publique pour organiser le passage.
+C: Le litige relève du juge judiciaire. || Le litige relève du juge administratif.
+
+%s-rubin | admin | 6 | rubin-de-servens
+M: Une mesure prise sur le fondement de l'article 16 dans une matière réservée à la loi a valeur législative et échappe au juge administratif. || Toute décision du chef de l'État est un acte administratif contrôlable.
+m: Une décision prise sous l'article 16 crée un tribunal militaire, matière que l'article 34 réserve à la loi. || Une décision prise sous l'article 16 règle une matière du domaine réglementaire.
+C: Le Conseil d'État se déclare incompétent pour l'apprécier. || Le Conseil d'État annule la création du tribunal.
+
+%s-perreux | admin | 4 | perreux
+M: Tout justiciable peut se prévaloir, contre un acte non réglementaire, des dispositions précises et inconditionnelles d'une directive non transposée dans le délai. || Une directive ne peut jamais être invoquée contre un acte individuel.
+m: Une magistrate invoque contre une nomination une directive précise et inconditionnelle dont le délai de transposition a expiré. || Une magistrate invoque une directive dont le délai de transposition n'a pas encore expiré.
+C: La directive peut être invoquée contre la nomination. || Le moyen tiré de la directive est inopérant.

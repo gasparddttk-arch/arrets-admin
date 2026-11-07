@@ -100,6 +100,14 @@ function aEnvoyer() {
   const { enCours, compte, ...reste } = etat; void enCours; void compte;
   return { ...reste, oblig: { ...etat.oblig, enCours: null } };
 }
+// Le nom d'une fiche à revoir, pour le rappel de Lexou : l'appli fournit le nom lisible.
+let nommer = () => null;
+export function definirNommeur(f) { nommer = f; }
+function ficheARevoir() {
+  const j = jour();
+  const dues = Object.entries(M().arrets || {}).filter(([, a]) => a.b > 0 && a.d <= j).sort((x, y) => x[1].b - y[1].b);
+  return dues.length ? nommer(dues[0][0]) : null;
+}
 // Ce que voient les amis : jamais le détail des fiches.
 export function resume() {
   const j = jour(); const s = etat.serie;
@@ -108,7 +116,7 @@ export function resume() {
     jour: j, serie: s.dernier >= j - 1 ? s.n : 0, sceau: s.dernier === j, grade: rangGeneral().nom,
     xp: (etat.xp || 0) + (etat.oblig?.xp || 0), xpAdmin: etat.xp || 0, xpOblig: etat.oblig?.xp || 0,
     semaine: lundi(), xpSemaine: etat.semaine?.debut === lundi() ? etat.semaine.xp : 0,
-    maitrises, equipe: etat.equipe || null, seances: etat.stats?.seances || 0,
+    maitrises, equipe: etat.equipe || null, seances: etat.stats?.seances || 0, revoir: ficheARevoir(),
   };
 }
 const poids = (e) => (e?.xp || 0) + (e?.oblig?.xp || 0) + (e?.stats?.seances || 0);
@@ -190,7 +198,7 @@ export const adminReglage = () => rpc('admin_lire_reglage');
 export const adminChangerReglage = (statut) => rpc('admin_reglage_nouveaux', { statut });
 
 // AMIS --------------------------------------------------------------------------------
-export const monProfil = async () => (await api(`profils?id=eq.${session.user.id}&select=pseudo,code_ami,masquer,notifs`))?.[0];
+export const monProfil = async () => (await api(`profils?id=eq.${session.user.id}&select=pseudo,code_ami,masquer,notifs,rappel`))?.[0];
 export const reglerProfil = (champs) => api(`profils?id=eq.${session.user.id}`, { method: 'PATCH', corps: champs });
 export const mesAmis = () => rpc('mes_amis');
 export const mesBloques = () => rpc('mes_bloques');

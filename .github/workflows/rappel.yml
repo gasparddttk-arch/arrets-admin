@@ -1,10 +1,7 @@
 name: Rappel quotidien
 
 on:
-  schedule:
-    # 8 h 41 à Paris, en été puis en hiver. GitHub prend souvent quelques minutes de retard.
-    - cron: '41 6 * * *'
-    - cron: '41 7 * * *'
+  # Le rappel part désormais de Supabase (fonction rappel, chaque heure, réglé par chacun dans son profil).
   workflow_dispatch:
   push:
     branches: [main]

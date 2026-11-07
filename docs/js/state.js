@@ -124,7 +124,7 @@ export function jour(d = new Date()) {
 // ce qui laisse intactes les progressions et les sauvegardes déjà faites.
 const zonesVierges = () => ({ ouvertes: [1, 2], gagnees: [], parfaites: [] });
 const matiereVierge = () => ({
-  xp: 0, arrets: {}, enCours: null, gains: { jour: null, n: 0 },
+  xp: 0, arrets: {}, erreurs: {}, enCours: null, gains: { jour: null, n: 0 },
   zones: zonesVierges(), parEquipe: {},
 });
 
@@ -337,6 +337,7 @@ export function crediter(n, m = etat.matiere) {
 export function noter(id, ok, confonduAvec = null, aide = false) {
   const fiches = M().arrets; const j = jour();
   const a = fiches[id] || (fiches[id] = { b: 0, d: j, ok: 0, ko: 0, c: {} });
+  noterErreur(id, ok, aide);
   if (!ok) {
     a.ko++;
     if (a.rate !== j) { a.b = Math.max(a.b === 0 ? 0 : 1, a.b - 2); a.rate = j; }
@@ -353,6 +354,24 @@ export function noter(id, ok, confonduAvec = null, aide = false) {
   return true;
 }
 export const niveau = (id) => M().arrets[id]?.b || 0;
+
+// LE CARNET D'ERREURS : une erreur reste ouverte jusqu'à deux réussites sur deux jours, ou un appel gagné.
+// Une erreur corrigée reste visible, barrée, sept jours.
+function carnet() { const m = M(); if (!m.erreurs) m.erreurs = {}; return m.erreurs; }
+function noterErreur(id, ok, aide) {
+  const c = carnet(); const j = jour();
+  if (!ok) { const e = c[id] || (c[id] = { n: 0, premier: j }); e.n++; e.dernier = j; e.corrige = null; e.oks = []; return; }
+  const e = c[id];
+  if (!e || e.corrige || aide) return;
+  if (!e.oks.includes(j) && j !== e.dernier) e.oks.push(j);
+  if (e.oks.length >= 2) e.corrige = j;
+}
+export function gagnerAppel(id) { const e = carnet()[id]; if (e && !e.corrige) e.corrige = jour(); }
+export function erreursOuvertes(m = etat.matiere) { return Object.entries(M(m).erreurs || {}).filter(([, e]) => !e.corrige).map(([id, e]) => ({ id, ...e })); }
+export function carnetVisible(m = etat.matiere) {
+  const j = jour();
+  return Object.entries(M(m).erreurs || {}).filter(([, e]) => !e.corrige || j - e.corrige < 7).map(([id, e]) => ({ id, ...e }));
+}
 
 // Arrêts à revoir aujourd'hui, les plus fragiles d'abord, puis les arrêts jamais vus.
 export function aRevoir(ix, zones) {

@@ -26,20 +26,20 @@ async function toucher(e) { try { await e.click({ timeout: 900 }); return true; 
 
 // Joue jusqu'à l'écran de résultats, en touchant ce qui est disponible.
 // Le sceau du jour demande une séance réussie : le robot joue juste, sauf demande contraire.
-async function jouer(p, { capture = false, auHasard = false } = {}) {
+async function jouer(p, { capture = false, auHasard = false, max = 1500 } = {}) {
   if (!auHasard && !capture) return jouerParfait(p);
   const vus = new Set();
-  for (let n = 0; n < 1500; n++) {
+  for (let n = 0; n < max; n++) {
     await textePropre(p);
     if (await p.$('.resultats')) return;
     if (capture) {
-      const nom = await p.evaluate(() => (['.paires', '.puzzle', '.qcm', '.bonplan', '.architecte', '.fin-epreuve'].find((s) => document.querySelector(s)) || '').slice(1));
+      const nom = await p.evaluate(() => (['.paires', '.puzzle', '.libre', '.trous', '.qcm', '.bonplan', '.architecte', '.fin-epreuve'].find((s) => document.querySelector(s)) || '').slice(1));
       if (nom && !vus.has(nom)) { vus.add(nom); await p.screenshot({ path: `${CAP}${capture}-${nom}.png` }); }
     }
     // Dans la séance seulement : le pied des résultats ramènerait au Palais avant que le test ne les voie.
     const pied = await p.$('.scene .pied button');
     if (pied) { await toucher(pied); await p.waitForTimeout(15); continue; }
-    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)', 'button.decision'];
+    const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)', 'button.decision', '.etiquette-mot:not([disabled])', '.piece-syllo'];
     let fait = false;
     for (const s of sel) {
       const e = await p.$(s);
@@ -73,8 +73,12 @@ async function jouerParfait(p) {
         return cible ? clic(cible) : false;
       }
       const opt = document.querySelector('.option[data-ok="true"]:not([disabled])'); if (opt) return clic(opt);
+      const trou = document.querySelector('.trou.cible');
+      if (trou) return clic(document.querySelector(`.etiquette-mot[data-mot="${trou.dataset.m}"]:not([disabled])`));
       const decision = document.querySelector('.decision');
       if (decision) { const c = document.querySelector(`.jalon-case[data-i="${decision.dataset.rang}"]`); return clic(c.classList.contains('cible') ? decision : c); }
+      const caseS = document.querySelector('.case-syllo.cible');
+      if (caseS) return clic(document.querySelector(`.piece-syllo[data-k="${caseS.dataset.k}"][data-ok="true"]`));
       const ecarter = document.querySelector('.dock-bas .bouton-fantome');
       const piece = document.querySelector('.carte-piece');
       if (piece) return piece.dataset.cle === 'piege' ? clic(ecarter) : clic(document.querySelector(`.vers[data-k="${piece.dataset.cle}"]`));
@@ -768,7 +772,7 @@ async function debordement(p, nom) {
   await u.screenshot({ path: CAP + 'palais-role.png' }); await debordement(u, 'le rôle');
   await u.locator('.bouton-matiere').click(); await u.waitForSelector('.tribune');
   await u.locator('.role-ligne[data-mode="vers-examen"]').click();
-  assert.equal(await u.locator('.role-ligne').count(), 3, 'trois niveaux');
+  assert.equal(await u.locator('.role-ligne').count(), 4, 'trois niveaux et le partiel blanc');
   await u.screenshot({ path: CAP + 'palais-examen.png' }); await debordement(u, 'vers l’examen');
   await u.locator('.role-ligne[data-mode="niveau-3"]').click();
   await u.waitForSelector('.quitter'); await u.waitForSelector('.palais-portes', { state: 'detached' });
@@ -776,6 +780,32 @@ async function debordement(p, nom) {
   await u.screenshot({ path: CAP + 'palais-entrees.png', fullPage: true });
   await pa.close();
   log('palais ok');
+
+  // Vers l'examen : Appel et Cassation, avec les épreuves à réponse libre, dans les deux matières.
+  const ex = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const xe = await ex.newPage(); xe.on('pageerror', (x) => erreurs.push(x.message));
+  for (const mat of ['admin', 'oblig']) {
+    await xe.goto(URLB + `?test&matiere=${mat}`); await xe.waitForSelector('.tribune');
+    await xe.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; });
+    for (const niv of [2, 3]) {
+      await xe.evaluate(() => window.__app.aller('examen')); await xe.locator(`.role-ligne[data-mode="niveau-${niv}"]`).click();
+      await xe.waitForSelector('.quitter'); await xe.waitForSelector('.palais-portes', { state: 'detached' });
+      await jouer(xe, { capture: `examen-${mat}-${niv}` });
+      await xe.waitForSelector('.resultats'); await xe.tap('text=Retour au Palais'); await xe.waitForSelector('.tribune');
+    }
+    // Partiel blanc : joué jusqu'au bout en droit admin, coupé par le temps en obligations.
+    await xe.evaluate(() => window.__app.aller('examen')); await xe.locator('.role-ligne[data-mode="niveau-4"]').click();
+    await xe.waitForSelector('.quitter'); await xe.waitForSelector('.palais-portes', { state: 'detached' });
+    await xe.waitForFunction(() => /\d+:\d\d/.test(document.querySelector('.chrono-partiel')?.textContent || ''));
+    if (mat === 'admin') await jouer(xe);
+    else { await jouer(xe, { auHasard: true, max: 6 }).catch(() => {}); await xe.evaluate(() => { const d = Date.now; Date.now = () => d() + 21 * 60000; }); }
+    await xe.waitForSelector('.res-bilan', { timeout: 5000 });
+    if (mat === 'oblig') assert.match(await xe.locator('.res-bilan').innerText(), /Temps écoulé/, 'partiel coupé par le temps');
+    await xe.screenshot({ path: CAP + `partiel-${mat}.png`, fullPage: true });
+    await xe.tap('text=Retour au Palais'); await xe.waitForSelector('.tribune');
+  }
+  await ex.close();
+  log('examen ok');
 
   // La mesure juste : progression, tirage, aides, série, signalement, boutique.
   const mj = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
@@ -923,6 +953,40 @@ async function debordement(p, nom) {
   assert.equal(await f.locator('.progression h2').count(), 4, 'trois échelles et Vers l’examen');
   await f.screenshot({ path: CAP + 'progression.png', fullPage: true }); await debordement(f, 'progression');
   await f.evaluate(() => window.__app.aller('examen')); await f.waitForSelector('text=Première instance');
+  // Carnet d'erreurs et Faire appel : des erreurs exprès, puis l'appel.
+  await f.goto(URLB + '?test'); await f.waitForSelector('.tribune');
+  await f.evaluate(() => window.__app.ouvrirMatiere('admin')); await f.waitForSelector('.tribune');
+  await f.evaluate(() => window.__app.aller('role')); await f.locator('.role-ligne[data-mode="paires"]').click();
+  await jouer(f, { auHasard: true });
+  let carnetN = await f.evaluate(() => Object.values(window.__app.etat().erreurs || {}).filter((e) => !e.corrige).length);
+  for (let k = 0; k < 4 && !carnetN; k++) {
+    await f.tap('text=Retour au Palais'); await f.evaluate(() => window.__app.aller('role')); await f.locator('.role-ligne[data-mode="puzzle"]').click(); await jouer(f, { auHasard: true });
+    carnetN = await f.evaluate(() => Object.values(window.__app.etat().erreurs || {}).filter((e) => !e.corrige).length);
+  }
+  assert(carnetN > 0, 'erreurs au carnet');
+  const jetonsAvant = await f.evaluate(() => window.__app.etat().jetons);
+  await f.locator('[data-appel]').click(); await f.waitForSelector('.qcm.appel');
+  await f.screenshot({ path: CAP + 'appel.png' });
+  await jouer(f);
+  assert.equal(await f.evaluate(() => window.__app.etat().jetons), jetonsAvant, 'appel sans jetons');
+  const restantes = await f.evaluate(() => Object.values(window.__app.etat().erreurs).filter((e) => !e.corrige).length);
+  assert(restantes < carnetN, `appel gagné qui sort du carnet : ${carnetN} puis ${restantes}`);
+  await f.tap('text=Retour au Palais');
+  await f.evaluate(() => window.__app.aller('arrets')); await f.locator('[data-carnet]').click(); await f.waitForSelector('.carnet');
+  assert(await f.locator('.carnet-ligne.corrige').count() > 0, 'erreur corrigée barrée');
+  await f.screenshot({ path: CAP + 'carnet.png', fullPage: true }); await debordement(f, 'carnet');
+  // Lexique et termes soulignés, prise en main revue depuis le profil.
+  await f.evaluate(() => window.__app.aller('arrets')); await f.locator('[data-lexique]').click(); await f.waitForSelector('.lexique dt');
+  assert(await f.locator('.lexique').first().locator('dt').count() >= 30, 'lexique administratif');
+  await f.screenshot({ path: CAP + 'lexique.png' }); await debordement(f, 'lexique');
+  await f.evaluate(() => { const q = document.createElement('h2'); q.className = 'question'; q.textContent = 'Le juge écarte-t-il la loi-écran face à un acte de gouvernement ?'; document.getElementById('app').append(q); });
+  await f.waitForSelector('.question .terme'); await f.locator('.question .terme').first().click(); await f.waitForSelector('.bulle-terme');
+  assert.match(await f.locator('.bulle-terme').innerText(), /:/, 'définition affichée');
+  await f.screenshot({ path: CAP + 'terme.png' });
+  await f.evaluate(() => window.__app.aller('profil')); await f.locator('text=Revoir la prise en main').click(); await f.waitForSelector('.prise-en-main');
+  await f.screenshot({ path: CAP + 'prise-en-main.png' });
+  for (let k = 0; k < 3; k++) await f.locator('.prise-en-main .bouton-or').click();
+  await f.locator('.prise-en-main .bouton-or').click(); await f.waitForSelector('.prise-en-main', { state: 'detached' });
   // La même frise en droit administratif.
   await f.goto(URLB + '?test'); await f.waitForSelector('.tribune');
   await f.evaluate(() => window.__app.ouvrirMatiere('admin')); await f.waitForSelector('.tribune');
