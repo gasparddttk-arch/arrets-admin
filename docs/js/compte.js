@@ -116,7 +116,7 @@ export function resume() {
     jour: j, serie: s.dernier >= j - 1 ? s.n : 0, sceau: s.dernier === j, grade: rangGeneral().nom,
     xp: (etat.xp || 0) + (etat.oblig?.xp || 0), xpAdmin: etat.xp || 0, xpOblig: etat.oblig?.xp || 0,
     semaine: lundi(), xpSemaine: etat.semaine?.debut === lundi() ? etat.semaine.xp : 0,
-    maitrises, equipe: etat.equipe || null, seances: etat.stats?.seances || 0, revoir: ficheARevoir(),
+    maitrises, annee: etat.annee || null, equipe: etat.annee === 'L1' ? etat.equipeL1 : etat.equipe || null, seances: etat.stats?.seances || 0, revoir: ficheARevoir(),
   };
 }
 const poids = (e) => (e?.xp || 0) + (e?.oblig?.xp || 0) + (e?.stats?.seances || 0);

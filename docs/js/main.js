@@ -3,9 +3,9 @@ import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
-import { remplacerEtat, ajouterSemaine, gagnerAppel, erreursOuvertes, carnetVisible, changerEquipe,
+import { remplacerEtat, choisirAnnee, ajouterSemaine, gagnerAppel, erreursOuvertes, carnetVisible, changerEquipe,
   SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, lundi, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
-  zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, exporter, importer, fixerDecalage, rembourse,
+  zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
 } from './state.js';
 import { indexer, questionsDunk, composerDefi, composerBoss, tirerRound, jumeaux, melange } from './engine.js';
@@ -121,8 +121,42 @@ function rejoindreEquipe(n) {
   changerEquipe(n); indexerObligations(); filtre = { texte: '', zone: 0, type: 'arrets' };
   if (etat.matiere === 'oblig') ix = CONTENUS.oblig;
 }
-function apresRestauration() {
-  appliquerTheme(); indexerObligations(); ix = CONTENUS[etat.matiere];
+
+// L'année se choisit une fois, à l'arrivée. La L3 n'a pas encore de cours.
+const EQUIPES_L1 = [{ n: 1, pret: false }, { n: 2, pret: false }, { n: 3, pret: true, detail: 'Introduction au droit civil' }];
+function ecranAnnee() {
+  afficherOnglets(false);
+  const carte = (a, txt, pret, action) => h('button', { class: `porte porte-annee${pret ? '' : ' en-travaux'}`, 'data-annee': a, disabled: !pret, 'aria-disabled': pret ? null : 'true', onClick: () => { if (!pret) return; son('carte'); vibrer(8); action(); } },
+    h('span', { class: 'porte-icone porte-annee-n' }, a),
+    h('span', { class: 'porte-txt' }, h('b', {}, a === 'L1' ? 'Première année' : a === 'L2' ? 'Deuxième année' : 'Troisième année'), h('small', {}, txt)));
+  montrer(h('section', { class: 'choix' },
+    h('div', { class: 'choix-tete' }, h('h1', {}, 'Tu es en…'), chouette('debout', { taille: 128, vivante: true, classe: 'chouette-guide' })),
+    h('p', { class: 'page-sous' }, 'Gdroit te montre les cours et les exercices de ton année. Tu pourras changer dans Profil.'),
+    h('div', { class: 'portes' },
+      carte('L1', 'Introduction au droit', true, ecranEquipeL1),
+      carte('L2', 'Droit administratif et droit des obligations', true, () => { choisirAnnee('L2'); if (etat.equipeChoisie) matieres(); else choisirEquipe(); }),
+      carte('L3', 'Bientôt', false, null))));
+}
+
+function ecranEquipeL1() {
+  afficherOnglets(false);
+  const choix = (e) => h('button', { class: `porte porte-equipe${e.pret ? '' : ' en-travaux'}`, 'data-equipe-l1': e.n, disabled: !e.pret, onClick: () => { if (!e.pret) return; son('carte'); vibrer(8); choisirAnnee('L1', e.n); accueilL1(); } },
+    h('span', { class: 'porte-icone' }, icone('balance', 34)),
+    h('span', { class: 'porte-txt' }, h('b', {}, `Équipe ${e.n}`), h('small', {}, e.pret ? e.detail : 'En travaux')));
+  montrer(h('section', { class: 'choix' },
+    h('div', { class: 'choix-tete' }, h('h1', {}, 'Quelle est ton équipe ?'), chouette('debout', { taille: 128, vivante: true, classe: 'chouette-guide' })),
+    h('p', { class: 'page-sous' }, 'Pour l’instant, seul le cours de l’équipe 3 est dans l’appli. Les autres arrivent.'),
+    h('div', { class: 'portes' }, EQUIPES_L1.map(choix)),
+    h('button', { class: 'bouton-lien', onClick: ecranAnnee }, 'Changer d’année')));
+}
+
+// En attendant le contenu L1 : un écran d'attente, avec un retour vers la L2.
+function accueilL1() {
+  afficherOnglets(false);
+  montrer(h('section', { class: 'choix l1-bientot' },
+    h('div', { class: 'choix-tete' }, h('h1', {}, 'L’introduction au droit arrive'), chouette('notes', { taille: 150, vivante: true, classe: 'chouette-guide' })),
+    h('p', { class: 'page-sous' }, `Lexou prépare le cours de l’équipe ${etat.equipeL1} : définitions, auteurs, histoire du droit et Code civil. Reviens très bientôt.`),
+    h('button', { class: 'bouton-lien', onClick: ecranAnnee }, 'Changer d’année')));
 }
 
 function choisirEquipe() {
@@ -1082,7 +1116,6 @@ function profil() {
     blocRappel.replaceChildren(inter, h('div', { class: 'rappel-heure' }, h('span', {}, 'Vers'), heure),
       h('p', { class: 'aide-claire' }, 'Un message par jour, jamais quand ton sceau est déjà posé. Après dix jours d’absence, Lexou se calme : une fois par semaine, puis plus rien.'));
   }
-  const champSauvegarde = h('textarea', { class: 'code', rows: 3, placeholder: 'Colle ici un code de sauvegarde', 'aria-label': 'Code de sauvegarde' });
   const pct = Math.round(r.part * 100);
   montrer(barreHaut(), h('section', { class: 'page page-profil' },
     h('div', { class: 'profil-tete' }, chouette('assise', { taille: 150, vivante: true })),
@@ -1102,6 +1135,8 @@ function profil() {
     h('ul', { class: 'trophees' }, TROPHEES.map((t) => { const g = !!etat.trophees[t.id]; return h('li', {}, h('button', { 'aria-label': `${t.nom}, ${g ? 'gagné' : 'à gagner'}`, onClick: () => montrerTrophee(t, g) }, medaille(metalDe(t.id), g))); })),
     h('h2', {}, 'Rappel quotidien'), blocRappel,
     h('h2', {}, 'Images personnelles'), blocImages(),
+    h('h2', {}, 'Ton année'),
+    h('div', { class: 'bascule', 'data-annees': '' }, ['L1', 'L2', 'L3'].map((a) => h('button', { class: etat.annee === a ? 'actif' : '', disabled: a === 'L3', 'aria-pressed': etat.annee === a ? 'true' : 'false', onClick: () => { if (etat.annee === a) return; son('tap'); if (a === 'L1') ecranEquipeL1(); else { choisirAnnee('L2'); profil(); } } }, a === 'L3' ? 'L3 bientôt' : a))),
     h('h2', {}, 'Équipe de droit des obligations'),
     h('div', { class: 'bascule' }, [1, 2].map((n) => h('button', { class: etat.equipe === n ? 'actif' : '', 'aria-pressed': etat.equipe === n ? 'true' : 'false', onClick: () => { if (etat.equipe === n) return; son('tap'); rejoindreEquipe(n); toast(`Équipe ${n} : tes chambres et tes exercices sont prêts.`); profil(); } }, `Équipe ${n}`))),
     h('p', { class: 'aide-claire' }, 'Le droit des obligations suit le cours de ton équipe. Tes pièces, ta série, tes tenues et les fiches communes te suivent.'),
@@ -1114,12 +1149,8 @@ function profil() {
       interrupteur('Ouvrir toutes les chambres', 'toutOuvert')),
     h('button', { class: 'bouton-fantome ecouter', onClick: () => son('grade') }, icone('son', 18), 'Écouter la signature sonore'),
     blocSignalements(),
-    h('h2', {}, 'Sauvegarde'),
-    connecte() ? blocCompte() : null,
-    h('p', { class: 'aide-claire' }, connecte() ? 'Copie manuelle, en plus de celle de ton compte.' : 'Ta progression reste sur ce téléphone. Garde une copie de ce code avant de changer d’appareil ou de supprimer l’appli.'),
-    h('button', { class: 'bouton-or', onClick: async () => { const c = exporter(); try { await navigator.clipboard.writeText(c); toast('Sauvegarde copiée.'); } catch { champSauvegarde.value = c; toast('Copie le code affiché.'); } } }, 'Copier ma sauvegarde'),
-    champSauvegarde,
-    h('button', { class: 'bouton-lien', onClick: () => { try { importer(champSauvegarde.value); apresRestauration(); toast('Progression restaurée.'); aller('palais'); } catch { toast('Ce code de sauvegarde est illisible.'); } } }, 'Restaurer ce code'),
+    h('h2', {}, 'Compte'),
+    connecte() ? blocCompte() : h('p', { class: 'aide-claire' }, 'Connecte-toi pour retrouver ta progression sur un autre téléphone.'),
     h('p', { class: 'version' }, `Contenu du ${ix.version}`)));
   rendreRappel();
 }
@@ -1640,7 +1671,10 @@ async function demarrer() {
   for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click']) document.addEventListener(ev, reveillerAudio, { passive: true });
   const evenement = verifierSerie();
   // L'appli s'ouvre sur le choix de la matière. Les tests vont droit à la matière demandée.
-  if (params.has('test') && !params.has('choix')) aller('palais');
+  if (params.has('test') && !params.has('annee') && !etat.annee) etat.annee = 'L2';
+  if (params.has('test') && !params.has('choix') && !params.has('annee')) aller('palais');
+  else if (!etat.annee) ecranAnnee();
+  else if (etat.annee === 'L1') accueilL1();
   else if (!etat.equipeChoisie && (!params.has('test') || params.has('groupe'))) choisirEquipe();
   else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);

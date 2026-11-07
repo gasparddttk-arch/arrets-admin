@@ -131,6 +131,7 @@ const matiereVierge = () => ({
 function etatInitial() {
   return {
     v: 1, cree: jour(), xp: 0, jetons: 30,
+    annee: null, equipeL1: 3,
     matiere: 'admin', equipe: 2, equipeChoisie: false, gains: { jour: null, n: 0 },
     oblig: matiereVierge(),
     signalements: [],
@@ -148,7 +149,6 @@ function etatInitial() {
     stats: { seances: 0, parfaites: 0, comboMax: 0, juge: 0, plan: 0, archi: 0, cas: 0, frise: 0 },
     reglages: { son: true, toutOuvert: false, effets: true, vibration: true, sonSilencieux: false },
     defi: { jour: null, fini: false },
-    cloud: { code: null, dernier: null },
     compte: { id: null, email: null, pseudo: null, acces: null, sync: 0 },
     modifie: 0,
     semaine: { debut: 0, xp: 0 },
@@ -159,7 +159,7 @@ function etatInitial() {
 
 function fusion(base, x) {
   const o = { ...base, ...x };
-  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'cloud', 'compte', 'semaine', 'gains', 'dunk', 'chouette']) o[k] = { ...base[k], ...(x[k] || {}) };
+  for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'compte', 'semaine', 'gains', 'dunk', 'chouette']) o[k] = { ...base[k], ...(x[k] || {}) };
   const ob = x.oblig || {};
   o.oblig = { ...base.oblig, ...ob, gains: { ...base.oblig.gains, ...(ob.gains || {}) }, zones: { ...base.oblig.zones, ...(ob.zones || {}) } };
   if (!['admin', 'oblig'].includes(o.matiere)) o.matiere = 'admin';
@@ -168,6 +168,12 @@ function fusion(base, x) {
 
 // Chaque équipe a ses chambres : on range celles qu'on quitte et on retrouve celles qu'on rejoint.
 // Les fiches, les pièces, la série et les tenues restent communes.
+export function choisirAnnee(a, equipe) {
+  etat.annee = a;
+  if (a === 'L1' && equipe) etat.equipeL1 = equipe;
+  sauver();
+}
+
 export function changerEquipe(n) {
   const o = etat.oblig;
   if (n !== etat.equipe) {
@@ -189,6 +195,8 @@ export const remplacerEtat = (e) => { etat = fusion(etatInitial(), e); migrer();
 
 // Les anciennes tenues disparaissent : ce qu'elles ont coûté revient en jetons.
 export function migrer() {
+  // Les comptes d'avant le choix de l'année étaient tous en L2.
+  if (!etat.annee && (etat.equipeChoisie || etat.stats?.seances > 0)) etat.annee = 'L2';
   if ((etat.m || 0) >= 2) return 0;
   let rendu = 0;
   for (const t of etat.themes) rendu += ANCIENNES_TENUES[t] || 0;
@@ -223,6 +231,7 @@ export async function charger() {
   if (!brut) brut = await lireSecours();
   if (brut) { try { etat = fusion(etatInitial(), JSON.parse(brut)); } catch { etat = etatInitial(); } }
   if ((etat.m || 0) < 2) { rembourse = migrer(); if (brut) sauver(); }
+  if (!etat.annee && (etat.equipeChoisie || etat.stats.seances > 0)) { etat.annee = 'L2'; if (brut) sauver(); }
   try { await navigator.storage?.persist?.(); } catch { /* facultatif */ }
   return etat;
 }
@@ -249,13 +258,6 @@ export async function ecrireImage(cle, val) {
     t.oncomplete = ok; t.onerror = () => ko(t.error);
   });
   db.close();
-}
-
-export const exporter = () => btoa(unescape(encodeURIComponent(JSON.stringify(etat))));
-export function importer(code) {
-  const e = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
-  if (!e || e.v !== 1) throw new Error('Code illisible');
-  remplacerEtat(e);
 }
 
 // Série.

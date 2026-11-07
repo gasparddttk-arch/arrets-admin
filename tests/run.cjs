@@ -223,18 +223,10 @@ async function debordement(p, nom) {
   await p.screenshot({ path: CAP + 'profil.png', fullPage: true }); await debordement(p, 'profil');
   log('écrans ok');
 
-  // 5. Sauvegarde : export puis restauration.
-  const code = await p.evaluate(() => { const st = window.__app.etat(); return btoa(unescape(encodeURIComponent(JSON.stringify(st)))); });
-  const xp = (await etat(p)).xp;
-  await p.evaluate(() => { localStorage.clear(); indexedDB.deleteDatabase('arrets-admin'); });
-  await p.waitForTimeout(100);
-  await p.goto(URLB + '?test'); await p.waitForSelector('.tribune');
-  assert.equal((await etat(p)).xp, 0, 'état vidé');
+  // 5. Plus de sauvegarde par code : le compte s'en charge.
   await p.evaluate(() => window.__app.aller('profil'));
-  await p.fill('textarea.code[placeholder]', code);
-  await p.tap('text=Restaurer ce code');
-  await p.waitForSelector('.tribune');
-  assert.equal((await etat(p)).xp, xp, 'restauration');
+  assert.equal(await p.locator('text=Restaurer ce code').count(), 0, 'sauvegarde par code retirée');
+  const xp = (await etat(p)).xp;
   log('sauvegarde ok');
 
   // 6. Copie de secours : localStorage vidé, IndexedDB prend le relais.
@@ -780,6 +772,23 @@ async function debordement(p, nom) {
   await u.screenshot({ path: CAP + 'palais-entrees.png', fullPage: true });
   await pa.close();
   log('palais ok');
+
+  // Le choix de l'année à l'arrivée : L1 et son équipe, L3 fermée, retour vers la L2.
+  const an = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const yan = await an.newPage(); yan.on('pageerror', (x) => erreurs.push(x.message));
+  await yan.goto(URLB + '?test&annee'); await yan.waitForSelector('[data-annee="L1"]');
+  assert.ok(await yan.locator('[data-annee="L3"]').isDisabled(), 'L3 fermée');
+  await yan.screenshot({ path: CAP + 'annee.png' }); await debordement(yan, 'année');
+  await yan.locator('[data-annee="L1"]').click(); await yan.waitForSelector('[data-equipe-l1="3"]');
+  assert.ok(await yan.locator('[data-equipe-l1="1"]').isDisabled(), 'équipe 1 en travaux');
+  await yan.locator('[data-equipe-l1="3"]').click(); await yan.waitForSelector('.l1-bientot');
+  let ea = await etat(yan); assert.equal(ea.annee, 'L1'); assert.equal(ea.equipeL1, 3);
+  await yan.reload(); await yan.waitForSelector('.l1-bientot');
+  await yan.locator('text=Changer d’année').click(); await yan.locator('[data-annee="L2"]').click();
+  await yan.waitForSelector('[data-equipe]');
+  assert.equal((await etat(yan)).annee, 'L2', 'retour en L2');
+  await an.close();
+  log('année ok');
 
   // Vers l'examen : Appel et Cassation, avec les épreuves à réponse libre, dans les deux matières.
   const ex = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });

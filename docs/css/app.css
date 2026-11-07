@@ -1055,3 +1055,8 @@ h1, h2, .question { letter-spacing: -.01em; }
 .res-bilan li i { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--juste) var(--p), var(--carte-bord) var(--p)); }
 .res-bilan li.fragile i { background: linear-gradient(90deg, var(--faux) var(--p), var(--carte-bord) var(--p)); }
 .res-bilan .discret { font-size: 15px; color: var(--texte-2); }
+
+/* Choix de l'année */
+.porte.en-travaux { opacity: .5; }
+.porte-annee-n { font-family: var(--ui); font-weight: 800; font-size: 22px; }
+.bascule button[disabled] { opacity: .45; }
