@@ -9,17 +9,7 @@ rmSync(SORTIE, { recursive: true, force: true });
 mkdirSync(SORTIE, { recursive: true });
 cpSync('app', SORTIE, { recursive: true });
 
-// Polices embarquées, pour un rendu identique hors ligne.
-mkdirSync(join(SORTIE, 'fonts'), { recursive: true });
-const polices = {
-  'garamond-400.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-400-normal.woff2',
-  'garamond-500.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-500-normal.woff2',
-  'garamond-600.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-600-normal.woff2',
-  'garamond-700.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-700-normal.woff2',
-  'garamond-500i.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-500-italic.woff2',
-  'garamond-700i.woff2': '@fontsource/eb-garamond/files/eb-garamond-latin-700-italic.woff2',
-};
-for (const [nom, src] of Object.entries(polices)) cpSync(join('node_modules', src), join(SORTIE, 'fonts', nom));
+// Polices : celles du système (New York et SF Pro sur Apple), rien à embarquer.
 
 // Clé publique des notifications (la clé privée reste un secret du dépôt).
 const cle = existsSync('rappel/cle-publique.txt') ? readFileSync('rappel/cle-publique.txt', 'utf8').trim() : '';

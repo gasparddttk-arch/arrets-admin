@@ -33,7 +33,7 @@ export function sceau(n, { taille = 150, lauriers = true, eteint = false, legend
       <path d="${CIRE}" fill="#000" opacity=".28" transform="translate(0 2.500)"/>
       <path d="${CIRE}" fill="url(#${eteint ? 'gEteint' : 'gCire'})"/>
       <path d="${CIRE}" fill="none" stroke="#fff" stroke-opacity=".34" stroke-width="1.100" transform="translate(50 50) scale(.84) translate(-50 -50)"/>
-      <text x="50" y="${50 + fs * 0.34}" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-weight="700" font-size="${fs}" fill="#fff">${n}</text>
+      <text x="50" y="${50 + fs * 0.34}" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-weight="700" font-size="${fs}" fill="#fff">${n}</text>
     </g></svg>`);
 }
 
