@@ -917,6 +917,12 @@ async function debordement(p, nom) {
   await f.locator('.scene .pied button').click(); await f.waitForSelector('.frise-vraie');
   assert.match(await f.locator('.frise .question').innerText(), /Toute la frise est juste/, 'échanges qui remettent la frise en ordre');
   await f.screenshot({ path: CAP + 'frise-corrige.png' });
+  // Ta progression, ouverte depuis le grade en haut ; Vers l'examen nommé par degrés.
+  await f.locator('.haut-rang').first().click().catch(() => {});
+  await f.evaluate(() => window.__app.aller('progression')); await f.waitForSelector('.progression');
+  assert.equal(await f.locator('.progression h2').count(), 4, 'trois échelles et Vers l’examen');
+  await f.screenshot({ path: CAP + 'progression.png', fullPage: true }); await debordement(f, 'progression');
+  await f.evaluate(() => window.__app.aller('examen')); await f.waitForSelector('text=Première instance');
   // La même frise en droit administratif.
   await f.goto(URLB + '?test'); await f.waitForSelector('.tribune');
   await f.evaluate(() => window.__app.ouvrirMatiere('admin')); await f.waitForSelector('.tribune');

@@ -49,7 +49,7 @@ function appliquerTheme() {
 function barreHaut() {
   const r = rang();
   return h('header', { class: 'haut' },
-    h('button', { class: 'haut-rang', onClick: () => aller('profil'), 'aria-label': `${r.nom}, voir le profil` },
+    h('button', { class: 'haut-rang', onClick: () => aller('progression'), 'aria-label': `${r.nom}${r.suivant ? `, encore ${fmt(r.suivant.xp - r.xp)} points avant ${r.suivant.nom}` : ''}. Voir ta progression` },
       h('span', { class: 'haut-ligne' }, h('span', { class: 'haut-nom' }, etat.insigne !== 'aucun' ? icone(etat.insigne, 16) : null, r.nom), laurier(36)),
       h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${r.part.toFixed(3)})` }))),
     connecte() ? h('button', { class: 'haut-amis', onClick: () => aller('amis'), 'aria-label': nonLus ? `Amis, ${pluriel(nonLus, 'nouvelle')}` : 'Amis' }, icone('equipe', 26), nonLus ? h('span', { class: 'pastille' }, nonLus > 9 ? '9+' : String(nonLus)) : null) : null,
@@ -113,9 +113,7 @@ function matieres() {
   };
   montrer(
     h('header', { class: 'haut haut-general' },
-      h('span', { class: 'haut-rang' },
-        h('span', { class: 'haut-ligne' }, h('span', { class: 'haut-nom' }, g.nom), laurier(36)),
-        h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${g.part.toFixed(3)})` }))),
+      h('span', { class: 'haut-rang' }, h('span', { class: 'haut-ligne' }, h('span', { class: 'haut-nom' }, 'Gdroit'))),
       h('span', { class: 'haut-jetons' }, h('i', { class: 'jeton' }), fmt(etat.jetons))),
     h('section', { class: 'choix' },
       h('div', { class: 'choix-tete' }, h('h1', {}, 'Que révises-tu aujourd’hui ?'), guide),
@@ -136,9 +134,9 @@ function afficherOnglets(vis) {
 function aller(id, p) {
   ongletCourant = id === 'role' || id === 'examen' ? 'palais' : id;
   afficherOnglets(true);
-  if (id === 'admin') ongletCourant = 'profil';
+  if (id === 'admin' || id === 'progression') ongletCourant = 'profil';
   if (id === 'amis') ongletCourant = 'palais';
-  ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen, admin: ecranAdmin, amis: ecranAmis }[id])(p);
+  ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen, admin: ecranAdmin, amis: ecranAmis, progression: ecranProgression }[id])(p);
 }
 
 // PALAIS -----------------------------------------------------------------------
@@ -246,16 +244,16 @@ function ecranRole() {
 
 // Vers l'examen : un enchaînement facultatif, sans rappel ni compte à rebours.
 const NIVEAUX_EXAMEN = [
-  { nom: 'Niveau 1', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'paires'] },
-  { nom: 'Niveau 2', txt: 'Quatre épreuves sur les cas et les plans', oblig: ['cas', 'remede', 'cas', 'plan'], admin: ['puzzle', 'juge', 'plan', 'juge'] },
-  { nom: 'Niveau 3', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['cas', 'plan', 'cas', 'frise', 'cas', 'plan'], admin: ['juge', 'architecte', 'puzzle', 'plan', 'juge', 'architecte'] },
+  { nom: 'Première instance', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'paires'] },
+  { nom: 'Appel', txt: 'Quatre épreuves sur les cas et les plans', oblig: ['cas', 'remede', 'cas', 'plan'], admin: ['puzzle', 'juge', 'plan', 'juge'] },
+  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['cas', 'plan', 'cas', 'frise', 'cas', 'plan'], admin: ['juge', 'architecte', 'puzzle', 'plan', 'juge', 'architecte'] },
 ];
 function lancerExamen(i) {
   const n = NIVEAUX_EXAMEN[i];
   const zones = estOblig() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix);
   const dus = aRevoir(ix, zones); const deja = new Set();
   const types = estOblig() ? n.oblig : n.admin;
-  lancer({ type: 'examen', long: i === 2, titre: `Vers l’examen, ${n.nom.toLowerCase()}`, rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
+  lancer({ type: 'examen', long: i === 2, titre: `Vers l’examen : ${n.nom.toLowerCase()}`, rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
 }
 function ecranExamen() {
   montrer(barreHaut(), retourPalais(), h('section', { class: 'role' }, h('h1', {}, 'Vers l’examen'),
@@ -614,7 +612,8 @@ function reviserZone(z) {
 // Arrêts par date, articles par numéro.
 const ordreFiches = (a, b) => (a.article && b.article ? parseFloat(a.num.replace('-', '.')) - parseFloat(b.num.replace('-', '.')) : a.article ? 1 : b.article ? -1 : a.an - b.an);
 const ICONES_NIVEAU = [null, 'note', 'crayon', 'plume', 'balance', 'laurier'];
-const niveauTag = (b) => h('span', { class: 'niveau', 'aria-label': TITRES_CARTE[b] }, TITRES_CARTE[b]);
+// La maîtrise d'une fiche : cinq points et le nom du palier.
+const niveauTag = (b) => h('span', { class: 'niveau', 'aria-label': `Maîtrise : ${TITRES_CARTE[b]}, ${b} sur 5` }, h('span', { class: 'pips-maitrise', 'aria-hidden': 'true' }, [1, 2, 3, 4, 5].map((k) => h('i', { class: k <= b ? 'p' : '' }))), TITRES_CARTE[b]);
 const carteArret = (a) => {
   const b = niveau(a.id);
   return h('li', {}, h('button', { class: `carte-arret n${b}`, onClick: () => fiche(a.id) },
@@ -885,6 +884,30 @@ function blocImages() {
     etat.themes.includes('rose') ? ligne('jeton', 'Jetons', 'Remplace la canette partout', () => h('img', { src: 'img/canette.svg', alt: '' })) : null);
 }
 
+// TA PROGRESSION : les trois échelles, et ce qui fait monter chacune.
+function ecranProgression() {
+  const r = rang(); const g = rangGeneral(); const m = matiereDe(etat.matiere);
+  const vals = Object.values(M().arrets);
+  const parPalier = [0, 1, 2, 3, 4, 5].map((b) => vals.filter((a) => (a.b || 0) === b).length);
+  const echelle = (rangs, actuel) => h('ol', { class: 'carriere' }, rangs.map((x, i) => h('li', { class: `${i <= actuel.i ? 'atteint' : ''} ${i === actuel.i ? 'actuel' : ''}`, style: `--i:${i}` }, x.nom, h('small', {}, `${fmt(x.xp)} points`))));
+  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => aller('profil') }, icone('retour', 18), 'Profil'), h('section', { class: 'page progression' },
+    h('h1', {}, 'Ta progression'),
+    h('p', { class: 'page-sous' }, 'Trois mesures, chacune avec son rôle.'),
+    h('h2', {}, `Ta carrière : ${m.institution}`),
+    h('p', {}, r.suivant ? `${r.nom}, ${fmt(r.xp)} points. Encore ${fmt(r.suivant.xp - r.xp)} avant ${r.suivant.nom}.` : `${r.nom} : sommet atteint.`),
+    h('p', { class: 'aide-claire' }, 'Chaque matière a sa carrière. Tu gagnes des points à chaque séance, plus avec une bonne réussite. C’est le grade affiché en haut de l’écran.'),
+    echelle(m.rangs, r),
+    h('h2', {}, 'La maîtrise de chaque fiche'),
+    h('p', { class: 'aide-claire' }, 'Chaque arrêt ou article monte d’un palier quand tu le réussis sans aide un jour où il est à revoir : au plus une fois par jour, et de plus en plus espacé. Une erreur le bloque jusqu’au lendemain.'),
+    h('ul', { class: 'paliers' }, TITRES_CARTE.map((t, b) => b === 0 ? null : h('li', {}, niveauTag(b), h('span', {}, pluriel(parPalier[b], 'fiche'))))),
+    h('p', { class: 'aide-claire' }, `Au palier Délibéré, après quatre montées sur quatre jours, la fiche est close : ${monnaie(PRIME_MAITRISE)} offerts.`),
+    h('h2', {}, 'Ton parcours universitaire'),
+    h('p', {}, g.suivant ? `${g.nom}, ${fmt(g.xp)} points dans les deux matières. Encore ${fmt(g.suivant.xp - g.xp)} avant ${g.suivant.nom}.` : `${g.nom} : dernier titre atteint.`),
+    echelle(RANGS_GENERAL, g),
+    h('h2', {}, 'Vers l’examen'),
+    h('p', { class: 'aide-claire' }, 'Trois degrés de difficulté, au choix, sans rien à débloquer : Première instance pour se mettre en route, Appel pour les cas et les plans, Cassation pour les épreuves les plus longues.')));
+}
+
 let carriereVue = null;
 function profil() {
   const vue = carriereVue || etat.matiere;
@@ -924,6 +947,7 @@ function profil() {
     h('p', { class: 'page-sous xp-txt' }, r.suivant ? `${fmt(r.xp)} points. Encore ${fmt(r.suivant.xp - r.xp)} pour devenir ${r.suivant.nom}.` : 'Dernier grade atteint.'),
     h('div', { class: 'bascule' }, MATIERES.map((m) => h('button', { class: vue === m.id ? 'actif' : '', onClick: () => { son('tap'); carriereVue = m.id; profil(); } }, m.institution))),
     h('ol', { class: 'carriere' }, matiereDe(vue).rangs.map((x, i) => h('li', { class: `${i <= r.i ? 'atteint' : ''} ${i === r.i ? 'actuel' : ''}`, style: `--i:${i}` }, x.nom))),
+    h('button', { class: 'bouton-fantome', onClick: () => aller('progression') }, 'Comprendre ma progression'),
     h('div', { class: 'general' },
       h('p', {}, 'Carrière générale'), h('strong', {}, g.nom),
       h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${g.part.toFixed(3)})` })),

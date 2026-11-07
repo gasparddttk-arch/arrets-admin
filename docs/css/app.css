@@ -960,3 +960,13 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .res-chiffres dd, .haut-jetons, .frise-an, .jalon-an, .annee, .carte-an, .classement .points, .dunk-score, .prix, .combo { font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
 .surtitre { font-size: 15px; font-weight: 600; letter-spacing: .01em; }
 h1, h2, .question { letter-spacing: -.01em; }
+/* Maîtrise et progression */
+.niveau { display: inline-flex; align-items: center; gap: 7px; }
+.pips-maitrise { display: inline-flex; gap: 3px; }
+.pips-maitrise i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, .18); }
+.pips-maitrise i.p { background: var(--or-2); }
+.progression h2 { margin-top: 22px; }
+.progression .carriere small { margin-left: 8px; font-family: var(--ui); font-size: 14px; color: var(--texte-2); }
+.paliers { list-style: none; padding: 0; margin: 10px 0; display: grid; gap: 6px; }
+.paliers li { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-family: var(--ui); font-size: 15px; color: var(--texte-2); }
+.paliers .niveau { border-radius: 999px; }
