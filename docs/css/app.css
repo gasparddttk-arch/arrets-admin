@@ -47,6 +47,7 @@
   --eteint-1: #DCD5EE; --eteint-2: #C9C0E2; --decor: #16131F; --decor-opacite: .05; --trait: #6A5BD8;
   --m-paires-1: #6F86F0; --m-paires-2: #6F86F0; --m-puzzle-1: #F07A5E; --m-puzzle-2: #F07A5E; --m-juge-1: #8E7CF0; --m-juge-2: #8E7CF0;
   --m-plan-1: #2FA77A; --m-plan-2: #2FA77A; --m-archi-1: #E3A13A; --m-archi-2: #E3A13A;
+  --mur-1: #DCD6F2; --mur-2: #ECE8F8; --banc-1: #9C7A5E; --banc-2: #7A5A42;
 }
 /* Rose : framboise, or rose et paillettes. */
 [data-theme='rose'] {
@@ -1168,11 +1169,11 @@ html[data-effets='non']::after { animation: none; }
 .salle-txt b { font-family: var(--ui); font-weight: 600; font-size: 15px; line-height: 1.2; }
 .salle-compte { display: block; margin: 0; padding: 0; background: none; box-shadow: none; font-family: var(--ui); font-size: 13px; color: var(--texte-2); }
 .salle.fermee .salle-txt { opacity: .6; }
-.salle.courante .salle-txt { left: 162px; right: 78px; }
+.salle.courante .salle-txt { left: calc(var(--x) + 64px); right: 0; }
 .salle.courante .salle-txt b { font-size: 16px; }
 .salle.courante .salle-compte { color: var(--texte); font-weight: 600; }
 .salle-entrer { align-self: flex-start; margin-top: 6px; padding: 9px 14px; border-radius: 999px; background: var(--or); color: var(--or-texte); box-shadow: inset 0 -3px 0 var(--or-ombre); font-family: var(--ui); font-size: 13px; font-weight: 800; white-space: nowrap; }
-.salle-lexou { position: absolute !important; right: -6px; bottom: 6px; pointer-events: none; }
+.salle-lexou { position: absolute !important; left: calc(var(--x) - 132px); top: 50%; margin-top: -34px; pointer-events: none; }
 .tribune .mini-sceau { display: none; }
 
 /* Boutique : un sélecteur de rayons qui reste en haut */
@@ -1248,3 +1249,4 @@ html[data-effets='non'] .feuille { display: none; }
 
 /* Arrêts : cartes à plat, nom en avant. */
 .grille-arrets .carte-arret, .carte-arret { border-radius: 24px; background: var(--banc); box-shadow: none; }
+.classement .insigne-ami { display: inline-flex; vertical-align: -2px; margin-right: 5px; color: var(--or); }

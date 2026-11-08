@@ -684,7 +684,7 @@ function carte() {
   const parcours = ix.zones.filter((z) => !z.bonus && !z.travaux);
   const enCours = (etat.reglages.toutOuvert ? parcours.find((z) => !gagnees.includes(z.id)) : [...parcours].reverse().find((z) => ouvertes.includes(z.id) && !gagnees.includes(z.id)))?.id;
   let y = 0;
-  const pts = ix.zones.map((z, i) => { const hh = z.id === enCours ? H_COURANTE : H_SALLE; const pt = { x: XS[i % 2], y: y + hh / 2, top: y, hh }; y += hh; return pt; });
+  const pts = ix.zones.map((z, i) => { const hh = z.id === enCours ? H_COURANTE : H_SALLE; const pt = { x: z.id === enCours ? 128 : XS[i % 2], y: y + hh / 2, top: y, hh }; y += hh; return pt; });
   const hauteur = y + 10;
   const chemin = (jusque) => pts.slice(0, jusque + 1).map((pt, i) => (i === 0 ? `M${pt.x} ${pt.y}` : `C${pts[i - 1].x} ${pts[i - 1].y + (pt.y - pts[i - 1].y) / 2},${pt.x} ${pts[i - 1].y + (pt.y - pts[i - 1].y) / 2},${pt.x} ${pt.y}`)).join('');
   const iCourant = ix.zones.findIndex((z) => z.id === enCours);
@@ -702,7 +702,7 @@ function carte() {
         marque,
         h('span', { class: 'salle-txt' }, h('b', {}, z.titre), h('small', { class: 'salle-compte' }, etatTxt),
           courante ? h('span', { class: 'salle-entrer' }, 'Ouvrir la chambre') : null)),
-      courante ? chouette('assise', { taille: 92, vivante: true, classe: 'salle-lexou' }) : null);
+      courante ? chouette('assise', { taille: 80, vivante: true, classe: 'salle-lexou' }) : null);
   });
   const plan = h('div', { class: 'parcours', style: `height:${hauteur}px` }, h('div', { html: voies }), h('ol', {}, salles));
   const audiences = gagnees.filter((id) => parcours.some((z) => z.id === id)).length;
@@ -1031,7 +1031,7 @@ function boutique() {
     rayon('tenues', 'Tenues de l’appli', h('p', { class: 'aide-claire' }, 'Une tenue change les couleurs de toute l’appli, jamais la place des choses.'), h('ul', { class: 'articles' }, themes)),
     rayon('decors', 'Décors du Palais', h('p', { class: 'aide-claire' }, 'Chaque décor change le fond du Palais et un détail de l’interface.'), h('ul', { class: 'articles' }, decors)),
     rayon('insignes', 'Insignes', h('p', { class: 'aide-claire' }, 'À côté de ton grade et au classement de tes amis.'), h('ul', { class: 'articles' }, insignes)),
-    rayon('aides', 'Aides et mini-jeux', h('ul', { class: 'articles' }, miniJeux()), h('ul', { class: 'articles' }, objets))));
+    rayon('aides', 'Aides', h('ul', { class: 'articles' }, miniJeux()), h('ul', { class: 'articles' }, objets))));
   if ('IntersectionObserver' in window) {
     const obs = new IntersectionObserver((entrees) => { for (const e of entrees) if (e.isIntersecting) { const id = e.target.id.replace('rayon-', ''); segments.querySelectorAll('button').forEach((b) => b.classList.toggle('actif', b.dataset.rayon === id)); } }, { rootMargin: '-30% 0px -60% 0px' });
     document.querySelectorAll('.rayon').forEach((r) => obs.observe(r));
@@ -1205,6 +1205,7 @@ async function ecranAmis() {
   const envoyees = liste.filter((a) => a.lien === 'envoyee');
   const recharger = () => ecranAmis();
 
+  const insigneDe = (r) => (r?.insigne && r.insigne !== 'aucun' && INSIGNES.some((t) => t.id === r.insigne) ? h('span', { class: 'insigne-ami' }, icone(r.insigne, 15)) : null);
   // Le classement de la semaine : toi et tes amis, remis à zéro chaque lundi.
   const moiR = monResume();
   const lignes = [{ id: 'moi', pseudo: `${moi.pseudo || 'Toi'} (toi)`, r: moiR }, ...amis.filter((a) => a.resume).map((a) => ({ id: a.id, pseudo: a.pseudo, r: a.resume, ami: a }))]
@@ -1212,7 +1213,7 @@ async function ecranAmis() {
   const classement = h('ol', { class: 'classement' }, lignes.map((l, i) => h('li', { class: l.id === 'moi' ? 'moi' : '' },
     h('button', { disabled: l.id === 'moi', onClick: () => ficheAmi(l.ami) },
       h('span', { class: 'place' }, String(i + 1)),
-      h('span', { class: 'qui' }, h('b', {}, l.pseudo), h('small', {}, `Série de ${pluriel(l.r?.serie || 0, 'jour')}${l.r?.sceau && l.r.jour === jour() ? ', sceau posé aujourd’hui' : ''}`)),
+      h('span', { class: 'qui' }, h('b', {}, insigneDe(l.r), l.pseudo), h('small', {}, `Série de ${pluriel(l.r?.serie || 0, 'jour')}${l.r?.sceau && l.r.jour === jour() ? ', sceau posé aujourd’hui' : ''}`)),
       h('span', { class: 'points' }, fmt(semaineDe(l.r)))))));
 
   const champ = h('input', { class: 'code', placeholder: 'Code ami, par exemple ABCD-EFGH', 'aria-label': 'Code ami', autocapitalize: 'characters', autocomplete: 'off', maxlength: 12 });
