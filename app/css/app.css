@@ -1227,3 +1227,24 @@ html[data-effets='non'] .feuille { display: none; }
 .monde { transition: transform .5s cubic-bezier(.3, .8, .3, 1); }
 .terrain { margin: 0; border-radius: 30px; background: var(--bleu); height: 230px; }
 .dunk-score { font-family: var(--ui); }
+
+/* Profil : avatar dans un rond, tuiles de chiffres, listes groupées. */
+.page-profil .profil-tete { position: relative; width: 128px; height: 128px; margin: 6px auto 4px; border-radius: 50%; overflow: hidden; background: var(--bleu); }
+.page-profil .profil-tete .chouette { position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%); }
+.page-profil h1 { font-size: 30px; }
+.carriere { padding: 0; border-radius: 22px; background: var(--banc); overflow: hidden; }
+.carriere li { margin: 0; border-radius: 0; box-shadow: none; background: none; text-align: left; padding: 12px 16px; font-family: var(--ui); font-size: 15px; transform: none; width: auto; }
+.carriere li + li { border-top: 1px solid var(--banc-fort); }
+.carriere li.actuel { background: var(--or); color: var(--or-texte); font-weight: 700; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.stats > div { padding: 12px; border-radius: 20px; background: var(--banc); box-shadow: none; }
+.stats dt { font-family: var(--ui); font-size: 12px; color: var(--texte-2); }
+.stats dd { font-family: var(--ui); font-size: 24px; font-weight: 700; }
+.general { border-radius: 24px; background: var(--banc); box-shadow: none; }
+.reglage { border-radius: 18px; background: var(--banc); box-shadow: none; }
+.bascule { border-radius: 14px; background: var(--banc); padding: 3px; }
+.bascule button { border-radius: 11px; font-family: var(--ui); font-weight: 600; }
+.bascule button.actif { background: var(--banc-fort); color: var(--texte); box-shadow: 0 1px 3px var(--ombre); }
+
+/* Arrêts : cartes à plat, nom en avant. */
+.grille-arrets .carte-arret, .carte-arret { border-radius: 24px; background: var(--banc); box-shadow: none; }
