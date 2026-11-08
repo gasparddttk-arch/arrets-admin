@@ -7,11 +7,14 @@ import { etat, sauver, ajouterSemaine, noter, crediter, M, PLAFOND_JOUR, PRIME_M
 import { questionsDunk, tirerDunk } from './engine.js';
 import { repere } from './games.js';
 
-const panier = (droite, y) => svg(`<svg class="panier ${droite ? 'droite' : 'gauche'}" style="top:${y}px" viewBox="0 0 96 74" width="96" height="74" aria-hidden="true">
-  <ellipse class="arceau-fond" cx="48" cy="14" rx="36" ry="9"/>
-  <path class="filet" d="M14 16 26 62h44l12-46M26 16l10 46M48 16v46M70 16 60 62M18 32h60M22 47h52"/>
-  <path class="arceau" d="M12 14a36 9 0 0 0 72 0"/>
-</svg>`);
+// Un panier en deux couches : l'arceau du fond passe derrière le ballon, le filet et l'arceau avant devant.
+const panier = (droite, y) => {
+  const w = document.createElement('div');
+  w.className = `panier ${droite ? 'droite' : 'gauche'}`; w.style.top = `${y}px`;
+  w.append(svg('<svg class="panier-fond" viewBox="0 0 96 74" width="96" height="74" aria-hidden="true"><ellipse class="arceau-fond" cx="48" cy="14" rx="34" ry="9"/></svg>'),
+    svg('<svg class="panier-avant" viewBox="0 0 96 74" width="96" height="74" aria-hidden="true"><g class="filet"><path d="M16 16 27 62h42l11-46M28 17l10 45M48 18v44M68 17 58 62M19 31h58M23 47h50"/></g><path class="arceau" d="M14 14a34 9 0 0 0 68 0"/></svg>'));
+  return w;
+};
 const ballon = () => svg(`<svg class="ballon" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true">
   <circle cx="20" cy="20" r="18" fill="url(#gBallon)"/>
   <path d="M2 20h36M20 2v36M7 7c6 7 6 19 0 26M33 7c-6 7-6 19 0 26" fill="none" stroke="#3A1608" stroke-opacity=".6" stroke-width="1.600"/>
@@ -37,7 +40,8 @@ export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
   const barre = h('div', { class: 'temps', role: 'timer', 'aria-label': 'Temps restant' }, h('i'));
   const zoneQ = h('div', { class: 'dunk-question' });
   const bille = ballon();
-  monde.append(panier(false, 120), panier(true, 120 - PAS), bille);
+  const paniers = [panier(false, 120), panier(true, 120 - PAS)];
+  monde.append(...paniers, bille);
   const cote = (n) => n % 2 === 1;
   const positionPanier = (n) => ({ x: terrain.clientWidth * (cote(n) ? 0.76 : 0.24), y: 120 - n * PAS + 2 });
   function poser(n) {
@@ -55,7 +59,7 @@ export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
         const k = Math.min(1, (t - t0) / ms);
         const x = de.x + (vers.x - de.x) * k;
         const y = de.y + (vers.y - de.y) * k - hauteur * 4 * k * (1 - k);
-        bille.style.transform = `translate(${x - 20}px, ${y - 22}px) rotate(${k * 300}deg)`;
+        bille.style.transform = `translate3d(${x - 20}px, ${y - 22}px, 0) rotate(${k * 420}deg)`;
         if (k < 1) requestAnimationFrame(pas); else ok();
       });
     });
@@ -68,9 +72,24 @@ export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
     bille.classList.toggle('en-feu', feu >= 3);
     const dunk = tir % 5 === 0;
     son(dunk ? 'dunk' : 'panier', { niveau: Math.min(tir, 8) }); vibrer(dunk ? [14, 40, 14] : 10);
-    await lancer(positionPanier(tir - 1), positionPanier(tir), 46, duree(420));
+    // Le panier lance : il se tend vers l'arrière, puis se détend d'un coup.
+    const de = positionPanier(tir - 1); const vers = positionPanier(tir);
+    const tireur = paniers[tir - 1]; const cible = paniers[tir];
+    const sens = cote(tir - 1) ? 1 : -1;
+    if (duree(1) && tireur?.animate) {
+      tireur.animate([{ transform: 'none' }, { transform: `rotate(${sens * 22}deg) translateY(9px)`, offset: 0.55 }, { transform: `rotate(${sens * -6}deg) translateY(-4px)`, offset: 0.8 }, { transform: 'none' }], { duration: 300, easing: 'ease-out' });
+      await lancer(de, { x: de.x, y: de.y + 9 }, 0, 165);
+    }
+    await lancer({ x: de.x, y: de.y + (duree(1) ? 9 : 0) }, vers, 96, duree(620));
+    if (duree(1) && cible?.animate) {
+      cible.animate([{ transform: 'none' }, { transform: 'translateY(7px)' }, { transform: 'translateY(-2px)' }, { transform: 'none' }], { duration: 360, easing: 'ease-out' });
+      cible.querySelector('.filet')?.animate([{ transform: 'scaleY(1)' }, { transform: 'scaleY(1.35) scaleX(.86)' }, { transform: 'scaleY(.92)' }, { transform: 'scaleY(1)' }], { duration: 420, easing: 'ease-out' });
+      await lancer(vers, { x: vers.x, y: vers.y + 16 }, 0, 140);
+      await lancer({ x: vers.x, y: vers.y + 16 }, vers, 0, 120);
+    }
     monde.style.transform = `translateY(${tir * PAS}px)`;
-    monde.append(panier(cote(tir + 1), 120 - (tir + 1) * PAS));
+    const neuf = panier(cote(tir + 1), 120 - (tir + 1) * PAS);
+    paniers.push(neuf); monde.insertBefore(neuf, bille);
     [...monde.querySelectorAll('.panier')].slice(0, -3).forEach((p) => p.remove());
     if (dunk) { confettis(); terrain.append(h('p', { class: 'dunk-mot' }, 'Dunk')); setTimeout(() => terrain.querySelector('.dunk-mot')?.remove(), 900); }
     if (tir >= objectif) { setTimeout(() => terminer(true), duree(800)); return; }

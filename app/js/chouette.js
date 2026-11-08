@@ -175,8 +175,9 @@ export function reagir(score) {
   const niveau = score >= 0.8 ? 'bien' : score >= 0.4 ? 'moyen' : 'rate';
   const pose = { bien: 'clin', moyen: 'piles', rate: 'pause' }[niveau];
   const v = h('div', { class: `reaction ${niveau}`, role: 'status' },
-    h('p', { class: 'bulle' }, auHasard(PHRASES[niveau])),
-    chouette(pose, { taille: 230 }));
+    h('div', { class: 'feuille-verdict' },
+      chouette(pose, { taille: 150 }),
+      h('p', { class: 'bulle' }, auHasard(PHRASES[niveau]))));
   document.body.append(v);
   return new Promise((ok) => {
     const fin = () => { v.remove(); ok(); };

@@ -1,5 +1,5 @@
 // Point d'entrée : écrans, séances, récompenses.
-import { h, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
+import { h, svg, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
@@ -80,10 +80,11 @@ function montrer(...enfants) {
 function appliquerTheme() {
   const r = document.documentElement;
   r.dataset.theme = etat.theme;
+  r.dataset.decor = etat.decor || 'aucun';
   r.dataset.effets = effets() ? 'oui' : 'non';
   if (images.jeton) r.style.setProperty('--jeton-image', `url("${images.jeton}")`);
   else r.style.removeProperty('--jeton-image');
-  document.querySelector('meta[name="theme-color"]').setAttribute('content', etat.theme === 'rose' ? '#C2466E' : '#0C1A47');
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', { rose: '#FFE3EA', pastel: '#F4F1FA', verre: '#060A1C' }[etat.theme] || '#0A0E22');
 }
 
 function barreHaut() {
@@ -285,20 +286,26 @@ function accueil() {
     h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); matieres(); } }, icone('matieres', 18), matiereDe(etat.matiere).nom, estOblig() ? `, équipe ${etat.equipe}` : null),
     aInstaller,
     h('section', { class: 'tribune', 'data-decor': etat.decor },
+      h('div', { class: 'serie-bloc' },
+        h('span', { class: 'serie-etiquette' }, 'Ta série'),
+        h('p', { class: 'serie-txt' }, h('b', { class: 'serie-nombre' }, String(s.n)), s.n === 1 ? ' jour' : ' jours'),
+        h('p', { class: 'serie-sous' }, fait ? 'Sceau posé. Reviens demain.' : s.n ? 'Une séance aujourd’hui la garde.' : 'Une séance pose ton premier sceau.'),
+        semaine()),
       figureSerie(s, fait),
-      h('p', { class: 'serie-txt' }, s.n === 0 ? 'Aucune série en cours' : `${pluriel(s.n, 'jour')} de série`),
-      h('p', { class: 'serie-sous' }, fait ? 'Séance du jour validée. Reviens demain.' : s.n ? 'Termine une séance aujourd’hui pour la garder.' : 'Termine une séance pour poser ton premier sceau.'),
-      semaine(), blocRupture),
+      etat.decor === 'jardin' ? [1, 2, 3].map((i) => h('i', { class: `feuille f${i}`, 'aria-hidden': 'true' })) : null,
+      etat.decor === 'buren' ? h('span', { class: 'colonnes-buren', 'aria-hidden': 'true' }, [70, 40, 100, 55, 85].map((v, i) => h('i', { style: `height:${v}%;--i:${i}` }))) : null),
+    blocRupture,
     h('div', { class: 'actions' },
       encours ? h('div', { class: 'reprise' },
         h('button', { class: 'bouton-or', onClick: () => lancer({ reprise: encours }) }, `Reprendre : ${encours.titre}, épreuve ${encours.i + 1} sur ${encours.rounds.length}`),
         h('button', { class: 'bouton-lien', onClick: () => { M().enCours = null; sauver(); accueil(); } }, 'Abandonner cette séance')) : null,
       defisEnAttente.length ? h('div', { class: 'defis-attente' }, defisEnAttente.slice(0, 2).map((d) => h('button', { class: 'bouton-or defi-attente', onClick: () => releverDefi(d.id) },
         `${d.pseudo || 'Un ami'} te défie : bats ses ${pct(d.score_auteur)}`))) : null,
-      h('button', { class: 'cta brille', onClick: lancerDefi }, 'Défi du jour'),
-      h('p', { class: 'cta-sous' }, dus ? `5 épreuves, ${pluriel(dus, estOblig() ? 'fiche' : 'arrêt')} à revoir` : '5 épreuves, environ 5 minutes'),
+      h('button', { class: 'cta brille', onClick: lancerDefi },
+        h('span', { class: 'cta-txt' }, h('b', {}, 'Défi du jour'), h('small', { class: 'cta-sous' }, dus ? `5 épreuves, ${pluriel(dus, estOblig() ? 'fiche' : 'arrêt')} à revoir` : '5 épreuves, environ 5 minutes')),
+        h('span', { class: 'cta-jouer', 'aria-hidden': 'true' }, svg('<svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>'))),
       ),
-    h('section', { class: 'role' },
+    h('section', { class: 'role role-duo' },
       ligneEntree('vers-examen', 'balance', 'Vers l’examen', 'Trois degrés et un partiel blanc', () => aller('examen'), 0),
       ligneEntree('vers-role', 'plan', 'Le rôle', 'Choisis ton exercice', () => aller('role'), 2.2)),
   );
@@ -669,42 +676,39 @@ function progressionZone(z) {
 }
 
 // Le chemin du cours : les chambres alternent de part et d'autre d'un fil de lumière.
-const LARGEUR = 390; const PAS = 164; const DEPART = 66; const PREMIER_ECART = 216;
-const pointSalle = (i) => ({ x: i === 0 ? 195 : i % 2 ? 300 : 90, y: i === 0 ? DEPART : DEPART + PREMIER_ECART + (i - 1) * PAS });
-
+// Les chambres : un chemin épuré. Les sceaux sur le chemin, les noms alignés à droite, la chambre en cours mise en avant.
+const XS = [70, 110]; const H_SALLE = 104; const H_COURANTE = 176;
 function carte() {
   const ouvertes = zonesOuvertes(ix);
   const gagnees = M().zones.gagnees;
   const parcours = ix.zones.filter((z) => !z.bonus && !z.travaux);
   const enCours = (etat.reglages.toutOuvert ? parcours.find((z) => !gagnees.includes(z.id)) : [...parcours].reverse().find((z) => ouvertes.includes(z.id) && !gagnees.includes(z.id)))?.id;
-  const n = ix.zones.length;
-  const hauteur = pointSalle(n - 1).y + 110;
-  let troncons = ''; let comete = '';
-  for (let i = 0; i < n - 1; i++) {
-    const a = pointSalle(i); const b = pointSalle(i + 1); const dy = b.y - a.y;
-    const d = i === 0 ? `M${a.x} ${a.y}C${a.x + 165} ${a.y + 2},${b.x + 4} ${b.y - 118},${b.x} ${b.y}` : `M${a.x} ${a.y}C${a.x} ${a.y + dy * 0.62},${b.x} ${b.y - dy * 0.62},${b.x} ${b.y}`;
-    const parcouru = ouvertes.includes(ix.zones[i + 1].id);
-    troncons += `<path class="voie-halo ${parcouru ? '' : 'loin'}" d="${d}"/><path class="voie ${parcouru ? '' : 'loin'}" d="${d}"/>`;
-    if (ix.zones[i + 1].id === enCours) comete = `<circle class="comete" r="3.500"><animateMotion dur="4.600s" repeatCount="indefinite" calcMode="spline" keySplines=".4 0 .6 1" keyTimes="0;1" path="${d}"/></circle>`;
-  }
+  let y = 0;
+  const pts = ix.zones.map((z, i) => { const hh = z.id === enCours ? H_COURANTE : H_SALLE; const pt = { x: XS[i % 2], y: y + hh / 2, top: y, hh }; y += hh; return pt; });
+  const hauteur = y + 10;
+  const chemin = (jusque) => pts.slice(0, jusque + 1).map((pt, i) => (i === 0 ? `M${pt.x} ${pt.y}` : `C${pts[i - 1].x} ${pts[i - 1].y + (pt.y - pts[i - 1].y) / 2},${pt.x} ${pts[i - 1].y + (pt.y - pts[i - 1].y) / 2},${pt.x} ${pt.y}`)).join('');
+  const iCourant = ix.zones.findIndex((z) => z.id === enCours);
+  const iDernierOuvert = ix.zones.reduce((m, z, i) => (ouvertes.includes(z.id) ? i : m), 0);
+  const voies = `<svg class="voies" width="100%" height="${hauteur}" aria-hidden="true"><path class="voie loin" d="${chemin(pts.length - 1)}"/><path class="voie faite" pathLength="1" d="${chemin(iCourant >= 0 ? iCourant : iDernierOuvert)}"/></svg>`;
   const salles = ix.zones.map((z, i) => {
-    const p = progressionZone(z.id); const pt = pointSalle(i);
-    const ouvert = ouvertes.includes(z.id); const gagne = gagnees.includes(z.id);
-    const cote = i === 0 ? 'dessous' : i % 2 ? 'gauche' : 'droite';
-    const marque = !ouvert ? h('span', { class: 'salle-marque' }, icone('cadenas', 30))
-      : z.travaux ? h('span', { class: 'salle-marque' }, icone('travaux', 30))
-      : z.id === enCours ? h('span', { class: 'salle-marque' }, String(z.id))
-        : h('span', { class: 'salle-marque' }, laurier(92), gagne ? icone('juste', 30) : h('span', {}, z.bonus ? '+' : String(z.id)));
-    return h('li', { class: `salle ${cote} ${ouvert ? 'ouverte' : 'fermee'} ${gagne ? 'gagnee' : ''} ${z.id === enCours ? 'courante' : ''}`, style: `left:${(pt.x / LARGEUR) * 100}%;top:${pt.y}px` },
-      h('button', { onClick: () => { son('tap'); if (ouvert) chambre(z.id); else chambreFermee(z); }, 'aria-label': `${z.titre}, ${p.acquis} arrêts acquis sur ${p.total}${ouvert ? '' : ', fermée'}` },
+    const p = progressionZone(z.id); const pt = pts[i];
+    const ouvert = ouvertes.includes(z.id); const gagne = gagnees.includes(z.id); const courante = z.id === enCours;
+    const etatTxt = z.travaux ? 'En travaux' : !ouvert ? 'Fermée' : gagne ? 'Audience gagnée' : `${p.acquis} arrêts sur ${p.total}`;
+    const marque = courante
+      ? h('span', { class: 'salle-marque', style: `--part:${p.total ? p.acquis / p.total : 0}` }, h('span', {}, String(z.id)))
+      : h('span', { class: 'salle-marque' }, !ouvert ? icone('cadenas', 22) : z.travaux ? icone('travaux', 22) : h('span', {}, z.bonus ? '+' : String(z.id)));
+    return h('li', { class: `salle ${ouvert ? 'ouverte' : 'fermee'} ${gagne ? 'gagnee' : ''} ${courante ? 'courante' : ''}`, style: `top:${pt.top}px;height:${pt.hh}px;--x:${pt.x}px;--d:${i * 0.06}s` },
+      h('button', { onClick: () => { son('tap'); if (ouvert) chambre(z.id); else chambreFermee(z); }, 'aria-label': `${z.titre}, ${etatTxt}` },
         marque,
-        h('span', { class: 'salle-txt' }, h('b', {}, z.titre), z.travaux ? h('span', { class: 'salle-compte travaux' }, 'En travaux') : ouvert ? h('span', { class: 'salle-compte' }, `${p.acquis}/${p.total}`) : null)));
+        h('span', { class: 'salle-txt' }, h('b', {}, z.titre), h('small', { class: 'salle-compte' }, etatTxt),
+          courante ? h('span', { class: 'salle-entrer' }, 'Ouvrir la chambre') : null)),
+      courante ? chouette('assise', { taille: 92, vivante: true, classe: 'salle-lexou' }) : null);
   });
-  const plan = h('div', { class: 'parcours', style: `height:${hauteur}px` },
-    h('div', { html: `<svg class="voies" viewBox="0 0 ${LARGEUR} ${hauteur}" preserveAspectRatio="none" aria-hidden="true">${troncons}${effets() ? comete : ''}</svg>` }),
-    h('ol', {}, salles));
-  montrer(barreHaut(), h('section', { class: 'page page-chambres' }, h('h1', {}, 'Les chambres'),
-    h('p', { class: 'page-sous' }, estOblig() ? 'Progression dans l’ordre du cours' : 'Progression dans l’ordre juridictionnel'), plan));
+  const plan = h('div', { class: 'parcours', style: `height:${hauteur}px` }, h('div', { html: voies }), h('ol', {}, salles));
+  const audiences = gagnees.filter((id) => parcours.some((z) => z.id === id)).length;
+  montrer(barreHaut(), h('section', { class: 'page page-chambres' },
+    h('div', { class: 'chambres-tete' }, h('h1', {}, 'Chambres'), h('span', {}, `${audiences} audience${audiences > 1 ? 's' : ''} sur ${parcours.length}`)),
+    h('p', { class: 'page-sous' }, estOblig() ? `Droit des obligations, équipe ${etat.equipe}` : 'Droit administratif'), plan));
 }
 
 function chambreFermee(z) {
@@ -1015,15 +1019,23 @@ function boutique() {
   });
   const insignes = collectionObjets(INSIGNES, 'insigne', 'insignes', (t) => (t.id === 'aucun' ? h('span', { class: 'pastille vide-p' }) : icone(t.id, 26)));
   const decors = collectionObjets(DECORS, 'decor', 'decors', (t) => h('span', { class: `pastille decor-${t.id}` }));
-  montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, 'La boutique'),
+  // Un sélecteur qui reste en haut : chaque bouton amène à sa section, le rayon visible s'allume.
+  const RAYONS = [['skins', 'Skins'], ['garde-robe', 'Garde-robe'], ['tenues', 'Tenues'], ['decors', 'Décors'], ['insignes', 'Insignes'], ['aides', 'Aides']];
+  const segments = h('nav', { class: 'segments', 'aria-label': 'Rayons de la boutique' }, RAYONS.map(([id, nom], i) => h('button', { class: i === 0 ? 'actif' : '', 'data-rayon': id, onClick: () => { son('tap'); document.getElementById(`rayon-${id}`)?.scrollIntoView({ behavior: effets() ? 'smooth' : 'auto', block: 'start' }); } }, nom)));
+  const rayon = (id, titre, ...contenu) => h('section', { class: 'rayon', id: `rayon-${id}` }, h('h2', {}, titre), contenu);
+  montrer(barreHaut(), h('section', { class: 'page page-boutique' }, h('h1', {}, 'La boutique'),
     h('p', { class: 'page-sous' }, estRose() ? 'Tes canettes de Ratio se gagnent en finissant des épreuves.' : 'Tes jetons de présence se gagnent en finissant des épreuves.'),
-    h('h2', {}, 'Skins de Lexou'), skinsDuHibou(),
-    h('h2', {}, 'Garde-robe de Lexou'), gardeRobe(),
-    h('h2', {}, 'Couleurs de l’appli'), h('ul', { class: 'articles' }, themes),
-    h('h2', {}, 'Décors du Palais'), h('ul', { class: 'articles' }, decors),
-    h('h2', {}, 'Insignes'), h('ul', { class: 'articles' }, insignes),
-    h('h2', {}, 'Mini-jeux'), h('ul', { class: 'articles' }, miniJeux()),
-    h('h2', {}, 'Aides'), h('ul', { class: 'articles' }, objets)));
+    segments,
+    rayon('skins', 'Skins de Lexou', skinsDuHibou()),
+    rayon('garde-robe', 'Garde-robe de Lexou', gardeRobe()),
+    rayon('tenues', 'Tenues de l’appli', h('p', { class: 'aide-claire' }, 'Une tenue change les couleurs de toute l’appli, jamais la place des choses.'), h('ul', { class: 'articles' }, themes)),
+    rayon('decors', 'Décors du Palais', h('p', { class: 'aide-claire' }, 'Chaque décor change le fond du Palais et un détail de l’interface.'), h('ul', { class: 'articles' }, decors)),
+    rayon('insignes', 'Insignes', h('p', { class: 'aide-claire' }, 'À côté de ton grade et au classement de tes amis.'), h('ul', { class: 'articles' }, insignes)),
+    rayon('aides', 'Aides et mini-jeux', h('ul', { class: 'articles' }, miniJeux()), h('ul', { class: 'articles' }, objets))));
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver((entrees) => { for (const e of entrees) if (e.isIntersecting) { const id = e.target.id.replace('rayon-', ''); segments.querySelectorAll('button').forEach((b) => b.classList.toggle('actif', b.dataset.rayon === id)); } }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('.rayon').forEach((r) => obs.observe(r));
+  }
 }
 
 // PROFIL -----------------------------------------------------------------------------

@@ -1,35 +1,59 @@
 /* Arrêts : le bleu du Palais, l'or, la cire. Une tenue change les jetons de couleur, jamais la structure. */
 
 :root {
-  --fond-haut: #0E1E50; --fond-bas: #081234; --fond-plat: #0A1740;
-  --carte-haut: #1A3175; --carte-bas: #102258; --carte-bord: #304E9F; --carte-reflet: rgba(255, 255, 255, .1); --ombre: rgba(2, 6, 26, .55);
-  --texte: #F3F6FE; --texte-2: #B6C3E8; --titre-or: #F6E0A2; --filet: #29407F;
-  --or-1: #FFEFC2; --or-2: #E7C168; --or-3: #BC8D32; --or-ombre: #6F5114; --or-texte: #2B1D05;
-  --feuille-1: #FFEFC2; --feuille-2: #E7C168; --feuille-3: #BC8D32;
-  --cire-1: #FF9D82; --cire-2: #E8573F; --cire-3: #A5251E;
-  --eteint-1: #4C63AC; --eteint-2: #27397A;
+  /* Bento Palais : l'encre du Palais, des tuiles franches, l'or, la cire. */
+  --encre: #0A0E22; --banc: #161B33; --banc-fort: #232A4D; --bleu: #3352E0; --bleu-texte: #FFFFFF;
+  --or: #F2C55C; --verdict: #5EE6A8; --verdict-texte: #06231A; --robe: #B7A6FF; --robe-texte: #170C3A;
+  --cire-vive: #FF7B5E; --cire-texte: #2A0A02; --sceau: #C8452B; --halo-force: 0;
+  --fond-haut: var(--encre); --fond-bas: var(--encre); --fond-plat: var(--encre);
+  --carte-haut: var(--banc); --carte-bas: var(--banc); --carte-bord: var(--banc-fort); --carte-reflet: transparent; --ombre: rgba(0, 0, 0, .45);
+  --texte: #F4F5FA; --texte-2: #8F98C2; --titre-or: var(--or); --filet: var(--banc-fort);
+  --or-1: #FFE08A; --or-2: #F2C55C; --or-3: #D9A63A; --or-ombre: #B98A25; --or-texte: #2B1D05;
+  --feuille-1: #FFE08A; --feuille-2: #F2C55C; --feuille-3: #D9A63A;
+  --cire-1: #E8705A; --cire-2: #C8452B; --cire-3: #8E2A17;
+  --eteint-1: #2C3563; --eteint-2: #1C2347;
   --orange-1: #FFD99B; --orange-2: #F89B3A; --orange-3: #C75E17; --orange-halo: rgba(248, 155, 58, .5);
   --acier-1: #CBD3E2; --acier-2: #76849F; --cuivre: #E0A27E;
-  --juste: #46D6A3; --juste-fond: rgba(70, 214, 163, .14); --faux: #FF8A7C; --faux-fond: rgba(255, 110, 92, .14);
-  --trait: #7FA6FF; --decor-opacite: .055; --decor: #fff;
-  --papier-1: #FCF5E3; --papier-2: #F2E6CA; --papier-texte: #2A1E0B; --papier-bord: #D9C088;
-  --mur-1: #142662; --mur-2: #0B1845; --banc-1: #4B2C26; --banc-2: #2A1712;
-  --m-paires-1: #2179B4; --m-paires-2: #0F4A7E; --m-puzzle-1: #C25039; --m-puzzle-2: #8F3425;
-  --m-juge-1: #6F4CB4; --m-juge-2: #452A80; --m-plan-1: #1C8870; --m-plan-2: #0F5D4C; --m-archi-1: #9A6A20; --m-archi-2: #6A4610;
-  --m-texte: #fff; --m-texte-2: rgba(255, 255, 255, .84);
+  --juste: #5EE6A8; --juste-fond: rgba(94, 230, 168, .14); --faux: #FF7B5E; --faux-fond: rgba(255, 123, 94, .14);
+  --trait: #7FA6FF; --decor-opacite: .07; --decor: #fff;
+  --papier-1: #F5EFE1; --papier-2: #F5EFE1; --papier-texte: #1E1810; --papier-bord: #E2D6B8;
+  --mur-1: #161B33; --mur-2: #0A0E22; --banc-1: #4B2C26; --banc-2: #2A1712;
+  --m-paires-1: #3352E0; --m-paires-2: #3352E0; --m-puzzle-1: #E05A3E; --m-puzzle-2: #E05A3E;
+  --m-juge-1: #6F5BD8; --m-juge-2: #6F5BD8; --m-plan-1: #17936A; --m-plan-2: #17936A; --m-archi-1: #C98A1E; --m-archi-2: #C98A1E;
+  --m-texte: #fff; --m-texte-2: rgba(255, 255, 255, .86);
   --jeton-image: url('../img/canette.svg');
   /* Apple et New York : New York pour lire, SF Pro pour agir (boutons, onglets, chiffres, étiquettes). */
   --corps: ui-serif, 'New York', 'Iowan Old Style', 'Charter', Georgia, serif;
   --ui: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   --haut-sur: env(safe-area-inset-top, 0px);
   --bas-sur: env(safe-area-inset-bottom, 0px);
-  --rayon: 16px;
+  --rayon: 24px;
 }
+/* Verre lumineux : la nuit du Palais, des tuiles de verre et des halos qui dérivent. */
+[data-theme='verre'] {
+  --encre: #060A1C; --banc: rgba(255, 255, 255, .07); --banc-fort: rgba(255, 255, 255, .12); --bleu: #4363F0; --or: #F6D27A;
+  --or-1: #FFF0C4; --or-2: #F6D27A; --or-3: #D9A845; --or-ombre: #A57A1E; --texte-2: #8E98BC; --sceau: #D25A3A; --halo-force: 1;
+  --papier-1: #121A38; --papier-2: #121A38; --papier-texte: #EEF1FA; --papier-bord: rgba(246, 210, 122, .35); --decor: #F6D27A;
+  --ombre: rgba(0, 0, 0, .6);
+}
+/* Pastel jour : le Palais en plein jour, des cartes douces. */
+[data-theme='pastel'] {
+  --encre: #F4F1FA; --banc: #FFFFFF; --banc-fort: #ECE7F6; --bleu: #8FA6FF; --bleu-texte: #0D1640;
+  --or: #FFB547; --or-1: #FFD08A; --or-2: #FFB547; --or-3: #E5992A; --or-ombre: #D98A12; --or-texte: #2A1700;
+  --verdict: #A8E6C2; --verdict-texte: #0B2A1A; --robe: #B8A9FF; --robe-texte: #1E1450; --cire-vive: #FF9B85; --cire-texte: #3A0D04; --sceau: #D9533A;
+  --texte: #16131F; --texte-2: #6E6880; --titre-or: #B5651D; --ombre: rgba(60, 40, 110, .16); --carte-bord: #E3DDF0;
+  --juste: #0E8A62; --juste-fond: rgba(14, 138, 98, .12); --faux: #C2264F; --faux-fond: rgba(194, 38, 79, .1);
+  --papier-1: #FFFFFF; --papier-2: #FFFFFF; --papier-texte: #16131F; --papier-bord: #E3DDF0;
+  --eteint-1: #DCD5EE; --eteint-2: #C9C0E2; --decor: #16131F; --decor-opacite: .05; --trait: #6A5BD8;
+  --m-paires-1: #6F86F0; --m-paires-2: #6F86F0; --m-puzzle-1: #F07A5E; --m-puzzle-2: #F07A5E; --m-juge-1: #8E7CF0; --m-juge-2: #8E7CF0;
+  --m-plan-1: #2FA77A; --m-plan-2: #2FA77A; --m-archi-1: #E3A13A; --m-archi-2: #E3A13A;
+}
+/* Rose : framboise, or rose et paillettes. */
 [data-theme='rose'] {
-  --fond-haut: #FFE3EA; --fond-bas: #FFCFDC; --fond-plat: #FFDCE5;
-  --carte-haut: #FFF7F9; --carte-bas: #FFE8EF; --carte-bord: #F2B4C6; --carte-reflet: rgba(255, 255, 255, .9); --ombre: rgba(150, 50, 90, .22);
-  --texte: #4E0F2B; --texte-2: #7E3A5A; --titre-or: #9C2F55; --filet: #F1B9CA;
-  --or-1: #FFEAD9; --or-2: #EDB49C; --or-3: #C57F6E; --or-ombre: #8C4B47; --or-texte: #52102A;
+  --encre: #FFE3EA; --banc: #FFF7F9; --banc-fort: #FFD2DD; --bleu: #E9557F; --bleu-texte: #FFFFFF;
+  --or: #EDB49C; --or-1: #FFEAD9; --or-2: #EDB49C; --or-3: #C57F6E; --or-ombre: #8C4B47; --or-texte: #52102A;
+  --verdict: #7FD8B2; --verdict-texte: #06321F; --robe: #CFA4F2; --robe-texte: #2E0A3F; --cire-vive: #F0668F; --cire-texte: #FFFFFF; --sceau: #AD2652;
+  --texte: #4E0F2B; --texte-2: #9A4A6C; --titre-or: #9C2F55; --ombre: rgba(150, 50, 90, .22); --carte-bord: #F2B4C6; --halo-force: .7;
   --feuille-1: #E8A98C; --feuille-2: #C96F7C; --feuille-3: #9C3F63;
   --cire-1: #FFA9BC; --cire-2: #E9557F; --cire-3: #AD2652;
   --eteint-1: #F4BFD0; --eteint-2: #DA8EA9;
@@ -37,10 +61,10 @@
   --acier-1: #FBE9EE; --acier-2: #D9A4B6; --cuivre: #B8566F;
   --juste: #0E8A62; --juste-fond: rgba(14, 138, 98, .13); --faux: #C2264F; --faux-fond: rgba(194, 38, 79, .1);
   --trait: #E9557F; --decor-opacite: .1; --decor: #B72D5C;
-  --papier-1: #FFFBF8; --papier-2: #FFEFEA; --papier-texte: #4E0F2B; --papier-bord: #EDB49C;
+  --papier-1: #FFFBF8; --papier-2: #FFFBF8; --papier-texte: #4E0F2B; --papier-bord: #F2B4C6;
   --mur-1: #F7C3D2; --mur-2: #FBD4DF; --banc-1: #B24F71; --banc-2: #8A3556;
-  --m-paires-1: #B4507B; --m-paires-2: #8F3560; --m-puzzle-1: #C4574A; --m-puzzle-2: #9C3B33;
-  --m-juge-1: #8D4DA6; --m-juge-2: #6A3286; --m-plan-1: #A84C72; --m-plan-2: #7E3355; --m-archi-1: #A0614A; --m-archi-2: #7A4432;
+  --m-paires-1: #D9558A; --m-paires-2: #D9558A; --m-puzzle-1: #E26A5C; --m-puzzle-2: #E26A5C;
+  --m-juge-1: #A061C4; --m-juge-2: #A061C4; --m-plan-1: #C25586; --m-plan-2: #C25586; --m-archi-1: #C07B5C; --m-archi-2: #C07B5C;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -1060,3 +1084,146 @@ h1, h2, .question { letter-spacing: -.01em; }
 .porte.en-travaux { opacity: .5; }
 .porte-annee-n { font-family: var(--ui); font-weight: 800; font-size: 22px; }
 .bascule button[disabled] { opacity: .45; }
+
+/* ============ Nouvelle interface : Bento Palais et ses tenues ============ */
+html::before { background: var(--encre); }
+/* Les halos de Verre lumineux et de Rose dérivent lentement derrière l'appli. */
+html::after { content: ''; position: fixed; inset: -10%; z-index: -2; pointer-events: none; opacity: calc(var(--halo-force) * .5); filter: blur(40px);
+  background: radial-gradient(240px 240px at 12% 22%, var(--bleu), transparent 70%), radial-gradient(220px 220px at 88% 55%, var(--or), transparent 70%), radial-gradient(200px 200px at 30% 92%, var(--verdict), transparent 70%);
+  animation: deriver-fond 16s ease-in-out infinite alternate; }
+@keyframes deriver-fond { to { transform: translate(30px, -40px) scale(1.08); } }
+html[data-effets='non']::after { animation: none; }
+
+/* Barre d'onglets : une pilule qui flotte, l'onglet actif en or. */
+#onglets { left: 12px; right: 12px; bottom: calc(8px + var(--bas-sur)); max-width: 536px; margin: 0 auto; padding: 7px; gap: 4px; justify-content: space-between; border: 0; border-radius: 999px; background: var(--banc); box-shadow: 0 10px 28px var(--ombre); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.onglet { flex: none; max-width: none; flex-direction: row; gap: 7px; min-height: 48px; min-width: 48px; padding: 0 12px; justify-content: center; border-radius: 999px; font-family: var(--ui); font-size: 15px; font-weight: 700; color: var(--texte-2); }
+.onglet span { display: none; }
+.onglet.actif { background: var(--or); color: var(--or-texte); padding: 0 16px; }
+.onglet.actif span { display: inline; }
+.onglet.actif::before { display: none; }
+#app { padding-bottom: calc(96px + var(--bas-sur)); }
+
+/* Accueil : la série dans une tuile bleue, Lexou qui en sort, puis les tuiles d'action. */
+.tribune { margin: 46px 14px 0; padding: 18px 20px; min-height: 200px; display: block; text-align: left; border-radius: 30px; background: var(--bleu); color: var(--bleu-texte); }
+.tribune .serie-bloc { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 2px; max-width: 58%; }
+.serie-etiquette { font-family: var(--ui); font-size: 14px; opacity: .85; }
+.tribune .serie-txt { margin: 0; font-family: var(--ui); font-size: 20px; font-weight: 700; display: flex; align-items: baseline; gap: 8px; }
+.serie-nombre { font-family: var(--corps); font-size: 70px; line-height: 1; font-weight: 400; }
+.tribune .serie-sous { color: inherit; opacity: .85; font-family: var(--ui); font-size: 14px; margin: 2px 0 0; }
+.tribune .semaine { gap: 5px; margin-top: 14px; }
+.tribune .jour-sceau { width: 26px; height: 26px; font-family: var(--ui); font-size: 11px; font-weight: 800; color: var(--bleu-texte); border: 2px dashed currentColor; background: transparent; opacity: .9; }
+.tribune .jour-sceau.tamponne { border: 0; background: var(--or); color: var(--or-texte); opacity: 1; }
+.tribune .jour-sceau.sursis { border: 2px solid var(--or); }
+.tribune .figure-chouette { position: absolute; right: -12px; bottom: 0; width: 210px; height: 210px; margin: 0; z-index: 1; }
+.tribune .figure-chouette .sur-accueil { top: auto; bottom: 0; left: 0; --taille: 210px !important; }
+.tribune .figure-chouette .mini-sceau { left: auto; right: 150px; bottom: 6px; }
+.tribune .aura { display: none; }
+.actions { padding: 10px 14px 0; gap: 10px; }
+.cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 92px; padding: 0 12px 0 22px; text-align: left; border-radius: 30px; background: var(--or); box-shadow: inset 0 -5px 0 var(--or-ombre); }
+.cta:active { transform: scale(.98); box-shadow: inset 0 -3px 0 var(--or-ombre); }
+.cta-txt { display: flex; flex-direction: column; gap: 3px; }
+.cta-txt b { font-size: 27px; font-weight: 700; }
+.cta .cta-sous { margin: 0; text-align: left; font-family: var(--ui); font-size: 14px; color: var(--or-texte); opacity: .75; }
+.cta-jouer { flex: none; width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; background: var(--encre); color: var(--or); }
+.role.role-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 10px 14px 12px; }
+.role-duo .role-ligne { margin: 0; min-height: 132px; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 16px; border-radius: 28px; }
+.role-duo .role-ligne[data-mode='vers-examen'] { background: var(--verdict); color: var(--verdict-texte); }
+.role-duo .role-ligne[data-mode='vers-role'] { background: var(--robe); color: var(--robe-texte); }
+.role-duo .role-ligne b { font-size: 19px; }
+.role-duo .role-ligne small { color: inherit; opacity: .75; }
+.role-duo .role-icone { background: transparent; box-shadow: none; padding: 0; }
+.role-duo .role-ligne::before, .role-duo .role-ligne::after { display: none; }
+
+/* Tuiles et cartes : à plat, sans dégradé ni filet. */
+.role-ligne { background: var(--m1, var(--banc)); box-shadow: none; border-radius: 26px; }
+.bouton-or { border-radius: 999px; background: var(--or); box-shadow: inset 0 -4px 0 var(--or-ombre); min-height: 52px; }
+.bouton-fantome { border-radius: 999px; border: 0; background: var(--banc); }
+.bouton-matiere { border-radius: 999px; background: var(--banc); }
+
+/* Chambres : le chemin épuré */
+.page-chambres { text-align: left; padding: 6px 16px 0; }
+.chambres-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.chambres-tete h1 { font-size: 34px; font-weight: 400; }
+.chambres-tete span { font-family: var(--ui); font-size: 14px; color: var(--texte-2); }
+.page-chambres .page-sous { margin: 2px 0 14px; font-family: var(--ui); font-size: 14px; }
+.parcours { position: relative; margin: 0; }
+.voies { position: absolute; left: 0; top: 0; overflow: visible; }
+.voie { fill: none; stroke-width: 5; stroke-linecap: round; vector-effect: none; }
+.voie.loin { stroke: var(--banc-fort); stroke-dasharray: none; opacity: 1; }
+.voie.faite { stroke: var(--or); stroke-dasharray: 1; stroke-dashoffset: 0; animation: tracer-voie 1.4s cubic-bezier(.4, 0, .2, 1) .2s both; }
+@keyframes tracer-voie { from { stroke-dashoffset: 1; } }
+.salle { position: absolute; left: 0; right: 0; transform: none; animation: salle-entree .45s cubic-bezier(.2, .8, .3, 1.1) both; animation-delay: var(--d); }
+@keyframes salle-entree { from { opacity: 0; transform: translateY(10px); } }
+.salle button { position: absolute; inset: 0; width: auto; height: auto; display: flex; align-items: center; gap: 0; text-align: left; }
+.salle-marque { position: absolute; left: calc(var(--x) - 29px); top: 50%; right: auto; bottom: auto; width: 58px; height: 58px; margin-top: -29px; display: grid; place-items: center; border-radius: 50%; font-family: var(--corps); font-weight: 400; font-size: 24px; }
+.salle.ouverte .salle-marque { color: var(--or); background: var(--banc); box-shadow: inset 0 0 0 2px var(--banc-fort); }
+.salle.gagnee .salle-marque { color: #FFE7DC; background: var(--sceau); box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .16), 0 4px 0 rgba(0, 0, 0, .22); }
+.salle.fermee .salle-marque { color: var(--texte-2); background: var(--banc); box-shadow: inset 0 0 0 2px var(--banc-fort); }
+.salle.fermee .salle-marque .ic { stroke: currentColor; filter: none; }
+.salle.courante .salle-marque { left: calc(var(--x) - 52px); top: 50%; width: 104px; height: 104px; margin-top: -52px; right: auto; bottom: auto; font-size: 32px; color: var(--bleu-texte); animation: none;
+  background: radial-gradient(circle, var(--bleu) 0 41px, var(--encre) 42px 45px, transparent 46px), conic-gradient(var(--or) calc(var(--part) * 360deg), var(--banc-fort) 0); box-shadow: none; }
+.salle.courante .salle-marque::after { content: ''; position: absolute; inset: 11px; border-radius: 50%; animation: pulser-salle 2.2s ease-out 1.4s infinite; }
+@keyframes pulser-salle { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--bleu) 55%, transparent); } to { box-shadow: 0 0 0 18px transparent; } }
+.salle-txt { position: absolute; left: 150px; right: 0; top: 50%; transform: translateY(-50%); width: auto; max-width: none; display: flex; flex-direction: column; gap: 2px; }
+.salle-txt b { font-family: var(--ui); font-weight: 600; font-size: 15px; line-height: 1.2; }
+.salle-compte { display: block; margin: 0; padding: 0; background: none; box-shadow: none; font-family: var(--ui); font-size: 13px; color: var(--texte-2); }
+.salle.fermee .salle-txt { opacity: .6; }
+.salle.courante .salle-txt { left: 162px; right: 78px; }
+.salle.courante .salle-txt b { font-size: 16px; }
+.salle.courante .salle-compte { color: var(--texte); font-weight: 600; }
+.salle-entrer { align-self: flex-start; margin-top: 6px; padding: 9px 14px; border-radius: 999px; background: var(--or); color: var(--or-texte); box-shadow: inset 0 -3px 0 var(--or-ombre); font-family: var(--ui); font-size: 13px; font-weight: 800; white-space: nowrap; }
+.salle-lexou { position: absolute !important; right: -6px; bottom: 6px; pointer-events: none; }
+.tribune .mini-sceau { display: none; }
+
+/* Boutique : un sélecteur de rayons qui reste en haut */
+.segments { position: sticky; top: calc(4px + var(--haut-sur)); z-index: 8; display: flex; gap: 2px; margin: 10px -4px 6px; padding: 4px; overflow-x: auto; scrollbar-width: none; border-radius: 999px; background: var(--banc); box-shadow: 0 6px 18px var(--ombre); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+.segments::-webkit-scrollbar { display: none; }
+.segments button { flex: none; padding: 9px 13px; border-radius: 999px; font-family: var(--ui); font-size: 14px; font-weight: 700; color: var(--texte-2); }
+.segments button.actif { background: var(--texte); color: var(--encre); }
+.rayon { scroll-margin-top: calc(70px + var(--haut-sur)); }
+.page h1 { font-weight: 400; }
+.page-sous { font-family: var(--ui); }
+
+/* Décors du Palais : chacun change un détail de l'interface. */
+html[data-decor='arcades'] .tribune { border-radius: 170px 170px 30px 30px; padding-top: 44px; }
+html[data-decor='arcades'] .jour-sceau, html[data-decor='arcades'] .pips i { border-radius: 10px 10px 3px 3px; }
+html[data-decor='jardin'] .haut .jauge::after { content: ''; position: absolute; right: -6px; top: -6px; width: 14px; height: 14px; border-radius: 0 60% 0 60%; background: var(--verdict); }
+html[data-decor='jardin'] .haut .jauge { position: relative; overflow: visible; }
+.feuille { position: absolute; top: -20px; width: 14px; height: 14px; border-radius: 0 70% 0 70%; background: var(--verdict); opacity: .7; pointer-events: none; z-index: 3; animation: chute-feuille 9s linear infinite; }
+.feuille.f1 { left: 30%; } .feuille.f2 { left: 62%; animation-delay: 3s; animation-duration: 11s; } .feuille.f3 { left: 84%; animation-delay: 6s; }
+@keyframes chute-feuille { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: .7; } 100% { transform: translate(-30px, 240px) rotate(300deg); opacity: 0; } }
+html[data-decor='buren'] .tribune { background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, .14) 0 10px, transparent 10px 20px); }
+html[data-decor='buren'] .pips i.fait { background-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, .28) 0 3px, transparent 3px 6px); }
+.colonnes-buren { position: absolute; left: 18px; bottom: 0; height: 52px; display: flex; align-items: flex-end; gap: 8px; opacity: .25; pointer-events: none; }
+.colonnes-buren i { width: 12px; border-radius: 3px 3px 0 0; background: repeating-linear-gradient(90deg, #fff 0 4px, transparent 4px 8px); transform-origin: bottom; animation: colonne-monte .9s cubic-bezier(.2, .8, .3, 1.1) both; animation-delay: calc(var(--i) * .08s); }
+@keyframes colonne-monte { from { transform: scaleY(0); } }
+.tribune[data-decor]:not([data-decor='aucun'])::before { display: none; }
+html[data-effets='non'] .feuille { display: none; }
+
+/* Verdict entre deux épreuves : une feuille de couleur remonte, Lexou saute dessus. */
+:root, [data-theme] { --battant-1: var(--bleu); --battant-2: var(--bleu); }
+.reaction { align-items: stretch; justify-content: flex-end; padding: 0 12px calc(12px + var(--bas-sur)); background: linear-gradient(0deg, color-mix(in srgb, var(--encre) 70%, transparent), transparent 55%); }
+.feuille-verdict { position: relative; min-height: 120px; padding: 26px 22px 24px; border-radius: 32px; background: var(--verdict); color: var(--verdict-texte); box-shadow: 0 -10px 30px var(--ombre); animation: monte-feuille .38s cubic-bezier(.2, .8, .2, 1) both; }
+.reaction.moyen .feuille-verdict { background: var(--or); color: var(--or-texte); }
+.reaction.rate .feuille-verdict { background: var(--cire-vive); color: var(--cire-texte); }
+@keyframes monte-feuille { from { transform: translateY(110%); } }
+.feuille-verdict .chouette { position: absolute !important; right: 6px; top: -104px; margin: 0; animation: saut-verdict .55s cubic-bezier(.25, 1.4, .5, 1) .18s both; }
+@keyframes saut-verdict { from { transform: translateY(80px) scale(.8); opacity: 0; } }
+.feuille-verdict .bulle { margin: 0; padding: 0; max-width: 64%; background: none; box-shadow: none; color: inherit; font-family: var(--corps); font-weight: 400; font-size: 26px; line-height: 1.15; animation: none; }
+.feuille-verdict .bulle::after { display: none; }
+
+/* Séance : en-tête, options, papiers */
+.option { border-radius: 20px; background: var(--banc); box-shadow: none; }
+.entete-seance { background: linear-gradient(180deg, var(--encre) 72%, transparent); }
+.quitter { border-radius: 50%; background: var(--banc); width: 40px; height: 40px; display: grid; place-items: center; }
+
+/* Dunk : le panier lance, le ballon passe entre l'arceau du fond et le filet. */
+.panier { width: 96px; height: 74px; transform-origin: 48px 14px; }
+.panier svg { position: absolute; left: 0; top: 0; }
+.panier-fond { z-index: 1; } .ballon { z-index: 2; } .panier-avant { z-index: 3; }
+.panier .filet { transform-box: fill-box; transform-origin: 50% 0; stroke: #FFFFFF; stroke-opacity: .8; stroke-width: 1.5; fill: none; }
+.arceau-fond { stroke: #B9470F; stroke-width: 4; }
+.arceau { stroke: #FF7A2E; stroke-width: 5; }
+.monde { transition: transform .5s cubic-bezier(.3, .8, .3, 1); }
+.terrain { margin: 0; border-radius: 30px; background: var(--bleu); height: 230px; }
+.dunk-score { font-family: var(--ui); }

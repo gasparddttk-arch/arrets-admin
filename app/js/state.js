@@ -90,7 +90,9 @@ export const BOUTIQUE = [
 
 // Chaque tenue change l'habillage de toute l'appli. Une nouvelle tenue s'ajoute ici et dans le CSS.
 export const THEMES = [
-  { id: 'palais', nom: 'Bleu', prix: 0, txt: 'Le bleu du Palais, l’or et la cire' },
+  { id: 'palais', nom: 'Bento Palais', prix: 0, txt: 'L’encre du Palais, des tuiles franches, l’or et la cire' },
+  { id: 'verre', nom: 'Verre lumineux', prix: 300, txt: 'Des tuiles de verre, des halos qui dérivent, l’or qui brille' },
+  { id: 'pastel', nom: 'Pastel jour', prix: 200, txt: 'Le Palais en plein jour, des cartes douces' },
   { id: 'rose', nom: 'Rose', prix: 200, txt: 'Le livre rose de Lexou, les canettes de Ratio, et Slay Diva' },
 ];
 const ANCIENNES_TENUES = { tapis: 150, robe: 150, pourpre: 300 };
@@ -104,10 +106,10 @@ export const INSIGNES = [
 ];
 
 export const DECORS = [
-  { id: 'aucun', nom: 'Bureau nu', prix: 0, txt: 'Rien que le sceau' },
-  { id: 'arcades', nom: 'Les galeries', prix: 100, txt: 'Les arcades du Palais-Royal' },
-  { id: 'jardin', nom: 'Le jardin', prix: 100, txt: 'Les tilleuls taillés du jardin' },
-  { id: 'buren', nom: 'Les colonnes', prix: 180, txt: 'La cour d’honneur, à deux pas du Conseil' },
+  { id: 'aucun', nom: 'Bureau nu', prix: 0, txt: 'Le fronton en filigrane, la sobriété' },
+  { id: 'arcades', nom: 'Les galeries', prix: 100, txt: 'Les arcades du Palais-Royal. Ta série prend la forme d’une arche' },
+  { id: 'jardin', nom: 'Le jardin', prix: 100, txt: 'Les tilleuls taillés. Des feuilles tombent, ta barre de grade pousse une feuille' },
+  { id: 'buren', nom: 'Les colonnes', prix: 180, txt: 'La cour d’honneur. Des colonnes rayées montent, ta série prend des rayures' },
 ];
 
 let decalage = 0;
