@@ -398,6 +398,7 @@ export async function lireIntro() {
     citations: c.citations.map(([a, t, z, ctx], i) => ({ id: `cit-${i}`, a, nom: auteur(a), t, zones: [z], ctx: ctx || null })),
     idees: c.idees.map(([a, t, z]) => ({ a, nom: auteur(a), t, zones: [z] })),
     auteurs: c.auteurs,
-    scanner: c.scanner.map(([t, src, r, g, s, w], i) => ({ id: `sc-${i}`, t, src, r: !!r, g: !!g, s: !!s, w })),
+    scanner: c.scanner.map(([t, src, manque, w], i) => ({ id: `sc-${i}`, t, src, manque, w })),
+    mots: c.mots.map(([mot, indice, carte, z], i) => ({ id: `mot-${i}`, mot, indice, carte, zones: [z] })),
   };
 }

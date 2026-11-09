@@ -124,7 +124,7 @@ export function jouerMot(zone, ctx, round) {
     const clavier = h('div', { class: 'mot-clavier' }, CLAVIER.map((r, k) => h('div', { class: 'mot-rangee' }, k === 2 ? touche('OK', true) : null, [...r].map((l) => touche(l)), k === 2 ? touche('EFF', true) : null)));
     const aide = h('p', { class: 'mot-aide' }, `${L} lettres, sans accent.`);
     const ecran = h('div', { class: 'ecran mot' }, h('div', { class: 'ecran-corps' },
-      h('p', { class: 'surtitre' }, 'Le mot du juriste'), h('h2', { class: 'question mot-def' }, round.def.replace(new RegExp(round.nom.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), '…')), aide, grille), clavier);
+      h('p', { class: 'surtitre' }, 'Le mot du juriste'), h('h2', { class: 'question mot-def' }, round.indice), aide, grille), clavier);
     zone.replaceChildren(ecran);
     const physique = (e) => {
       if (e.metaKey || e.ctrlKey) return;
@@ -162,7 +162,7 @@ export function jouerMot(zone, ctx, round) {
       fin = true;
       document.removeEventListener('keydown', physique);
       ctx.combo(gagne);
-      ctx.noter(round.id, gagne && ligne <= 4);
+      if (round.id) ctx.noter(round.id, gagne && ligne <= 4);
       const score = gagne ? Math.max(0.4, 1 - (ligne - 1) * 0.12) : 0;
       ctx.gain(gagne ? Math.round(30 * score) + (ligne <= 2 ? 8 : 0) : 0);
       if (gagne) { son('valide'); grille.children[ligne - 1].classList.add('danse'); }
@@ -308,43 +308,55 @@ export function jouerQuiADit(zone, ctx, round) {
 }
 
 // AU SCANNER ----------------------------------------------------------------------------------------
-// Un rayon balaie le texte ; on allume les témoins, puis le verdict tombe, témoin par témoin.
-const TEMOINS = [['r', 'Règle de conduite'], ['g', 'Générale et impersonnelle'], ['s', 'Sanctionnée par l’autorité publique']];
+// Un texte passe au scanner. Est-ce une règle de droit ? Sinon, qu'est-ce qui lui manque ?
+// Puis le rayon balaie la feuille et les trois éléments de la définition classique s'allument.
+const CRITERES = [['conduite', 'Une règle de conduite', 'Il dit ce qui doit être'], ['generale', 'Générale et impersonnelle', 'Il vise tout le monde, pas une personne'], ['sanction', 'Sanctionnée par l’autorité publique', 'L’État le fait respecter']];
+const MANQUES = [['conduite', 'Il décrit ce qui est : ce n’est pas une règle de conduite'], ['generale', 'Il vise une personne nommée : c’est une décision'], ['sanction', 'Aucune autorité publique ne le fait respecter']];
 export function jouerScanner(zone, ctx, round) {
   return new Promise((fini) => {
     let k = 0; let points = 0;
     const texte = () => {
       const x = round.textes[k];
-      const choix = { r: false, g: false, s: false };
-      const temoins = TEMOINS.map(([c, nom]) => h('button', { class: 'sc-temoin', role: 'switch', 'aria-checked': 'false', 'data-temoin': c, 'data-ok': repere(x[c]), onClick: (e) => {
-        if (fige) return; choix[c] = !choix[c]; e.currentTarget.setAttribute('aria-checked', String(choix[c])); e.currentTarget.classList.toggle('allume', choix[c]); son('tap');
-      } }, h('i', { class: 'sc-voyant', 'aria-hidden': 'true' }), h('span', {}, nom)));
-      let fige = false;
       const feuille = h('article', { class: 'sc-feuille' }, h('small', {}, x.src), h('p', {}, x.t), h('i', { class: 'sc-rayon', 'aria-hidden': 'true' }));
-      const pied = barrePied(continuer('Scanner', () => verdict(), { 'data-action': 'scanner' }));
-      const ecran = h('div', { class: 'ecran scanner' }, h('div', { class: 'ecran-corps' },
-        h('p', { class: 'surtitre' }, `Au scanner : ${k + 1} sur ${round.textes.length}`), feuille,
-        h('p', { class: 'sc-consigne' }, 'Allume les témoins que ce texte remplit.'), h('div', { class: 'sc-temoins' }, temoins)), pied);
+      const question = h('h2', { class: 'question sc-question' }, 'Est-ce une règle de droit ?');
+      const choix = h('div', { class: 'sc-choix-liste' });
+      const corps = h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, `Au scanner : ${k + 1} sur ${round.textes.length}`), feuille, question, choix);
+      const ecran = h('div', { class: 'ecran scanner' }, corps);
       zone.replaceChildren(ecran);
-      async function verdict() {
-        if (fige) return; fige = true;
-        pied.remove();
+      const bouton = (label, ok, action, classe = '') => h('button', { class: `sc-choix ${classe}`, 'data-ok': repere(ok), onClick: action }, label);
+      // Première question : du droit, ou pas.
+      choix.replaceChildren(
+        bouton('Oui, c’est du droit', x.manque === null, () => repondre(null), 'oui'),
+        bouton('Non, ce n’est pas du droit', x.manque !== null, () => deuxieme(), 'non'));
+      function deuxieme() {
+        son('tap');
+        question.textContent = 'Qu’est-ce qui lui manque ?';
+        choix.replaceChildren(...MANQUES.map(([m, label]) => bouton(label, x.manque === m, () => repondre(m))));
+      }
+      async function repondre(m) {
+        for (const b of choix.querySelectorAll('button')) b.disabled = true;
+        const verdictJuste = (m === null) === (x.manque === null);
+        const manqueJuste = m === x.manque;
+        const score = manqueJuste ? 1 : verdictJuste ? 0.5 : 0;
+        points += score;
+        ctx.combo(manqueJuste);
+        choix.remove();
+        question.textContent = 'Le scanner';
         feuille.classList.add('balaye');
-        await attendre(effets() ? 700 : 0);
-        let justes = 0;
-        for (const [i, [c]] of TEMOINS.entries()) {
-          const bon = choix[c] === x[c];
-          if (bon) justes++;
-          temoins[i].classList.add(bon ? 'bip-vert' : 'bip-rouge');
-          temoins[i].classList.toggle('allume', x[c]);
-          son(bon ? 'ok' : 'ko');
+        son('tic');
+        await attendre(effets() ? 750 : 0);
+        // Les trois éléments, un par un : vert s'il est rempli, rouge s'il manque, gris s'il n'a plus de sens.
+        const lignes = CRITERES.map(([c, nom, aide]) => h('div', { class: 'sc-temoin', 'data-critere': c }, h('i', { class: 'sc-voyant', 'aria-hidden': 'true' }), h('span', {}, h('b', {}, nom), h('small', {}, aide))));
+        corps.append(h('div', { class: 'sc-temoins' }, lignes));
+        for (const [i, [c]] of CRITERES.entries()) {
           await attendre(effets() ? 260 : 0);
+          const etat_ = x.manque === c ? 'manque' : x.manque === 'conduite' ? 'sans-objet' : 'rempli';
+          lignes[i].classList.add(etat_);
+          if (etat_ !== 'sans-objet') son(etat_ === 'rempli' ? 'ok' : 'ko');
         }
-        const droit = x.r && x.g && x.s;
-        points += justes / 3;
-        ctx.combo(justes === 3);
-        ecran.querySelector('.ecran-corps').append(h('div', { class: `sc-verdict ${droit ? 'droit' : 'pas'}` },
-          h('b', {}, droit ? 'Du droit' : 'Pas une règle de droit'), h('p', {}, x.w)));
+        const droit = x.manque === null;
+        const bilan = manqueJuste ? 'Bien vu.' : verdictJuste ? 'Bon verdict, mais ce n’est pas cet élément qui manque.' : 'Ce n’est pas le bon verdict.';
+        corps.append(h('div', { class: `sc-verdict ${droit ? 'droit' : 'pas'}` }, h('b', {}, droit ? 'Du droit' : 'Pas une règle de droit'), h('p', {}, x.w), h('small', { class: 'sc-bilan' }, bilan)));
         ecran.append(barrePied(continuer(k + 1 < round.textes.length ? 'Texte suivant' : 'Continuer', () => { k++; if (k < round.textes.length) texte(); else conclure(); })));
       }
     };
@@ -353,9 +365,9 @@ export function jouerScanner(zone, ctx, round) {
       ctx.gain(Math.round(30 * score) + (score === 1 ? 6 : 0));
       fini();
       finEpreuve(zone, ctx, { score, parfait: score === 1 },
-        h('p', { class: 'surtitre' }, score === 1 ? 'Tous les témoins justes.' : `${Math.round(score * 100)} % des témoins justes.`),
+        h('p', { class: 'surtitre' }, score === 1 ? 'Tous les textes bien jugés.' : `${Math.round(score * 100)} % de bonnes analyses.`),
         h('article', { class: 'revelation' }, h('h3', {}, 'La définition classique'),
-          h('p', { class: 'apport' }, 'Une règle de conduite en société, générale et impersonnelle, dont le respect est imposé par l’autorité publique.')));
+          h('p', { class: 'apport' }, 'Une règle de conduite en société, générale et impersonnelle, dont le respect est imposé par l’autorité publique. Il manque un élément ? Ce n’est pas une règle de droit.')));
     }
     texte();
   });

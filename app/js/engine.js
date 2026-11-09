@@ -364,9 +364,10 @@ export function tirerIntro(ix, type, zones, dus, rng = Math.random, deja = new S
       return { type, cartes: pris };
     }
     case 'mot': {
-      const avecMot = notions.filter((n) => n.mot);
-      const n = prendre(avecMot.length ? avecMot : ix.articles.filter((x) => x.mot));
-      return { type, id: n.id, mot: sansAccent(n.mot), nom: n.nom, def: n.regle, indice: n.c };
+      const liste = ix.mots.filter(dans);
+      const m = prendre(liste.length ? liste : ix.mots);
+      const n = m.carte ? ix.parId.get(m.carte) : null;
+      return { type, id: m.carte, mot: sansAccent(m.mot), indice: m.indice, nom: n?.nom || m.mot, def: n?.regle || m.indice };
     }
     case 'rangement': {
       const pris = melange(ix.rangement.filter((c) => !deja.has(c.id)), rng);
@@ -386,7 +387,11 @@ export function tirerIntro(ix, type, zones, dus, rng = Math.random, deja = new S
       return { type, tours };
     }
     case 'scanner': {
-      const pris = melange(ix.scanner.filter((x) => !deja.has(x.id)), rng).slice(0, 3);
+      // Trois textes : un de droit, et deux qui manquent chacun d'un élément différent.
+      const libres = melange(ix.scanner.filter((x) => !deja.has(x.id)), rng);
+      const droit = libres.find((x) => x.manque === null);
+      const autres = melange(['conduite', 'generale', 'sanction'], rng).slice(0, 2).map((m) => libres.find((x) => x.manque === m)).filter(Boolean);
+      const pris = melange([droit, ...autres].filter(Boolean), rng);
       for (const x of pris) deja.add(x.id);
       return { type, textes: pris };
     }

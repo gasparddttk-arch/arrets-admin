@@ -31,8 +31,7 @@ async function toucher(e) { try { await e.click({ timeout: 900 }); return true; 
 const pasL1 = (p) => p.evaluate(() => {
   const clic = (e) => { if (!e) return false; e.click(); return true; };
   const q = (s) => document.querySelector(s);
-  const scanner = q('[data-action="scanner"]');
-  if (scanner) { for (const t of document.querySelectorAll('.sc-temoin')) if ((t.dataset.ok === 'true') !== (t.getAttribute('aria-checked') === 'true')) t.click(); return clic(scanner); }
+  const sc = q('.sc-choix[data-ok="true"]:not([disabled])'); if (sc) return clic(sc);
   if (q('.scene .pied button')) return false;
   const carte = q('.tri-carte[data-bon]:not(.tamponnee)'); if (carte) return clic(q(`.tri-bord[data-bord="${carte.dataset.bon}"]`));
   const grille = q('.mot-grille');
