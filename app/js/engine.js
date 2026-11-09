@@ -236,6 +236,7 @@ function tirerOblig(ix, type, zones, dus, rng, deja) {
 // DUNK SHOT ------------------------------------------------------------------------
 // Une liste de questions rapides pour les chambres ouvertes. n : niveau de difficulté, de 1 à 3.
 export function questionsDunk(ix, zones, rng = Math.random) {
+  if (ix.matiere === 'intro') return questionsIntro(ix, zones, rng);
   const dans = dansZones(zones);
   const travaux = new Set(ix.zones.filter((z) => z.travaux).map((z) => z.id));
   const tag = (x) => (x.zones.every((z) => travaux.has(z)) ? 'En travaux' : null);
@@ -279,6 +280,7 @@ export function tirerDunk(liste, tir, dus, deja, rng = Math.random) {
 }
 
 export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new Set()) {
+  if (ix.matiere === 'intro') return tirerIntro(ix, type, zones, dus, rng, deja);
   if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, dus, rng, deja);
   const d = dispo(ix, zones);
   const prendre = (liste) => {
@@ -305,6 +307,7 @@ export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new S
 }
 
 export function composerDefi(ix, zones, dus, rng = Math.random) {
+  if (ix.matiere === 'intro') return composerDefiIntro(ix, zones, dus, rng);
   const deja = new Set();
   if (ix.matiere === 'oblig') {
     const milieu = melange(['cas', choix(['remede', 'frise'], rng), choix(['remede', 'frise', 'plan'], rng)], rng);
@@ -316,8 +319,127 @@ export function composerDefi(ix, zones, dus, rng = Math.random) {
 
 // Audience solennelle : les cinq modes, plus une épreuve au hasard.
 export function composerBoss(ix, zone, rng = Math.random) {
+  if (ix.matiere === 'intro') return composerBossIntro(ix, zone, rng);
   const deja = new Set();
   if (ix.matiere === 'oblig') return melange(['qualif', 'cas', 'remede', 'frise', 'plan', 'cas'], rng).map((t) => tirerRound(ix, t, [zone], [], rng, deja));
   const types = melange(['paires', 'puzzle', 'juge', 'plan', 'architecte', choix(['puzzle', 'juge'], rng)], rng);
   return types.map((t) => tirerRound(ix, t, [zone], [], rng, deja));
+}
+
+// L1, INTRODUCTION AU DROIT ----------------------------------------------------------------
+// Les exercices qu'une chambre peut nourrir. Le tri vient des chambres 1 et 2, le scanner de la 1,
+// le rangement de la 4, la frise des 5 et 6 ; le mot, Memory et Qui a dit ? puisent partout.
+export function typesIntro(ix, zones) {
+  const z = (ids) => ids.some((i) => zones.includes(i));
+  const t = ['memory', 'mot'];
+  if (z([1, 2])) t.push('tri');
+  if (z([1])) t.push('scanner');
+  if (z([4])) t.push('rangement');
+  if (ix.citations.filter(dansZones(zones)).length >= 3) t.push('quiadit');
+  if (ix.frises.some(dansZones(zones))) t.push('frise');
+  return t;
+}
+const sansAccent = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase();
+
+export function tirerIntro(ix, type, zones, dus, rng = Math.random, deja = new Set()) {
+  const dans = dansZones(zones);
+  const dispo = typesIntro(ix, zones);
+  if (!dispo.includes(type)) type = choix(dispo.filter((t) => t !== 'frise'), rng);
+  const notions = ix.articles.filter(dans);
+  const prendre = (liste) => {
+    const frais = liste.filter((x) => !deja.has(x.id));
+    const base = frais.length ? frais : liste;
+    const du = dus.find((id) => base.some((x) => x.id === id));
+    const pris = du ? base.find((x) => x.id === du) : choix(base, rng);
+    deja.add(pris.id);
+    return pris;
+  };
+  switch (type) {
+    case 'tri': {
+      const cartes = ix.tri.filter((c) => !deja.has(c.id));
+      const parBord = ['d', 'm', 'r', 'c'].map((k) => melange(cartes.filter((c) => c.k === k), rng));
+      // Huit cartes, deux par bord au moins quand c'est possible, dans le désordre.
+      const pris = melange(parBord.flatMap((l) => l.slice(0, 2)), rng);
+      for (const c of pris) deja.add(c.id);
+      return { type, cartes: pris };
+    }
+    case 'mot': {
+      const avecMot = notions.filter((n) => n.mot);
+      const n = prendre(avecMot.length ? avecMot : ix.articles.filter((x) => x.mot));
+      return { type, id: n.id, mot: sansAccent(n.mot), nom: n.nom, def: n.regle, indice: n.c };
+    }
+    case 'rangement': {
+      const pris = melange(ix.rangement.filter((c) => !deja.has(c.id)), rng);
+      const mixte = pris.find((c) => c.k === 'x');
+      const liste = melange([...(mixte ? [mixte] : []), ...pris.filter((c) => c !== mixte).slice(0, 9)], rng);
+      for (const c of liste) deja.add(c.id);
+      return { type, pieces: liste };
+    }
+    case 'quiadit': {
+      const cits = ix.citations.filter(dans);
+      const tours = [];
+      for (const c of melange(cits.filter((x) => !deja.has(x.id)), rng).slice(0, 3)) {
+        deja.add(c.id);
+        const autres = melange([...new Set(ix.citations.map((x) => x.a))].filter((a) => a !== c.a), rng).slice(0, 3);
+        tours.push({ ...c, choix: melange([c.a, ...autres], rng).map((a) => ({ a, nom: ix.auteurs[a] })) });
+      }
+      return { type, tours };
+    }
+    case 'scanner': {
+      const pris = melange(ix.scanner.filter((x) => !deja.has(x.id)), rng).slice(0, 3);
+      for (const x of pris) deja.add(x.id);
+      return { type, textes: pris };
+    }
+    case 'memory': {
+      // Six paires : des notions et leur idée courte, parfois un auteur et son idée.
+      const base = melange(notions.filter((n) => !deja.has(n.id)), rng);
+      const prio = dus.map((id) => base.find((n) => n.id === id)).filter(Boolean).slice(0, 2);
+      const idees = melange(ix.idees.filter(dans), rng).slice(0, rng() < 0.5 ? 2 : 0);
+      const reste = base.filter((n) => !prio.includes(n)).slice(0, 6 - prio.length - idees.length);
+      const paires = [...prio, ...reste].map((n) => ({ id: n.id, a: n.nom, b: n.c, carte: n.id }))
+        .concat(idees.map((x, i) => ({ id: `idee-${i}-${x.a}`, a: x.nom, b: x.t, carte: null })));
+      for (const p of paires) if (p.carte) deja.add(p.carte);
+      return { type, paires: melange(paires, rng) };
+    }
+    case 'frise': {
+      const f = choix(ix.frises.filter(dans).length ? ix.frises.filter(dans) : ix.frises, rng);
+      return { type, mot: 'étape', ...roundFrise(f, rng) };
+    }
+    default: throw new Error('mode inconnu ' + type);
+  }
+}
+
+export function composerDefiIntro(ix, zones, dus, rng = Math.random) {
+  const deja = new Set();
+  const dispo = typesIntro(ix, zones);
+  const jeux = melange(dispo.filter((t) => !['memory', 'mot'].includes(t)), rng);
+  const milieu = [jeux[0] || 'mot', 'mot', jeux[1] || 'memory'];
+  return ['memory', ...melange(milieu, rng), jeux[2] || 'memory'].map((t) => tirerIntro(ix, t, zones, dus, rng, deja));
+}
+export function composerBossIntro(ix, zone, rng = Math.random) {
+  const deja = new Set();
+  const dispo = typesIntro(ix, [zone]);
+  const types = melange([...dispo, ...dispo].slice(0, 6), rng);
+  while (types.length < 6) types.push(choix(dispo, rng));
+  return types.map((t) => tirerIntro(ix, t, [zone], [], rng, deja));
+}
+
+// Dunk en L1 : la notion d'après sa définition, la définition d'après la notion, l'auteur d'une citation.
+export function questionsIntro(ix, zones, rng = Math.random) {
+  const dans = dansZones(zones);
+  const out = [];
+  const notions = ix.articles.filter(dans);
+  for (const n of notions) {
+    const proches = melange(notions.filter((m) => m !== n), rng);
+    const faux = proches.map((m) => m.nom).slice(0, 3);
+    if (faux.length >= 2) out.push({ n: 1, q: `Quelle notion ? ${n.c}`, bonne: n.nom, faux, carte: n.id, tag: null });
+    const fauxD = prochesEnLongueur(n.regle, proches.map((m) => ({ t: m.regle })), 3, rng).map((p) => p.t);
+    if (fauxD.length >= 2) out.push({ n: 2, q: `${n.nom} : c’est…`, bonne: n.regle, faux: fauxD, carte: n.id, tag: null });
+  }
+  const cits = ix.citations.filter(dans);
+  for (const c of cits) {
+    const faux = melange([...new Set(ix.citations.map((x) => x.nom))].filter((a) => a !== c.nom), rng).slice(0, 3);
+    out.push({ n: 3, q: `Qui a dit : « ${c.t} » ?`, bonne: c.nom, faux, carte: null, tag: null });
+  }
+  return melange(out, rng);
 }

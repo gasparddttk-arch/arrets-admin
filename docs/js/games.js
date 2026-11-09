@@ -512,3 +512,12 @@ export const NOMS_MODES_OBLIG = {
   frise: ['Frise de la jurisprudence', 'Placer chaque décision à sa date'],
   plan: ['Le bon plan', 'Choisir le meilleur plan et diagnostiquer les autres'],
 };
+export const NOMS_MODES_INTRO = {
+  tri: ['Le tri du greffe', 'Droit, morale, religion ou convenance : jette la carte du bon côté'],
+  mot: ['Le mot du juriste', 'Six essais pour trouver le mot d’une définition'],
+  rangement: ['Le grand rangement', 'Ranger les disciplines avant qu’elles touchent le sol'],
+  quiadit: ['Qui a dit ?', 'Une citation du cours, quatre auteurs'],
+  scanner: ['Au scanner', 'Ce texte est-il une règle de droit ?'],
+  memory: ['Memory', 'Retrouver chaque notion et sa définition'],
+  frise: ['La frise', 'Du droit romain à 2008, chaque étape à sa date'],
+};

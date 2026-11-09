@@ -18,6 +18,11 @@ const apportDe = (a, zones) => a.ap[a.zones.find((z) => zones.includes(z)) ?? a.
 // LES ÉPREUVES, tirées du contenu existant.
 export function roundExamen(ix, type, zones, dus, deja) {
   const arrets = ix.arrets.filter((a) => dans(zones)(a) && !a.nf && Object.keys(a.ap).length);
+  // L1 : Notion flash, la définition à écrire de mémoire.
+  if (type === 'flash' && ix.matiere === 'intro') {
+    const n = prendre(ix.articles.filter(dans(zones)), dus, deja); if (!n) return null;
+    return { type, notion: true, id: n.id, nom: n.nom, an: '', ref: n.etiquette, attendu: n.regle, complement: n.ex ? `Exemple du cours : ${n.ex}` : n.pg };
+  }
   if (type === 'flash') {
     const a = prendre(arrets, dus, deja); if (!a) return null;
     return { type, id: a.id, nom: a.court || a.nom, an: a.an, ref: a.ref, attendu: apportDe(a, zones), complement: a.po };
@@ -80,7 +85,7 @@ function autoNote(zone, { surtitre, entete, question, attendu, complement }) {
 }
 
 export async function jouerFlash(zone, ctx, r) {
-  const v = await autoNote(zone, { surtitre: 'Arrêt flash', entete: h('p', { class: 'flash-arret' }, h('b', {}, r.nom), ` ${r.an}`, h('small', {}, r.ref || '')), question: 'Son apport, en quelques mots ?', attendu: r.attendu, complement: r.complement });
+  const v = await autoNote(zone, { surtitre: r.notion ? 'Notion flash' : 'Arrêt flash', entete: h('p', { class: 'flash-arret' }, h('b', {}, r.nom), r.an ? ` ${r.an}` : '', h('small', {}, r.ref || '')), question: r.notion ? 'Sa définition, en quelques mots ?' : 'Son apport, en quelques mots ?', attendu: r.attendu, complement: r.complement });
   ctx.noter(r.id, v === 1); ctx.gain(Math.round(18 * v)); ctx.fin({ score: v, parfait: v === 1 });
 }
 export async function jouerPlaide(zone, ctx, r) {

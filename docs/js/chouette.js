@@ -10,6 +10,7 @@ export const POSE_MODE = {
   defi: 'tribune', express: 'pause', zone: 'assise', boss: 'marteau', reprise: 'debout', dunk: 'clin',
   paires: 'reflexion', puzzle: 'piles', juge: 'marteau', plan: 'notes', architecte: 'tableau',
   cas: 'serment', qualif: 'lunettes', remede: 'balance', frise: 'echelle',
+  tri: 'piles', mot: 'reflexion', rangement: 'tableau', quiadit: 'clin', scanner: 'lunettes', memory: 'notes',
 };
 
 export const TENUES = [

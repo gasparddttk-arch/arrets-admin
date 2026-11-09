@@ -70,6 +70,7 @@ export async function jouerRemede(zone, ctx, round, ix) {
 // FRISE DE LA JURISPRUDENCE : les années sont posées, on place ce que chaque étape a décidé ------
 // La première étape sert de point de départ. Une fois tout placé, on peut échanger deux décisions.
 export async function jouerFrise(zone, ctx, round) {
+  const mot = round.mot || 'décision';
   const etapes = [...round.etapes].sort((a, b) => a.rang - b.rang);
   const n = etapes.length;
   const place = etapes.map((e, i) => (i === 0 ? e : null));
@@ -92,23 +93,23 @@ export async function jouerFrise(zone, ctx, round) {
             depart ? h('p', { class: 'jalon-decision fixe' }, d.t)
               : h('button', {
                 class: `jalon-case${d ? ' pleine' : ''}${cible === i ? ' cible' : ''}${choisie === i ? ' choisie' : ''}`, 'data-i': repere(i),
-                'aria-label': d ? `${e.an} : ${d.t}. Touche pour échanger` : `${e.an} : décision à placer`,
+                'aria-label': d ? `${e.an} : ${d.t}. Touche pour échanger` : `${e.an} : ${mot} à placer`,
                 onClick: () => {
                   if (!d) { cible = i; choisie = null; son('tap'); return rendre(); }
                   if (choisie === null) { choisie = i; son('tap'); return rendre(); }
                   if (choisie === i) { pile.unshift(d); place[i] = null; cible = i; choisie = null; son('retour'); return rendre(); }
                   [place[choisie], place[i]] = [place[i], place[choisie]]; choisie = null; son('carte'); vibrer(8); return rendre();
                 },
-              }, d ? d.t : 'Quelle décision ?')));
+              }, d ? d.t : `Quelle ${mot} ?`)));
       });
       const consigne = complet
-        ? (choisie !== null ? 'Touche une autre décision pour les échanger, ou la même pour la retirer.' : 'Tout est placé. Touche deux décisions pour les échanger, puis vérifie.')
-        : choisie !== null ? 'Touche une autre décision placée pour les échanger, ou la même pour la retirer.'
-          : `Que décide-t-on en ${etapes[cible].an} ? Choisis ci-dessous.`;
+        ? (choisie !== null ? `Touche une autre ${mot} pour les échanger, ou la même pour la retirer.` : `Tout est placé. Touche deux ${mot}s pour les échanger, puis vérifie.`)
+        : choisie !== null ? `Touche une autre ${mot} placée pour les échanger, ou la même pour la retirer.`
+          : round.mot ? `Que se passe-t-il : ${etapes[cible].an} ? Choisis ci-dessous.` : `Que décide-t-on en ${etapes[cible].an} ? Choisis ci-dessous.`;
       zone.replaceChildren(h('div', { class: 'ecran frise' },
         h('div', { class: 'ecran-corps' },
           h('p', { class: 'surtitre' }, round.titre),
-          h('h2', { class: 'question' }, 'Place chaque décision à sa date'),
+          h('h2', { class: 'question' }, `Place chaque ${mot} à sa date`),
           h('p', { class: 'aide frise-consigne' }, consigne),
           h('ol', { class: 'jalons' }, jalons)),
         h('div', { class: 'dock' },
@@ -131,7 +132,7 @@ export async function jouerFrise(zone, ctx, round) {
   await new Promise((suite) => {
     zone.replaceChildren(h('div', { class: 'ecran frise' },
       h('p', { class: 'surtitre' }, round.p),
-      h('h2', { class: 'question' }, tout ? 'Toute la frise est juste' : justes === 0 ? `Aucune décision sur ${aPlacer} à sa place` : `${justes} décision${justes > 1 ? 's' : ''} sur ${aPlacer} à sa place`),
+      h('h2', { class: 'question' }, tout ? 'Toute la frise est juste' : justes === 0 ? `Aucune ${mot} sur ${aPlacer} à sa place` : `${justes} ${mot}${justes > 1 ? 's' : ''} sur ${aPlacer} à sa place`),
       h('ol', { class: 'frise-vraie' }, etapes.map((e, i) => {
         const bon = i === 0 || place[i].rang === i;
         return h('li', { class: bon ? 'juste' : 'faux' },

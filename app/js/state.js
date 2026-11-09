@@ -35,6 +35,7 @@ export const RANGS_GENERAL = [
 export const MATIERES = [
   { id: 'admin', nom: 'Droit administratif', institution: 'Conseil d’État', rangs: RANGS },
   { id: 'oblig', nom: 'Droit des obligations', institution: 'Cour de cassation', rangs: RANGS_OBLIG },
+  { id: 'intro', nom: 'Introduction au droit', institution: 'Cour de cassation', rangs: RANGS_OBLIG, annee: 'L1' },
 ];
 export const matiereDe = (id) => MATIERES.find((m) => m.id === id);
 
@@ -136,6 +137,7 @@ function etatInitial() {
     annee: null, equipeL1: 3,
     matiere: 'admin', equipe: 2, equipeChoisie: false, gains: { jour: null, n: 0 },
     oblig: matiereVierge(),
+    intro: matiereVierge(),
     signalements: [],
     dunk: { infini: false, record: 0, parties: 0, paniers: 0 },
     serie: { n: 0, dernier: null, record: 0 },
@@ -164,7 +166,9 @@ function fusion(base, x) {
   for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'compte', 'semaine', 'gains', 'dunk', 'chouette']) o[k] = { ...base[k], ...(x[k] || {}) };
   const ob = x.oblig || {};
   o.oblig = { ...base.oblig, ...ob, gains: { ...base.oblig.gains, ...(ob.gains || {}) }, zones: { ...base.oblig.zones, ...(ob.zones || {}) } };
-  if (!['admin', 'oblig'].includes(o.matiere)) o.matiere = 'admin';
+  const il = x.intro || {};
+  o.intro = { ...base.intro, ...il, gains: { ...base.intro.gains, ...(il.gains || {}) }, zones: { ...base.intro.zones, ...(il.zones || {}) } };
+  if (!['admin', 'oblig', 'intro'].includes(o.matiere)) o.matiere = 'admin';
   return o;
 }
 
@@ -192,7 +196,7 @@ export function changerEquipe(n) {
 export let etat = etatInitial();
 export let rembourse = 0;
 // La progression de la matière ouverte, ou de celle demandée.
-export const M = (m = etat.matiere) => (m === 'oblig' ? etat.oblig : etat);
+export const M = (m = etat.matiere) => (m === 'oblig' ? etat.oblig : m === 'intro' ? etat.intro : etat);
 export const remplacerEtat = (e) => { etat = fusion(etatInitial(), e); migrer(); sauver(); };
 
 // Les anciennes tenues disparaissent : ce qu'elles ont coûté revient en jetons.
@@ -319,7 +323,7 @@ export function ajouterSemaine(n) {
   etat.semaine.xp += n;
 }
 export const rang = (m = etat.matiere) => palier(matiereDe(m).rangs, M(m).xp);
-export const rangGeneral = () => palier(RANGS_GENERAL, etat.xp + etat.oblig.xp);
+export const rangGeneral = () => palier(RANGS_GENERAL, etat.xp + etat.oblig.xp + (etat.intro?.xp || 0));
 
 // Pièces gagnées aujourd'hui dans une matière, et ce qu'il reste à gagner avant le plafond.
 export function gainsDuJour(m = etat.matiere) {

@@ -8,8 +8,9 @@ import { remplacerEtat, choisirAnnee, ajouterSemaine, gagnerAppel, erreursOuvert
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
 } from './state.js';
-import { indexer, questionsDunk, composerDefi, composerBoss, tirerRound, jumeaux, melange } from './engine.js';
-import { JEUX, NOMS_MODES, NOMS_MODES_OBLIG, continuer, qcm } from './games.js';
+import { indexer, questionsDunk, composerDefi, composerBoss, tirerRound, jumeaux, melange, typesIntro, roundPlan } from './engine.js';
+import { JEUX, NOMS_MODES, NOMS_MODES_OBLIG, NOMS_MODES_INTRO, continuer, qcm } from './games.js';
+import { jouerTri, jouerMot, jouerRangement, jouerQuiADit, jouerScanner, jouerMemory } from './jeux-l1.js';
 import { preparerLexique, souligner } from './lexique.js';
 import { roundExamen, jouerFlash, jouerPlaide, jouerTrous, jouerExpress, jouerSyllogisme, jouerCasNu } from './examen.js';
 import { jouerCas, jouerRemede, jouerFrise } from './jeux-oblig.js';
@@ -19,7 +20,8 @@ import { SUPABASE_URL } from './config.js';
 import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
-const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu };
+const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu,
+  tri: jouerTri, mot: jouerMot, rangement: jouerRangement, quiadit: jouerQuiADit, scanner: jouerScanner, memory: jouerMemory };
 
 // FAIRE APPEL : chaque fiche ratée revient sous une autre forme, une question rapide.
 async function jouerAppel(zone, ctx, r) {
@@ -70,7 +72,13 @@ const fmt = (n) => n.toLocaleString('fr-FR');
 const pluriel = (n, s, p = s + 's') => `${fmt(n)} ${n > 1 ? p : s}`;
 const monnaie = (n) => pluriel(n, estRose() ? 'canette' : 'jeton');
 const estOblig = () => etat.matiere === 'oblig';
-const nomsModes = () => (estOblig() ? NOMS_MODES_OBLIG : NOMS_MODES);
+const estIntro = () => etat.matiere === 'intro';
+const nomsModes = () => (estIntro() ? NOMS_MODES_INTRO : estOblig() ? NOMS_MODES_OBLIG : NOMS_MODES);
+// Le nom des fiches selon la matière : arrêts en administratif, fiches en obligations, notions en L1.
+const motFiche = () => (estIntro() ? 'notion' : estOblig() ? 'fiche' : 'arrêt');
+// Les chambres d'un exercice choisi : tout le cours ouvert en obligations et en L1, le parcours du jour en administratif.
+const zonesCours = () => (estOblig() || estIntro() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix));
+const matieresAnnee = () => MATIERES.filter((m) => (m.annee || 'L2') === (etat.annee === 'L1' ? 'L1' : 'L2'));
 
 function montrer(...enfants) {
   racine.replaceChildren(...enfants.filter(Boolean));
@@ -151,13 +159,12 @@ function ecranEquipeL1() {
     h('button', { class: 'bouton-lien', onClick: ecranAnnee }, 'Changer d’année')));
 }
 
-// En attendant le contenu L1 : un écran d'attente, avec un retour vers la L2.
+// La L1 n'a qu'une matière pour l'instant : l'introduction au droit de l'équipe 3.
 function accueilL1() {
-  afficherOnglets(false);
-  montrer(h('section', { class: 'choix l1-bientot' },
-    h('div', { class: 'choix-tete' }, h('h1', {}, 'L’introduction au droit arrive'), chouette('notes', { taille: 150, vivante: true, classe: 'chouette-guide' })),
-    h('p', { class: 'page-sous' }, `Lexou prépare le cours de l’équipe ${etat.equipeL1} : définitions, auteurs, histoire du droit et Code civil. Reviens très bientôt.`),
-    h('button', { class: 'bouton-lien', onClick: ecranAnnee }, 'Changer d’année')));
+  if (etat.equipeL1 !== 3) { ecranEquipeL1(); return; }
+  if (etat.matiere !== 'intro') { etat.matiere = 'intro'; filtre = { texte: '', zone: 0, type: 'arrets' }; sauver(); }
+  ix = CONTENUS.intro;
+  aller('palais');
 }
 
 function choisirEquipe() {
@@ -181,7 +188,7 @@ function matieres() {
       h('span', { class: 'porte-icone' }, icone(m.id === 'admin' ? 'palais' : 'balance', 34)),
       h('span', { class: 'porte-txt' },
         h('b', {}, m.nom),
-        h('small', {}, m.id === 'oblig' ? `${m.institution}, équipe ${etat.equipe}` : m.institution),
+        h('small', {}, m.id === 'oblig' ? `${m.institution}, équipe ${etat.equipe}` : m.id === 'intro' ? `${m.institution}, équipe ${etat.equipeL1}` : m.institution),
         h('span', { class: 'porte-rang' }, r.nom),
         h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${r.part.toFixed(3)})` })),
         h('small', { class: 'porte-gain' }, gagnes >= PLAFOND_JOUR ? `Plafond atteint : ${monnaie(PLAFOND_JOUR)} aujourd’hui` : `${fmt(gagnes)} sur ${monnaie(PLAFOND_JOUR)} aujourd’hui`)));
@@ -193,13 +200,13 @@ function matieres() {
     h('section', { class: 'choix' },
       h('div', { class: 'choix-tete' }, h('h1', {}, 'Que révises-tu aujourd’hui ?'), guide),
       h('p', { class: 'page-sous' }, s.n ? `${pluriel(s.n, 'jour')} de série. Une séance dans l’une ou l’autre matière la garde.` : 'Termine une séance pour poser ton premier sceau.'),
-      h('div', { class: 'portes' }, MATIERES.map(porte))));
+      h('div', { class: 'portes' }, matieresAnnee().map(porte))));
 }
 
 function afficherOnglets(vis) {
   onglets.hidden = !vis;
   if (!vis) return;
-  const defs = [['palais', 'Palais'], ['carte', 'Chambres'], ['arrets', 'Arrêts'], ['boutique', 'Boutique'], ['profil', 'Profil']];
+  const defs = [['palais', 'Palais'], ['carte', 'Chambres'], ['arrets', estIntro() ? 'Notions' : 'Arrêts'], ['boutique', 'Boutique'], ['profil', 'Profil']];
   onglets.replaceChildren(...defs.map(([id, l]) => h('button', {
     class: `onglet ${ongletCourant === id ? 'actif' : ''}`, 'aria-current': ongletCourant === id ? 'page' : null,
     onClick: () => { son('tap'); aller(id); },
@@ -283,7 +290,7 @@ function accueil() {
   const encours = M().enCours;
   montrer(
     barreHaut(),
-    h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); matieres(); } }, icone('matieres', 18), matiereDe(etat.matiere).nom, estOblig() ? `, équipe ${etat.equipe}` : null),
+    h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); matieres(); } }, icone('matieres', 18), matiereDe(etat.matiere).nom, estOblig() ? `, équipe ${etat.equipe}` : estIntro() ? `, équipe ${etat.equipeL1}` : null),
     aInstaller,
     h('section', { class: 'tribune', 'data-decor': etat.decor },
       h('div', { class: 'serie-bloc' },
@@ -302,7 +309,7 @@ function accueil() {
       defisEnAttente.length ? h('div', { class: 'defis-attente' }, defisEnAttente.slice(0, 2).map((d) => h('button', { class: 'bouton-or defi-attente', onClick: () => releverDefi(d.id) },
         `${d.pseudo || 'Un ami'} te défie : bats ses ${pct(d.score_auteur)}`))) : null,
       h('button', { class: 'cta brille', onClick: lancerDefi },
-        h('span', { class: 'cta-txt' }, h('b', {}, 'Défi du jour'), h('small', { class: 'cta-sous' }, dus ? `5 épreuves, ${pluriel(dus, estOblig() ? 'fiche' : 'arrêt')} à revoir` : '5 épreuves, environ 5 minutes')),
+        h('span', { class: 'cta-txt' }, h('b', {}, 'Défi du jour'), h('small', { class: 'cta-sous' }, dus ? `5 épreuves, ${pluriel(dus, motFiche())} à revoir` : '5 épreuves, environ 5 minutes')),
         h('span', { class: 'cta-jouer', 'aria-hidden': 'true' }, svg('<svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>'))),
       ),
     h('section', { class: 'role role-duo' },
@@ -311,40 +318,46 @@ function accueil() {
   );
 }
 
+const ICONE_MODE = { tri: 'ecarter', mot: 'crayon', rangement: 'colonne', quiadit: 'plume', scanner: 'loupe', memory: 'paires' };
 const ligneEntree = (mode, ic, nom, txt, action, d) => h('button', { class: 'role-ligne', 'data-mode': mode, style: `--d:${d}s`, onClick: action },
   h('span', { class: 'role-icone' }, icone(ic, 28)), h('span', { class: 'role-txt' }, h('b', {}, nom), h('small', {}, txt)));
 const retourPalais = () => h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); aller('palais'); } }, icone('retour', 18), 'Retour au Palais');
 
 // Le rôle : la liste des exercices, à part du Palais.
 function ecranRole() {
-  const lignes = Object.entries(nomsModes()).map(([m, [nom, txt]], i) => ligneEntree(m, m, nom, txt, () => (m === 'plan' || m === 'architecte' ? choixGenre(m) : lancerMode(m)), i * 2.2));
+  const lignes = Object.entries(nomsModes()).map(([m, [nom, txt]], i) => ligneEntree(m, ICONE_MODE[m] || m, nom, txt, () => (m === 'plan' || m === 'architecte' ? choixGenre(m) : lancerMode(m)), i * 2.2));
+  // En L1, le cas pratique attend la suite du cours (sources du droit, jurisprudence).
+  const casL1 = estIntro() ? h('div', { class: 'role-ligne en-travaux', 'data-mode': 'cas-l1', 'aria-disabled': 'true' }, h('span', { class: 'role-icone' }, icone('cas', 28)),
+    h('span', { class: 'role-txt' }, h('b', {}, 'Cas pratique'), h('small', {}, 'Bientôt, avec la suite du cours'))) : null;
   montrer(barreHaut(), retourPalais(), h('section', { class: 'role' }, h('h1', {}, 'Le rôle'),
     h('p', { class: 'page-sous' }, 'Choisis ton exercice.'),
     ligneEntree('express', 'prorogation', 'Trois minutes', 'Trois épreuves rapides', lancerExpress, 0),
-    lignes, blocDunk()));
+    lignes, casL1, blocDunk()));
 }
 
 // Vers l'examen : un enchaînement facultatif, sans rappel ni compte à rebours.
 const NIVEAUX_EXAMEN = [
-  { nom: 'Première instance', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'frise'] },
-  { nom: 'Appel', txt: 'Cinq épreuves : cas, plans, et des réponses à écrire soi-même', oblig: ['cas', 'flash', 'trous', 'syllogisme', 'plaide'], admin: ['puzzle', 'juge', 'flash', 'syllogisme', 'plaide'] },
-  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['casnu', 'express', 'cas', 'frise', 'plaide', 'plan'], admin: ['juge', 'architecte', 'express', 'frise', 'syllogisme', 'plaide'] },
+  { nom: 'Première instance', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'frise'], intro: ['tri', 'memory', 'frise'] },
+  { nom: 'Appel', txt: 'Cinq épreuves : cas, plans, et des réponses à écrire soi-même', oblig: ['cas', 'flash', 'trous', 'syllogisme', 'plaide'], admin: ['puzzle', 'juge', 'flash', 'syllogisme', 'plaide'], intro: ['mot', 'flash', 'quiadit', 'plan', 'scanner'], txtIntro: 'Cinq épreuves : une définition à écrire, un plan à choisir' },
+  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['casnu', 'express', 'cas', 'frise', 'plaide', 'plan'], admin: ['juge', 'architecte', 'express', 'frise', 'syllogisme', 'plaide'], intro: ['rangement', 'flash', 'plan', 'quiadit', 'mot', 'flash'], txtIntro: 'Six épreuves, dont deux définitions à écrire' },
   { nom: 'Partiel blanc', txt: '20 minutes, une dizaine d’épreuves, puis ton bilan par chambre. Un repère, pas une note', partiel: true,
-    oblig: ['qualif', 'cas', 'flash', 'syllogisme', 'casnu', 'trous', 'remede', 'express', 'plaide', 'frise'], admin: ['paires', 'juge', 'flash', 'syllogisme', 'puzzle', 'express', 'plan', 'plaide', 'frise', 'architecte'] },
+    oblig: ['qualif', 'cas', 'flash', 'syllogisme', 'casnu', 'trous', 'remede', 'express', 'plaide', 'frise'], admin: ['paires', 'juge', 'flash', 'syllogisme', 'puzzle', 'express', 'plan', 'plaide', 'frise', 'architecte'],
+    intro: ['tri', 'mot', 'flash', 'quiadit', 'memory', 'scanner', 'plan', 'rangement', 'flash', 'frise'] },
 ];
 function lancerExamen(i) {
   const n = NIVEAUX_EXAMEN[i];
-  const zones = estOblig() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix);
+  const zones = zonesCours();
   const dus = aRevoir(ix, zones); const deja = new Set();
-  const types = estOblig() ? n.oblig : n.admin;
+  const types = estIntro() ? n.intro : estOblig() ? n.oblig : n.admin;
   // Les épreuves à réponse libre viennent du module d'examen ; à défaut de contenu, une épreuve classique les remplace.
-  const tirer = (t) => (['flash', 'plaide', 'trous', 'express', 'syllogisme', 'casnu'].includes(t) ? roundExamen(ix, t, zones, dus, deja) || tirerRound(ix, estOblig() ? 'cas' : 'puzzle', zones, dus, Math.random, deja) : tirerRound(ix, t, zones, dus, Math.random, deja));
+  const tirerBase = (t) => (estIntro() && t === 'plan' ? { type: 'plan', ...roundPlan(ix, melange(ix.sujets, Math.random)[0]) } : tirerRound(ix, t, zones, dus, Math.random, deja));
+  const tirer = (t) => (['flash', 'plaide', 'trous', 'express', 'syllogisme', 'casnu'].includes(t) ? roundExamen(ix, t, zones, dus, deja) || tirerRound(ix, estIntro() ? 'memory' : estOblig() ? 'cas' : 'puzzle', zones, dus, Math.random, deja) : tirerBase(t));
   lancer({ type: n.partiel ? 'partiel' : 'examen', long: i >= 2, titre: `Vers l’examen : ${n.nom.toLowerCase()}`, rounds: types.map(tirer) });
 }
 function ecranExamen() {
   montrer(barreHaut(), retourPalais(), h('section', { class: 'role' }, h('h1', {}, 'Vers l’examen'),
     h('p', { class: 'page-sous' }, 'Quand tu as envie de te tester. Plus le niveau monte, plus ça se corse.'),
-    NIVEAUX_EXAMEN.map((n, i) => ligneEntree(`niveau-${i + 1}`, 'balance', n.nom, n.txt, () => lancerExamen(i), i * 2.2))));
+    NIVEAUX_EXAMEN.map((n, i) => ligneEntree(`niveau-${i + 1}`, 'balance', n.nom, (estIntro() && n.txtIntro) || n.txt, () => lancerExamen(i), i * 2.2))));
 }
 
 // Le mini-jeu, à part des épreuves : il se débloque en boutique.
@@ -352,7 +365,7 @@ function blocDunk() {
   const d = etat.dunk;
   // Les obligations puisent dans tout le cours, chapitres en travaux compris.
   const jouer = (mode) => {
-    const zones = estOblig() ? ix.zones.map((z) => z.id) : zonesOuvertes(ix);
+    const zones = estOblig() || estIntro() ? ix.zones.map((z) => z.id) : zonesOuvertes(ix);
     if (document.querySelector('.palais-portes')) return;
     const p = portes({ pose: POSE_MODE.dunk, titre: 'Dunk shot', sonFerme: () => son('porte') });
     p.pret.then(() => {
@@ -363,7 +376,7 @@ function blocDunk() {
   };
   const entete = h('span', { class: 'role-icone' }, icone('dunk', 28));
   return h('div', { class: 'role-ligne dunk-bloc', 'data-mode': 'dunk' },
-    entete, h('span', { class: 'role-txt' }, h('b', {}, 'Dunk shot'), h('small', {}, d.record ? `Record : ${pluriel(d.record, 'panier')}` : 'Articles, arrêts, cours : un panier par bonne réponse'),
+    entete, h('span', { class: 'role-txt' }, h('b', {}, 'Dunk shot'), h('small', {}, d.record ? `Record : ${pluriel(d.record, 'panier')}` : estIntro() ? 'Notions, définitions, citations : un panier par bonne réponse' : 'Articles, arrêts, cours : un panier par bonne réponse'),
       h('span', { class: 'dunk-choix' },
         h('button', { class: 'bouton-fantome', onClick: () => jouer('cinq') }, '5 paniers'),
         d.infini ? h('button', { class: 'bouton-fantome', onClick: () => jouer('infini') }, 'Infini') : h('button', { class: 'bouton-fantome', onClick: () => aller('boutique') }, icone('cadenas', 16), 'Infini'))));
@@ -376,7 +389,7 @@ function lancerDefi() {
 function lancerExpress() {
   const zones = zonesDuJour(ix); const dus = aRevoir(ix, zones);
   const deja = new Set();
-  const types = estOblig() ? ['qualif', 'remede', 'qualif'] : ['paires', 'puzzle', 'paires'];
+  const types = estIntro() ? ['tri', 'mot', 'memory'] : estOblig() ? ['qualif', 'remede', 'qualif'] : ['paires', 'puzzle', 'paires'];
   lancer({ type: 'express', titre: 'Trois minutes', rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
 }
 // Le bon plan et l'architecte : commentaire d'arrêt, dissertation ou au hasard.
@@ -391,7 +404,7 @@ function choixGenre(m) {
 }
 function lancerMode(m, genre = null) {
   // En obligations, un exercice choisi puise dans tout le cours : les chambres rythment le défi et les audiences.
-  let zones = estOblig() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix);
+  let zones = zonesCours();
   let source = ix;
   if (genre) {
     // Un type choisi puise dans toutes les chambres ouvertes, pour toujours trouver un sujet.
@@ -400,7 +413,7 @@ function lancerMode(m, genre = null) {
     if (sujets.length) { source = { ...ix, sujets }; zones = ouvertes; }
   }
   const dus = aRevoir(ix, zones);
-  const n = m === 'paires' || m === 'qualif' ? 3 : 2;
+  const n = m === 'paires' || m === 'qualif' ? 3 : estIntro() ? (m === 'quiadit' || m === 'scanner' ? 1 : 2) : 2;
   const deja = new Set();
   const titre = nomsModes()[m][0] + (genre && source !== ix ? (genre === 'C' ? ', commentaire' : ', dissertation') : '');
   lancer({ type: 'mode', mode: m, titre, rounds: Array.from({ length: n }, () => tirerRound(source, m, zones, dus, Math.random, deja)) });
@@ -693,7 +706,7 @@ function carte() {
   const salles = ix.zones.map((z, i) => {
     const p = progressionZone(z.id); const pt = pts[i];
     const ouvert = ouvertes.includes(z.id); const gagne = gagnees.includes(z.id); const courante = z.id === enCours;
-    const etatTxt = z.travaux ? 'En travaux' : !ouvert ? 'Fermée' : gagne ? 'Audience gagnée' : `${p.acquis} arrêts sur ${p.total}`;
+    const etatTxt = z.travaux ? 'En travaux' : !ouvert ? 'Fermée' : gagne ? 'Audience gagnée' : `${p.acquis} ${motFiche()}s sur ${p.total}`;
     const marque = courante
       ? h('span', { class: 'salle-marque', style: `--part:${p.total ? p.acquis / p.total : 0}` }, h('span', {}, String(z.id)))
       : h('span', { class: 'salle-marque' }, !ouvert ? icone('cadenas', 22) : z.travaux ? icone('travaux', 22) : h('span', {}, z.bonus ? '+' : String(z.id)));
@@ -708,7 +721,7 @@ function carte() {
   const audiences = gagnees.filter((id) => parcours.some((z) => z.id === id)).length;
   montrer(barreHaut(), h('section', { class: 'page page-chambres' },
     h('div', { class: 'chambres-tete' }, h('h1', {}, 'Chambres'), h('span', {}, `${audiences} audience${audiences > 1 ? 's' : ''} sur ${parcours.length}`)),
-    h('p', { class: 'page-sous' }, estOblig() ? `Droit des obligations, équipe ${etat.equipe}` : 'Droit administratif'), plan));
+    h('p', { class: 'page-sous' }, estOblig() ? `Droit des obligations, équipe ${etat.equipe}` : matiereDe(etat.matiere).nom), plan));
 }
 
 function chambreFermee(z) {
@@ -725,6 +738,11 @@ function lancerBoss(z) { lancer({ type: 'boss', titre: 'Audience solennelle', zo
 function reviserZone(z) {
   const dus = aRevoir(ix, [z]);
   const deja = new Set();
+  if (estIntro()) {
+    const dispo = melange(typesIntro(ix, [z]).filter((t) => t !== 'memory'), Math.random);
+    lancer({ type: 'zone', titre: 'Révision', zone: z, rounds: ['memory', dispo[0], dispo[1] || 'mot'].map((t) => tirerRound(ix, t, [z], dus, Math.random, deja)) });
+    return;
+  }
   const base = estOblig() ? 'qualif' : 'paires';
   const types = melange(estOblig() ? ['cas', 'remede', 'frise'] : ['puzzle', 'juge', 'plan'], Math.random);
   lancer({ type: 'zone', titre: 'Révision', zone: z, rounds: [base, types[0], base].map((t) => tirerRound(ix, t, [z], dus, Math.random, deja)) });
@@ -738,7 +756,7 @@ const niveauTag = (b) => h('span', { class: 'niveau', 'aria-label': `Maîtrise :
 const carteArret = (a) => {
   const b = niveau(a.id);
   return h('li', {}, h('button', { class: `carte-arret n${b}`, onClick: () => fiche(a.id) },
-    h('span', { class: 'carte-an' }, a.article ? (a.etiquette || a.num.replace(/^1242-/, '1242 al. ')) : a.an), h('i', { class: 'losange', 'aria-hidden': 'true' }), h('b', {}, a.article ? a.titre : a.court),
+    h('span', { class: `carte-an${a.notion ? ' carte-etiquette' : ''}` }, a.article ? (a.etiquette || a.num.replace(/^1242-/, '1242 al. ')) : a.an), h('i', { class: 'losange', 'aria-hidden': 'true' }), h('b', {}, a.article ? a.titre : a.court),
     h('span', { class: 'carte-bas' }, niveauTag(b), ICONES_NIVEAU[b] ? icone(ICONES_NIVEAU[b], 20) : null)));
 };
 
@@ -759,8 +777,8 @@ function chambre(zid) {
 // ARRÊTS ----------------------------------------------------------------------------
 let filtre = { texte: '', zone: 0, type: 'arrets' };
 function collection() {
-  const articles = estOblig() && filtre.type === 'articles';
-  const champ = h('input', { type: 'search', class: 'recherche', placeholder: articles ? 'Chercher un article ou un mot' : 'Chercher un arrêt ou une année', value: filtre.texte, 'aria-label': 'Chercher', onInput: (e) => { filtre.texte = e.target.value; rendre(); } });
+  const articles = (estOblig() && filtre.type === 'articles') || estIntro();
+  const champ = h('input', { type: 'search', class: 'recherche', placeholder: estIntro() ? 'Chercher une notion ou un auteur' : articles ? 'Chercher un article ou un mot' : 'Chercher un arrêt ou une année', value: filtre.texte, 'aria-label': 'Chercher', onInput: (e) => { filtre.texte = e.target.value; rendre(); } });
   const zonesBtns = [{ id: 0, titre: 'Tous' }, ...ix.zones].map((z) => h('button', { class: `filtre ${filtre.zone === z.id ? 'actif' : ''}`, onClick: () => { son('tap'); filtre.zone = z.id; collection(); } }, z.id ? `${z.bonus ? 'Bonus' : z.id}` : 'Tous'));
   const grille = h('ul', { class: 'grille-cartes' });
   const norm = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -776,8 +794,8 @@ function collection() {
   const bascule = estOblig() ? h('div', { class: 'bascule', role: 'tablist' }, [['arrets', 'Arrêts'], ['articles', 'Articles']].map(([id, l]) => h('button', {
     class: filtre.type === id ? 'actif' : '', role: 'tab', 'aria-selected': filtre.type === id ? 'true' : 'false', onClick: () => { son('tap'); filtre.type = id; collection(); },
   }, l))) : null;
-  montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, articles ? 'Les articles' : 'Les arrêts'),
-    h('p', { class: 'page-sous' }, articles ? `${fmt(acquisArticles)} sur ${ix.articles.length} au niveau Conclusions. Chaque carte monte quand tu réussis.` : `${pluriel(acquis, 'grand arrêt')} sur ${ix.arrets.length}. Chaque carte monte de niveau quand tu réussis.`),
+  montrer(barreHaut(), h('section', { class: 'page' }, h('h1', {}, estIntro() ? 'Les notions' : articles ? 'Les articles' : 'Les arrêts'),
+    h('p', { class: 'page-sous' }, estIntro() ? `${fmt(acquisArticles)} sur ${ix.articles.length} au niveau Conclusions. Chaque notion monte quand tu la réussis.` : articles ? `${fmt(acquisArticles)} sur ${ix.articles.length} au niveau Conclusions. Chaque carte monte quand tu réussis.` : `${pluriel(acquis, 'grand arrêt')} sur ${ix.arrets.length}. Chaque carte monte de niveau quand tu réussis.`),
     lienCarnet(),
     bascule, h('label', { class: 'cherche' }, icone('loupe', 22), champ), h('div', { class: 'filtres' }, zonesBtns), grille));
   rendre();
@@ -871,6 +889,18 @@ function fiche(id) {
 
 function ficheArticle(a) {
   const z = ix.zones.find((x) => x.id === a.zones[0]);
+  if (a.notion) {
+    montrer(
+      h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller(ongletCourant) }, icone('retour', 22)), niveauTag(niveau(a.id))),
+      h('article', { class: 'fiche fiche-notion' },
+        h('div', { class: 'revelation-tete' }, h('div', {}, h('h1', {}, a.nom), h('p', { class: 'ref' }, `${a.etiquette}, ${z.titre}`))),
+        h('p', { class: 'apport' }, a.regle),
+        a.ex ? h('p', { class: 'notion-ex' }, h('b', {}, 'Exemple du cours. '), a.ex) : null,
+        a.pg ? h('p', { class: 'notion-piege' }, h('b', {}, 'Le piège. '), a.pg) : null,
+        h('p', { class: 'aide-claire' }, 'Tiré de ton cours d’introduction au droit. Une erreur ? Signale-la.'),
+        boutonSignaler(a.id, a.nom)));
+    return;
+  }
   montrer(
     h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller(ongletCourant) }, icone('retour', 22)), niveauTag(niveau(a.id))),
     h('article', { class: 'fiche' },
@@ -1105,10 +1135,10 @@ function ecranProgression() {
 
 let carriereVue = null;
 function profil() {
-  const vue = carriereVue || etat.matiere;
+  const vue = carriereVue && matieresAnnee().some((m) => m.id === carriereVue) ? carriereVue : etat.matiere;
   const r = rang(vue); const g = rangGeneral(); const vals = Object.values(M(vue).arrets);
   const stats = [['Séances', etat.stats.seances], ['Record de série', etat.serie.record], ['Sans faute', etat.stats.parfaites], ['Grands arrêts', vals.filter((a) => a.b >= 5).length], ['Meilleur enchaînement', etat.stats.comboMax], [vue === 'oblig' ? 'Fiches vues' : 'Arrêts vus', vals.length], ...(etat.dunk.cinq ? [['Record Dunk shot', etat.dunk.record]] : [])];
-  const liste = CONTENUS[vue]?.arrets || []; const fichesVue = M(vue).arrets || {};
+  const liste = (vue === 'intro' ? CONTENUS.intro?.articles : CONTENUS[vue]?.arrets) || []; const fichesVue = M(vue).arrets || {};
   const grands = liste.length ? liste.filter((a) => fichesVue[a.id]?.b >= 5).length : vals.filter((a) => a.b >= 5).length;
   const vus = liste.length ? liste.filter((a) => fichesVue[a.id]).length : vals.length; const totalArrets = liste.length || vals.length;
   const serieDuJour = etat.serie.dernier >= jour() - 1 ? etat.serie.n : 0;
@@ -1138,7 +1168,7 @@ function profil() {
     h('h1', {}, r.nom),
     h('div', { class: 'xp', role: 'img', 'aria-label': `${pct} % du grade suivant` }, h('span', {}, 'XP'), h('span', { class: 'xp-rail' }, h('i', { style: `width:${Math.max(pct, 3)}%` }))),
     h('p', { class: 'page-sous xp-txt' }, r.suivant ? `${fmt(r.xp)} points. Encore ${fmt(r.suivant.xp - r.xp)} pour devenir ${r.suivant.nom}.` : 'Dernier grade atteint.'),
-    h('div', { class: 'bascule' }, MATIERES.map((m) => h('button', { class: vue === m.id ? 'actif' : '', onClick: () => { son('tap'); carriereVue = m.id; profil(); } }, m.institution))),
+    matieresAnnee().length > 1 ? h('div', { class: 'bascule' }, matieresAnnee().map((m) => h('button', { class: vue === m.id ? 'actif' : '', onClick: () => { son('tap'); carriereVue = m.id; profil(); } }, m.institution))) : null,
     h('ol', { class: 'carriere' }, matiereDe(vue).rangs.map((x, i) => h('li', { class: `${i <= r.i ? 'atteint' : ''} ${i === r.i ? 'actuel' : ''}`, style: `--i:${i}` }, x.nom))),
     h('button', { class: 'bouton-fantome', onClick: () => aller('progression') }, 'Comprendre ma progression'),
     h('button', { class: 'bouton-lien', onClick: () => priseEnMain(true) }, 'Revoir la prise en main'),
@@ -1150,9 +1180,9 @@ function profil() {
     h('dl', { class: 'stats-cle' },
       h('div', { class: 'cle-serie' }, h('dd', {}, fmt(serieDuJour)), h('dt', {}, serieDuJour > 1 ? 'jours de série' : 'jour de série')),
       h('div', {}, h('dd', {}, fmt(etat.stats.seances)), h('dt', {}, etat.stats.seances > 1 ? 'séances' : 'séance')),
-      h('div', {}, h('dd', {}, fmt(grands)), h('dt', {}, 'grands arrêts'))),
+      h('div', {}, h('dd', {}, fmt(grands)), h('dt', {}, vue === 'intro' ? 'notions sues' : 'grands arrêts'))),
     h('div', { class: 'maitrise', role: 'img', 'aria-label': `${grands} arrêts maîtrisés sur ${totalArrets}` },
-      h('span', { class: 'maitrise-ligne' }, h('span', {}, 'Arrêts maîtrisés'), h('b', {}, `${grands} sur ${totalArrets}`)),
+      h('span', { class: 'maitrise-ligne' }, h('span', {}, vue === 'intro' ? 'Notions maîtrisées' : 'Arrêts maîtrisés'), h('b', {}, `${grands} sur ${totalArrets}`)),
       h('span', { class: 'maitrise-rail' }, h('i', { class: 'vu', style: `width:${totalArrets ? (vus / totalArrets) * 100 : 0}%` }), h('i', { style: `width:${totalArrets ? (grands / totalArrets) * 100 : 0}%` })),
       h('small', {}, `${fmt(vus)} déjà vus, ${fmt(grands)} sus par cœur.`)),
     h('dl', { class: 'stats' }, stats.filter(([l]) => !['Séances', 'Grands arrêts', 'Arrêts vus', 'Fiches vues'].includes(l)).map(([l, v]) => h('div', {}, h('dt', {}, l), h('dd', {}, fmt(v))))),
@@ -1162,10 +1192,11 @@ function profil() {
     h('h2', {}, 'Rappel quotidien'), blocRappel,
     h('h2', {}, 'Images personnelles'), blocImages(),
     h('h2', {}, 'Ton année'),
-    h('div', { class: 'bascule', 'data-annees': '' }, ['L1', 'L2', 'L3'].map((a) => h('button', { class: etat.annee === a ? 'actif' : '', disabled: a === 'L3', 'aria-pressed': etat.annee === a ? 'true' : 'false', onClick: () => { if (etat.annee === a) return; son('tap'); if (a === 'L1') ecranEquipeL1(); else { choisirAnnee('L2'); profil(); } } }, a === 'L3' ? 'L3 bientôt' : a))),
-    h('h2', {}, 'Équipe de droit des obligations'),
-    h('div', { class: 'bascule' }, [1, 2].map((n) => h('button', { class: etat.equipe === n ? 'actif' : '', 'aria-pressed': etat.equipe === n ? 'true' : 'false', onClick: () => { if (etat.equipe === n) return; son('tap'); rejoindreEquipe(n); toast(`Équipe ${n} : tes chambres et tes exercices sont prêts.`); profil(); } }, `Équipe ${n}`))),
-    h('p', { class: 'aide-claire' }, 'Le droit des obligations suit le cours de ton équipe. Tes pièces, ta série, tes tenues et les fiches communes te suivent.'),
+    h('div', { class: 'bascule', 'data-annees': '' }, ['L1', 'L2', 'L3'].map((a) => h('button', { class: etat.annee === a ? 'actif' : '', disabled: a === 'L3', 'aria-pressed': etat.annee === a ? 'true' : 'false', onClick: () => { if (etat.annee === a) return; son('tap'); if (a === 'L1') ecranEquipeL1(); else { choisirAnnee('L2'); if (estIntro()) { etat.matiere = 'admin'; ix = CONTENUS.admin; filtre = { texte: '', zone: 0, type: 'arrets' }; sauver(); } carriereVue = null; profil(); } } }, a === 'L3' ? 'L3 bientôt' : a))),
+    etat.annee === 'L1' ? [h('h2', {}, 'Ton équipe de L1'), h('p', { class: 'aide-claire' }, `Équipe ${etat.equipeL1} : introduction au droit civil. Les équipes 1 et 2 arrivent bientôt.`)] : null,
+    etat.annee === 'L1' ? null : h('h2', {}, 'Équipe de droit des obligations'),
+    etat.annee === 'L1' ? null : h('div', { class: 'bascule' }, [1, 2].map((n) => h('button', { class: etat.equipe === n ? 'actif' : '', 'aria-pressed': etat.equipe === n ? 'true' : 'false', onClick: () => { if (etat.equipe === n) return; son('tap'); rejoindreEquipe(n); toast(`Équipe ${n} : tes chambres et tes exercices sont prêts.`); profil(); } }, `Équipe ${n}`))),
+    etat.annee === 'L1' ? null : h('p', { class: 'aide-claire' }, 'Le droit des obligations suit le cours de ton équipe. Tes pièces, ta série, tes tenues et les fiches communes te suivent.'),
     h('h2', {}, 'Réglages'),
     h('div', { class: 'reglages' },
       interrupteur('Sons', 'son'),
@@ -1681,7 +1712,7 @@ async function demarrer() {
   // Une ouverture lente : la chouette patiente, montre en main.
   const attente = setTimeout(() => racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Le Palais ouvre ses portes'))), 700);
   if (params.has('decalage')) fixerDecalage(+params.get('decalage'));
-  const [admin, oblig2, oblig1] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), charger().then(chargerImages)]);
+  const [admin, oblig2, oblig1, intro] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), fetch('intro.json').then((r) => r.json()), charger().then(chargerImages)]);
   clearTimeout(attente);
   if (!(await ouvrirCompte(params))) { enregistrerServiceWorker(); return; }
   // Une ancienne sauvegarde connaît déjà le jour de la dernière séance.
@@ -1689,8 +1720,11 @@ async function demarrer() {
   // ?equipe=1 : les tests ouvrent directement une équipe, sans passer par la question.
   if (params.has('equipe')) changerEquipe(+params.get('equipe'));
   PAR_EQUIPE[1] = oblig1; PAR_EQUIPE[2] = oblig2;
-  CONTENUS.admin = indexer(admin); indexerObligations();
-  if (params.has('test') && !params.has('choix')) etat.matiere = params.get('matiere') === 'oblig' ? 'oblig' : etat.matiere;
+  CONTENUS.admin = indexer(admin); indexerObligations(); CONTENUS.intro = indexer(intro);
+  if (params.has('test') && !params.has('choix')) etat.matiere = ['oblig', 'intro'].includes(params.get('matiere')) ? params.get('matiere') : etat.matiere;
+  if (params.has('test') && params.get('matiere') === 'intro') { etat.annee = 'L1'; etat.equipeL1 = 3; }
+  // Une matière qui n'est pas de l'année revient à la première de l'année.
+  if (etat.annee && !matieresAnnee().some((m) => m.id === etat.matiere)) etat.matiere = matieresAnnee()[0].id;
   ix = CONTENUS[etat.matiere];
   appliquerTheme();
   appliquerSession();

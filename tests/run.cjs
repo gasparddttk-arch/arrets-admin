@@ -26,6 +26,24 @@ async function toucher(e) { try { await e.click({ timeout: 900 }); return true; 
 
 // Joue jusqu'à l'écran de résultats, en touchant ce qui est disponible.
 // Le sceau du jour demande une séance réussie : le robot joue juste, sauf demande contraire.
+
+// Les jeux de la L1, joués juste grâce aux repères du mode test. Renvoie vrai si un geste a été fait.
+const pasL1 = (p) => p.evaluate(() => {
+  const clic = (e) => { if (!e) return false; e.click(); return true; };
+  const q = (s) => document.querySelector(s);
+  const scanner = q('[data-action="scanner"]');
+  if (scanner) { for (const t of document.querySelectorAll('.sc-temoin')) if ((t.dataset.ok === 'true') !== (t.getAttribute('aria-checked') === 'true')) t.click(); return clic(scanner); }
+  if (q('.scene .pied button')) return false;
+  const carte = q('.tri-carte[data-bon]:not(.tamponnee)'); if (carte) return clic(q(`.tri-bord[data-bord="${carte.dataset.bon}"]`));
+  const grille = q('.mot-grille');
+  if (grille && !grille.querySelector('.retourne') && !grille.querySelector('.pleine')) { for (const l of grille.dataset.mot) q(`.mot-touche[data-touche="${l}"]`).click(); return clic(q('.mot-touche[data-touche="OK"]')); }
+  const piece = q('.rg-piece[data-bon]'); if (piece) return clic(q(`.rg-colonne[data-col="${piece.dataset.bon}"]`));
+  const med = q('.qad-medaillon[data-ok="true"]:not([disabled])'); if (med) return clic(med);
+  const cartes = [...document.querySelectorAll('.mem-carte:not(.trouvee):not(.ouverte)')];
+  if (cartes.length && !document.querySelector('.mem-carte.ouverte:not(.trouvee)')) { const a = cartes[0]; const b2 = cartes.find((c) => c !== a && c.dataset.paire === a.dataset.paire); a.click(); b2.click(); return true; }
+  return false;
+});
+
 async function jouer(p, { capture = false, auHasard = false, max = 1500 } = {}) {
   if (!auHasard && !capture) return jouerParfait(p);
   const vus = new Set();
@@ -33,9 +51,10 @@ async function jouer(p, { capture = false, auHasard = false, max = 1500 } = {}) 
     await textePropre(p);
     if (await p.$('.resultats')) return;
     if (capture) {
-      const nom = await p.evaluate(() => (['.paires', '.puzzle', '.libre', '.trous', '.qcm', '.bonplan', '.architecte', '.fin-epreuve'].find((s) => document.querySelector(s)) || '').slice(1));
+      const nom = await p.evaluate(() => (['.tri', '.mot', '.rangement', '.quiadit', '.scanner', '.memory', '.paires', '.puzzle', '.libre', '.trous', '.qcm', '.bonplan', '.architecte', '.fin-epreuve'].find((s) => document.querySelector(s)) || '').slice(1));
       if (nom && !vus.has(nom)) { vus.add(nom); await p.screenshot({ path: `${CAP}${capture}-${nom}.png` }); }
     }
+    if (await pasL1(p)) { await p.waitForTimeout(120); continue; }
     // Dans la séance seulement : le pied des résultats ramènerait au Palais avant que le test ne les voie.
     const pied = await p.$('.scene .pied button');
     if (pied) { await toucher(pied); await p.waitForTimeout(15); continue; }
@@ -61,6 +80,7 @@ async function jouerParfait(p) {
   for (let n = 0; n < 2500; n++) {
     await textePropre(p);
     if (await p.$('.resultats')) return;
+    if (await pasL1(p)) { await p.waitForTimeout(120); continue; }
     const fait = await p.evaluate(() => {
       const clic = (e) => { e.click(); return true; };
       const rail = document.querySelector('.plans-rail'); const bon = document.querySelector('.plan-carte[data-ok="true"]');
@@ -781,19 +801,52 @@ async function debordement(p, nom) {
   await yan.screenshot({ path: CAP + 'annee.png' }); await debordement(yan, 'année');
   await yan.locator('[data-annee="L1"]').click(); await yan.waitForSelector('[data-equipe-l1="3"]');
   assert.ok(await yan.locator('[data-equipe-l1="1"]').isDisabled(), 'équipe 1 en travaux');
-  await yan.locator('[data-equipe-l1="3"]').click(); await yan.waitForSelector('.l1-bientot');
-  let ea = await etat(yan); assert.equal(ea.annee, 'L1'); assert.equal(ea.equipeL1, 3);
-  await yan.reload(); await yan.waitForSelector('.l1-bientot');
-  await yan.locator('text=Changer d’année').click(); await yan.locator('[data-annee="L2"]').click();
-  await yan.waitForSelector('[data-equipe]');
-  assert.equal((await etat(yan)).annee, 'L2', 'retour en L2');
+  await yan.locator('[data-equipe-l1="3"]').click(); await yan.waitForSelector('.tribune');
+  let ea = await etat(yan); assert.equal(ea.annee, 'L1'); assert.equal(ea.equipeL1, 3); assert.equal(ea.matiere, 'intro', 'la L1 ouvre l’introduction au droit');
+  assert.match(await yan.locator('.bouton-matiere').innerText(), /Introduction au droit/);
+  await yan.reload(); await yan.waitForSelector('.tribune');
+  assert.match(await yan.locator('.onglet', { hasText: 'Notions' }).innerText(), /Notions/, 'onglet des notions en L1');
+  await yan.evaluate(() => window.__app.aller('profil')); await yan.locator('[data-annees] button', { hasText: 'L2' }).click();
+  ea = await etat(yan); assert.equal(ea.annee, 'L2', 'retour en L2'); assert.equal(ea.matiere, 'admin', 'la L2 rouvre une matière de L2');
   await an.close();
   log('année ok');
+
+  // La L1 : introduction au droit, ses six chambres, ses huit jeux, ses notions.
+  const l1 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const un = await l1.newPage(); un.on('pageerror', (x) => erreurs.push(x.message));
+  await un.goto(URLB + '?test&matiere=intro'); await un.waitForSelector('.tribune');
+  const ixL1 = await un.evaluate(() => ({ zones: window.__app.ix.zones.length, notions: window.__app.ix.articles.length, tri: window.__app.ix.tri.length }));
+  assert.equal(ixL1.zones, 6, 'six chambres en L1'); assert(ixL1.notions >= 60, 'au moins soixante notions'); assert.equal(ixL1.tri, 40, 'quarante cartes à trier');
+  await un.screenshot({ path: CAP + 'l1-palais.png' }); await debordement(un, 'palais L1');
+  await un.evaluate(() => window.__app.aller('role'));
+  assert.equal(await un.locator('.role-ligne[data-mode="cas-l1"]').count(), 1, 'cas pratique annoncé');
+  assert.match(await un.locator('.role-ligne[data-mode="cas-l1"]').innerText(), /Bientôt/);
+  await un.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; });
+  for (const m of ['tri', 'mot', 'rangement', 'quiadit', 'scanner', 'memory', 'frise']) {
+    await un.evaluate(() => window.__app.aller('role')); await un.locator(`.role-ligne[data-mode="${m}"]`).click();
+    await un.waitForSelector('.quitter'); await un.waitForSelector('.palais-portes', { state: 'detached' });
+    await un.waitForTimeout(300); await un.screenshot({ path: CAP + `l1-${m}.png` }); await debordement(un, `L1 ${m}`);
+    await jouer(un);
+    await un.waitForSelector('.resultats'); await un.tap('text=Retour au Palais'); await un.waitForSelector('.tribune');
+  }
+  const eL1 = await etat(un);
+  assert(eL1.intro.xp > 0, 'points gagnés en L1'); assert(Object.keys(eL1.intro.arrets).length > 0, 'notions notées');
+  assert.equal(eL1.xp, 0, 'la L2 ne bouge pas');
+  await un.locator('.cta').first().click(); await un.waitForSelector('.quitter'); await jouer(un); await un.waitForSelector('.resultats');
+  await un.tap('text=Retour au Palais'); await un.waitForSelector('.tribune');
+  await un.evaluate(() => window.__app.aller('arrets'));
+  assert.match(await un.locator('.page h1').innerText(), /Les notions/);
+  await un.locator('.carte-arret').first().click(); await un.waitForSelector('.fiche-notion');
+  await un.screenshot({ path: CAP + 'l1-fiche.png' });
+  await un.evaluate(() => window.__app.aller('role')); await un.locator('.dunk-choix button').first().click();
+  await un.waitForSelector('.dunk-question .option'); await un.screenshot({ path: CAP + 'l1-dunk.png' });
+  await l1.close();
+  log('L1 ok');
 
   // Vers l'examen : Appel et Cassation, avec les épreuves à réponse libre, dans les deux matières.
   const ex = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
   const xe = await ex.newPage(); xe.on('pageerror', (x) => erreurs.push(x.message));
-  for (const mat of ['admin', 'oblig']) {
+  for (const mat of ['admin', 'oblig', 'intro']) {
     await xe.goto(URLB + `?test&matiere=${mat}`); await xe.waitForSelector('.tribune');
     await xe.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; });
     for (const niv of [2, 3]) {

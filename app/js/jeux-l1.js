@@ -1,0 +1,415 @@
+// Les jeux de la L1 (introduction au droit). Chacun emprunte le geste d'un jeu connu :
+// le tri à la Tinder, le mot à la Wordle, le rangement à la Tetris, Qui a dit ?, le scanner, Memory.
+import { h, effets, duree } from './ui.js';
+import { icone } from './visuels.js';
+import { son, vibrer } from './sons.js';
+import { finEpreuve, barrePied, continuer, repere } from './games.js';
+
+const attendre = (ms) => new Promise((r) => setTimeout(r, duree(ms)));
+const plurielS = (n, s) => `${n} ${s}${n > 1 ? 's' : ''}`;
+
+// LE TRI DU GREFFE ---------------------------------------------------------------------------
+// Une norme sur une carte ; on la jette vers un des quatre bords. Le tampon tombe, la carte s'envole.
+const BORDS = { d: ['Droit', 'haut'], m: ['Morale', 'droite'], r: ['Religion', 'bas'], c: ['Convenance', 'gauche'] };
+export function jouerTri(zone, ctx, round) {
+  return new Promise((fini) => {
+    let i = 0; let bons = 0; let rate = false;
+    const pile = h('div', { class: 'tri-pile' });
+    const consigne = h('p', { class: 'tri-consigne' }, 'Jette la carte vers le bon bord.');
+    const compteur = h('span', { class: 'tri-compte' });
+    const boutons = Object.entries(BORDS).map(([k, [nom, cote]]) => h('button', { class: `tri-bord tri-${cote}`, 'data-bord': k, onClick: () => jeter(k) }, nom));
+    const terrain = h('div', { class: 'tri-terrain' }, boutons, pile);
+    const ecran = h('div', { class: 'ecran tri' }, h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, 'Le tri du greffe ', compteur), consigne), terrain);
+    zone.replaceChildren(ecran);
+    let carte = null; let occupe = false;
+
+    function suivante() {
+      if (i >= round.cartes.length) return conclure();
+      rate = false;
+      compteur.textContent = `${i + 1} sur ${round.cartes.length}`;
+      const c = round.cartes[i];
+      carte = h('article', { class: 'tri-carte', 'data-bon': repere(c.k) }, h('p', {}, c.t), h('span', { class: 'tri-tampon', 'aria-hidden': 'true' }));
+      pile.replaceChildren(carte);
+      consigne.textContent = 'Jette la carte vers le bon bord.';
+      consigne.classList.remove('explique');
+      brancher(carte);
+    }
+    function brancher(el) {
+      let x0 = 0; let y0 = 0; let dx = 0; let dy = 0; let tient = false;
+      el.addEventListener('pointerdown', (e) => { if (occupe) return; tient = true; x0 = e.clientX; y0 = e.clientY; el.setPointerCapture(e.pointerId); el.classList.add('tenue'); });
+      el.addEventListener('pointermove', (e) => {
+        if (!tient) return;
+        dx = e.clientX - x0; dy = e.clientY - y0;
+        el.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 14}deg)`;
+        const k = direction(dx, dy, 40);
+        for (const b of boutons) b.classList.toggle('vise', b.dataset.bord === k);
+      });
+      const lacher = () => {
+        if (!tient) return; tient = false; el.classList.remove('tenue');
+        for (const b of boutons) b.classList.remove('vise');
+        const k = direction(dx, dy, 80);
+        dx = 0; dy = 0;
+        if (k) jeter(k); else el.style.transform = '';
+      };
+      el.addEventListener('pointerup', lacher);
+      el.addEventListener('pointercancel', lacher);
+    }
+    const direction = (dx, dy, seuil) => (Math.max(Math.abs(dx), Math.abs(dy)) < seuil ? null
+      : Math.abs(dy) > Math.abs(dx) ? (dy < 0 ? 'd' : 'r') : (dx > 0 ? 'm' : 'c'));
+
+    async function jeter(k) {
+      if (occupe || !carte) return;
+      const c = round.cartes[i];
+      occupe = true;
+      const tampon = carte.querySelector('.tri-tampon');
+      if (k === c.k) {
+        if (!rate) bons++;
+        ctx.combo(!rate);
+        tampon.textContent = BORDS[k][0];
+        carte.classList.add('tamponnee');
+        son('marteau'); vibrer(14);
+        await attendre(420);
+        carte.classList.add(`vole-${BORDS[k][1]}`);
+        await attendre(380);
+        i++; occupe = false; suivante();
+      } else {
+        if (!rate) ctx.combo(false);
+        rate = true;
+        son('ko'); vibrer([20, 40, 20]);
+        carte.style.transform = '';
+        carte.classList.remove('tremble'); void carte.offsetWidth; carte.classList.add('tremble');
+        consigne.textContent = `Pas ${BORDS[k][0].toLowerCase() === 'droit' ? 'du droit' : `la ${BORDS[k][0].toLowerCase()}`}. ${c.w}`;
+        consigne.classList.add('explique');
+        for (const b of boutons) b.classList.toggle('indique', b.dataset.bord === c.k);
+        await attendre(500);
+        occupe = false;
+      }
+    }
+    function conclure() {
+      for (const b of boutons) b.classList.remove('indique');
+      const n = round.cartes.length; const score = bons / n;
+      ctx.gain(Math.round(30 * score) + (bons === n ? 8 : 0));
+      fini();
+      finEpreuve(zone, ctx, { score, parfait: bons === n },
+        h('p', { class: 'surtitre' }, bons === n ? 'Tout le greffe est rangé du premier coup.' : `${plurielS(bons, 'carte')} sur ${n} du premier coup.`),
+        h('article', { class: 'revelation' }, h('h3', {}, 'Ce qui fait le droit'),
+          h('p', { class: 'apport' }, 'La morale, la religion et les convenances règlent aussi nos conduites. Ce qui distingue le droit, c’est la sanction organisée par l’autorité publique.')));
+    }
+    suivante();
+  });
+}
+
+// LE MOT DU JURISTE ---------------------------------------------------------------------------
+// Six essais pour trouver le mot d'une définition du cours. Les tuiles se retournent une à une.
+const CLAVIER = ['AZERTYUIOP', 'QSDFGHJKLM', 'WXCVBN'];
+export function noterMot(essai, mot) {
+  const res = Array(mot.length).fill('absent');
+  const reste = {};
+  for (let k = 0; k < mot.length; k++) { if (essai[k] === mot[k]) res[k] = 'place'; else reste[mot[k]] = (reste[mot[k]] || 0) + 1; }
+  for (let k = 0; k < mot.length; k++) if (res[k] !== 'place' && reste[essai[k]]) { res[k] = 'present'; reste[essai[k]]--; }
+  return res;
+}
+export function jouerMot(zone, ctx, round) {
+  return new Promise((fini) => {
+    const L = round.mot.length; const ESSAIS = 6;
+    let ligne = 0; let saisie = ''; let fin = false; let occupe = false;
+    const grille = h('div', { class: 'mot-grille', style: `--n:${L}`, 'data-mot': repere(round.mot) },
+      Array.from({ length: ESSAIS }, () => h('div', { class: 'mot-ligne' }, Array.from({ length: L }, () => h('span', { class: 'mot-tuile' })))));
+    const touches = {};
+    const touche = (l, large = false) => {
+      const b = h('button', { class: `mot-touche ${large ? 'large' : ''}`, 'data-touche': l, onClick: () => frappe(l) }, l === 'EFF' ? icone('retour', 18) : l === 'OK' ? 'Valider' : l);
+      if (l.length === 1) touches[l] = b;
+      return b;
+    };
+    const clavier = h('div', { class: 'mot-clavier' }, CLAVIER.map((r, k) => h('div', { class: 'mot-rangee' }, k === 2 ? touche('OK', true) : null, [...r].map((l) => touche(l)), k === 2 ? touche('EFF', true) : null)));
+    const aide = h('p', { class: 'mot-aide' }, `${L} lettres, sans accent.`);
+    const ecran = h('div', { class: 'ecran mot' }, h('div', { class: 'ecran-corps' },
+      h('p', { class: 'surtitre' }, 'Le mot du juriste'), h('h2', { class: 'question mot-def' }, round.def.replace(new RegExp(round.nom.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), '…')), aide, grille), clavier);
+    zone.replaceChildren(ecran);
+    const physique = (e) => {
+      if (e.metaKey || e.ctrlKey) return;
+      if (e.key === 'Enter') frappe('OK'); else if (e.key === 'Backspace') frappe('EFF');
+      else { const l = e.key.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase(); if (/^[A-Z]$/.test(l)) frappe(l); }
+    };
+    document.addEventListener('keydown', physique);
+    const tuiles = () => [...grille.children[ligne].children];
+    function afficher() { tuiles().forEach((t, k) => { t.textContent = saisie[k] || ''; t.classList.toggle('pleine', !!saisie[k]); }); }
+    async function frappe(l) {
+      if (fin || occupe) return;
+      if (l === 'EFF') { saisie = saisie.slice(0, -1); son('tap'); return afficher(); }
+      if (l === 'OK') {
+        if (saisie.length < L) { grille.children[ligne].classList.remove('secoue'); void grille.offsetWidth; grille.children[ligne].classList.add('secoue'); aide.textContent = `Il faut ${L} lettres.`; son('ko'); return; }
+        occupe = true;
+        const res = noterMot(saisie, round.mot);
+        const ts = tuiles();
+        for (let k = 0; k < L; k++) {
+          ts[k].classList.add('retourne', res[k]);
+          son('tic');
+          const t = touches[saisie[k]];
+          if (t && !t.classList.contains('place')) { t.classList.remove('present', 'absent'); t.classList.add(res[k] === 'place' ? 'place' : t.classList.contains('present') && res[k] === 'absent' ? 'present' : res[k]); }
+          await attendre(effets() ? 230 : 0);
+        }
+        const gagne = saisie === round.mot;
+        ligne++; saisie = ''; occupe = false;
+        if (gagne || ligne >= ESSAIS) conclure(gagne);
+        else aide.textContent = `Encore ${ESSAIS - ligne} essai${ESSAIS - ligne > 1 ? 's' : ''}.`;
+        return;
+      }
+      if (saisie.length >= L) return;
+      saisie += l; son('tap'); afficher();
+    }
+    function conclure(gagne) {
+      fin = true;
+      document.removeEventListener('keydown', physique);
+      ctx.combo(gagne);
+      ctx.noter(round.id, gagne && ligne <= 4);
+      const score = gagne ? Math.max(0.4, 1 - (ligne - 1) * 0.12) : 0;
+      ctx.gain(gagne ? Math.round(30 * score) + (ligne <= 2 ? 8 : 0) : 0);
+      if (gagne) { son('valide'); grille.children[ligne - 1].classList.add('danse'); }
+      setTimeout(() => {
+        fini();
+        finEpreuve(zone, ctx, { score, parfait: gagne && ligne <= 2 },
+          h('p', { class: 'surtitre' }, gagne ? `Trouvé en ${plurielS(ligne, 'essai')}.` : `Le mot était ${round.mot}.`),
+          h('article', { class: 'revelation' }, h('h3', {}, round.nom), h('p', { class: 'apport' }, round.def)));
+      }, duree(gagne ? 900 : 400));
+    }
+  });
+}
+
+// LE GRAND RANGEMENT ---------------------------------------------------------------------------
+// Les disciplines tombent ; on les envoie dans leur colonne. Le droit pénal, mixte, rebondit ailleurs.
+const COLONNES = [['p', 'Droit public'], ['x', 'Mixte'], ['v', 'Droit privé']];
+export function jouerRangement(zone, ctx, round) {
+  return new Promise((fini) => {
+    let i = 0; let bons = 0; let rate = false; let piece = null; let anim = null; let depart = 0; let duree0 = 7000; let fini_ = false;
+    const tas = {}; const remplis = {};
+    const cols = COLONNES.map(([k, nom]) => {
+      tas[k] = h('div', { class: 'rg-tas' }); remplis[k] = 0;
+      return h('button', { class: 'rg-colonne', 'data-col': k, onClick: () => envoyer(k) }, tas[k], h('span', { class: 'rg-nom' }, nom));
+    });
+    const ciel = h('div', { class: 'rg-ciel' });
+    const note = h('p', { class: 'rg-note' }, 'Touche la colonne où ranger la pièce.');
+    const puits = h('div', { class: 'rg-puits' }, ciel, h('div', { class: 'rg-colonnes' }, cols));
+    const ecran = h('div', { class: 'ecran rangement' }, h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, 'Le grand rangement'), note), puits);
+    zone.replaceChildren(ecran);
+
+    function lancerPiece() {
+      if (i >= round.pieces.length) return conclure();
+      rate = false;
+      const p = round.pieces[i];
+      piece = h('div', { class: 'rg-piece', 'data-bon': repere(p.k) }, p.t);
+      ciel.replaceChildren(piece);
+      depart = performance.now();
+      const tomber = (t) => {
+        if (fini_ || !piece) return;
+        const part = Math.min(1, (t - depart) / duree(duree0));
+        piece.style.transform = `translate(-50%, ${part * (ciel.clientHeight - piece.offsetHeight)}px)`;
+        if (part >= 1) { manque(); return; }
+        anim = requestAnimationFrame(tomber);
+      };
+      anim = requestAnimationFrame(tomber);
+    }
+    function poser(k, juste) {
+      const p = round.pieces[i];
+      cancelAnimationFrame(anim);
+      piece.remove(); piece = null;
+      const bloc = h('span', { class: `rg-bloc ${juste ? '' : 'corrige'}` }, p.t);
+      tas[k].append(bloc);
+      remplis[k]++;
+      // Trois pièces justes dans une colonne : elle s'illumine et descend d'un cran.
+      if (remplis[k] % 3 === 0) {
+        const col = cols.find((c) => c.dataset.col === k);
+        col.classList.remove('illumine'); void col.offsetWidth; col.classList.add('illumine');
+        son('combo');
+        setTimeout(() => { [...tas[k].children].slice(0, 3).forEach((b) => b.remove()); }, duree(500));
+      }
+      note.textContent = p.w; note.classList.add('explique');
+      i++; duree0 = Math.max(3200, duree0 - 380);
+      setTimeout(lancerPiece, duree(juste ? 350 : 900));
+    }
+    function envoyer(k) {
+      if (!piece || fini_) return;
+      const p = round.pieces[i];
+      if (k === p.k) {
+        if (!rate) bons++;
+        ctx.combo(!rate); son('valide'); vibrer(10);
+        poser(k, !rate);
+      } else {
+        if (!rate) ctx.combo(false);
+        rate = true; son('rebond'); vibrer([20, 30, 20]);
+        piece.classList.remove('rebondit'); void piece.offsetWidth; piece.classList.add('rebondit');
+        depart = performance.now() - duree(duree0) * 0.15;
+        note.textContent = 'Pas dans cette colonne.'; note.classList.remove('explique');
+      }
+    }
+    function manque() {
+      if (!rate) ctx.combo(false);
+      rate = true; son('ko');
+      poser(round.pieces[i].k, false);
+    }
+    function conclure() {
+      fini_ = true;
+      const n = round.pieces.length; const score = bons / n;
+      ctx.gain(Math.round(30 * score) + (bons === n ? 8 : 0));
+      fini();
+      finEpreuve(zone, ctx, { score, parfait: bons === n },
+        h('p', { class: 'surtitre' }, bons === n ? 'Tout est rangé du premier coup.' : `${plurielS(bons, 'pièce')} sur ${n} rangées du premier coup.`),
+        h('article', { class: 'revelation' }, h('h3', {}, 'La carte du droit'),
+          h('p', { class: 'apport' }, 'Le droit public organise les pouvoirs publics et leurs rapports avec les personnes privées ; le droit privé règle les rapports entre personnes privées. Le droit pénal, mixte, est rattaché au droit privé en France.')));
+    }
+    lancerPiece();
+  });
+}
+
+// QUI A DIT ? ------------------------------------------------------------------------------------
+// La bulle se tape à la machine ; le bon auteur hoche la tête, les autres se retournent.
+const initiales = (nom) => nom.replace(/\(.*\)/, '').split(/[\s-]+/).filter((m) => /^[A-ZÀ-Ý]/.test(m)).map((m) => m[0]).slice(0, 2).join('');
+export function jouerQuiADit(zone, ctx, round) {
+  return new Promise((fini) => {
+    let k = 0; let bons = 0;
+    const tour = () => {
+      const c = round.tours[k];
+      const bulle = h('p', { class: 'qad-bulle-txt' });
+      const medaillons = c.choix.map((x, j) => h('button', { class: 'qad-medaillon', style: `--j:${j}`, 'data-ok': repere(x.a === c.a), onClick: () => choisir(x) },
+        h('span', { class: 'qad-portrait', 'aria-hidden': 'true' }, h('span', { class: 'qad-face' }, initiales(x.nom)), h('span', { class: 'qad-dos' })), h('span', { class: 'qad-nom' }, x.nom)));
+      const ecran = h('div', { class: 'ecran quiadit' }, h('div', { class: 'ecran-corps' },
+        h('p', { class: 'surtitre' }, `Qui a dit ? ${k + 1} sur ${round.tours.length}`),
+        h('div', { class: 'qad-bulle' }, c.ctx ? h('small', { class: 'qad-ctx' }, c.ctx) : null, bulle),
+        h('div', { class: 'qad-medaillons' }, medaillons)));
+      zone.replaceChildren(ecran);
+      // La machine à écrire : rapide, et instantanée sans effets.
+      const txt = `« ${c.t} »`; let n = 0;
+      const taper = () => { if (!effets()) { bulle.textContent = txt; return; } n += 2; bulle.textContent = txt.slice(0, n); if (n < txt.length) setTimeout(taper, 18); };
+      taper();
+      let repondu = false;
+      async function choisir(x) {
+        if (repondu) return; repondu = true;
+        bulle.textContent = txt;
+        const ok = x.a === c.a;
+        if (ok) bons++;
+        ctx.combo(ok); son(ok ? 'ok' : 'ko'); vibrer(ok ? 10 : [20, 40, 20]);
+        medaillons.forEach((m, j) => { const bon = c.choix[j].a === c.a; m.disabled = true; m.classList.add(bon ? 'hoche' : 'retourne'); if (m === medaillons[c.choix.indexOf(x)] && !ok) m.classList.add('choisi-faux'); });
+        await attendre(700);
+        ecran.append(h('p', { class: `qad-verdict ${ok ? 'juste' : 'faux'}` }, ok ? `Oui, ${c.nom}.` : `Non : c’est ${c.nom}.`),
+          barrePied(continuer(k + 1 < round.tours.length ? 'Citation suivante' : 'Continuer', () => { k++; if (k < round.tours.length) tour(); else conclure(); })));
+      }
+    };
+    function conclure() {
+      const n = round.tours.length; const score = n ? bons / n : 0;
+      ctx.gain(Math.round(30 * score) + (bons === n ? 6 : 0));
+      fini();
+      finEpreuve(zone, ctx, { score, parfait: bons === n },
+        h('p', { class: 'surtitre' }, `${plurielS(bons, 'auteur')} reconnu${bons > 1 ? 's' : ''} sur ${n}.`),
+        h('article', { class: 'revelation' }, h('h3', {}, 'Les voix du cours'), h('ul', { class: 'qad-recap' }, round.tours.map((c) => h('li', {}, h('b', {}, c.nom), ` : « ${c.t} »`)))));
+    }
+    if (!round.tours.length) { fini(); ctx.fin({ score: 1, parfait: true }); return; }
+    tour();
+  });
+}
+
+// AU SCANNER ----------------------------------------------------------------------------------------
+// Un rayon balaie le texte ; on allume les témoins, puis le verdict tombe, témoin par témoin.
+const TEMOINS = [['r', 'Règle de conduite'], ['g', 'Générale et impersonnelle'], ['s', 'Sanctionnée par l’autorité publique']];
+export function jouerScanner(zone, ctx, round) {
+  return new Promise((fini) => {
+    let k = 0; let points = 0;
+    const texte = () => {
+      const x = round.textes[k];
+      const choix = { r: false, g: false, s: false };
+      const temoins = TEMOINS.map(([c, nom]) => h('button', { class: 'sc-temoin', role: 'switch', 'aria-checked': 'false', 'data-temoin': c, 'data-ok': repere(x[c]), onClick: (e) => {
+        if (fige) return; choix[c] = !choix[c]; e.currentTarget.setAttribute('aria-checked', String(choix[c])); e.currentTarget.classList.toggle('allume', choix[c]); son('tap');
+      } }, h('i', { class: 'sc-voyant', 'aria-hidden': 'true' }), h('span', {}, nom)));
+      let fige = false;
+      const feuille = h('article', { class: 'sc-feuille' }, h('small', {}, x.src), h('p', {}, x.t), h('i', { class: 'sc-rayon', 'aria-hidden': 'true' }));
+      const pied = barrePied(continuer('Scanner', () => verdict(), { 'data-action': 'scanner' }));
+      const ecran = h('div', { class: 'ecran scanner' }, h('div', { class: 'ecran-corps' },
+        h('p', { class: 'surtitre' }, `Au scanner : ${k + 1} sur ${round.textes.length}`), feuille,
+        h('p', { class: 'sc-consigne' }, 'Allume les témoins que ce texte remplit.'), h('div', { class: 'sc-temoins' }, temoins)), pied);
+      zone.replaceChildren(ecran);
+      async function verdict() {
+        if (fige) return; fige = true;
+        pied.remove();
+        feuille.classList.add('balaye');
+        await attendre(effets() ? 700 : 0);
+        let justes = 0;
+        for (const [i, [c]] of TEMOINS.entries()) {
+          const bon = choix[c] === x[c];
+          if (bon) justes++;
+          temoins[i].classList.add(bon ? 'bip-vert' : 'bip-rouge');
+          temoins[i].classList.toggle('allume', x[c]);
+          son(bon ? 'ok' : 'ko');
+          await attendre(effets() ? 260 : 0);
+        }
+        const droit = x.r && x.g && x.s;
+        points += justes / 3;
+        ctx.combo(justes === 3);
+        ecran.querySelector('.ecran-corps').append(h('div', { class: `sc-verdict ${droit ? 'droit' : 'pas'}` },
+          h('b', {}, droit ? 'Du droit' : 'Pas une règle de droit'), h('p', {}, x.w)));
+        ecran.append(barrePied(continuer(k + 1 < round.textes.length ? 'Texte suivant' : 'Continuer', () => { k++; if (k < round.textes.length) texte(); else conclure(); })));
+      }
+    };
+    function conclure() {
+      const n = round.textes.length; const score = points / n;
+      ctx.gain(Math.round(30 * score) + (score === 1 ? 6 : 0));
+      fini();
+      finEpreuve(zone, ctx, { score, parfait: score === 1 },
+        h('p', { class: 'surtitre' }, score === 1 ? 'Tous les témoins justes.' : `${Math.round(score * 100)} % des témoins justes.`),
+        h('article', { class: 'revelation' }, h('h3', {}, 'La définition classique'),
+          h('p', { class: 'apport' }, 'Une règle de conduite en société, générale et impersonnelle, dont le respect est imposé par l’autorité publique.')));
+    }
+    texte();
+  });
+}
+
+// MEMORY ---------------------------------------------------------------------------------------
+// Douze cartes retournées : une notion, sa définition courte. Une paire trouvée s'envole vers le dossier.
+export function jouerMemory(zone, ctx, round) {
+  return new Promise((fini) => {
+    const cartes = round.paires.flatMap((p) => [{ p, t: p.a, cote: 'a' }, { p, t: p.b, cote: 'b' }]).sort(() => Math.random() - 0.5);
+    let ouvertes = []; let trouvees = 0; let coups = 0; let bloque = false;
+    const erreurs = new Map();
+    const dossier = h('span', { class: 'mem-dossier', 'aria-label': 'Paires trouvées' }, icone('note', 22), h('b', {}, '0'));
+    const els = cartes.map((c) => {
+      const el = h('button', { class: `mem-carte cote-${c.cote}`, 'data-paire': repere(c.p.id), 'aria-label': 'Carte retournée', onClick: () => retourner(c, el) },
+        h('span', { class: 'mem-dos', 'aria-hidden': 'true' }), h('span', { class: 'mem-face' }, c.t));
+      c.el = el; return el;
+    });
+    const ecran = h('div', { class: 'ecran memory' }, h('div', { class: 'ecran-corps' },
+      h('div', { class: 'mem-tete' }, h('p', { class: 'surtitre' }, 'Memory'), dossier),
+      h('p', { class: 'mem-consigne' }, 'Retrouve chaque notion et sa définition.'),
+      h('div', { class: 'mem-grille' }, els)));
+    zone.replaceChildren(ecran);
+    async function retourner(c, el) {
+      if (bloque || el.classList.contains('ouverte') || el.classList.contains('trouvee')) return;
+      el.classList.add('ouverte'); el.setAttribute('aria-label', c.t); son('carte');
+      ouvertes.push(c);
+      if (ouvertes.length < 2) return;
+      coups++;
+      const [x, y] = ouvertes; ouvertes = [];
+      if (x.p === y.p) {
+        trouvees++; son('valide'); vibrer(10); ctx.combo(true);
+        await attendre(350);
+        for (const z of [x, y]) z.el.classList.add('trouvee');
+        dossier.querySelector('b').textContent = String(trouvees);
+        dossier.classList.remove('recoit'); void dossier.offsetWidth; dossier.classList.add('recoit');
+        if (x.p.carte) ctx.noter(x.p.carte, (erreurs.get(x.p) || 0) < 2);
+        if (trouvees === round.paires.length) setTimeout(conclure, duree(500));
+      } else {
+        bloque = true; son('ecart');
+        for (const z of [x, y]) erreurs.set(z.p, (erreurs.get(z.p) || 0) + 1);
+        await attendre(850);
+        for (const z of [x, y]) { z.el.classList.remove('ouverte'); z.el.setAttribute('aria-label', 'Carte retournée'); }
+        bloque = false;
+      }
+    }
+    function conclure() {
+      const n = round.paires.length;
+      const score = Math.max(0.3, Math.min(1, 1 - Math.max(0, coups - n * 1.5) / (n * 2)));
+      ctx.gain(Math.round(30 * score) + (coups <= n + 2 ? 8 : 0));
+      fini();
+      finEpreuve(zone, ctx, { score, parfait: coups <= n + 2 },
+        h('p', { class: 'surtitre' }, `${plurielS(n, 'paire')} en ${plurielS(coups, 'coup')}.`),
+        h('article', { class: 'revelation' }, h('h3', {}, 'Le dossier'), h('ul', { class: 'mem-recap' }, round.paires.map((p) => h('li', {}, h('b', {}, p.a), ` : ${p.b}`)))));
+    }
+  });
+}

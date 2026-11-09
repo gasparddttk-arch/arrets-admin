@@ -1281,3 +1281,152 @@ html[data-effets='non'] .feuille { display: none; }
 .tiroir-trophees[open] .trophees { animation: eclore-tiroir .3s ease both; }
 @keyframes eclore-tiroir { from { opacity: 0; transform: translateY(-6px); } }
 @media (prefers-reduced-motion: reduce) { .maitrise-rail i, .tiroir-trophees[open] .trophees { animation: none; } }
+
+/* ====================== L1 : les jeux de l'introduction au droit ====================== */
+.role-ligne.en-travaux { opacity: .55; cursor: default; }
+
+/* Le tri du greffe : la carte au centre, un bord par famille de règles. */
+.ecran.tri { display: flex; flex-direction: column; gap: 10px; }
+.tri .surtitre { display: flex; justify-content: space-between; }
+.tri-compte { color: var(--texte-2); font-family: var(--ui); font-size: 13px; }
+.tri-consigne { min-height: 44px; margin: 0; font-family: var(--ui); font-size: 14px; color: var(--texte-2); }
+.tri-consigne.explique { color: var(--texte); }
+.tri-terrain { position: relative; height: min(58vh, 460px); border-radius: 28px; background: var(--banc); overflow: hidden; touch-action: none; }
+.tri-bord { position: absolute; z-index: 2; border: 0; font: 700 14px var(--ui); color: var(--texte); background: var(--banc-fort); border-radius: 999px; padding: 9px 14px; transition: transform .2s, background .2s, color .2s; }
+.tri-haut { top: 10px; left: 50%; transform: translateX(-50%); }
+.tri-bas { bottom: 10px; left: 50%; transform: translateX(-50%); }
+.tri-gauche { left: 6px; top: 50%; transform: translateY(-50%) rotate(-90deg); transform-origin: center; margin-left: -24px; }
+.tri-droite { right: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); margin-right: -18px; }
+.tri-bord.vise { background: var(--or); color: var(--or-texte); }
+.tri-bord.indique { background: var(--verdict); color: var(--verdict-texte); animation: tri-pouls 1s ease-in-out infinite; }
+@keyframes tri-pouls { 50% { filter: brightness(1.15); box-shadow: 0 0 0 6px color-mix(in srgb, var(--verdict) 30%, transparent); } }
+.tri-pile { position: absolute; inset: 56px 52px; display: grid; place-items: center; }
+.tri-carte { position: relative; width: 100%; max-width: 250px; min-height: 190px; display: grid; place-items: center; padding: 20px 18px; box-sizing: border-box; border-radius: 22px;
+  background: var(--papier-1, #FFFDF6); color: var(--papier-texte, #1B1A16); box-shadow: 0 12px 30px var(--ombre); text-align: center; cursor: grab; user-select: none; -webkit-user-select: none;
+  transition: transform .35s cubic-bezier(.2, .8, .3, 1.2), opacity .35s; animation: tri-arrive .35s cubic-bezier(.2, .8, .3, 1.2) both; }
+.tri-carte p { margin: 0; font-size: 19px; line-height: 1.3; }
+.tri-carte.tenue { transition: none; cursor: grabbing; }
+@keyframes tri-arrive { from { transform: translateY(24px) scale(.94); opacity: 0; } }
+.tri-tampon { position: absolute; top: 14px; right: 12px; padding: 4px 10px; border: 3px solid var(--sceau); border-radius: 8px; color: var(--sceau); font: 900 18px var(--ui); letter-spacing: .04em; transform: rotate(-12deg) scale(2.4); opacity: 0; pointer-events: none; }
+.tri-carte.tamponnee .tri-tampon { animation: tampon .32s cubic-bezier(.3, 1.4, .5, 1) forwards; }
+@keyframes tampon { to { transform: rotate(-12deg) scale(1); opacity: 1; } }
+.tri-carte.vole-haut { transform: translateY(-140%) rotate(-6deg) !important; opacity: 0; }
+.tri-carte.vole-bas { transform: translateY(140%) rotate(6deg) !important; opacity: 0; }
+.tri-carte.vole-gauche { transform: translateX(-160%) rotate(-18deg) !important; opacity: 0; }
+.tri-carte.vole-droite { transform: translateX(160%) rotate(18deg) !important; opacity: 0; }
+.tri-carte.tremble { animation: tremble .45s ease both; }
+@keyframes tremble { 20%, 60% { transform: translateX(-10px) rotate(-2deg); } 40%, 80% { transform: translateX(10px) rotate(2deg); } }
+
+/* Le mot du juriste : la grille de Wordle, les tuiles qui se retournent, le clavier. */
+.ecran.mot { display: flex; flex-direction: column; gap: 12px; }
+.mot-def { font-size: 19px; }
+.mot-aide { margin: 0; font: 13px var(--ui); color: var(--texte-2); }
+.mot-grille { display: grid; gap: 6px; margin: 4px auto 0; width: min(100%, calc(var(--n) * 44px)); }
+.mot-ligne { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 5px; }
+.mot-ligne.secoue { animation: tremble .4s ease; }
+.mot-ligne.danse .mot-tuile { animation: mot-saut .5s ease calc(var(--k, 0) * 60ms); }
+@keyframes mot-saut { 40% { transform: translateY(-10px); } }
+.mot-tuile { aspect-ratio: 1; display: grid; place-items: center; border-radius: 9px; background: var(--banc); box-shadow: inset 0 0 0 2px var(--banc-fort); font: 800 clamp(15px, 5vw, 22px) var(--ui); color: var(--texte); text-transform: uppercase; }
+.mot-tuile.pleine { box-shadow: inset 0 0 0 2px var(--texte-2); animation: mot-pop .12s ease; }
+@keyframes mot-pop { 50% { transform: scale(1.08); } }
+.mot-tuile.retourne { animation: mot-flip .45s ease both; }
+@keyframes mot-flip { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0); } }
+.mot-tuile.place { background: var(--verdict); color: var(--verdict-texte); box-shadow: none; }
+.mot-tuile.present { background: var(--or); color: var(--or-texte); box-shadow: none; }
+.mot-tuile.absent { background: var(--banc-fort); color: var(--texte-2); box-shadow: none; }
+.mot-clavier { display: grid; gap: 6px; margin-top: auto; padding-bottom: calc(8px + var(--bas-sur)); }
+.mot-rangee { display: flex; justify-content: center; gap: 4px; }
+.mot-touche { flex: 1 1 0; max-width: 38px; min-height: 48px; border: 0; border-radius: 8px; background: var(--banc-fort); color: var(--texte); font: 700 15px var(--ui); display: grid; place-items: center; padding: 0; }
+.mot-touche.large { max-width: 66px; flex-grow: 1.7; font-size: 12px; }
+.mot-touche.place { background: var(--verdict); color: var(--verdict-texte); }
+.mot-touche.present { background: var(--or); color: var(--or-texte); }
+.mot-touche.absent { opacity: .35; }
+
+/* Le grand rangement : le puits, la pièce qui tombe, trois colonnes. */
+.ecran.rangement { display: flex; flex-direction: column; gap: 10px; }
+.rg-note { min-height: 40px; margin: 0; font: 14px var(--ui); color: var(--texte-2); }
+.rg-note.explique { color: var(--texte); }
+.rg-puits { position: relative; display: grid; grid-template-rows: 1fr auto; height: min(62vh, 520px); border-radius: 26px; background: var(--banc); overflow: hidden; }
+.rg-ciel { position: relative; }
+.rg-piece { position: absolute; left: 50%; top: 0; max-width: 70%; padding: 10px 14px; border-radius: 14px; background: var(--bleu); color: var(--bleu-texte); font: 700 15px var(--ui); text-align: center; box-shadow: 0 8px 18px var(--ombre); will-change: transform; transform: translate(-50%, 0); }
+.rg-piece.rebondit { animation: rg-rebond .45s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes rg-rebond { 30% { margin-top: -30px; } 60% { margin-top: 6px; } }
+.rg-colonnes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 6px; }
+.rg-colonne { display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; min-height: 170px; padding: 6px; border: 0; border-radius: 16px; background: var(--banc-fort); color: var(--texte); font: inherit; }
+.rg-colonne[data-col='x'] { background: color-mix(in srgb, var(--robe) 22%, var(--banc-fort)); }
+.rg-tas { display: flex; flex-direction: column-reverse; gap: 4px; }
+.rg-bloc { padding: 6px 4px; border-radius: 9px; background: var(--verdict); color: var(--verdict-texte); font: 700 11px/1.15 var(--ui); animation: rg-pose .3s cubic-bezier(.3, 1.4, .5, 1); }
+.rg-bloc.corrige { background: var(--cire-vive); color: var(--cire-texte); }
+@keyframes rg-pose { from { transform: translateY(-40px); opacity: 0; } }
+.rg-nom { font: 800 12px var(--ui); color: var(--texte-2); padding-top: 4px; }
+.rg-colonne.illumine { animation: rg-illumine .7s ease; }
+@keyframes rg-illumine { 30% { box-shadow: 0 0 0 3px var(--or), 0 0 30px color-mix(in srgb, var(--or) 60%, transparent); transform: translateY(6px); } }
+
+/* Qui a dit ? : la bulle, les médaillons. */
+.qad-bulle { position: relative; margin: 6px 0 18px; padding: 18px 18px 16px; border-radius: 24px; background: var(--papier-1, #FFFDF6); color: var(--papier-texte, #1B1A16); box-shadow: 0 10px 24px var(--ombre); }
+.qad-bulle::after { content: ''; position: absolute; left: 34px; bottom: -14px; border: 14px solid transparent; border-top-color: var(--papier-1, #FFFDF6); border-bottom: 0; }
+.qad-bulle-txt { margin: 0; min-height: 3.6em; font-size: 20px; line-height: 1.32; }
+.qad-ctx { display: block; margin-bottom: 6px; font: 12px var(--ui); opacity: .7; }
+.qad-medaillons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.qad-medaillon { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px; border: 0; border-radius: 22px; background: var(--banc); color: var(--texte); font: inherit; animation: tri-arrive .4s cubic-bezier(.2, .8, .3, 1.2) both; animation-delay: calc(var(--j) * 70ms); perspective: 400px; }
+.qad-portrait { position: relative; width: 74px; height: 74px; transform-style: preserve-3d; transition: transform .5s ease; }
+.qad-face, .qad-dos { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 50%; backface-visibility: hidden; }
+.qad-face { background: radial-gradient(circle at 35% 30%, var(--or-1), var(--or-3)); color: var(--or-texte); font: 800 26px var(--corps); box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .35), 0 4px 0 var(--or-ombre); }
+.qad-dos { background: var(--banc-fort); transform: rotateY(180deg); }
+.qad-nom { font: 700 13px var(--ui); text-align: center; }
+.qad-medaillon.retourne .qad-portrait { transform: rotateY(180deg); }
+.qad-medaillon.retourne { opacity: .6; }
+.qad-medaillon.hoche .qad-portrait { animation: hoche .7s ease 2; }
+.qad-medaillon.hoche { box-shadow: inset 0 0 0 2px var(--verdict); opacity: 1; }
+@keyframes hoche { 25% { transform: translateY(5px) rotate(-3deg); } 50% { transform: translateY(0); } 75% { transform: translateY(5px) rotate(3deg); } }
+.qad-verdict { margin: 16px 0 0; font: 700 16px var(--ui); }
+.qad-verdict.juste { color: var(--verdict); } .qad-verdict.faux { color: var(--cire-vive); }
+.qad-recap, .mem-recap { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+/* Au scanner : la feuille, le rayon, les témoins. */
+.sc-feuille { position: relative; overflow: hidden; margin: 6px 0 14px; padding: 16px 18px; border-radius: 20px; background: var(--papier-1, #FFFDF6); color: var(--papier-texte, #1B1A16); box-shadow: 0 10px 24px var(--ombre); }
+.sc-feuille small { font: 12px var(--ui); opacity: .65; }
+.sc-feuille p { margin: 6px 0 0; font-size: 19px; line-height: 1.32; }
+.sc-rayon { position: absolute; left: 0; right: 0; top: -10%; height: 3px; background: var(--cire-vive); box-shadow: 0 0 14px 4px color-mix(in srgb, var(--cire-vive) 55%, transparent); opacity: 0; }
+.sc-feuille.balaye .sc-rayon { animation: rayon .7s ease-in-out; }
+@keyframes rayon { 0% { top: -5%; opacity: 1; } 100% { top: 105%; opacity: 1; } }
+.sc-consigne { margin: 0 0 8px; font: 14px var(--ui); color: var(--texte-2); }
+.sc-temoins { display: grid; gap: 8px; }
+.sc-temoin { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border: 0; border-radius: 16px; background: var(--banc); color: var(--texte); font: 600 15px var(--ui); text-align: left; }
+.sc-voyant { flex: none; width: 16px; height: 16px; border-radius: 50%; background: var(--banc-fort); box-shadow: inset 0 0 0 2px var(--texte-2); transition: background .2s, box-shadow .2s; }
+.sc-temoin.allume .sc-voyant { background: var(--or); box-shadow: 0 0 10px var(--or); }
+.sc-temoin.bip-vert { box-shadow: inset 0 0 0 2px var(--verdict); }
+.sc-temoin.bip-rouge { box-shadow: inset 0 0 0 2px var(--cire-vive); animation: tremble .35s ease; }
+.sc-verdict { margin-top: 14px; padding: 14px 16px; border-radius: 18px; background: var(--banc); animation: tri-arrive .35s ease both; }
+.sc-verdict b { font: 800 17px var(--ui); }
+.sc-verdict.droit b { color: var(--verdict); } .sc-verdict.pas b { color: var(--or); }
+.sc-verdict p { margin: 4px 0 0; }
+
+/* Memory : douze cartes, une paire trouvée s'envole vers le dossier. */
+.mem-tete { display: flex; align-items: center; justify-content: space-between; }
+.mem-dossier { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--banc); color: var(--or); font: 800 15px var(--ui); }
+.mem-dossier.recoit { animation: mot-pop .35s ease; }
+.mem-consigne { margin: 4px 0 10px; font: 14px var(--ui); color: var(--texte-2); }
+.mem-grille { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.mem-carte { position: relative; min-height: 104px; padding: 0; border: 0; border-radius: 16px; background: transparent; color: var(--texte); font: inherit; perspective: 600px; }
+.mem-dos, .mem-face { position: absolute; inset: 0; display: grid; place-items: center; padding: 8px; border-radius: 16px; backface-visibility: hidden; transition: transform .4s ease; box-sizing: border-box; }
+.mem-dos { background: var(--bleu) radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .18) 0 18%, transparent 19%); box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .12); }
+.mem-face { transform: rotateY(180deg); background: var(--banc); box-shadow: inset 0 0 0 2px var(--banc-fort); font: 600 12.5px/1.2 var(--ui); text-align: center; overflow: hidden; }
+.mem-carte.cote-a .mem-face { font: 700 14px/1.15 var(--corps); color: var(--titre-or); }
+.mem-carte.ouverte .mem-dos { transform: rotateY(-180deg); }
+.mem-carte.ouverte .mem-face { transform: rotateY(0); }
+.mem-carte.trouvee .mem-dos { transform: rotateY(-180deg); }
+.mem-carte.trouvee .mem-face { transform: rotateY(0); box-shadow: inset 0 0 0 2px var(--verdict); }
+.mem-carte.trouvee { animation: mem-envol .6s ease forwards .1s; pointer-events: none; }
+@keyframes mem-envol { 60% { transform: scale(1.05); opacity: 1; } 100% { transform: translateY(-30px) scale(.5); opacity: .12; } }
+
+/* La fiche d'une notion. */
+.notion-ex, .notion-piege { margin: 12px 0 0; padding: 12px 14px; border-radius: 16px; background: var(--banc); }
+.notion-piege { box-shadow: inset 3px 0 0 var(--or); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tri-carte, .mot-tuile, .rg-piece, .qad-portrait, .mem-dos, .mem-face { transition: none !important; animation: none !important; }
+  .mem-carte.trouvee { animation: none; opacity: .4; }
+}
+.carte-an.carte-etiquette { font: 700 12px var(--ui); letter-spacing: 0; color: var(--texte-2); }
+.jalon-an { white-space: nowrap; }

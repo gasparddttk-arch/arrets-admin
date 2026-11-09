@@ -375,3 +375,29 @@ export function lireContenu() {
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
   };
 }
+
+// L1, introduction au droit : le contenu est écrit en JavaScript dans content/intro.mjs.
+export async function lireIntro() {
+  const c = await import(new URL('../content/intro.mjs', import.meta.url));
+  const SANS_LEXIQUE = new Set(['regle', 'decision', 'trois-adjectifs', 'qualites-code', 'coutumes-droit-ecrit', 'autonomie', 'generale-impersonnelle', 'lege', 'devoir-etre']);
+  const articles = c.notions.map((n, i) => ({
+    id: n.id, num: String(i + 1), nom: n.nom, titre: n.nom, etiquette: n.etiquette, zones: n.z, imp: 2,
+    regle: n.regle, c: n.c, ex: n.ex, pg: n.pg, mot: n.mot, ap: Object.fromEntries(n.z.map((z) => [z, n.regle])), article: 1, notion: 1,
+  }));
+  const lexique = c.notions.filter((n) => n.etiquette !== 'Adage' && !SANS_LEXIQUE.has(n.id)).map((n) => {
+    const t = n.nom.replace(/\s*\(.*\)$/, '');
+    return { t: t.charAt(0).toLowerCase() + t.slice(1), d: n.regle, formes: [] };
+  });
+  const auteur = (k) => c.auteurs[k];
+  return {
+    matiere: 'intro', zones: c.zones, arrets: [], articles, familles: [], juges: [], cas: [], qualifs: [], remedes: [],
+    frises: c.frises, questions: [], lexique, syllogismes: [], sujets: c.sujets,
+    defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
+    tri: c.tri.map(([t, k, w], i) => ({ id: `tri-${i}`, t, k, w })),
+    rangement: c.rangement.map(([t, k, w], i) => ({ id: `rg-${i}`, t, k, w })),
+    citations: c.citations.map(([a, t, z, ctx], i) => ({ id: `cit-${i}`, a, nom: auteur(a), t, zones: [z], ctx: ctx || null })),
+    idees: c.idees.map(([a, t, z]) => ({ a, nom: auteur(a), t, zones: [z] })),
+    auteurs: c.auteurs,
+    scanner: c.scanner.map(([t, src, r, g, s, w], i) => ({ id: `sc-${i}`, t, src, r: !!r, g: !!g, s: !!s, w })),
+  };
+}
