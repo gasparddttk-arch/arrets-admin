@@ -47,7 +47,7 @@
   --eteint-1: #DCD5EE; --eteint-2: #C9C0E2; --decor: #16131F; --decor-opacite: .05; --trait: #6A5BD8;
   --m-paires-1: #6F86F0; --m-paires-2: #6F86F0; --m-puzzle-1: #F07A5E; --m-puzzle-2: #F07A5E; --m-juge-1: #8E7CF0; --m-juge-2: #8E7CF0;
   --m-plan-1: #2FA77A; --m-plan-2: #2FA77A; --m-archi-1: #E3A13A; --m-archi-2: #E3A13A;
-  --mur-1: #DCD6F2; --mur-2: #ECE8F8; --banc-1: #9C7A5E; --banc-2: #7A5A42;
+  --mur-1: #DCD6F2; --mur-2: #ECE8F8; --banc-1: #EFE6DA; --banc-2: #E4D6C4;
 }
 /* Rose : framboise, or rose et paillettes. */
 [data-theme='rose'] {
@@ -1250,3 +1250,34 @@ html[data-effets='non'] .feuille { display: none; }
 /* Arrêts : cartes à plat, nom en avant. */
 .grille-arrets .carte-arret, .carte-arret { border-radius: 24px; background: var(--banc); box-shadow: none; }
 .classement .insigne-ami { display: inline-flex; vertical-align: -2px; margin-right: 5px; color: var(--or); }
+/* Profil : trois chiffres clés, la maîtrise, puis les records en liste. */
+.page-profil .stats-cle { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 6px 0 0; text-align: left; }
+.stats-cle > div { display: flex; flex-direction: column; justify-content: space-between; gap: 2px; padding: 14px 14px 12px; border-radius: 22px; background: var(--banc); min-height: 92px; box-sizing: border-box; }
+.stats-cle dd { margin: 0; font-family: var(--ui); font-size: 34px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.stats-cle dt { font-family: var(--ui); font-size: 13px; color: var(--texte-2); line-height: 1.2; }
+.stats-cle .cle-serie { background: var(--bleu); color: var(--bleu-texte, #fff); }
+.stats-cle .cle-serie dt { color: inherit; opacity: .82; }
+.page-profil .maitrise { display: grid; gap: 8px; margin-top: 8px; padding: 14px 16px; border-radius: 22px; background: var(--banc); text-align: left; }
+.maitrise-ligne { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--ui); font-size: 15px; }
+.maitrise-ligne b { font-variant-numeric: tabular-nums; }
+.maitrise-rail { position: relative; height: 10px; border-radius: 999px; background: var(--banc-fort); overflow: hidden; }
+.maitrise-rail i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: inherit; background: var(--or); transform-origin: left; animation: maitrise-pousse .9s cubic-bezier(.3, .8, .3, 1) both; }
+.maitrise-rail i.vu { background: color-mix(in srgb, var(--or) 35%, transparent); }
+@keyframes maitrise-pousse { from { transform: scaleX(0); } }
+.maitrise small { font-family: var(--ui); font-size: 13px; color: var(--texte-2); }
+.page-profil .stats { display: flex; flex-direction: column; gap: 0; margin-top: 8px; padding: 0 16px; border-radius: 22px; background: var(--banc); text-align: left; }
+.page-profil .stats > div { display: flex; justify-content: space-between; align-items: center; min-height: 48px; padding: 0; border-radius: 0; background: none; }
+.page-profil .stats > div + div { border-top: 1px solid var(--banc-fort); }
+.page-profil .stats dt { font-size: 15px; color: var(--texte); }
+.page-profil .stats dd { margin: 0; font-size: 17px; font-weight: 700; color: var(--texte-2); font-variant-numeric: tabular-nums; }
+/* Trophées repliés par défaut. */
+.tiroir-trophees { margin-top: 16px; border-radius: 22px; background: var(--banc); text-align: left; }
+.tiroir-trophees summary { display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 16px; list-style: none; cursor: pointer; font-family: var(--ui); font-size: 17px; font-weight: 600; }
+.tiroir-trophees summary::-webkit-details-marker { display: none; }
+.tiroir-trophees summary small { margin-left: auto; font-size: 14px; font-weight: 500; color: var(--texte-2); }
+.tiroir-trophees summary::after { content: ''; width: 8px; height: 8px; border-right: 2px solid var(--texte-2); border-bottom: 2px solid var(--texte-2); transform: rotate(45deg) translateY(-3px); transition: transform .25s ease; }
+.tiroir-trophees[open] summary::after { transform: rotate(-135deg) translateX(-2px); }
+.tiroir-trophees .trophees { padding: 0 12px 14px; margin: 0; }
+.tiroir-trophees[open] .trophees { animation: eclore-tiroir .3s ease both; }
+@keyframes eclore-tiroir { from { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .maitrise-rail i, .tiroir-trophees[open] .trophees { animation: none; } }

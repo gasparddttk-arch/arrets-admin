@@ -1108,6 +1108,10 @@ function profil() {
   const vue = carriereVue || etat.matiere;
   const r = rang(vue); const g = rangGeneral(); const vals = Object.values(M(vue).arrets);
   const stats = [['Séances', etat.stats.seances], ['Record de série', etat.serie.record], ['Sans faute', etat.stats.parfaites], ['Grands arrêts', vals.filter((a) => a.b >= 5).length], ['Meilleur enchaînement', etat.stats.comboMax], [vue === 'oblig' ? 'Fiches vues' : 'Arrêts vus', vals.length], ...(etat.dunk.cinq ? [['Record Dunk shot', etat.dunk.record]] : [])];
+  const liste = CONTENUS[vue]?.arrets || []; const fichesVue = M(vue).arrets || {};
+  const grands = liste.length ? liste.filter((a) => fichesVue[a.id]?.b >= 5).length : vals.filter((a) => a.b >= 5).length;
+  const vus = liste.length ? liste.filter((a) => fichesVue[a.id]).length : vals.length; const totalArrets = liste.length || vals.length;
+  const serieDuJour = etat.serie.dernier >= jour() - 1 ? etat.serie.n : 0;
   const blocRappel = h('div', { class: 'rappel' });
   // Le rappel de Lexou : activé ici, à l'heure choisie, envoyé par le serveur.
   async function rendreRappel() {
@@ -1142,9 +1146,19 @@ function profil() {
       h('p', {}, 'Carrière générale'), h('strong', {}, g.nom),
       h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${g.part.toFixed(3)})` })),
       h('small', {}, g.suivant ? `${fmt(g.xp)} points cumulés. Encore ${fmt(g.suivant.xp - g.xp)} pour devenir ${g.suivant.nom}.` : `${RANGS_GENERAL.at(-1).nom} : dernier titre atteint.`)),
-    h('dl', { class: 'stats' }, stats.map(([l, v]) => h('div', {}, h('dt', {}, l), h('dd', {}, fmt(v))))),
-    h('h2', {}, 'Trophées'),
-    h('ul', { class: 'trophees' }, TROPHEES.map((t) => { const g = !!etat.trophees[t.id]; return h('li', {}, h('button', { 'aria-label': `${t.nom}, ${g ? 'gagné' : 'à gagner'}`, onClick: () => montrerTrophee(t, g) }, medaille(metalDe(t.id), g))); })),
+    h('h2', {}, 'Tes chiffres'),
+    h('dl', { class: 'stats-cle' },
+      h('div', { class: 'cle-serie' }, h('dd', {}, fmt(serieDuJour)), h('dt', {}, serieDuJour > 1 ? 'jours de série' : 'jour de série')),
+      h('div', {}, h('dd', {}, fmt(etat.stats.seances)), h('dt', {}, etat.stats.seances > 1 ? 'séances' : 'séance')),
+      h('div', {}, h('dd', {}, fmt(grands)), h('dt', {}, 'grands arrêts'))),
+    h('div', { class: 'maitrise', role: 'img', 'aria-label': `${grands} arrêts maîtrisés sur ${totalArrets}` },
+      h('span', { class: 'maitrise-ligne' }, h('span', {}, 'Arrêts maîtrisés'), h('b', {}, `${grands} sur ${totalArrets}`)),
+      h('span', { class: 'maitrise-rail' }, h('i', { class: 'vu', style: `width:${totalArrets ? (vus / totalArrets) * 100 : 0}%` }), h('i', { style: `width:${totalArrets ? (grands / totalArrets) * 100 : 0}%` })),
+      h('small', {}, `${fmt(vus)} déjà vus, ${fmt(grands)} sus par cœur.`)),
+    h('dl', { class: 'stats' }, stats.filter(([l]) => !['Séances', 'Grands arrêts', 'Arrêts vus', 'Fiches vues'].includes(l)).map(([l, v]) => h('div', {}, h('dt', {}, l), h('dd', {}, fmt(v))))),
+    h('details', { class: 'tiroir-trophees' },
+      h('summary', {}, h('span', {}, 'Trophées'), h('small', {}, `${TROPHEES.filter((t) => etat.trophees[t.id]).length} sur ${TROPHEES.length}`)),
+      h('ul', { class: 'trophees' }, TROPHEES.map((t) => { const g = !!etat.trophees[t.id]; return h('li', {}, h('button', { 'aria-label': `${t.nom}, ${g ? 'gagné' : 'à gagner'}`, onClick: () => montrerTrophee(t, g) }, medaille(metalDe(t.id), g))); }))),
     h('h2', {}, 'Rappel quotidien'), blocRappel,
     h('h2', {}, 'Images personnelles'), blocImages(),
     h('h2', {}, 'Ton année'),
