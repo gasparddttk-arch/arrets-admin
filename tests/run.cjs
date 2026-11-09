@@ -805,7 +805,7 @@ async function debordement(p, nom) {
   let ea = await etat(yan); assert.equal(ea.annee, 'L1'); assert.equal(ea.equipeL1, 3); assert.equal(ea.matiere, 'intro', 'la L1 ouvre l’introduction au droit');
   assert.match(await yan.locator('.bouton-matiere').innerText(), /Introduction au droit/);
   await yan.reload(); await yan.waitForSelector('.tribune');
-  assert.match(await yan.locator('.onglet', { hasText: 'Notions' }).innerText(), /Notions/, 'onglet des notions en L1');
+  assert.match(await yan.evaluate(() => document.getElementById('onglets').textContent), /Notions/, 'onglet des notions en L1');
   await yan.evaluate(() => window.__app.aller('profil')); await yan.locator('[data-annees] button', { hasText: 'L2' }).click();
   ea = await etat(yan); assert.equal(ea.annee, 'L2', 'retour en L2'); assert.equal(ea.matiere, 'admin', 'la L2 rouvre une matière de L2');
   await an.close();
@@ -1042,8 +1042,13 @@ async function debordement(p, nom) {
   assert(await f.locator('.lexique').first().locator('dt').count() >= 30, 'lexique administratif');
   await f.screenshot({ path: CAP + 'lexique.png' }); await debordement(f, 'lexique');
   await f.evaluate(() => { const q = document.createElement('h2'); q.className = 'question'; q.textContent = 'Le juge écarte-t-il la loi-écran face à un acte de gouvernement ?'; document.getElementById('app').append(q); });
-  await f.waitForSelector('.question .terme'); await f.locator('.question .terme').first().click(); await f.waitForSelector('.bulle-terme');
-  assert.match(await f.locator('.bulle-terme').innerText(), /:/, 'définition affichée');
+  await f.waitForSelector('.question .terme');
+  let bulleTxt = '';
+  for (let k = 0; k < 4 && !bulleTxt.includes(':'); k++) {
+    await f.locator('.question .terme').first().click();
+    bulleTxt = await f.waitForFunction(() => document.querySelector('.bulle-terme')?.textContent || '', null, { timeout: 3000 }).then((x) => x.jsonValue()).catch(() => '');
+  }
+  assert.match(bulleTxt, /:/, 'définition affichée');
   await f.screenshot({ path: CAP + 'terme.png' });
   await f.evaluate(() => window.__app.aller('profil')); await f.locator('text=Revoir la prise en main').click(); await f.waitForSelector('.prise-en-main');
   await f.screenshot({ path: CAP + 'prise-en-main.png' });

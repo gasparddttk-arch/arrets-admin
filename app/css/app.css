@@ -1430,3 +1430,7 @@ html[data-effets='non'] .feuille { display: none; }
 }
 .carte-an.carte-etiquette { font: 700 12px var(--ui); letter-spacing: 0; color: var(--texte-2); }
 .jalon-an { white-space: nowrap; }
+.tri-carte, .qad-bulle, .sc-feuille { box-shadow: 0 12px 30px var(--ombre), inset 0 0 0 1px var(--papier-bord); }
+.qad-verdict.juste, .sc-verdict.droit b { color: color-mix(in srgb, var(--verdict) 55%, var(--texte)); }
+.qad-verdict.faux { color: color-mix(in srgb, var(--cire-vive) 70%, var(--texte)); }
+.sc-verdict.pas b { color: color-mix(in srgb, var(--or) 55%, var(--texte)); }
