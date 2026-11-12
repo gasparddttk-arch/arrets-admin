@@ -28,7 +28,13 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 * **Statut** : 🟡 En ligne, cas à relire par Gaspard
 * **Fichiers** : `content/ateliers.mjs` (cas), `app/js/atelier.js` (moteur)
 * **Détail** : 10 cas d'entraînement écrits sur les axes du cours (offre, pourparlers, promesse, information et dol, erreur, abus de dépendance, silence, ordre public, gestion d'affaires, 1240). Trois niveaux. Remplace le syllogisme et le cas nu dans « Vers l'examen » en obligations.
-* **À faire** : cas d'administratif (le syllogisme y reste en attendant), nouveaux cas à chaque séance (inexécution, responsabilité).
+* **Administratif** : `content/ateliers-admin.mjs`, 7 cas (traité et loi, directive non transposée, loi-écran et QPC, PGD et droits de la défense, circonstances exceptionnelles, extradition et acte de gouvernement, privilège du préalable). Équipe 1 : 4 cas ; équipe 2 : les 7. Remplace le syllogisme dans « Vers l'examen ».
+* **Contrôle** : `npm run check` vérifie la structure de chaque cas. Les leurres ont été rallongés pour que la bonne réponse ne se reconnaisse pas à sa longueur.
+* **À faire** : nouveaux cas à chaque séance (inexécution, responsabilité ; en administratif, les séances suivantes).
+
+### 9. Obligations, équipe 1 : chambres 13 et 14
+* **Statut** : 🟡 En ligne, à relire par Gaspard
+* **Détail** : la violence (TD 5) n'est plus en travaux ; nouvelle chambre « L'ordre public » (TD 6 : licéité, corps humain, GPA, bonnes mœurs, Gleeden, cagnotte, ostéopathe 2025). Fichiers `content/oblig1/*.txt`.
 
 ### 7. L1, droit constitutionnel (Pr Le Divellec, équipe 2) : relecture
 * **Statut** : 🟡 À relire par Gaspard
