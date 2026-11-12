@@ -212,7 +212,20 @@ export function roundFrise(x, rng = Math.random) {
 // Les fiches qu'un exercice fait travailler.
 const fichesDe = (t, x) => (t === 'qualif' ? x.m.map((m) => m.carte) : t === 'frise' ? x.e.map((e) => e.carte).filter(Boolean) : x.liens || []);
 
+// L'atelier du cas pratique : un cas des chambres ouvertes, au niveau demandé si possible.
+export function tirerAtelier(ix, zones, niveau = null, rng = Math.random, deja = new Set()) {
+  const tous = ix.ateliers || [];
+  const dans = tous.filter(dansZones(zones));
+  const base = dans.length ? dans : tous;
+  const auNiveau = niveau ? base.filter((c) => c.niveau === niveau) : base;
+  const liste = (auNiveau.length ? auNiveau : niveau ? tous.filter((c) => c.niveau === niveau) : base);
+  const frais = liste.filter((c) => !deja.has(c.id));
+  const pris = choix(frais.length ? frais : liste.length ? liste : tous, rng);
+  deja.add(pris.id);
+  return { type: 'atelier', id: pris.id };
+}
 function tirerOblig(ix, type, zones, dus, rng, deja) {
+  if (type === 'atelier' && ix.ateliers?.length) return tirerAtelier(ix, zones, null, rng, deja);
   const dans = dansZones(zones);
   const listes = { qualif: ix.qualifs.filter(dans), cas: ix.cas.filter(dans), remede: ix.remedes.filter(dans), frise: ix.frises.filter(dans), plan: ix.sujets.filter(dans) };
   const t = listes[type]?.length ? type : ['qualif', 'cas', 'remede', 'frise', 'plan'].find((k) => listes[k].length);

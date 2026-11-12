@@ -8,9 +8,10 @@ import { remplacerEtat, choisirAnnee, ajouterSemaine, gagnerAppel, erreursOuvert
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
 } from './state.js';
-import { indexer, questionsDunk, composerDefi, composerBoss, tirerRound, jumeaux, melange, typesIntro, roundPlan } from './engine.js';
+import { indexer, questionsDunk, composerDefi, composerBoss, tirerRound, jumeaux, melange, typesIntro, roundPlan, tirerAtelier } from './engine.js';
 import { JEUX, NOMS_MODES, NOMS_MODES_OBLIG, NOMS_MODES_INTRO, NOMS_MODES_CONSTIT, continuer, qcm } from './games.js';
 import { jouerPouvoirs, jouerNuancier, jouerPlume } from './jeux-constit.js';
+import { jouerAtelier } from './atelier.js';
 import { jouerTri, jouerMot, jouerRangement, jouerQuiADit, jouerScanner, jouerMemory } from './jeux-l1.js';
 import { preparerLexique, souligner } from './lexique.js';
 import { roundExamen, jouerFlash, jouerPlaide, jouerTrous, jouerExpress, jouerSyllogisme, jouerCasNu } from './examen.js';
@@ -21,7 +22,7 @@ import { SUPABASE_URL } from './config.js';
 import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifier, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
-const TOUS_JEUX = { ...JEUX, pouvoirs: jouerPouvoirs, nuancier: jouerNuancier, plume: jouerPlume, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu,
+const TOUS_JEUX = { ...JEUX, atelier: jouerAtelier, pouvoirs: jouerPouvoirs, nuancier: jouerNuancier, plume: jouerPlume, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu,
   tri: jouerTri, mot: jouerMot, rangement: jouerRangement, quiadit: jouerQuiADit, scanner: jouerScanner, memory: jouerMemory };
 
 // FAIRE APPEL : chaque fiche ratée revient sous une autre forme, une question rapide.
@@ -334,14 +335,14 @@ function accueil() {
   );
 }
 
-const ICONE_MODE = { pouvoirs: 'reseau', nuancier: 'nuancier', plume: 'sceau', tri: 'ecarter', mot: 'crayon', rangement: 'colonne', quiadit: 'plume', scanner: 'loupe', memory: 'paires' };
+const ICONE_MODE = { atelier: 'note', pouvoirs: 'reseau', nuancier: 'nuancier', plume: 'sceau', tri: 'ecarter', mot: 'crayon', rangement: 'colonne', quiadit: 'plume', scanner: 'loupe', memory: 'paires' };
 const ligneEntree = (mode, ic, nom, txt, action, d) => h('button', { class: 'role-ligne', 'data-mode': mode, style: `--d:${d}s`, onClick: action },
   h('span', { class: 'role-icone' }, icone(ic, 28)), h('span', { class: 'role-txt' }, h('b', {}, nom), h('small', {}, txt)));
 const retourPalais = () => h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); aller('palais'); } }, icone('retour', 18), 'Retour au Palais');
 
 // Le rôle : la liste des exercices, à part du Palais.
 function ecranRole() {
-  const lignes = Object.entries(nomsModes()).map(([m, [nom, txt]], i) => ligneEntree(m, ICONE_MODE[m] || m, nom, txt, () => (m === 'plan' || m === 'architecte' ? choixGenre(m) : lancerMode(m)), i * 2.2));
+  const lignes = Object.entries(nomsModes()).map(([m, [nom, txt]], i) => ligneEntree(m, ICONE_MODE[m] || m, nom, txt, () => (m === 'plan' || m === 'architecte' ? choixGenre(m) : m === 'atelier' ? choixNiveauAtelier() : lancerMode(m)), i * 2.2));
   // En L1, le cas pratique attend la suite du cours (sources du droit, jurisprudence).
   const casL1 = estIntro() ? h('div', { class: 'role-ligne en-travaux', 'data-mode': 'cas-l1', 'aria-disabled': 'true' }, h('span', { class: 'role-icone' }, icone('cas', 28)),
     h('span', { class: 'role-txt' }, h('b', {}, 'Cas pratique'), h('small', {}, 'Bientôt, avec la suite du cours'))) : null;
@@ -354,10 +355,10 @@ function ecranRole() {
 // Vers l'examen : un enchaînement facultatif, sans rappel ni compte à rebours.
 const NIVEAUX_EXAMEN = [
   { nom: 'Première instance', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'frise'], intro: ['tri', 'memory', 'frise'], constit: ['nuancier', 'memory', 'frise'] },
-  { nom: 'Appel', txt: 'Cinq épreuves : cas, plans, et des réponses à écrire soi-même', oblig: ['cas', 'flash', 'trous', 'syllogisme', 'plaide'], admin: ['puzzle', 'juge', 'flash', 'syllogisme', 'plaide'], intro: ['mot', 'flash', 'quiadit', 'plan', 'scanner'], constit: ['pouvoirs', 'flash', 'quiadit', 'plan', 'plume'], txtIntro: 'Cinq épreuves : une définition à écrire, un plan à choisir' },
-  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['casnu', 'express', 'cas', 'frise', 'plaide', 'plan'], admin: ['juge', 'architecte', 'express', 'frise', 'syllogisme', 'plaide'], intro: ['rangement', 'flash', 'plan', 'quiadit', 'mot', 'flash'], constit: ['pouvoirs', 'flash', 'plan', 'plume', 'nuancier', 'flash'], txtIntro: 'Six épreuves, dont deux définitions à écrire' },
+  { nom: 'Appel', txt: 'Cinq épreuves : cas, plans, et des réponses à écrire soi-même', oblig: ['cas', 'flash', 'trous', 'atelier', 'plaide'], admin: ['puzzle', 'juge', 'flash', 'syllogisme', 'plaide'], intro: ['mot', 'flash', 'quiadit', 'plan', 'scanner'], constit: ['pouvoirs', 'flash', 'quiadit', 'plan', 'plume'], txtIntro: 'Cinq épreuves : une définition à écrire, un plan à choisir' },
+  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['atelier', 'express', 'cas', 'frise', 'plaide', 'plan'], admin: ['juge', 'architecte', 'express', 'frise', 'syllogisme', 'plaide'], intro: ['rangement', 'flash', 'plan', 'quiadit', 'mot', 'flash'], constit: ['pouvoirs', 'flash', 'plan', 'plume', 'nuancier', 'flash'], txtIntro: 'Six épreuves, dont deux définitions à écrire' },
   { nom: 'Partiel blanc', txt: '20 minutes, une dizaine d’épreuves, puis ton bilan par chambre. Un repère, pas une note', partiel: true,
-    oblig: ['qualif', 'cas', 'flash', 'syllogisme', 'casnu', 'trous', 'remede', 'express', 'plaide', 'frise'], admin: ['paires', 'juge', 'flash', 'syllogisme', 'puzzle', 'express', 'plan', 'plaide', 'frise', 'architecte'],
+    oblig: ['qualif', 'cas', 'flash', 'atelier', 'trous', 'remede', 'express', 'plaide', 'frise'], admin: ['paires', 'juge', 'flash', 'syllogisme', 'puzzle', 'express', 'plan', 'plaide', 'frise', 'architecte'],
     intro: ['tri', 'mot', 'flash', 'quiadit', 'memory', 'scanner', 'plan', 'rangement', 'flash', 'frise'],
     constit: ['pouvoirs', 'mot', 'flash', 'quiadit', 'memory', 'plume', 'plan', 'nuancier', 'flash', 'frise'] },
 ];
@@ -408,6 +409,16 @@ function lancerExpress() {
   const deja = new Set();
   const types = estConstit() ? ['pouvoirs', 'mot', 'plume'] : estIntro() ? ['tri', 'mot', 'memory'] : estOblig() ? ['qualif', 'remede', 'qualif'] : ['paires', 'puzzle', 'paires'];
   lancer({ type: 'express', titre: 'Trois minutes', rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
+}
+// L'atelier : trois niveaux, comme les juridictions.
+const NIVEAUX_ATELIER = [[1, 'Première instance', 'Un problème, des faits complets'], [2, 'Appel', 'Deux problèmes enchaînés'], [3, 'Cassation', 'Plusieurs problèmes, des faits lacunaires'], [null, 'Au hasard', 'Un cas des chambres ouvertes']];
+function choixNiveauAtelier() {
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite boite-genre', role: 'dialog', 'aria-label': 'Niveau du cas' },
+    h('h2', {}, 'L’atelier du cas pratique'), h('p', {}, 'Quel niveau ?'),
+    h('div', { class: 'boite-actions' },
+      NIVEAUX_ATELIER.map(([n, nom, txt]) => h('button', { class: n ? 'bouton-or at-niveau' : 'bouton-fantome', 'data-niveau': n || 'hasard', onClick: () => { voile.remove(); lancer({ type: 'mode', mode: 'atelier', titre: `L’atelier du cas pratique${n ? `, ${nom.toLowerCase()}` : ''}`, rounds: [tirerAtelier(ix, zonesCours(), n)] }); } }, h('b', {}, nom), h('small', {}, txt))),
+      h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Fermer'))));
+  document.body.append(voile);
 }
 // Le bon plan et l'architecte : commentaire d'arrêt, dissertation ou au hasard.
 const GENRES = [['C', 'Commentaire d’arrêt'], ['D', 'Dissertation'], [null, 'Au hasard']];

@@ -1607,3 +1607,84 @@ body:has(#onglets[hidden]) .maj { display: none; }
 .pl-cite { margin: 0; font: 18px/1.5 var(--corps); }
 .pl-cite b { color: var(--titre-or); }
 .ar-scene.fige { width: min(100%, 340px, 36vh); }
+
+/* L'ATELIER DU CAS PRATIQUE : un dossier, un rail d'étapes, des engrenages, une copie corrigée en rouge. */
+.role-ligne[data-mode='atelier'] { --m1: #B5462E; --m2: #B5462E; }
+[data-theme='pastel'] .role-ligne[data-mode='atelier'] { --m1: #D9674C; --m2: #D9674C; }
+.at-niveau { display: grid; gap: 2px; text-align: left; }
+.at-niveau small { font-weight: 500; opacity: .8; }
+.ecran.atelier { display: flex; flex-direction: column; }
+.at-rail { display: flex; gap: 4px; margin: 8px 0 4px; padding: 0; list-style: none; overflow-x: auto; scrollbar-width: none; }
+.at-rail li { flex: none; padding: 5px 10px; border-radius: 999px; font: 600 12px var(--ui); color: var(--texte-2); background: var(--banc); white-space: nowrap; }
+.at-rail li.fait { color: var(--juste); background: var(--juste-fond); }
+.at-rail li.courant { color: var(--or-texte); background: var(--or); }
+.at-consigne { margin: 6px 0 10px; font: 15px/1.35 var(--ui); color: var(--texte-2); }
+.at-dossier, .at-copie { padding: 18px; border-radius: 18px; background: var(--papier-1); color: var(--papier-texte); box-shadow: 0 10px 26px var(--ombre), inset 0 0 0 1.5px var(--papier-bord); }
+.at-dossier p { margin: 0; font: 18px/1.6 var(--corps); }
+.at-dossier .at-question, .at-question { margin-top: 12px; font: italic 600 17px/1.4 var(--corps); }
+.at-seg { padding: 1px 0; border-radius: 3px; cursor: pointer; box-decoration-break: clone; -webkit-box-decoration-break: clone; transition: background .2s; }
+.at-seg.surligne { background: linear-gradient(transparent 40%, color-mix(in srgb, var(--or) 70%, transparent) 40%, color-mix(in srgb, var(--or) 70%, transparent) 92%, transparent 92%); }
+.at-seg.oublie { outline: 2px dashed var(--juste); outline-offset: 1px; }
+.at-seg.bruit { text-decoration: line-through; text-decoration-color: var(--sceau); text-decoration-thickness: 2px; }
+.at-note { margin: 10px 2px 0; padding-left: 12px; border-left: 3px solid var(--carte-bord); font: 15px/1.4 var(--ui); color: var(--texte); }
+.at-note.juste { border-color: var(--juste); }
+.at-note.faux { border-color: var(--faux); }
+.at-note:empty { display: none; }
+.at-fait { margin: 6px 0; padding: 14px 16px; border-radius: 14px; background: var(--papier-1); color: var(--papier-texte); font: 18px/1.45 var(--corps); box-shadow: inset 4px 0 0 var(--or); }
+.at-options { margin-top: 6px; }
+.at-ref { display: block; margin-top: 4px; font: 700 12px var(--ui); color: var(--texte-2); }
+.at-plan { display: grid; gap: 8px; margin: 0 0 14px; padding: 0; list-style: none; }
+.at-plan li { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: start; min-height: 54px; padding: 8px 10px; border-radius: 14px; background: var(--banc); box-shadow: inset 0 0 0 1.5px var(--carte-bord); }
+.at-plan li.cible { box-shadow: inset 0 0 0 2px var(--or); }
+.at-plan li > b { font: 800 18px var(--corps); color: var(--titre-or); }
+.at-plan li > span { font: 14px var(--ui); color: var(--texte-2); align-self: center; }
+.at-plan li.juste { box-shadow: inset 0 0 0 2px var(--juste); background: var(--juste-fond); }
+.at-plan li.faux { box-shadow: inset 0 0 0 2px var(--faux); background: var(--faux-fond); }
+.at-plan li.juste > span, .at-plan li.faux > span { color: var(--texte); font: 16px/1.35 var(--corps); }
+.at-plan li small { grid-column: 2; font: 13px/1.35 var(--ui); color: var(--texte-2); }
+.at-pile { display: grid; gap: 8px; padding-bottom: 110px; }
+.at-carte-p { width: 100%; padding: 12px 14px; border: 0; border-radius: 14px; text-align: left; font: 16px/1.35 var(--corps); background: var(--banc-fort); color: var(--texte); animation: pl-tombe .3s both; }
+.at-plan .at-carte-p { padding: 0; background: none; font: 16px/1.35 var(--corps); }
+.at-rappel { margin: 4px 0 10px; border-radius: 12px; background: var(--banc); padding: 8px 12px; }
+.at-rappel summary { font: 600 14px var(--ui); color: var(--texte-2); cursor: pointer; }
+.at-rappel p { margin: 8px 0 0; font: 16px/1.45 var(--corps); }
+.at-acquis { margin: 0 0 10px; padding: 10px 12px; border-radius: 12px; background: var(--juste-fond); font: 15px/1.4 var(--ui); animation: nu-arrive .4s both; }
+.at-regle { margin: 0 0 12px; padding: 12px 14px; border-radius: 14px; background: var(--banc); font: 16px/1.45 var(--corps); box-shadow: inset 4px 0 0 var(--titre-or); }
+.at-machine { padding: 12px; border-radius: 18px; background: var(--banc); box-shadow: inset 0 0 0 1.5px var(--carte-bord); }
+.at-conds { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.at-cond { display: grid; grid-template-columns: 30px 1fr; gap: 4px 10px; align-items: center; padding: 10px; border-radius: 14px; background: var(--banc-fort); transition: box-shadow .25s, background .25s; }
+.at-cond-t { font: 600 15px/1.3 var(--ui); }
+.at-prise { grid-column: 2; font: italic 15px/1.3 var(--corps); color: var(--texte-2); }
+.at-cond.cible { box-shadow: inset 0 0 0 2px var(--or); }
+.at-cond.remplie .at-prise, .at-cond.acquise .at-prise { color: var(--texte); }
+.at-cond.faux { box-shadow: inset 0 0 0 2px var(--faux); }
+.at-cond.juste { box-shadow: inset 0 0 0 2px var(--juste); }
+.at-engrenage { grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle, var(--banc) 28%, transparent 30%), repeating-conic-gradient(var(--texte-2) 0 15deg, transparent 15deg 30deg); opacity: .5; }
+.at-cond.remplie .at-engrenage, .at-cond.acquise .at-engrenage { background: radial-gradient(circle, var(--banc-fort) 28%, transparent 30%), repeating-conic-gradient(var(--or) 0 15deg, transparent 15deg 30deg); opacity: 1; animation: at-tourne 2.4s linear infinite; }
+.at-cond.bloquee .at-engrenage { background: radial-gradient(circle, var(--banc-fort) 28%, transparent 30%), repeating-conic-gradient(var(--faux) 0 15deg, transparent 15deg 30deg); opacity: 1; }
+.at-cond.doute .at-engrenage { background: radial-gradient(circle, var(--banc-fort) 28%, transparent 30%), repeating-conic-gradient(var(--orange-2) 0 15deg, transparent 15deg 30deg); opacity: 1; animation: at-tourne 2.4s linear infinite alternate; }
+@keyframes at-tourne { to { transform: rotate(360deg); } }
+.at-sortie { margin: 12px 2px 0; font: 700 15px/1.35 var(--ui); color: var(--texte-2); }
+.at-machine.tourne .at-sortie { color: var(--juste); }
+.at-machine.cale .at-sortie { color: var(--faux); }
+.at-machine.hesite .at-sortie { color: var(--orange-2); }
+.at-plateau { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-bottom: 16px; }
+.at-jeton { padding: 10px 14px; border: 0; border-radius: 12px; font: 600 14px/1.25 var(--ui); text-align: left; background: var(--papier-1); color: var(--papier-texte); box-shadow: 0 3px 0 rgba(0, 0, 0, .2), inset 0 0 0 1.5px var(--papier-bord); animation: pl-tombe .3s both; }
+.at-jeton.special { background: var(--banc-fort); color: var(--texte); box-shadow: 0 3px 0 rgba(0, 0, 0, .2); }
+.at-jeton:active { transform: translateY(2px); }
+.at-branches { display: grid; gap: 10px; }
+.at-branche { padding: 12px 14px; border-radius: 14px; background: var(--banc); box-shadow: inset 4px 0 0 var(--orange-2); }
+.at-branche b { font: 700 13px var(--ui); color: var(--texte-2); }
+.at-branche p { margin: 4px 0 0; font: 16px/1.45 var(--corps); }
+.at-bareme { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 14px; }
+.at-bareme div { padding: 10px 12px; border-radius: 12px; background: var(--banc); }
+.at-bareme div.plein { background: var(--juste-fond); }
+.at-bareme dt { font: 600 12px var(--ui); color: var(--texte-2); }
+.at-bareme dd { margin: 2px 0 0; font: 700 17px var(--ui); font-variant-numeric: tabular-nums; }
+.at-copie { margin-bottom: 18px; font: 16px/1.5 var(--corps); }
+.at-copie h3 { margin: 14px 0 6px; font: 700 15px/1.3 var(--ui); }
+.at-copie h3:first-child { margin-top: 0; }
+.at-copie ul, .at-copie ol { margin: 0; padding-left: 18px; }
+.at-copie p { margin: 6px 0; }
+.at-rouge { color: #C2264F; text-decoration-thickness: 2px; }
+.at-correction { color: #C2264F; font-style: italic; }

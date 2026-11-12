@@ -471,3 +471,10 @@ export function lireAdmin2() {
     defauts: b.defauts,
   };
 }
+
+// L'atelier du cas pratique : les cas d'une équipe, avec ses chambres. Les textes passent par la typographie.
+export async function lireAteliers(equipe) {
+  const { ateliers } = await import(new URL('../content/ateliers.mjs', import.meta.url));
+  const t = (x) => (typeof x === 'string' ? typo(x) : Array.isArray(x) ? x.map(t) : x && typeof x === 'object' ? Object.fromEntries(Object.entries(x).map(([k, v]) => [k, t(v)])) : x);
+  return ateliers.filter((a) => a.zones[equipe]?.length).map((a) => ({ ...t({ ...a, zones: undefined }), zones: a.zones[equipe] }));
+}

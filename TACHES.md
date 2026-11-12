@@ -24,6 +24,12 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 ### 4. Cas pratique L1
 * **Statut** : ⚪ Attente suite du cours (sources du droit, jurisprudence).
 
+### 8. L'atelier du cas pratique (obligations) : relecture et suite
+* **Statut** : 🟡 En ligne, cas à relire par Gaspard
+* **Fichiers** : `content/ateliers.mjs` (cas), `app/js/atelier.js` (moteur)
+* **Détail** : 10 cas d'entraînement écrits sur les axes du cours (offre, pourparlers, promesse, information et dol, erreur, abus de dépendance, silence, ordre public, gestion d'affaires, 1240). Trois niveaux. Remplace le syllogisme et le cas nu dans « Vers l'examen » en obligations.
+* **À faire** : cas d'administratif (le syllogisme y reste en attendant), nouveaux cas à chaque séance (inexécution, responsabilité).
+
 ### 7. L1, droit constitutionnel (Pr Le Divellec, équipe 2) : relecture
 * **Statut** : 🟡 À relire par Gaspard
 * **Fichier concerné** : `content/constit.mjs` ; jeux dans `app/js/jeux-constit.js`

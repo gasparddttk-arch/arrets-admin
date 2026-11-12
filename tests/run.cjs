@@ -31,6 +31,12 @@ async function toucher(e) { try { await e.click({ timeout: 900 }); return true; 
 const pasL1 = (p) => p.evaluate(() => {
   const clic = (e) => { if (!e) return false; e.click(); return true; };
   const q = (s) => document.querySelector(s);
+  // L'atelier du cas pratique : surligner les faits utiles, remplir le plan dans l'ordre, brancher les bons faits.
+  const segs = [...document.querySelectorAll('.at-seg:not(.fige)')];
+  if (segs.length) { for (const x of segs) if (x.dataset.utile === 'true' && !x.classList.contains('surligne')) x.click(); return clic(q('.pied .cta')); }
+  const plan = q('.at-plan li.cible');
+  if (plan && q('.at-pile')) { const k = document.querySelectorAll('.at-plan li.plein').length; return clic(q(`.at-pile .at-carte-p[data-p="p${k + 1}"]`)); }
+  const atJ = q('.at-jeton[data-ok="true"]'); if (atJ) return clic(atJ);
   const sc = q('.sc-choix[data-ok="true"]:not([disabled])'); if (sc) return clic(sc);
   if (q('.scene .pied button')) return false;
   const carte = q('.tri-carte[data-bon]:not(.tamponnee)'); if (carte) return clic(q(`.tri-bord[data-bord="${carte.dataset.bon}"]`));
@@ -966,6 +972,30 @@ async function debordement(p, nom) {
   await co.evaluate(() => window.__app.aller('arrets')); assert.match(await co.locator('.page h1').innerText(), /Les notions/);
   await dc.close();
   log('droit constitutionnel ok');
+
+  // L'atelier du cas pratique, en obligations, dans les deux équipes : chaque cas joué jusqu'à la copie.
+  for (const eq of [1, 2]) {
+    const at = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+    const ap = await at.newPage(); ap.on('pageerror', (x) => erreurs.push(x.message));
+    ap.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
+    await ap.goto(URLB + `?test&matiere=oblig&equipe=${eq}`); await ap.waitForSelector('.tribune');
+    const nb = await ap.evaluate(() => window.__app.ix.ateliers.length);
+    assert(nb >= 9, `au moins neuf cas pour l’équipe ${eq}`);
+    await ap.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; });
+    for (let k = 0; k < nb; k++) {
+      const niv = [1, 2, 3, 'hasard'][k % 4];
+      await ap.evaluate(() => window.__app.aller('role')); await ap.locator('.role-ligne[data-mode="atelier"]').click();
+      await ap.locator(`[data-niveau="${niv}"]`).click(); await ap.waitForSelector('.at-dossier');
+      if (k === 0) { await ap.screenshot({ path: CAP + `atelier-${eq}.png` }); await debordement(ap, 'atelier dossier'); }
+      await jouerParfait(ap); await textePropre(ap);
+      await ap.tap('text=Retour au Palais'); await ap.waitForSelector('.tribune');
+    }
+    assert((await etat(ap)).oblig.xp > 0, 'points gagnés à l’atelier');
+    await ap.evaluate(() => window.__app.aller('examen')); await ap.locator('.role-ligne[data-mode="niveau-3"]').click();
+    await ap.waitForSelector('.quitter'); await jouer(ap); await ap.waitForSelector('.resultats');
+    await at.close();
+  }
+  log('atelier ok');
 
   // Vers l'examen : Appel et Cassation, avec les épreuves à réponse libre, dans les deux matières.
   const ex = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });

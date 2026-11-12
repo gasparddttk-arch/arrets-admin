@@ -506,6 +506,7 @@ export const NOMS_MODES = {
   frise: ['Frise de la jurisprudence', 'Placer chaque décision à sa date'],
 };
 export const NOMS_MODES_OBLIG = {
+  atelier: ['L’atelier du cas pratique', 'Construire sa copie : faits, problèmes, syllogismes, conseil'],
   cas: ['Le juge du cas pratique', 'Suivre la méthode, étape par étape, jusqu’au jugement'],
   qualif: ['Qualifier les faits', 'Relier des faits à la bonne notion, contre la montre'],
   remede: ['Quel remède ?', 'Choisir la sanction, puis ce qui la justifie'],
