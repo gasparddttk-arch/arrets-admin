@@ -1486,7 +1486,7 @@ async function ecranAdmin() {
     h('p', { class: 'aide-claire' }, 'Prévenir tous les testeurs qu’une nouvelle version est disponible.'),
     h('button', { class: 'bouton-fantome', onClick: async (e) => {
       e.currentTarget.disabled = true;
-      try { const n = await adminNotifier(null, 'maj_appli', { titre: 'Une nouvelle version est en ligne. Viens voir les nouveautés.' }); toast(n ? `${pluriel(n, 'compte notifié')}.` : 'Aucun compte à prévenir.'); } catch { toast('Envoi refusé.'); e.currentTarget.disabled = false; }
+      try { const n = await adminNotifier(null, 'maj_appli', { titre: 'Une nouvelle version est en ligne. Viens voir les nouveautés.' }); toast(n ? `${pluriel(n, 'compte notifié')}.` : 'Tout le monde a déjà été prévenu il y a moins de 10 minutes.'); } catch { toast('Envoi refusé.'); e.currentTarget.disabled = false; }
     } }, 'Notifier les testeurs d’une mise à jour'),
     h('h2', {}, 'Nouveaux comptes'),
     h('p', { class: 'aide-claire' }, 'Le statut donné à chaque nouvelle inscription. Passe à « Sans accès » le jour où l’appli devient payante : les comptes existants gardent leur statut.'),
@@ -1698,14 +1698,39 @@ function bulleExercice(type) {
 
 // Le mot d'accueil des testeurs, une seule fois.
 function accueilTesteur() {
-  if (etat.compte?.acces !== 'testeur' || etat.reglages.accueilTesteur) return;
+  if (etat.compte?.acces !== 'testeur' || etat.reglages.accueilTesteur) { demanderNotifs(); return; }
   etat.reglages.accueilTesteur = true; sauver();
   const voile = h('div', { class: 'voile' }, h('div', { class: 'boite accueil-testeur', role: 'dialog', 'aria-label': 'Bienvenue, testeur' },
     chouette('clin', { taille: 120, tenue: false }),
     h('h2', {}, 'Tu es testeur'),
     h('p', {}, 'Tu fais partie des 28 premiers testeurs de Gdroit. Le but, c’est d’abord de t’amuser en révisant.'),
     h('p', {}, 'Mais tu as aussi un rôle : repérer ce qui cloche. Une erreur de droit, un écran confus, un bouton qui ne marche pas, une idée : touche « Faire un retour », dans ton profil ou en fin de séance. C’est lu par le créateur de l’appli.'),
-    h('div', { class: 'boite-actions' }, h('button', { class: 'bouton-or', onClick: () => voile.remove() }, 'C’est parti'))));
+    h('div', { class: 'boite-actions' }, h('button', { class: 'bouton-or', onClick: () => { voile.remove(); setTimeout(demanderNotifs, 400); } }, 'C’est parti'))));
+  document.body.append(voile);
+}
+
+// Une fois par téléphone (et une fois pour les comptes déjà là à cette mise à jour) : proposer les notifications.
+// Sur iPhone, la demande d'autorisation doit suivre un toucher : d'où la fenêtre et son bouton.
+const DEMANDE_NOTIFS = 1;
+async function demanderNotifs() {
+  if (!connecte() || new URLSearchParams(location.search).has('test')) return;
+  if ((etat.reglages.demandeNotifs || 0) >= DEMANDE_NOTIFS) return;
+  if (document.querySelector('.voile')) { setTimeout(demanderNotifs, 1500); return; }
+  const r = await etatRappel().catch(() => 'indisponible');
+  if (r !== 'inactif') return;
+  etat.reglages.demandeNotifs = DEMANDE_NOTIFS; sauver();
+  const voile = h('div', { class: 'voile' }, h('div', { class: 'boite demande-notifs', role: 'dialog', 'aria-label': 'Activer les notifications' },
+    chouette('lunettes', { taille: 110, tenue: false }),
+    h('h2', {}, 'Ne rate rien'),
+    h('p', {}, 'Gdroit te prévient quand un ami te défie, quand une nouvelle version arrive, ou quand une place de test s’ouvre.'),
+    h('p', { class: 'aide-claire' }, 'Le rappel de révision reste éteint : tu l’allumes dans ton profil si tu le veux.'),
+    h('div', { class: 'boite-actions' },
+      h('button', { class: 'bouton-or', onClick: async (e) => {
+        e.currentTarget.disabled = true;
+        try { await activerRappel(); const ab = await abonnementActuel(); if (!ab) throw new Error('Notifications refusées.'); await inscrireAppareil(ab); toast('Notifications activées.'); } catch (err) { toast(err.message || 'Notifications refusées.'); }
+        voile.remove();
+      } }, 'Activer les notifications'),
+      h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Plus tard'))));
   document.body.append(voile);
 }
 

@@ -966,9 +966,9 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .frise-vraie p { font-size: 16px; line-height: 1.2; margin: 2px 0; }
 .frise-mis { color: var(--texte) !important; text-decoration: line-through; opacity: .75; }
 /* Testeurs */
-.accueil-testeur { text-align: center; }
-.accueil-testeur h2 { font-weight: 700; font-size: 26px; color: var(--titre-or); margin-top: -4px; }
-.accueil-testeur p { text-align: left; margin-top: 8px; }
+.accueil-testeur, .demande-notifs { text-align: center; }
+.accueil-testeur h2, .demande-notifs h2 { font-weight: 700; font-size: 26px; color: var(--titre-or); margin-top: -4px; }
+.accueil-testeur p, .demande-notifs p { text-align: left; margin-top: 8px; }
 .puces-retour { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0; }
 .puce { padding: 8px 13px; border-radius: 999px; font: inherit; font-size: 15px; color: var(--texte); box-shadow: inset 0 0 0 1px var(--carte-bord); background: transparent; }
 .puce[aria-checked="true"] { color: var(--or-texte); background: linear-gradient(180deg, var(--or-1), var(--or-2)); box-shadow: none; }
@@ -1467,3 +1467,4 @@ html[data-effets='non'] .feuille { display: none; }
 .sc-bilan { display: block; margin-top: 6px; font: 600 13px var(--ui); color: var(--texte-2); }
 /* Le bandeau de mise à jour attend la fin de la séance. */
 body:has(#onglets[hidden]) .maj { display: none; }
+.demande-notifs .boite-actions { display: grid; gap: 6px; }
