@@ -16,13 +16,13 @@
 2 | 2 | 3 | Non-rétroactivité | La loi ne dispose que pour l'avenir, elle n'a point d'effet rétroactif.
 9-ord | 2 | 3 | Application de l'ordonnance de 2016 | L'ordonnance entre en vigueur le 1er octobre 2016. Les contrats conclus avant cette date restent soumis à la loi ancienne, même pour leurs effets légaux et les dispositions d'ordre public. Seules les actions interrogatoires s'appliquent tout de suite.
 16-loi | 2 | 3 | Application de la loi de ratification | La loi entre en vigueur le 1er octobre 2018. Certaines de ses modifications ne visent que les actes conclus depuis cette date. D'autres ont un caractère interprétatif.
-1143 | 2 | 2
+1143 | 2,13 | 3
 
 # 3. Le fondement du contrat
 1102 | 3 | 3
 1103 | 3 | 3
 1104 | 3,9 | 3
-1162 | 3 | 2
+1162 | 3,14 | 3
 1172 | 3,6 | 3 | Consensualisme | Les contrats sont par principe consensuels. Par exception, la validité des contrats solennels dépend de formes fixées par la loi, et la formation de certains contrats suppose la remise d'une chose.
 1199 | 3 | 3 | Effet relatif | Le contrat ne crée d'obligations qu'entre les parties. Les tiers ne peuvent ni en demander l'exécution ni être contraints de l'exécuter, sauf exception légale.
 
@@ -72,7 +72,7 @@
 
 # 11. L'erreur
 180 | 11 | 2 | Erreur dans le mariage | L'époux victime d'une erreur dans la personne, ou sur des qualités essentielles de la personne, peut demander la nullité du mariage.
-1128 | 11 | 3
+1128 | 11,14 | 3
 1129 | 11 | 2
 1130 | 11,12 | 3
 1131 | 11,12 | 3
@@ -86,3 +86,14 @@
 1137 | 10,12 | 3
 1138 | 12 | 3
 1139 | 12 | 3
+
+# 13. La violence
+1140 | 13 | 3
+1141 | 13 | 3
+1142 | 13 | 2
+1144 | 11,12,13 | 2
+1168 | 13 | 1
+
+# 14. L'ordre public
+6 | 14 | 2
+16-7 | 14 | 2 | Gestation pour autrui | Toute convention portant sur la procréation ou la gestation pour le compte d'autrui est nulle.

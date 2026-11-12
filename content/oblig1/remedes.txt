@@ -232,3 +232,15 @@ r: L'exagération banale, le bon dol, n'entraîne pas la nullité.
 rx: Tout propos commercial inexact est un dol. || La tromperie doit être réelle : personne ne prend cela au pied de la lettre.
 rx: Le dol suppose un écrit. || Le mensonge oral suffit, mais il n'y a pas ici de tromperie réelle.
 a: a1137, a1130
+
+=violence-nullite | 13
+
+%cuves | 14 | 1
+c: Un pompiste, lié à un pétrolier par un contrat d'approvisionnement exclusif, doit en fin de contrat restituer en nature les cuves enterrées sous sa station : des travaux très coûteux, sans nécessité technique, qui le dissuadent de changer de fournisseur. Tu le conseilles.
+d: Demander la nullité de la clause de restitution
+dx: Demander la résolution du contrat pour inexécution || Personne n'a manqué à ses obligations : c'est la clause elle-même qui pose problème.
+dx: Demander seulement un délai pour exécuter les travaux || Le délai laisse subsister une clause illicite.
+r: Disproportionnée à sa fonction, la clause freine la concurrence : elle est contraire à l'ordre public économique.
+rx: Une clause librement acceptée s'impose toujours. || La liberté contractuelle s'arrête à l'ordre public.
+rx: Seule l'Autorité de la concurrence peut écarter une clause. || Le juge civil prononce la nullité de la clause illicite.
+a: a1162, total1992

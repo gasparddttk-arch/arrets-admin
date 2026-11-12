@@ -153,3 +153,27 @@ pb: Pourquoi la même fausse représentation de la réalité reçoit-elle deux t
 m: Le cours annonce cette distinction pour l'interrogation de la séance 7. Le plan part du point commun, puis explique que la faute de l'auteur justifie la faveur faite à la victime.
 b: RECIT || Le plan récite deux chapitres sans les comparer. || L'erreur || Ses conditions || Ses effets || Le dol || Ses conditions || Ses effets
 b: REDITE || Les deux parties reviennent à dire que dol et erreur annulent le contrat. || La nullité pour erreur || Le vice || La sanction || La nullité pour dol || Le vice || La sanction
+
+&dis-ordrepublic | D | Le contrat et l'ordre public | 14
+pb: L'ordre public est-il une borne fixe de la liberté contractuelle ?
+1: Une borne ferme de la liberté contractuelle
+1a: Des valeurs essentielles hors du commerce | investiture2013, maternite1991
+1b: Un ordre public économique qui encadre le marché | total1992, honoraires2022
+2: Une borne qui se déplace
+2a: Le recul des bonnes mœurs | leg2004
+2b: L'essor d'un ordre public européen et des droits fondamentaux | hebergement2006
+m: Le I montre ce que l'ordre public interdit au contrat, le II comment ce contenu évolue : il recule sur la morale sexuelle, avance sur les droits fondamentaux. La thèse répond à la question : la borne existe, mais elle bouge.
+b: DESCR || Le plan énumère des exemples sans dégager d'idée. || Les contrats illicites || L'achat d'investiture || La mère porteuse || D'autres contrats illicites || La clause de restitution des cuves || La cagnotte du boxeur
+b: CONTRESENS || Le plan croit que tout manquement déontologique annule le contrat. L'arrêt de 2025 dit le contraire. || La déontologie, source de nullité || Les codes professionnels impératifs || La nullité automatique || Une sanction toujours civile || L'ostéopathe et son site || L'expert-comptable et ses honoraires
+
+&dis-violence | D | La violence, vice du consentement | 13
+pb: Jusqu'où la pression exercée sur un contractant vicie-t-elle son consentement ?
+1: Une contrainte qui inspire la crainte
+1a: La menace d'un mal considérable | a1140, a1142
+1b: La menace d'une voie de droit, seulement si elle est détournée | a1141, karous2015
+2: Une contrainte étendue à la dépendance
+2a: L'exploitation abusive d'une situation de dépendance | kannas, garage
+2b: L'abus de dépendance consacré par la loi | a1143
+m: Le I part de la violence classique et de sa limite, la voie de droit légitime ; le II montre l'extension à la pression économique, jusqu'à l'article 1143. Le plan répond à la question posée : la pression vicie le consentement quand elle est illégitime.
+b: RECIT || Le plan récite des articles dans l'ordre du code. || L'article 1140 || La définition || Les exemples || Les articles 1141 à 1143 || La voie de droit || La dépendance
+b: CONTRESENS || Le plan voit une violence dans toute mauvaise affaire. Le déséquilibre seul n'est pas une cause de nullité. || Toute pression est une violence || Le contrat déséquilibré || La lésion || Une nullité automatique || Le juge rétablit l'équilibre || Le prix révisé

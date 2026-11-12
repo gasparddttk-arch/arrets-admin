@@ -454,3 +454,21 @@ x: Parce que Baldus a été abandonné || La solution est au contraire consacré
 x: Parce que Baldus ne vise que les photographies || Sa portée est générale pour l'acheteur.
 v: Le vendeur, qui connaissait une information déterminante et l'a dissimulée, commet une réticence dolosive si l'intention est prouvée (art. 1137 al. 2). À défaut, il répond d'un manquement à l'article 1112-1.
 a: a1137, a1112-1, reticence1971, baldus
+
+=caisse | 13
+=soustraitant | 13
+=rencontre | 14
+
+%investiture | Le prix de l'investiture | 14 | 1 | Création
+c: Un parti investit Paul aux élections régionales. Paul signe un contrat par lequel il s'engage, s'il est élu, à verser chaque mois au parti une « participation aux dépenses nationales ». Élu, il paie pendant trois ans, puis demande la restitution de tout ce qu'il a versé.
+s: Qualifier || Que rémunère réellement le contrat ? || L'investiture à l'élection || Derrière le motif affiché, la cause déterminante est l'obtention de l'investiture.
+x: Une contribution libre aux dépenses du parti || Le paiement n'est dû qu'en cas d'élection : il est lié à l'investiture.
+x: Une donation ordinaire || L'engagement a une contrepartie : l'investiture.
+s: Règle || Quel texte s'applique ? || L'article 1162 : le contrat ne peut déroger à l'ordre public, ni par ses stipulations, ni par son but || Le but illicite suffit à faire tomber le contrat.
+x: L'article 1103 : le contrat tient lieu de loi à ceux qui l'ont fait || Un contrat contraire à l'ordre public n'est pas légalement formé.
+x: L'article 1137 : le parti a trompé Paul || Il n'y a eu aucune tromperie.
+s: Trancher || Quel est ton jugement ? || Le contrat est nul et les sommes versées sont restituées || L'investiture est hors du commerce : la nullité entraîne la restitution (Civ. 1re, 27 févr. 2013).
+x: Le contrat est valable : Paul a été élu || Le succès électoral ne purge pas l'illicéité.
+x: Le contrat est nul, mais Paul ne récupère rien || La nullité impose les restitutions.
+v: Sous couvert de participation aux dépenses, le contrat rémunère l'investiture, objet hors du commerce. Contraire à l'ordre public par son but (art. 1162), il est nul, et les sommes versées doivent être restituées.
+a: a1162, investiture2013

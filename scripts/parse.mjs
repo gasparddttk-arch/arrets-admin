@@ -211,7 +211,8 @@ export const ZONES_OBLIG1 = [
   { id: 10, titre: "L'information", lieu: 'Devoir général, droits spéciaux, formalisme' },
   { id: 11, titre: "L'erreur", lieu: 'Substance, personne, erreurs indifférentes' },
   { id: 12, titre: 'Le dol', lieu: 'Tromperie, intention, domaine, sanctions' },
-  { id: 13, titre: 'La violence', lieu: 'Pas encore arrivée au cours', travaux: true },
+  { id: 13, titre: 'La violence', lieu: 'Contrainte, voie de droit, abus de dépendance' },
+  { id: 14, titre: "L'ordre public", lieu: 'Licéité, corps humain, économie, bonnes mœurs' },
 ].map((z) => ({ ...z, titre: typo(z.titre) }));
 
 const ARTICLES_TEXTES = { '9-ord': ["Art. 9 de l'ordonnance", 'Ord. 9'], '16-loi': ['Art. 16 de la loi de 2018', 'Loi 16'], '212-1': ['Art. L. 212-1 C. conso.', 'Conso. L. 212-1'] };
@@ -473,8 +474,8 @@ export function lireAdmin2() {
 }
 
 // L'atelier du cas pratique : les cas d'une équipe, avec ses chambres. Les textes passent par la typographie.
-export async function lireAteliers(equipe) {
-  const { ateliers } = await import(new URL('../content/ateliers.mjs', import.meta.url));
+export async function lireAteliers(equipe, fichier = 'ateliers.mjs') {
+  const { ateliers } = await import(new URL('../content/' + fichier, import.meta.url));
   const t = (x) => (typeof x === 'string' ? typo(x) : Array.isArray(x) ? x.map(t) : x && typeof x === 'object' ? Object.fromEntries(Object.entries(x).map(([k, v]) => [k, t(v)])) : x);
   return ateliers.filter((a) => a.zones[equipe]?.length).map((a) => ({ ...t({ ...a, zones: undefined }), zones: a.zones[equipe] }));
 }

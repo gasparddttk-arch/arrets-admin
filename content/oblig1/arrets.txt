@@ -192,3 +192,66 @@ po: À partir des années 1970, le silence qui trompe est sanctionné. Exiger de
 
 =parsys | 12 | 3
 =excesprix | 12 | 3
+
+# 13. La violence (séance 5)
+@karous2015 | Menace de recours | Civ. 1re, 4 févr. 2015, n° 14-10.920 | Cass. | 2015 | 3 | 13
+ap: La menace de recours dénués de toute chance de succès, exploitée pour obtenir une indemnité élevée, est une violence
+f: Par une transaction, une société renonce à attaquer trois permis de construire délivrés à un promoteur, contre une indemnité de 500 000 euros. Le promoteur, qui avait besoin de permis purgés de tout recours pour mener une vaste opération, invoque la nullité de la transaction.
+q: La menace d'exercer des recours voués à l'échec, pour obtenir une indemnité, vicie-t-elle le consentement ?
+s: Oui. La menace était illégitime, les recours étant dénués de toute chance de succès, et elle faisait craindre l'échec d'une opération coûteuse : la contrainte économique ainsi exploitée justifie la nullité de la transaction. Rejet.
+po: La solution annonce l'article 1141 : la menace d'une voie de droit devient une violence quand elle est détournée de son but ou invoquée pour obtenir un avantage manifestement excessif.
+=kannas | 13 | 3
+=garage | 13 | 2
+=voiedroit | 13 | 2
+=honoraires2021 | 13 | 1
+=bailrural | 13 | 1
+
+# 14. L'ordre public (séance 6)
+@investiture2013 | Achat d'investiture | Civ. 1re, 27 févr. 2013, n° 10-19.133 | Cass. | 2013 | 2 | 14
+ap: Le contrat dont la cause réelle est l'achat d'une investiture électorale est nul, quel que soit le motif affiché
+f: Deux candidats investis par un parti s'engagent, s'ils sont élus, à lui rembourser une quote-part de ses dépenses de campagne nationales. Après plusieurs années de paiements, ils invoquent la nullité des contrats pour cause illicite et demandent la restitution des sommes.
+q: Le contrat qui rémunère, sous couvert de participation aux dépenses, l'investiture à une élection politique est-il licite ?
+s: Non. Les juges du fond ont souverainement estimé que la cause déterminante était l'investiture, cause illicite comme portant sur un objet hors du commerce. Les sommes doivent être restituées. Rejet.
+po: Le juge démasque le motif illicite caché derrière un motif apparent licite. L'article 1162 vise aujourd'hui le but du contrat.
+@maternite1991 | Mère porteuse | Ass. plén., 31 mai 1991, Bull. n° 4 | Cass. | 1991 | 3 | 14
+ap: La convention de maternité pour autrui est nulle : elle viole l'indisponibilité du corps humain et de l'état des personnes
+f: Une épouse étant stérile, son mari donne son sperme à une autre femme, qui porte l'enfant et l'abandonne à sa naissance. L'épouse demande l'adoption plénière ; la cour d'appel la prononce, jugeant la méthode licite en l'état des mœurs.
+q: L'adoption peut-elle consacrer la filiation d'un enfant conçu en exécution d'une convention de maternité pour autrui ?
+s: Non. La convention, même gratuite, contrevient aux principes d'ordre public de l'indisponibilité du corps humain et de l'état des personnes ; l'adoption n'est que l'ultime phase d'un processus qui détourne cette institution. Cassation dans l'intérêt de la loi.
+po: La loi de 1994 inscrit la solution à l'article 16-7. La transcription de la filiation des enfants nés d'une GPA à l'étranger a depuis évolué, sous l'influence de la Cour européenne.
+=ourbody | 14 | 2
+@total1992 | Clause de restitution des cuves | Com., 18 févr. 1992, Bull. IV, n° 78 | Cass. | 1992 | 2 | 14
+ap: Est nulle la clause disproportionnée à sa fonction qui freine la concurrence
+f: Un pompiste lié à une compagnie pétrolière par un contrat d'approvisionnement exclusif doit, en fin de contrat, restituer en nature les cuves prêtées, ce qui impose des travaux coûteux. Il refuse et offre d'en payer la valeur.
+q: La clause de restitution en nature du matériel, qui dissuade de traiter avec un autre fournisseur, est-elle licite ?
+s: Non. Coûteuse et non justifiée par des nécessités techniques, elle est disproportionnée à sa fonction et constitue un frein à la concurrence : elle est nulle. Cassation.
+po: L'ordre public économique de direction protège le fonctionnement du marché ; le droit de la concurrence s'impose au contrat.
+@honoraires2022 | Honoraires de résultat | Civ. 1re, 6 avr. 2022, n° 21-12.045 | Cass. | 2022 | 2 | 14
+ap: Le contrat qui fixe les honoraires d'un expert-comptable d'après les résultats financiers du client est nul
+f: Un expert-comptable réclame des honoraires calculés sur les résultats obtenus par son client. La cour d'appel les accorde : les règles de déontologie ne seraient assorties que de sanctions disciplinaires.
+q: La violation de la règle légale qui interdit les honoraires de résultat rend-elle le contrat nul ?
+s: Oui. Le texte qui organise la profession impose une juste rémunération du travail fourni et interdit de calculer les honoraires d'après les résultats : le contrat est illicite et nul. Cassation.
+po: Une règle professionnelle d'origine légale relève de l'ordre public du contrat. À rapprocher de l'arrêt de 2025 sur le site de l'ostéopathe.
+@osteopathe2025 | Site de l'ostéopathe | Com., 25 juin 2025, n° 24-10.862 | Cass. | 2025 | 2 | 14
+ap: Un code de déontologie sans base légale ou réglementaire ne rend pas le contrat illicite
+f: Un ostéopathe souscrit un contrat de création de site internet, puis invoque sa nullité : le code de déontologie de sa profession interdit la publicité. La cour d'appel annule le contrat.
+q: Le contrat contraire à un code de déontologie professionnel est-il, de ce seul fait, illicite ?
+s: Non, lorsque ce code ne résulte d'aucune disposition légale ou réglementaire. Cassation.
+po: Seules les règles déontologiques qui ont une source légale ou réglementaire participent de l'ordre public du contrat.
+=leg2004 | 14 | 3
+=donation1999 | 14 | 1
+=courtage | 14 | 1
+=gleeden | 14 | 1
+@cagnotte2023 | Cagnotte du boxeur | CA Paris, 8 sept. 2023, n° 21/02326 | CA | 2023 | 2 | 14
+ap: Le contrat de cagnotte dont le but est de valoriser des violences contre un gendarme est nul
+f: Après des violences publiques contre un gendarme lors d'une manifestation, un tiers ouvre une cagnotte en ligne pour soutenir leur auteur. La plateforme suspend la cagnotte ; les intéressés réclament la remise des fonds.
+q: Le contrat de cagnotte est-il contraire à l'ordre public par son but ?
+s: Oui. Le but de l'appel aux dons était la valorisation monétaire des violences : il porte atteinte à la défense de l'ordre et à la prévention du crime. Le contrat est nul sur le fondement de l'article 1162 et les fonds sont restitués aux donateurs.
+po: L'article 1162 permet de sanctionner un but illicite, apprécié au jour où le contrat est formé.
+@hebergement2006 | Héberger ses proches | Civ. 3e, 22 mars 2006, Bull. III, n° 73 | Cass. | 2006 | 2 | 14
+ap: Les clauses d'un bail d'habitation ne peuvent priver le preneur de la possibilité d'héberger ses proches
+f: Un bail interdit toute mise à disposition du logement. La locataire y héberge sa fille majeure ; l'ancien colocataire demande son expulsion et des dommages et intérêts.
+q: Une clause du bail peut-elle interdire au locataire d'héberger ses proches ?
+s: Non. Au visa de l'article 8 de la Convention européenne, les clauses d'un bail d'habitation ne peuvent avoir cet effet. Cassation.
+po: L'ordre public européen a un effet horizontal : le contrat ne peut être l'instrument de la violation des droits fondamentaux.
+

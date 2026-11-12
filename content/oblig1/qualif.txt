@@ -102,3 +102,15 @@ m: Erreur inexcusable | art. 1132 | Un professionnel achète un stock sans lire 
 m: Erreur sur la valeur | art. 1136 | Un vendeur cède un fonds trop bon marché, et personne ne l'a trompé. | Une appréciation économique inexacte ne justifie pas la nullité.
 m: Valeur et manœuvre | art. 1139 | Un acheteur fabrique une fausse expertise pour faire baisser le prix. | L'erreur sur la valeur provoquée par un dol est une cause de nullité.
 m: Motif provoqué | art. 1139 | Un vendeur invente une future gare pour convaincre d'acheter. | L'erreur sur un simple motif est une cause de nullité si elle résulte d'un dol.
+
+=contrainte | 13
+
+%licite | Licite ou non ? | 14
+m: Ordre public politique | art. 1162 | Deux candidats paient un parti, sous couvert de dépenses de campagne, pour obtenir son investiture. | On n'achète pas une investiture électorale.
+m: Corps humain | art. 16-7 | Une femme s'engage à porter un enfant pour le remettre à un couple à sa naissance. | Le corps humain et l'état des personnes sont indisponibles.
+m: Ordre public économique | art. 1162 | Une clause impose au pompiste des travaux coûteux s'il change de fournisseur. | Disproportionnée, elle freine la concurrence.
+m: Règle professionnelle légale | art. 1162 | Un expert-comptable fixe ses honoraires d'après les bénéfices de son client. | La loi l'interdit : le contrat est nul.
+m: Déontologie sans base légale | art. 1162 | Un ostéopathe commande un site publicitaire, que son code de déontologie interdit. | Ce code n'a aucune source légale ou réglementaire : le contrat est valable.
+m: But illicite | art. 1162 | Une cagnotte en ligne valorise des violences commises contre un gendarme. | Le but suffit à rendre le contrat nul.
+m: Libéralité licite | art. 1162 | Un homme marié lègue ses biens à la femme avec qui il entretenait une relation adultère. | Elle n'est plus nulle comme contraire aux bonnes mœurs.
+

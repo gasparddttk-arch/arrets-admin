@@ -295,6 +295,7 @@ export function tirerDunk(liste, tir, dus, deja, rng = Math.random) {
 export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new Set()) {
   if (estL1(ix)) return tirerIntro(ix, type, zones, dus, rng, deja);
   if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, dus, rng, deja);
+  if (type === 'atelier' && ix.ateliers?.length) return tirerAtelier(ix, zones, null, rng, deja);
   const d = dispo(ix, zones);
   const prendre = (liste) => {
     const frais = liste.filter((x) => !deja.has(x.id));

@@ -136,7 +136,7 @@ export async function jouerAtelier(zone, ctx, round, ix) {
     const o = await choisir(corps, melange([{ t: texte, ref: art, ok: true }, ...s.leurres.map(([a, t, w]) => ({ t, ref: a, w, ok: false }))], Math.random));
     res.regle = o; marquer('regles', o.ok);
     if (carte && ix.parId?.has(carte)) ctx.noter(carte, o.ok);
-    corps.append(note(o.ok ? `Oui : ${art}.` : `${o.w} La règle est l’${art.replace(/^Art\./, 'article')}.`, o.ok ? 'juste' : 'faux'));
+    corps.append(note(o.ok ? `Oui : ${art}.` : `${o.w} La règle : ${art.replace(/^Art\./, 'article')}.`, o.ok ? 'juste' : 'faux'));
     await suite(corps, 'Décomposer la règle');
 
     // La mineure : chaque condition reçoit son fait.

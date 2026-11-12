@@ -355,10 +355,10 @@ function ecranRole() {
 // Vers l'examen : un enchaînement facultatif, sans rappel ni compte à rebours.
 const NIVEAUX_EXAMEN = [
   { nom: 'Première instance', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'frise'], intro: ['tri', 'memory', 'frise'], constit: ['nuancier', 'memory', 'frise'] },
-  { nom: 'Appel', txt: 'Cinq épreuves : cas, plans, et des réponses à écrire soi-même', oblig: ['cas', 'flash', 'trous', 'atelier', 'plaide'], admin: ['puzzle', 'juge', 'flash', 'syllogisme', 'plaide'], intro: ['mot', 'flash', 'quiadit', 'plan', 'scanner'], constit: ['pouvoirs', 'flash', 'quiadit', 'plan', 'plume'], txtIntro: 'Cinq épreuves : une définition à écrire, un plan à choisir' },
-  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['atelier', 'express', 'cas', 'frise', 'plaide', 'plan'], admin: ['juge', 'architecte', 'express', 'frise', 'syllogisme', 'plaide'], intro: ['rangement', 'flash', 'plan', 'quiadit', 'mot', 'flash'], constit: ['pouvoirs', 'flash', 'plan', 'plume', 'nuancier', 'flash'], txtIntro: 'Six épreuves, dont deux définitions à écrire' },
+  { nom: 'Appel', txt: 'Cinq épreuves : cas, plans, et des réponses à écrire soi-même', oblig: ['cas', 'flash', 'trous', 'atelier', 'plaide'], admin: ['puzzle', 'juge', 'flash', 'atelier', 'plaide'], intro: ['mot', 'flash', 'quiadit', 'plan', 'scanner'], constit: ['pouvoirs', 'flash', 'quiadit', 'plan', 'plume'], txtIntro: 'Cinq épreuves : une définition à écrire, un plan à choisir' },
+  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['atelier', 'express', 'cas', 'frise', 'plaide', 'plan'], admin: ['atelier', 'juge', 'architecte', 'express', 'frise', 'plaide'], intro: ['rangement', 'flash', 'plan', 'quiadit', 'mot', 'flash'], constit: ['pouvoirs', 'flash', 'plan', 'plume', 'nuancier', 'flash'], txtIntro: 'Six épreuves, dont deux définitions à écrire' },
   { nom: 'Partiel blanc', txt: '20 minutes, une dizaine d’épreuves, puis ton bilan par chambre. Un repère, pas une note', partiel: true,
-    oblig: ['qualif', 'cas', 'flash', 'atelier', 'trous', 'remede', 'express', 'plaide', 'frise'], admin: ['paires', 'juge', 'flash', 'syllogisme', 'puzzle', 'express', 'plan', 'plaide', 'frise', 'architecte'],
+    oblig: ['qualif', 'cas', 'flash', 'atelier', 'trous', 'remede', 'express', 'plaide', 'frise'], admin: ['paires', 'juge', 'flash', 'atelier', 'puzzle', 'express', 'plan', 'plaide', 'frise', 'architecte'],
     intro: ['tri', 'mot', 'flash', 'quiadit', 'memory', 'scanner', 'plan', 'rangement', 'flash', 'frise'],
     constit: ['pouvoirs', 'mot', 'flash', 'quiadit', 'memory', 'plume', 'plan', 'nuancier', 'flash', 'frise'] },
 ];

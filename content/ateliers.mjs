@@ -31,9 +31,9 @@ export const ateliers = [
     question: 'M. Dubois vous consulte : peut-il obtenir la maison ? À défaut, que peut-il obtenir ?',
     faits: {
       f1: ['Une offre assortie d’un délai', ['Une simple invitation à entrer en pourparlers', 'Une promesse unilatérale de vente'], 'Elle est ferme et précise (le bien, le prix) et fixe un délai : c’est une offre au sens de l’article 1114.'],
-      f2: ['Une dépense engagée sur la foi de l’offre', ['Un commencement d’exécution du contrat', 'Une acceptation tacite'], 'Payer un géomètre n’accepte rien : c’est une dépense, qui pourra être un préjudice.'],
-      f3: ['Une rétractation avant l’expiration du délai', ['Une rétractation après l’expiration du délai', 'Une caducité de l’offre'], 'Le délai courait jusqu’au 17 mars : la rétractation du 8 mars intervient pendant le délai.'],
-      f4: ['Une acceptation postérieure à la rétractation', ['Une acceptation qui forme le contrat', 'Une contre-proposition'], 'L’acceptation arrive après une rétractation : il faut savoir si elle a encore un objet.'],
+      f2: ['Une dépense engagée sur la foi de l’offre', ['Un commencement d’exécution du contrat de vente', 'Une acceptation tacite de l’offre'], 'Payer un géomètre n’accepte rien : c’est une dépense, qui pourra être un préjudice.'],
+      f3: ['Une rétractation avant l’expiration du délai', ['Une rétractation après l’expiration du délai fixé', 'Une caducité de l’offre par l’écoulement du temps'], 'Le délai courait jusqu’au 17 mars : la rétractation du 8 mars intervient pendant le délai.'],
+      f4: ['Une acceptation postérieure à la rétractation', ['Une acceptation qui forme le contrat de vente', 'Une contre-proposition sur le prix'], 'L’acceptation arrive après une rétractation : il faut savoir si elle a encore un objet.'],
     },
     problemes: [
       { id: 'p1', t: 'La rétractation d’une offre avant l’expiration du délai fixé par son auteur empêche-t-elle la formation du contrat ?', factuel: 'Mme Leroy avait-elle le droit de changer d’avis ?' },
@@ -50,7 +50,7 @@ export const ateliers = [
           ['Une rétractation avant l’expiration de ce délai', 'f3', 'oui', 'Mme Leroy se rétracte le 8 mars, avant le 17 mars.'],
         ],
         exception: null,
-        conclusion: ['La rétractation, bien que fautive, empêche la conclusion du contrat : M. Dubois ne peut pas obtenir la maison.', 'La rétractation est sans effet : l’acceptation du 10 mars forme la vente.', 'L’offre est caduque, mais M. Dubois peut obtenir l’exécution forcée.'],
+        conclusion: ['La rétractation, bien que fautive, empêche la conclusion du contrat : M. Dubois ne peut pas obtenir la maison.', 'La rétractation, faite pendant le délai, est sans effet : l’acceptation du 10 mars forme la vente.', 'L’offre est caduque, mais M. Dubois peut obtenir l’exécution forcée de la vente promise.'],
       },
       p2: {
         regle: ['Art. 1116, al. 3', 'La rétractation engage la responsabilité extracontractuelle de son auteur dans les conditions du droit commun sans l’obliger à compenser la perte des avantages attendus du contrat.', 'a1116'],
@@ -61,10 +61,10 @@ export const ateliers = [
           ['Un préjudice réparable', 'f2', 'oui', 'Les 800 euros versés au géomètre sont une perte subie à cause de la rétractation.'],
         ],
         exception: ['Pas de compensation de la perte des avantages attendus du contrat', true, 'L’espoir d’acquérir la maison, et le gain qu’il représentait, n’est pas réparable.'],
-        conclusion: ['Mme Leroy doit réparer les 800 euros de frais, mais pas la perte de la maison.', 'Mme Leroy doit indemniser M. Dubois de la valeur de la maison.', 'M. Dubois ne peut rien obtenir, puisque le contrat n’est pas formé.'],
+        conclusion: ['Mme Leroy doit réparer les 800 euros de frais, mais pas la perte de la maison.', 'Mme Leroy doit indemniser M. Dubois de la perte de la maison, à hauteur de sa valeur.', 'M. Dubois ne peut rien obtenir, puisque le contrat n’a jamais été formé.'],
       },
     },
-    conseil: ['M. Dubois ne peut pas obtenir la maison. Il peut agir contre Mme Leroy en responsabilité extracontractuelle pour obtenir les 800 euros.', 'M. Dubois peut demander au juge de constater la vente et de le déclarer propriétaire.', 'M. Dubois n’a aucune action : l’offre ne l’engageait à rien.'],
+    conseil: ['M. Dubois n’aura pas la maison, mais Mme Leroy lui doit les 800 euros (art. 1240).', 'M. Dubois peut demander au juge de constater la vente, formée par son acceptation, et de le déclarer propriétaire de la maison.', 'M. Dubois n’a aucune action : une offre ne lie jamais son auteur, qui reste libre de la retirer à tout moment.'],
   },
 
   {
@@ -78,10 +78,10 @@ export const ateliers = [
     ],
     question: 'M. Martin vous consulte : que peut-il obtenir de Nova ?',
     faits: {
-      f1: ['Des négociations précontractuelles avancées', ['Un contrat de franchise déjà formé', 'Une offre de contracter'], 'Rien n’est signé : les parties sont dans la période précontractuelle, que l’article 1112 régit.'],
-      f2: ['Des dépenses engagées à la demande du partenaire', ['Une exécution anticipée du contrat', 'Une donation au partenaire'], 'Ces frais ont été engagés sur la foi des négociations, à la demande de Nova.'],
+      f1: ['Des négociations précontractuelles avancées', ['Un contrat de franchise déjà formé entre eux', 'Une offre ferme de contracter'], 'Rien n’est signé : les parties sont dans la période précontractuelle, que l’article 1112 régit.'],
+      f2: ['Des dépenses engagées à la demande du partenaire', ['Une exécution anticipée du contrat de franchise', 'Une libéralité consentie au partenaire'], 'Ces frais ont été engagés sur la foi des négociations, à la demande de Nova.'],
       f3: ['Une rupture brutale et sans motif, au dernier moment', ['L’usage normal de la liberté de ne pas contracter', 'Une rétractation d’offre'], 'Rompre est libre ; rompre brutalement, sans explication, après avoir fait engager des frais, ne l’est pas.'],
-      f4: ['Les gains espérés du contrat non conclu', ['Un préjudice moral', 'Une perte subie'], 'C’est la perte des avantages attendus du contrat : le texte l’exclut de la réparation.'],
+      f4: ['Les gains espérés du contrat non conclu', ['Un préjudice moral né de la déception', 'Une perte subie du fait des dépenses'], 'C’est la perte des avantages attendus du contrat : le texte l’exclut de la réparation.'],
     },
     problemes: [
       { id: 'p1', t: 'La rupture brutale et sans motif de pourparlers avancés constitue-t-elle une faute ?', factuel: 'Nova avait-elle le droit de choisir un autre candidat ?' },
@@ -98,7 +98,7 @@ export const ateliers = [
           ['Une rupture contraire à la bonne foi', 'f3', 'oui', 'Nova rompt la veille de la signature, sans explication, après avoir fait engager des frais.'],
         ],
         exception: null,
-        conclusion: ['La rupture, libre dans son principe, est fautive dans ses circonstances : brutale, tardive, sans motif.', 'La rupture n’est jamais fautive, puisque la négociation est libre.', 'La rupture forme le contrat, que Nova doit exécuter.'],
+        conclusion: ['La rupture, libre dans son principe, est fautive dans ses circonstances : brutale, tardive, sans motif.', 'La rupture n’est jamais fautive, puisque chacun reste libre de ne pas contracter.', 'Les négociations avancées valent contrat : Nova doit exécuter la franchise.'],
       },
       p2: {
         regle: ['Art. 1112, al. 2', 'En cas de faute commise dans les négociations, la réparation du préjudice qui en résulte ne peut avoir pour objet de compenser ni la perte des avantages attendus du contrat non conclu, ni la perte de chance d’obtenir ces avantages.', 'a1112'],
@@ -109,10 +109,10 @@ export const ateliers = [
           ['Un préjudice qui n’est pas la perte des avantages attendus', 'f2', 'oui', 'Le bail et les 40 000 euros de travaux sont des frais engagés en pure perte.'],
         ],
         exception: ['Ni la perte des gains espérés, ni la perte de chance de les obtenir', true, 'Les 150 000 euros espérés sont la perte des avantages attendus : ils ne sont pas réparables.'],
-        conclusion: ['Seuls les frais engagés sont réparés : les 40 000 euros de travaux, pas les 150 000 euros espérés.', 'M. Martin obtient les 150 000 euros de gains espérés.', 'M. Martin obtient une indemnité pour perte de chance de conclure.'],
+        conclusion: ['Seuls les frais engagés sont réparés : les 40 000 euros de travaux, pas les 150 000 euros espérés.', 'M. Martin obtient les 150 000 euros de gains qu’il espérait tirer de la franchise.', 'M. Martin obtient une indemnité pour la perte de chance de conclure le contrat.'],
       },
     },
-    conseil: ['M. Martin peut agir contre Nova en responsabilité extracontractuelle pour rupture fautive et obtenir le remboursement de ses frais, mais pas des gains espérés.', 'M. Martin peut exiger la signature du contrat de franchise.', 'M. Martin n’a aucun recours : Nova était libre de rompre.'],
+    conseil: ['M. Martin obtiendra ses frais pour rupture fautive, pas les gains espérés.', 'M. Martin peut exiger de Nova la signature du contrat de franchise, qui était presque prêt.', 'M. Martin n’a aucun recours : la liberté de ne pas contracter permettait à Nova de rompre sans s’expliquer.'],
   },
 
   {
@@ -126,10 +126,10 @@ export const ateliers = [
     ],
     question: 'Mme Faure vous consulte : peut-elle obtenir l’appartement ?',
     faits: {
-      f1: ['Une promesse unilatérale de vente', ['Une offre de vente', 'Un pacte de préférence'], 'M. Roux a déjà consenti à la vente ; seule manque l’option de Mme Faure : c’est une promesse unilatérale (art. 1124).'],
-      f2: ['Une révocation pendant le délai d’option', ['Une rétractation d’offre', 'Une résiliation du contrat de vente'], 'La révocation intervient avant l’expiration des deux mois.'],
-      f3: ['Un contrat conclu avec un tiers en violation de la promesse', ['Une vente parfaitement valable', 'Une cession de la promesse'], 'Le promettant vend à un autre le bien promis.'],
-      f4: ['Une levée d’option dans le délai', ['Une levée d’option tardive', 'Une acceptation d’offre'], 'Le délai courait jusqu’au 1er avril : l’option est levée à temps.'],
+      f1: ['Une promesse unilatérale de vente', ['Une offre de vente avec délai', 'Un pacte de préférence sur l’appartement'], 'M. Roux a déjà consenti à la vente ; seule manque l’option de Mme Faure : c’est une promesse unilatérale (art. 1124).'],
+      f2: ['Une révocation pendant le délai d’option', ['Une rétractation d’offre pendant son délai', 'Une résiliation du contrat de vente déjà formé'], 'La révocation intervient avant l’expiration des deux mois.'],
+      f3: ['Un contrat conclu avec un tiers en violation de la promesse', ['Une vente parfaitement valable et opposable', 'Une cession de la promesse à M. Garnier'], 'Le promettant vend à un autre le bien promis.'],
+      f4: ['Une levée d’option dans le délai', ['Une levée d’option tardive, hors délai', 'Une simple acceptation d’offre'], 'Le délai courait jusqu’au 1er avril : l’option est levée à temps.'],
     },
     problemes: [
       { id: 'p1', t: 'La révocation de la promesse unilatérale pendant le délai d’option empêche-t-elle la formation du contrat promis ?', factuel: 'M. Roux pouvait-il changer d’avis ?' },
@@ -160,10 +160,10 @@ export const ateliers = [
         si: 'Si M. Garnier connaissait la promesse, la vente à son profit est nulle et Mme Faure peut obtenir l’appartement.',
         sinon: 'S’il l’ignorait, la vente est valable : Mme Faure ne peut obtenir que des dommages et intérêts contre M. Roux.',
         exception: null,
-        conclusion: ['Tout dépend de la connaissance de M. Garnier : nullité s’il connaissait la promesse, dommages et intérêts sinon.', 'La vente à M. Garnier est nulle dans tous les cas.', 'La vente à M. Garnier est valable dans tous les cas, en vertu de l’effet relatif.'],
+        conclusion: ['Tout dépend de la connaissance de M. Garnier : nullité s’il connaissait la promesse, dommages et intérêts sinon.', 'La vente à M. Garnier est nulle dans tous les cas, la promesse étant antérieure.', 'La vente à M. Garnier est valable dans tous les cas, en vertu de l’effet relatif.'],
       },
     },
-    conseil: ['La vente avec Mme Faure est formée. Il faut prouver que M. Garnier connaissait la promesse pour faire annuler sa vente et obtenir l’appartement ; à défaut, elle n’obtiendra que des dommages et intérêts de M. Roux.', 'Mme Faure obtient l’appartement sans avoir rien à prouver.', 'Mme Faure ne peut obtenir que des dommages et intérêts, la révocation ayant mis fin à la promesse.'],
+    conseil: ['La vente avec Mme Faure est formée. Il faut prouver que M. Garnier connaissait la promesse pour faire annuler sa vente et obtenir l’appartement ; à défaut, elle n’obtiendra que des dommages et intérêts de M. Roux.', 'Mme Faure obtient l’appartement sans rien prouver : la levée de l’option suffit à évincer M. Garnier, qu’il ait su ou non.', 'Mme Faure ne peut obtenir que des dommages et intérêts : la révocation, même fautive, a mis fin à la promesse et la vente à M. Garnier tient.'],
   },
 
   {
@@ -177,10 +177,10 @@ export const ateliers = [
     ],
     question: 'Mme Petit vous consulte : peut-elle faire annuler la vente ou obtenir réparation ?',
     faits: {
-      f1: ['Une vente entre une particulière et un professionnel', ['Une donation déguisée', 'Une vente entre deux professionnels'], 'Un professionnel des meubles anciens achète à une particulière.'],
-      f2: ['Le silence de l’acheteur sur la valeur du bien', ['Une manœuvre active de l’acheteur', 'Un mensonge sur les qualités du meuble'], 'L’antiquaire n’a rien affirmé de faux : il s’est tu sur la valeur.'],
-      f3: ['Une erreur portant seulement sur la valeur', ['Une erreur sur une qualité essentielle', 'Une erreur sur la personne'], 'Mme Petit connaissait la nature et l’origine du meuble : elle n’en a mal estimé que le prix.'],
-      f4: ['La découverte du vice six mois plus tard', ['L’expiration du délai pour agir', 'La confirmation de la vente'], 'Le délai de l’action ne court qu’à compter de la découverte.'],
+      f1: ['Une vente entre une particulière et un professionnel', ['Une donation déguisée en vente', 'Une vente entre deux professionnels du meuble'], 'Un professionnel des meubles anciens achète à une particulière.'],
+      f2: ['Le silence de l’acheteur sur la valeur du bien', ['Une manœuvre active de l’acheteur pour la tromper', 'Un mensonge de l’acheteur sur les qualités du meuble'], 'L’antiquaire n’a rien affirmé de faux : il s’est tu sur la valeur.'],
+      f3: ['Une erreur portant seulement sur la valeur', ['Une erreur sur une qualité essentielle du meuble', 'Une erreur sur la personne de l’acheteur'], 'Mme Petit connaissait la nature et l’origine du meuble : elle n’en a mal estimé que le prix.'],
+      f4: ['La découverte du vice six mois plus tard', ['L’expiration du délai de prescription pour agir', 'La confirmation tacite de la vente par Mme Petit'], 'Le délai de l’action ne court qu’à compter de la découverte.'],
     },
     problemes: [
       { id: 'p1', t: 'L’acheteur est-il tenu d’informer le vendeur de la valeur du bien ?', factuel: 'L’antiquaire aurait-il dû dire le vrai prix ?' },
@@ -198,7 +198,7 @@ export const ateliers = [
           ['Une information sur autre chose que la valeur de la prestation', 'f2', 'non', 'L’information tue porte précisément sur la valeur : elle est hors du devoir d’information.'],
         ],
         exception: null,
-        conclusion: ['L’acheteur n’était pas tenu de révéler la valeur : le devoir d’information n’a pas été méconnu.', 'L’acheteur a manqué à son devoir d’information.', 'Le devoir d’information ne pèse que sur le vendeur.'],
+        conclusion: ['L’acheteur n’était pas tenu de révéler la valeur : le devoir d’information n’a pas été méconnu.', 'L’acheteur, professionnel, a manqué à son devoir d’information sur la valeur.', 'Le devoir d’information ne pèse que sur le vendeur, jamais sur l’acheteur.'],
       },
       p2: {
         regle: ['Art. 1137, al. 2 et 3', 'Constitue un dol la dissimulation intentionnelle par l’un des contractants d’une information dont il sait le caractère déterminant pour l’autre partie. Néanmoins, ne constitue pas un dol le fait pour une partie de ne pas révéler à son cocontractant son estimation de la valeur de la prestation.', 'a1137'],
@@ -209,7 +209,7 @@ export const ateliers = [
           ['Sur autre chose que l’estimation de la valeur', 'f2', 'non', 'Il n’a tu que son estimation de la valeur.'],
         ],
         exception: ['L’estimation de la valeur n’est jamais un dol', true, 'C’est exactement le cas : l’alinéa 3 écarte le dol.'],
-        conclusion: ['Pas de réticence dolosive : taire son estimation de la valeur n’est pas un dol.', 'Il y a réticence dolosive : la vente est nulle.', 'Il y a dol, mais seulement des dommages et intérêts.'],
+        conclusion: ['Pas de réticence dolosive : taire son estimation de la valeur n’est pas un dol.', 'Il y a réticence dolosive : le silence de l’antiquaire rend la vente nulle.', 'Il y a dol, mais il n’ouvre droit qu’à des dommages et intérêts.'],
       },
       p3: {
         regle: ['Art. 1136', 'L’erreur sur la valeur par laquelle, sans se tromper sur les qualités essentielles de la prestation, un contractant fait seulement de celle-ci une appréciation économique inexacte, n’est pas une cause de nullité.', 'a1136'],
@@ -220,10 +220,10 @@ export const ateliers = [
           ['Une simple appréciation économique inexacte', 'f3', 'oui', 'Elle s’est seulement trompée sur le prix.'],
         ],
         exception: null,
-        conclusion: ['L’erreur sur la valeur n’est pas une cause de nullité.', 'L’erreur sur la valeur permet d’annuler la vente.', 'L’erreur sur la valeur permet de réviser le prix.'],
+        conclusion: ['L’erreur sur la valeur n’est pas une cause de nullité.', 'L’erreur sur la valeur permet d’annuler la vente.', 'L’erreur sur la valeur permet au juge de réviser le prix.'],
       },
     },
-    conseil: ['Mme Petit ne peut ni faire annuler la vente, ni obtenir réparation : le droit laisse à chacun le risque de mal estimer la valeur de ce qu’il vend.', 'Mme Petit peut faire annuler la vente pour dol et récupérer le buffet.', 'Mme Petit peut obtenir de l’antiquaire la différence de prix.'],
+    conseil: ['Mme Petit ne peut ni faire annuler la vente, ni obtenir réparation : le droit laisse à chacun le risque de mal estimer la valeur de ce qu’il vend.', 'Mme Petit peut faire annuler la vente pour réticence dolosive et récupérer le buffet contre restitution du prix.', 'Mme Petit peut obtenir de l’antiquaire, professionnel tenu d’informer, la différence entre le prix et la valeur.'],
   },
 
   {
@@ -238,9 +238,9 @@ export const ateliers = [
     question: 'Les époux Arnaud vous consultent : peuvent-ils récupérer le tableau ?',
     faits: {
       f1: ['Une vente dans la conviction que l’œuvre n’est pas du maître', ['Une vente avec un aléa accepté sur l’auteur', 'Une vente d’une œuvre authentique connue comme telle'], 'Le catalogue, « école de », révèle la conviction des vendeurs : ce n’était pas, pour eux, une œuvre du maître.'],
-      f2: ['L’authenticité de l’œuvre', ['Une simple plus-value', 'Une erreur de l’acheteur'], 'L’œuvre est de Fragonard lui-même : la réalité diffère de ce que les vendeurs croyaient.'],
-      f3: ['Une erreur du vendeur sur sa propre prestation', ['Une erreur de l’acheteur', 'Un dol de l’acheteur'], 'Les vendeurs se sont trompés sur ce qu’ils vendaient.'],
-      f4: ['Une découverte de l’erreur qui fait courir le délai', ['Une confirmation tacite de la vente', 'Un délai expiré'], 'Le délai de cinq ans ne court que du jour de la découverte de l’erreur.'],
+      f2: ['L’authenticité de l’œuvre', ['Une simple plus-value réalisée par l’acheteur', 'Une erreur de l’acheteur'], 'L’œuvre est de Fragonard lui-même : la réalité diffère de ce que les vendeurs croyaient.'],
+      f3: ['Une erreur du vendeur sur sa propre prestation', ['Une erreur de l’acheteur', 'Un dol commis par l’acheteur'], 'Les vendeurs se sont trompés sur ce qu’ils vendaient.'],
+      f4: ['Une découverte de l’erreur qui fait courir le délai', ['Une confirmation tacite de la vente par les époux', 'Un délai d’action déjà expiré'], 'Le délai de cinq ans ne court que du jour de la découverte de l’erreur.'],
     },
     problemes: [
       { id: 'p1', t: 'L’erreur du vendeur sur l’authenticité de l’œuvre qu’il vend est-elle une cause de nullité ?', factuel: 'Les vendeurs se sont-ils trompés ?' },
@@ -258,7 +258,7 @@ export const ateliers = [
           ['Une erreur excusable', 'f3', 'oui', 'Des particuliers qui se fient au catalogue ne commettent pas d’erreur grossière.'],
         ],
         exception: ['L’acceptation d’un aléa exclut l’erreur', false, 'Les vendeurs n’avaient accepté aucun aléa : ils étaient convaincus que l’œuvre n’était pas du maître.'],
-        conclusion: ['L’erreur sur l’authenticité est une cause de nullité, même commise par le vendeur sur sa propre prestation.', 'Le vendeur ne peut jamais invoquer une erreur sur ce qu’il vend.', 'L’erreur est indifférente : seul le prix a changé.'],
+        conclusion: ['L’erreur sur l’authenticité est une cause de nullité, même commise par le vendeur sur sa propre prestation.', 'Le vendeur ne peut jamais invoquer une erreur sur la chose qu’il vend lui-même.', 'L’erreur est indifférente : elle ne porte que sur la valeur du tableau.'],
       },
       p2: {
         regle: ['Art. 1144 et 2224', 'Le délai de l’action en nullité ne court, en cas d’erreur ou de dol, que du jour où ils ont été découverts. Il est de cinq ans.', 'a1144'],
@@ -269,10 +269,10 @@ export const ateliers = [
           ['Un délai qui court de la découverte de l’erreur', 'f4', 'oui', 'L’erreur a été découverte un an après la vente.'],
         ],
         exception: null,
-        conclusion: ['L’action est recevable : le délai court depuis la découverte.', 'L’action est prescrite.', 'L’action ne se prescrit jamais.'],
+        conclusion: ['L’action est recevable : le délai court depuis la découverte.', 'L’action est prescrite : cinq ans ont passé depuis la vente.', 'L’action en nullité ne se prescrit jamais.'],
       },
     },
-    conseil: ['Les époux Arnaud peuvent agir en nullité de la vente pour erreur sur une qualité essentielle ; chaque partie restituera ce qu’elle a reçu : le tableau contre le prix.', 'Ils ne peuvent obtenir qu’un complément de prix.', 'Ils n’ont aucun recours : on ne revient pas sur une vente aux enchères.'],
+    conseil: ['Les époux Arnaud peuvent faire annuler la vente pour erreur et récupérer le tableau contre le prix.', 'Ils ne peuvent obtenir qu’un complément de prix, calculé sur la valeur réelle de l’œuvre au jour de la vente.', 'Ils n’ont aucun recours : le vendeur supporte seul le risque d’une erreur sur la chose qu’il vend lui-même.'],
   },
 
   {
@@ -286,9 +286,9 @@ export const ateliers = [
     ],
     question: 'Bertin vous consulte : peut-elle remettre en cause le contrat qu’elle a signé ?',
     faits: {
-      f1: ['Un état de dépendance économique', ['Une simple relation commerciale', 'Un contrat d’exclusivité'], 'Sans ce client, Bertin ne survit pas : elle est dépendante à son égard.'],
-      f2: ['Un engagement obtenu sous la contrainte', ['Une négociation commerciale normale', 'Une offre que Bertin pouvait refuser'], 'La menace de rompre toute relation a dicté le consentement.'],
-      f3: ['Un avantage manifestement excessif', ['Une simple bonne affaire', 'Une lésion indifférente'], 'Un prix sous les coûts, quand le cocontractant augmente ses marges : l’avantage est manifestement excessif.'],
+      f1: ['Un état de dépendance économique', ['Une simple relation commerciale suivie', 'Un contrat d’exclusivité librement négocié'], 'Sans ce client, Bertin ne survit pas : elle est dépendante à son égard.'],
+      f2: ['Un engagement obtenu sous la contrainte', ['Une négociation commerciale dure mais normale', 'Une offre que Bertin pouvait librement refuser'], 'La menace de rompre toute relation a dicté le consentement.'],
+      f3: ['Un avantage manifestement excessif', ['Une simple bonne affaire pour l’acheteur', 'Une lésion, indifférente en principe'], 'Un prix sous les coûts, quand le cocontractant augmente ses marges : l’avantage est manifestement excessif.'],
       f4: ['Une contrainte qui n’a pas cessé', ['Une violence terminée depuis trois ans', 'Une confirmation du contrat'], 'Le délai pour agir ne court qu’à compter du jour où la violence a cessé.'],
     },
     problemes: [
@@ -307,7 +307,7 @@ export const ateliers = [
           ['Un avantage manifestement excessif', 'f3', 'oui', 'Le prix ne couvre pas les coûts tandis que le constructeur augmente ses marges.'],
         ],
         exception: null,
-        conclusion: ['Il y a violence par abus de dépendance : le contrat est nul.', 'Il n’y a pas de violence sans menace physique.', 'Le seul déséquilibre du prix suffit à annuler le contrat.'],
+        conclusion: ['Il y a violence par abus de dépendance : le contrat est nul.', 'Il n’y a pas de violence sans menace physique ou morale contre la personne.', 'Le seul déséquilibre du prix suffit à annuler le contrat.'],
       },
       p2: {
         regle: ['Art. 1144 et 2224', 'Le délai de l’action en nullité ne court, en cas de violence, que du jour où elle a cessé. Il est de cinq ans.', 'a1143'],
@@ -318,10 +318,10 @@ export const ateliers = [
           ['Un délai qui court du jour où la violence a cessé', 'f4', 'oui', 'La dépendance dure encore : le délai n’a pas commencé.'],
         ],
         exception: null,
-        conclusion: ['L’action n’est pas prescrite : le délai n’a pas encore commencé à courir.', 'L’action est prescrite depuis deux ans.', 'L’action est recevable seulement pendant un an.'],
+        conclusion: ['L’action n’est pas prescrite : le délai n’a pas encore commencé à courir.', 'L’action est prescrite depuis deux ans, le délai courant de la signature.', 'L’action n’est recevable que dans l’année qui suit le contrat.'],
       },
     },
-    conseil: ['Bertin peut agir en nullité relative pour violence par abus de dépendance, et demander en outre des dommages et intérêts ; son action n’est pas prescrite.', 'Bertin doit exécuter le contrat : elle l’a signé.', 'Bertin peut seulement demander au juge de réviser le prix.'],
+    conseil: ['Bertin peut agir en nullité pour abus de dépendance, et demander des dommages et intérêts.', 'Bertin doit exécuter le contrat : elle l’a signé librement, et la dépendance n’est pas un vice du consentement.', 'Bertin peut seulement demander au juge de réviser le prix, devenu manifestement excessif.'],
   },
 
   {
@@ -333,8 +333,8 @@ export const ateliers = [
     ],
     question: 'Le viticulteur vous consulte : le caviste est-il tenu de prendre et de payer les caisses ?',
     faits: {
-      f1: ['Des relations d’affaires suivies, où le silence vaut accord', ['Un simple usage de politesse', 'Un contrat-cadre écrit'], 'Dix ans de commandes tacites créent des relations d’affaires où le silence a un sens.'],
-      f2: ['Le silence du destinataire de l’offre', ['Un refus exprès de l’offre', 'Une contre-proposition'], 'Le caviste n’a rien dit : la question est la valeur de ce silence.'],
+      f1: ['Des relations d’affaires suivies, où le silence vaut accord', ['Un simple usage de politesse entre commerçants', 'Un contrat-cadre écrit qui prévoit les commandes'], 'Dix ans de commandes tacites créent des relations d’affaires où le silence a un sens.'],
+      f2: ['Le silence du destinataire de l’offre', ['Un refus exprès de l’offre par le caviste', 'Une contre-proposition sur la quantité'], 'Le caviste n’a rien dit : la question est la valeur de ce silence.'],
     },
     problemes: [
       { id: 'p1', t: 'Le silence gardé par le destinataire d’une offre vaut-il acceptation lorsque les parties sont en relations d’affaires ?', factuel: 'Le caviste a-t-il le droit de refuser les caisses ?' },
@@ -353,7 +353,7 @@ export const ateliers = [
         conclusion: ['Le silence vaut ici acceptation : la vente est formée.', 'Le silence ne vaut jamais acceptation : il n’y a pas de vente.', 'Il faut un écrit pour former la vente.'],
       },
     },
-    conseil: ['Le viticulteur peut exiger que le caviste prenne livraison et paie : la vente a été formée par son silence.', 'Le viticulteur doit reprendre ses caisses.', 'Le viticulteur peut seulement réclamer les frais de transport.'],
+    conseil: ['Le viticulteur peut exiger livraison et paiement : le silence a formé la vente.', 'Le viticulteur doit reprendre ses caisses : le silence ne vaut jamais acceptation.', 'Le viticulteur peut seulement réclamer au caviste les frais de transport engagés.'],
   },
 
   {
@@ -366,9 +366,9 @@ export const ateliers = [
     ],
     question: 'Léa vous consulte : le voisin doit-il lui rembourser les 400 euros ?',
     faits: {
-      f1: ['L’affaire d’autrui, sans obligation de s’en occuper', ['Un contrat de voisinage', 'Un mandat donné par le voisin'], 'Rien n’obligeait Léa à intervenir chez son voisin.'],
+      f1: ['L’affaire d’autrui, sans obligation de s’en occuper', ['Un contrat tacite de voisinage', 'Un mandat donné par le voisin avant son départ'], 'Rien n’obligeait Léa à intervenir chez son voisin.'],
       f2: ['Une gestion utile', ['Une dépense somptuaire', 'Un enrichissement de Léa'], 'Couper l’eau et réparer la fuite a évité un dommage plus grave.'],
-      f3: ['Une gestion à l’insu du maître de l’affaire', ['Une gestion malgré l’opposition du voisin', 'Un refus de ratification sans portée'], 'Le voisin était absent : il ne s’y est pas opposé.'],
+      f3: ['Une gestion à l’insu du maître de l’affaire', ['Une gestion malgré l’opposition du voisin', 'Un refus de ratification, sans portée ici'], 'Le voisin était absent : il ne s’y est pas opposé.'],
     },
     problemes: [
       { id: 'p1', t: 'Celui qui gère utilement l’affaire d’autrui sans y être tenu peut-il obtenir le remboursement de ses dépenses ?', factuel: 'Le voisin doit-il payer Léa ?' },
@@ -385,10 +385,10 @@ export const ateliers = [
           ['À l’insu ou sans opposition du maître', 'f3', 'oui', 'Le voisin, absent, ne s’y est pas opposé.'],
         ],
         exception: null,
-        conclusion: ['Le voisin doit rembourser les 400 euros, dépense utile faite dans son intérêt.', 'Le voisin ne doit rien, faute de contrat.', 'Le voisin doit rembourser le double, pour récompenser Léa.'],
+        conclusion: ['Le voisin doit rembourser les 400 euros, dépense utile faite dans son intérêt.', 'Le voisin ne doit rien, faute de contrat entre lui et Léa.', 'Le voisin doit rembourser le double, pour récompenser l’initiative de Léa.'],
       },
     },
-    conseil: ['Léa peut agir contre son voisin sur le fondement de la gestion d’affaires et obtenir les 400 euros.', 'Léa doit se retourner contre le plombier.', 'Léa n’a aucun recours.'],
+    conseil: ['Léa obtiendra du voisin les 400 euros, au titre de la gestion d’affaires.', 'Léa doit se retourner contre le plombier, seul cocontractant.', 'Léa n’a aucun recours : elle a agi sans mandat.'],
   },
 
   {
@@ -404,7 +404,7 @@ export const ateliers = [
     faits: {
       f1: ['Une faute d’imprudence', ['Un cas de force majeure', 'Un fait de la victime'], 'Rouler sur un trottoir en regardant son téléphone est un comportement imprudent.'],
       f2: ['Un lien de causalité', ['Une simple coïncidence', 'Une faute de la victime'], 'Le choc est la cause directe de la chute et de la fracture.'],
-      f3: ['Un dommage corporel et économique', ['Un préjudice hypothétique', 'Un préjudice purement moral'], 'Soins et perte de revenus sont des préjudices certains.'],
+      f3: ['Un dommage corporel et économique', ['Un préjudice hypothétique et futur', 'Un préjudice purement moral'], 'Soins et perte de revenus sont des préjudices certains.'],
     },
     problemes: [
       { id: 'p1', t: 'L’auteur d’une faute d’imprudence doit-il réparer le dommage qu’elle a causé, en l’absence de tout contrat avec la victime ?', factuel: 'Hugo doit-il payer Mme Blanc ?' },
@@ -424,11 +424,11 @@ export const ateliers = [
         conclusion: ['Hugo doit réparer l’entier dommage de Mme Blanc.', 'Hugo ne doit rien, faute de contrat.', 'Hugo ne doit réparer que si Mme Blanc prouve une intention de nuire.'],
       },
     },
-    conseil: ['Mme Blanc peut agir contre Hugo en responsabilité extracontractuelle pour obtenir la réparation de ses soins et de sa perte de revenus.', 'Mme Blanc doit agir contre le fabricant de la trottinette.', 'Mme Blanc doit prouver un contrat avec Hugo.'],
+    conseil: ['Mme Blanc peut obtenir d’Hugo, sur le fondement de l’article 1240, ses soins et sa perte de revenus.', 'Mme Blanc doit agir contre le fabricant de la trottinette, responsable du produit.', 'Mme Blanc doit d’abord prouver un contrat avec Hugo pour obtenir réparation.'],
   },
 
   {
-    id: 'at-influence', titre: 'Le contrat d’influence', niveau: 1, zones: { 1: [3], 2: [7] },
+    id: 'at-influence', titre: 'Le contrat d’influence', niveau: 1, zones: { 1: [3, 14], 2: [7] },
     enonce: [
       { f: 'f1', t: 'Une entreprise promet 50 000 euros à un consultant s’il obtient, grâce à ses relations avec un élu, l’attribution d’un marché public' }, '. ',
       { b: true, t: 'Le contrat est rédigé sur papier à en-tête.' }, ' ',
@@ -436,8 +436,8 @@ export const ateliers = [
     ],
     question: 'Le consultant vous consulte : peut-il obtenir les 50 000 euros ?',
     faits: {
-      f1: ['Un contrat dont l’objet et le but sont contraires à l’ordre public', ['Un contrat de prestation de services ordinaire', 'Une donation'], 'Payer pour obtenir l’intervention d’un élu dans l’attribution d’un marché, c’est rémunérer un trafic d’influence.'],
-      f2: ['Une demande d’exécution d’un contrat illicite', ['Une demande de réparation', 'Une demande de restitution'], 'Le consultant demande l’exécution du contrat.'],
+      f1: ['Un contrat dont l’objet et le but sont contraires à l’ordre public', ['Un contrat de prestation de services ordinaire', 'Une donation déguisée au consultant'], 'Payer pour obtenir l’intervention d’un élu dans l’attribution d’un marché, c’est rémunérer un trafic d’influence.'],
+      f2: ['Une demande d’exécution d’un contrat illicite', ['Une demande de réparation d’un préjudice', 'Une demande de restitution de l’indu'], 'Le consultant demande l’exécution du contrat.'],
     },
     problemes: [
       { id: 'p1', t: 'Un contrat dont l’objet est de rémunérer un trafic d’influence peut-il produire effet ?', factuel: 'L’entreprise doit-elle payer ?' },
@@ -455,6 +455,6 @@ export const ateliers = [
         conclusion: ['Le contrat est nul : il ne peut produire aucun effet.', 'Le contrat est valable : le consultant a rempli sa mission.', 'Le contrat est valable, mais le prix doit être réduit.'],
       },
     },
-    conseil: ['Le consultant ne peut rien obtenir : le contrat est nul, d’une nullité absolue que toute personne intéressée peut invoquer.', 'Le consultant peut obtenir son paiement en justice.', 'Le consultant peut obtenir la moitié de la somme.'],
+    conseil: ['Le consultant n’obtiendra rien : le contrat est frappé de nullité absolue.', 'Le consultant peut obtenir son paiement en justice, puisque le marché a bien été attribué.', 'Le consultant peut obtenir la moitié de la somme, le juge réduisant le prix excessif.'],
   },
 ];

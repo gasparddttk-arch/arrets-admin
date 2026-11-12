@@ -498,6 +498,7 @@ export async function jouerArchitecte(zone, ctx, round, ix) {
 
 export const JEUX = { paires: jouerPaires, puzzle: jouerPuzzle, juge: jouerJuge, plan: jouerPlan, architecte: jouerArchitecte, qualif: jouerPaires };
 export const NOMS_MODES = {
+  atelier: ['L’atelier du cas pratique', 'Construire sa copie : faits, problèmes, syllogismes, conseil'],
   paires: ['Paires', 'Relier arrêts, apports et années, contre la montre'],
   puzzle: ['Puzzle d’arrêt', 'Reconstituer la fiche, puis trouver le problème de droit'],
   juge: ['Le juge, c’est toi', 'Trancher une affaire et motiver ta décision'],

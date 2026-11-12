@@ -1,5 +1,5 @@
 // Contrôle du contenu : références, champs obligatoires et règles anti-devinette.
-import { lireContenu, lireObligations, lireObligations1, lireAdmin2 } from './parse.mjs';
+import { lireContenu, lireObligations, lireObligations1, lireAdmin2, lireAteliers } from './parse.mjs';
 import { indexer, creerRng, optionsProbleme, blocsPuzzle, casJuge, roundPlan, planOf, roundArchitecte, grillePaires, composerDefi, composerBoss, questionsDunk, tirerDunk } from '../app/js/engine.js';
 
 const erreurs = [];
@@ -204,6 +204,29 @@ controlerObligations(indexer(lireObligations(), 2), 2);
 }
 { const a1 = indexer(lireContenu()); if (questionsDunk(a1, a1.zones.map((z) => z.id), Math.random).length < 300) erreurs.push('trop peu de questions de dunk en administratif'); }
 { const a2 = indexer(lireAdmin2()); if (questionsDunk(a2, a2.zones.map((z) => z.id), Math.random).length < 200) erreurs.push('trop peu de questions de dunk en administratif, équipe 2'); }
+
+// L'atelier du cas pratique : chaque cas doit se jouer jusqu'au bout.
+for (const [fichier, nom, sources] of [['ateliers.mjs', 'obligations', [[1, lireObligations1()], [2, lireObligations()]]], ['ateliers-admin.mjs', 'administratif', [[1, lireContenu()], [2, lireAdmin2()]]]]) {
+  for (const [equipe, c] of sources) {
+    const zs = new Set(c.zones.map((z) => z.id));
+    for (const a of await lireAteliers(equipe, fichier)) {
+      const e = (m) => erreurs.push(`atelier ${nom}, équipe ${equipe}, ${a.id} : ${m}`);
+      const faitsTexte = a.enonce.filter((x) => x.f).map((x) => x.f);
+      for (const z of a.zones) if (!zs.has(z)) e(`chambre ${z} inconnue`);
+      for (const f of faitsTexte) if (!a.faits[f]) e(`fait ${f} sans qualification`);
+      for (const f of Object.keys(a.faits)) if (!faitsTexte.includes(f)) e(`fait ${f} absent de l’énoncé`);
+      if (![1, 2, 3].includes(a.niveau)) e('niveau invalide');
+      if (!a.question || a.conseil?.length < 3) e('question ou conseil incomplet');
+      for (const p of a.problemes) {
+        const s = a.syllo[p.id];
+        if (!s) { e(`problème ${p.id} sans syllogisme`); continue; }
+        if (s.regle?.length !== 3 || s.leurres?.length < 2) e(`${p.id} : règle ou leurres incomplets`);
+        if (s.conclusion?.length !== 3 || !s.conditions?.length) e(`${p.id} : conclusion ou conditions incomplètes`);
+        for (const [, f, v] of s.conditions) { if (f && !a.faits[f]) e(`${p.id} : fait ${f} inconnu`); if (!['oui', 'non', 'hypo'].includes(v)) e(`${p.id} : valeur ${v}`); }
+      }
+    }
+  }
+}
 
 if (erreurs.length) { console.error(`\n${erreurs.length} erreur(s) :\n- ` + [...new Set(erreurs)].slice(0, 60).join('\n- ')); process.exit(1); }
 console.log('\nContenu valide.');

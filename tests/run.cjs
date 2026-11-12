@@ -601,20 +601,17 @@ async function debordement(p, nom) {
   assert.equal(await e1.locator('.porte-equipe').count(), 0, 'question posée une seule fois');
   await e1.locator('.porte-oblig').click(); await e1.waitForSelector('.tribune');
   let ixe = await e1.evaluate(() => ({ eq: window.__app.ix.equipe, zones: window.__app.ix.zones.length, cas: window.__app.ix.cas.map((c) => c.id), travaux: window.__app.ix.zones.filter((z) => z.travaux).map((z) => z.id), arrets: window.__app.ix.arrets.map((a) => a.id) }));
-  assert.equal(ixe.eq, 1); assert.equal(ixe.zones, 13); assert.deepEqual(ixe.travaux, [13]);
+  assert.equal(ixe.eq, 1); assert.equal(ixe.zones, 14); assert.deepEqual(ixe.travaux, []);
   assert.ok(!ixe.arrets.includes('mixte2006'), 'pas d’arrêt propre à l’équipe 2');
   assert.ok(!ixe.cas.includes('michel'), 'pas de cas propre à l’équipe 2');
-  // Douze chambres, puis la violence en travaux, sans bouton de révision.
+  // Quatorze chambres, toutes ouvertes au travail : la violence (TD 5) et l'ordre public (TD 6) comprises.
   await e1.evaluate(() => window.__app.aller('carte')); await e1.waitForSelector('.salle');
-  assert.equal(await e1.locator('.salle').count(), 13);
+  assert.equal(await e1.locator('.salle').count(), 14);
   await debordement(e1, 'chambres équipe 1');
   await e1.screenshot({ path: CAP + 'equipe-chambres.png', fullPage: true });
-  await e1.locator('.salle', { hasText: 'La violence' }).locator('button').click();
-  await e1.waitForSelector('.avis-travaux');
-  assert.equal(await e1.locator('.cta').count(), 0, 'aucun exercice en travaux');
-  await e1.locator('.quitter').click(); await e1.waitForSelector('.salle');
+  assert.equal(await e1.locator('.salle', { hasText: 'L’ordre public' }).count(), 1, 'chambre de l’ordre public');
   // Chaque chambre du parcours compose une audience et une révision.
-  for (const z of [1, 3, 6, 10, 12]) {
+  for (const z of [1, 3, 6, 10, 12, 13, 14]) {
     const r = await e1.evaluate((id) => { const ix = window.__app.ix; return ix.cartes.filter((a) => a.zones.includes(id)).length; }, z);
     assert.ok(r > 0, `chambre ${z} vide`);
   }
@@ -996,6 +993,29 @@ async function debordement(p, nom) {
     await at.close();
   }
   log('atelier ok');
+
+  // L'atelier en droit administratif : chaque cas des deux équipes, puis Vers l'examen (Appel) qui l'inclut.
+  for (const eq of [1, 2]) {
+    const at = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+    const ap = await at.newPage(); ap.on('pageerror', (x) => erreurs.push(x.message));
+    ap.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
+    await ap.goto(URLB + `?test&equipe=${eq}`); await ap.waitForSelector('.tribune');
+    const nb = await ap.evaluate(() => window.__app.ix.ateliers.length);
+    assert(nb >= (eq === 1 ? 4 : 7), `cas d’administratif pour l’équipe ${eq}`);
+    await ap.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; });
+    for (let k = 0; k < nb + 1; k++) {
+      const niv = [1, 2, 'hasard'][k % 3];
+      await ap.evaluate(() => window.__app.aller('role')); await ap.locator('.role-ligne[data-mode="atelier"]').click();
+      await ap.locator(`[data-niveau="${niv}"]`).click(); await ap.waitForSelector('.at-dossier');
+      if (k === 0) { await ap.screenshot({ path: CAP + `atelier-admin-${eq}.png` }); await debordement(ap, 'atelier admin'); }
+      await jouerParfait(ap); await textePropre(ap);
+      await ap.tap('text=Retour au Palais'); await ap.waitForSelector('.tribune');
+    }
+    await ap.evaluate(() => window.__app.aller('examen')); await ap.locator('.role-ligne[data-mode="niveau-1"]').click();
+    await ap.waitForSelector('.quitter'); await jouer(ap); await ap.waitForSelector('.resultats');
+    await at.close();
+  }
+  log('atelier administratif ok');
 
   // Vers l'examen : Appel et Cassation, avec les épreuves à réponse libre, dans les deux matières.
   const ex = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
