@@ -19,7 +19,7 @@ const apportDe = (a, zones) => a.ap[a.zones.find((z) => zones.includes(z)) ?? a.
 export function roundExamen(ix, type, zones, dus, deja) {
   const arrets = ix.arrets.filter((a) => dans(zones)(a) && !a.nf && Object.keys(a.ap).length);
   // L1 : Notion flash, la définition à écrire de mémoire.
-  if (type === 'flash' && ix.matiere === 'intro') {
+  if (type === 'flash' && (ix.matiere === 'intro' || ix.matiere === 'constit')) {
     const n = prendre(ix.articles.filter(dans(zones)), dus, deja); if (!n) return null;
     return { type, notion: true, id: n.id, nom: n.nom, an: '', ref: n.etiquette, attendu: n.regle, complement: n.ex ? `Exemple du cours : ${n.ex}` : n.pg };
   }

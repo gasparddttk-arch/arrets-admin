@@ -1468,3 +1468,142 @@ html[data-effets='non'] .feuille { display: none; }
 /* Le bandeau de mise à jour attend la fin de la séance. */
 body:has(#onglets[hidden]) .maj { display: none; }
 .demande-notifs .boite-actions { display: grid; gap: 6px; }
+
+/* DROIT CONSTITUTIONNEL : l'architecte des pouvoirs, le nuancier des États, la plume du constituant. */
+.porte-constit { --m1: var(--m-plan-1); --m2: var(--m-plan-2); }
+.role-ligne[data-mode='pouvoirs'] { --m1: #2F64D0; --m2: #2F64D0; }
+.role-ligne[data-mode='nuancier'] { --m1: #8A4FC4; --m2: #8A4FC4; }
+.role-ligne[data-mode='plume'] { --m1: #9A5B2E; --m2: #9A5B2E; }
+[data-theme='pastel'] .role-ligne[data-mode='pouvoirs'] { --m1: #5C86E6; --m2: #5C86E6; }
+[data-theme='pastel'] .role-ligne[data-mode='nuancier'] { --m1: #A57AD8; --m2: #A57AD8; }
+[data-theme='pastel'] .role-ligne[data-mode='plume'] { --m1: #B9794A; --m2: #B9794A; }
+[data-theme='rose'] .role-ligne[data-mode='nuancier'] { --m1: #B25CB8; --m2: #B25CB8; }
+
+/* L'architecte : des pastilles en cercle, des flèches courbes qui se tracent. */
+.ecran.pouvoirs { display: flex; flex-direction: column; }
+.ar-verbes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.ar-puce { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 999px; background: var(--banc-fort); color: var(--texte); font: 600 13px var(--ui); transition: opacity .3s; }
+.ar-puce b { color: var(--titre-or); font-weight: 800; }
+.ar-puce.faite { opacity: .32; text-decoration: line-through; }
+.ar-scene { position: relative; width: min(100%, 380px, 44vh); aspect-ratio: 1; margin: 12px auto 0; border-radius: 30px;
+  background: radial-gradient(circle at 50% 50%, var(--banc-fort), var(--banc) 72%); box-shadow: inset 0 0 0 1.5px var(--carte-bord); }
+.ar-scene.secoue { animation: tremble .4s ease both; }
+.ar-toile { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ar-fleche { fill: none; stroke-width: 1.15; stroke-linecap: round; }
+.ar-fleche.juste { stroke: var(--or); }
+.ar-fleche.pose { filter: drop-shadow(0 0 1.2px var(--or)); }
+.ar-fleche.faux { stroke: var(--faux); }
+.ar-fleche.revele { stroke: var(--texte-2); opacity: .8; }
+.ar-fleche.brise { opacity: 0; transition: opacity .4s; }
+.ar-pointe { fill: var(--or); }
+.ar-pointe.faux { fill: var(--faux); }
+.ar-scene.acheve .ar-fleche { animation: ar-allume 1.1s ease-in-out 2; }
+@keyframes ar-allume { 50% { stroke-width: 1.9; filter: drop-shadow(0 0 2.4px var(--or)); } }
+.ar-organe { position: absolute; z-index: 2; transform: translate(-50%, -50%); min-width: 70px; max-width: 108px; padding: 9px 10px; border: 0; border-radius: 16px;
+  font: 700 13px/1.12 var(--ui); background: var(--papier-1); color: var(--papier-texte); box-shadow: 0 6px 16px var(--ombre), inset 0 0 0 1.5px var(--papier-bord);
+  transition: transform .2s cubic-bezier(.3, 1.4, .5, 1), box-shadow .2s, background .2s; animation: ar-entre .4s cubic-bezier(.3, 1.4, .5, 1) both; }
+.ar-organe:nth-child(4) { animation-delay: .05s; } .ar-organe:nth-child(5) { animation-delay: .1s; } .ar-organe:nth-child(6) { animation-delay: .15s; } .ar-organe:nth-child(7) { animation-delay: .2s; }
+@keyframes ar-entre { from { opacity: 0; transform: translate(-50%, -50%) scale(.6); } }
+.ar-organe.source { background: var(--or); color: var(--or-texte); transform: translate(-50%, -50%) scale(1.08); box-shadow: 0 0 0 5px color-mix(in srgb, var(--or) 35%, transparent), 0 8px 20px var(--ombre); }
+.ar-organe.cible-possible { animation: ar-pouls 1.4s ease-in-out infinite; }
+.ar-organe.touche { box-shadow: 0 0 0 3px var(--trait), 0 8px 20px var(--ombre); }
+@keyframes ar-pouls { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--trait) 35%, transparent), 0 6px 16px var(--ombre); } }
+.ar-scene.fige .ar-organe { pointer-events: none; }
+.ar-etiquettes { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.ar-verbe { position: absolute; transform: translate(-50%, -50%); padding: 3px 8px; border-radius: 999px; white-space: nowrap; font: 700 11px var(--ui);
+  background: var(--encre); color: var(--or); box-shadow: inset 0 0 0 1px var(--or); animation: ar-apparait .3s .3s both; }
+.ar-verbe.faux { color: var(--faux); box-shadow: inset 0 0 0 1px var(--faux); }
+.ar-verbe.revele { color: var(--texte-2); box-shadow: inset 0 0 0 1px var(--texte-2); }
+.ar-verbe.brise { opacity: 0; transition: opacity .4s; }
+@keyframes ar-apparait { from { opacity: 0; transform: translate(-50%, -50%) scale(.6); } }
+.ar-note { min-height: 46px; margin: 12px 2px 0; font: 15px/1.35 var(--ui); color: var(--texte-2); }
+.ar-note.juste { color: var(--texte); }
+.ar-note.faux { color: var(--faux); }
+.ar-menu { position: fixed; z-index: 30; left: 12px; right: 12px; bottom: calc(12px + var(--bas-sur)); max-width: 460px; margin: 0 auto; padding: 14px;
+  border-radius: 24px; background: var(--banc); box-shadow: 0 -10px 40px var(--ombre), inset 0 0 0 1.5px var(--carte-bord); animation: ar-monte .26s cubic-bezier(.3, 1.2, .5, 1); }
+.ar-menu[hidden] { display: none; }
+@keyframes ar-monte { from { transform: translateY(30px); opacity: 0; } }
+.ar-menu-titre { margin: 0 0 10px; text-align: center; font: 700 14px var(--ui); color: var(--texte-2); }
+.ar-menu-choix { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ar-choix { min-height: 48px; padding: 10px 8px; border: 0; border-radius: 14px; font: 700 15px/1.15 var(--ui); background: var(--banc-fort); color: var(--texte); transition: transform .12s; }
+.ar-choix:active { transform: scale(.96); background: var(--or); color: var(--or-texte); }
+.ar-menu .bouton-lien { display: block; margin: 10px auto 0; }
+.ar-recap { margin: 0; padding-left: 18px; }
+.ar-recap li { margin-bottom: 8px; font-size: 16px; line-height: 1.3; }
+.ar-recap b { display: block; }
+
+/* Le nuancier : un jeton de papier, une bande en dégradé, des épingles qui s'y plantent. */
+.ecran.nuancier { display: flex; flex-direction: column; }
+.nu-axe { display: flex; justify-content: space-between; margin-top: 6px; font: 600 12px var(--ui); color: var(--texte-2); }
+.nu-pile { min-height: 168px; display: grid; place-items: center; margin: 12px 0 6px; }
+.nu-jeton { width: 100%; max-width: 300px; padding: 20px 18px; box-sizing: border-box; border-radius: 20px; text-align: center; cursor: grab; touch-action: none;
+  background: var(--papier-1); color: var(--papier-texte); box-shadow: 0 12px 28px var(--ombre), inset 0 0 0 1.5px var(--papier-bord);
+  transition: transform .25s cubic-bezier(.3, 1.3, .5, 1); animation: nu-arrive .38s cubic-bezier(.3, 1.3, .5, 1); }
+.nu-jeton p { margin: 0; font: 19px/1.3 var(--corps); }
+.nu-jeton.tenue { cursor: grabbing; transition: none; box-shadow: 0 20px 40px var(--ombre), inset 0 0 0 2px var(--or); }
+@keyframes nu-arrive { from { transform: translateY(-24px) scale(.9); opacity: 0; } }
+.nu-cadre { position: relative; padding-top: 48px; }
+.nu-bande { display: grid; grid-template-columns: repeat(4, 1fr); height: 96px; border-radius: 22px; overflow: hidden;
+  background: linear-gradient(90deg, #2F4FD0 0%, #6A55D2 33%, #B24E9E 66%, #E8902E 100%); box-shadow: 0 10px 24px var(--ombre); }
+[data-theme='pastel'] .nu-bande { background: linear-gradient(90deg, #6F86F0 0%, #9A82E8 33%, #D47AB4 66%, #F2AE5C 100%); }
+[data-theme='rose'] .nu-bande { background: linear-gradient(90deg, #9C3F63 0%, #C2508A 33%, #E9557F 66%, #EDB49C 100%); }
+.nu-zone { display: grid; place-items: end center; padding: 8px 4px 10px; border: 0; border-right: 1px solid rgba(255, 255, 255, .28); background: transparent;
+  color: #fff; font: 700 13px/1.15 var(--ui); text-shadow: 0 1px 3px rgba(0, 0, 0, .4); transition: background .2s, box-shadow .2s; }
+.nu-zone:last-child { border-right: 0; }
+.nu-zone.vise { background: rgba(255, 255, 255, .24); }
+.nu-zone.indique { background: rgba(255, 255, 255, .3); box-shadow: inset 0 0 0 3px #fff; }
+.nu-epingles { position: absolute; left: 0; right: 0; top: 0; height: 48px; pointer-events: none; }
+.nu-epingle { position: absolute; left: calc(var(--x) + var(--r) * 18px - 18px); bottom: 4px; transform: translateX(-50%); animation: nu-plante .45s cubic-bezier(.3, 1.6, .5, 1) both; }
+.nu-epingle i { display: block; width: 16px; height: 16px; border-radius: 50%; background: var(--or); box-shadow: 0 0 0 3px var(--encre), 0 4px 8px var(--ombre); }
+.nu-epingle i::after { content: ''; position: absolute; left: 7px; top: 16px; width: 2px; height: 12px; background: currentColor; color: var(--texte-2); }
+.nu-epingle.proche i { background: var(--orange-2); }
+.nu-epingle.faux i { background: var(--faux); }
+@keyframes nu-plante { from { transform: translate(-50%, -40px); opacity: 0; } }
+.nu-consigne { min-height: 64px; margin: 14px 2px 0; padding-left: 12px; border-left: 3px solid transparent; font: 15px/1.35 var(--ui); color: var(--texte-2); }
+.nu-consigne.juste { border-color: var(--juste); color: var(--texte); }
+.nu-consigne.proche { border-color: var(--orange-2); color: var(--texte); }
+.nu-consigne.faux { border-color: var(--faux); color: var(--texte); }
+
+/* La plume : un article sur papier, des mots qui s'écrivent à l'encre, un sceau de cire. */
+.ecran.plume { display: flex; flex-direction: column; }
+.pl-feuille { position: relative; margin-top: 10px; padding: 20px 20px 34px; border-radius: 8px 8px 22px 22px;
+  background: var(--papier-1);
+  color: var(--papier-texte); box-shadow: 0 14px 30px var(--ombre), inset 0 0 0 1.5px var(--papier-bord); animation: nu-arrive .4s cubic-bezier(.3, 1.3, .5, 1); }
+.pl-ref { margin: 0 0 8px; font: 700 12px var(--ui); letter-spacing: .02em; opacity: .62; }
+.pl-texte { margin: 0; font: 20px/1.55 var(--corps); }
+.pl-trou { display: inline-block; min-width: 86px; height: 1.15em; margin: 0 2px; vertical-align: -.2em; border-bottom: 2px dashed currentColor; opacity: .4; }
+.pl-trou.cible { opacity: 1; border-bottom-color: var(--or-3); animation: pl-cligne 1.2s ease-in-out infinite; }
+@keyframes pl-cligne { 50% { border-bottom-color: transparent; } }
+.pl-trou .pl-encre { display: none; }
+.pl-trou.ecrit { min-width: 0; height: auto; opacity: 1; border-bottom: 2px solid var(--or-3); animation: none; }
+.pl-trou.ecrit .pl-encre { display: inline; font-style: italic; font-weight: 600; animation: pl-ecrit .5s ease-out both; }
+@keyframes pl-ecrit { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.pl-cachet { position: absolute; right: 14px; bottom: -26px; width: 82px; height: 82px; box-sizing: border-box; padding: 10px; border-radius: 50%; display: grid; place-items: center;
+  text-align: center; font: 800 12px/1.1 var(--ui); color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .45);
+  background: radial-gradient(circle at 35% 30%, var(--cire-1), var(--cire-2) 55%, var(--cire-3)); box-shadow: 0 6px 14px var(--ombre), inset 0 -4px 8px rgba(0, 0, 0, .25);
+  opacity: 0; transform: scale(2.4) rotate(-14deg); pointer-events: none; }
+.pl-cachet.pose { animation: pl-scelle .45s cubic-bezier(.3, 1.4, .5, 1) forwards; }
+@keyframes pl-scelle { to { opacity: 1; transform: scale(1) rotate(-14deg); } }
+.pl-consigne { min-height: 22px; margin: 36px 2px 0; text-align: center; font: 15px/1.35 var(--ui); color: var(--texte-2); }
+.pl-tuiles { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-top: 14px; padding-bottom: 16px; }
+.pl-tuile { min-height: 48px; padding: 10px 18px; border: 0; border-radius: 14px; font: italic 600 18px var(--corps); background: var(--banc-fort); color: var(--texte);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, .22); animation: pl-tombe .35s cubic-bezier(.3, 1.4, .5, 1) both; transition: transform .12s; }
+.pl-tuile:nth-child(2) { animation-delay: .05s; } .pl-tuile:nth-child(3) { animation-delay: .1s; }
+.pl-tuile:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, .22); }
+.pl-tuile.faux { background: var(--faux-fond); color: var(--faux); box-shadow: inset 0 0 0 1.5px var(--faux); animation: tremble .4s ease both; }
+.pl-tuile.juste { background: var(--or); color: var(--or-texte); }
+@keyframes pl-tombe { from { transform: translateY(-14px); opacity: 0; } }
+.pl-sceaux { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 340px; }
+.pl-sceau { justify-self: center; width: 100%; max-width: 140px; aspect-ratio: 1; padding: 14px; border: 0; border-radius: 50%; display: grid; place-items: center;
+  font: 700 13px/1.15 var(--ui); color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .45);
+  background: radial-gradient(circle at 35% 30%, var(--cire-1), var(--cire-2) 55%, var(--cire-3));
+  box-shadow: 0 6px 14px var(--ombre), inset 0 -5px 10px rgba(0, 0, 0, .25), inset 0 3px 6px rgba(255, 255, 255, .25);
+  animation: pl-tombe .4s cubic-bezier(.3, 1.4, .5, 1) both; transition: transform .15s, filter .3s, opacity .3s; }
+.pl-sceau:nth-child(2) { animation-delay: .06s; } .pl-sceau:nth-child(3) { animation-delay: .12s; } .pl-sceau:nth-child(4) { animation-delay: .18s; }
+.pl-sceau:active:not(:disabled) { transform: scale(.94) rotate(-4deg); }
+.pl-sceau.juste { box-shadow: 0 0 0 4px var(--juste), 0 6px 14px var(--ombre); }
+.pl-sceau.faux { filter: grayscale(.7); opacity: .55; }
+.pl-sceau:disabled:not(.juste):not(.faux) { opacity: .4; }
+.pl-cite { margin: 0; font: 18px/1.5 var(--corps); }
+.pl-cite b { color: var(--titre-or); }
+.ar-scene.fige { width: min(100%, 340px, 36vh); }

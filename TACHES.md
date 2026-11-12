@@ -24,6 +24,13 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 ### 4. Cas pratique L1
 * **Statut** : ⚪ Attente suite du cours (sources du droit, jurisprudence).
 
+### 7. L1, droit constitutionnel (Pr Le Divellec, équipe 2) : relecture
+* **Statut** : 🟡 À relire par Gaspard
+* **Fichier concerné** : `content/constit.mjs` ; jeux dans `app/js/jeux-constit.js`
+* **Détail** : leçons 1 à 6 et TD 1 à 6. Ouvert à toute la L1 (l'équipe 1 n'a que cette matière). 10 chambres, dont 4 en travaux (IIe-IIIe Républiques, facettes de la constitution, justice constitutionnelle, Allemagne). 89 notions, 23 citations de la plaquette, 4 frises, 6 sujets.
+* **Jeux propres** : l'architecte des pouvoirs (6 régimes : Angleterre XVIIIe, États-Unis 1787, 1791, Charte 1814, Weimar, Autriche 1920), le nuancier des États (21 jetons), la plume du constituant (24 articles recopiés de la plaquette).
+* **À ajouter à chaque nouvelle leçon** : notions, régimes (IIIe République), articles (lois de 1875), et retirer `travaux` de la chambre.
+
 ### 6. L1, introduction au droit, équipe 2 : relecture
 * **Statut** : 🟡 À relire par Gaspard
 * **Fichier concerné** : `content/intro2.mjs` (reprend `intro.mjs` et l'adapte)

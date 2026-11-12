@@ -36,6 +36,7 @@ export const MATIERES = [
   { id: 'admin', nom: 'Droit administratif', institution: 'Conseil d’État', rangs: RANGS },
   { id: 'oblig', nom: 'Droit des obligations', institution: 'Cour de cassation', rangs: RANGS_OBLIG },
   { id: 'intro', nom: 'Introduction au droit', institution: 'Cour de cassation', rangs: RANGS_OBLIG, annee: 'L1' },
+  { id: 'constit', nom: 'Droit constitutionnel', institution: 'Conseil constitutionnel', rangs: RANGS_OBLIG, annee: 'L1' },
 ];
 export const matiereDe = (id) => MATIERES.find((m) => m.id === id);
 
@@ -138,6 +139,7 @@ function etatInitial() {
     matiere: 'admin', equipe: 2, equipeChoisie: false, adminEquipe: 2, adminParEquipe: {}, gains: { jour: null, n: 0 },
     oblig: matiereVierge(),
     intro: matiereVierge(),
+    constit: matiereVierge(),
     signalements: [],
     dunk: { infini: false, record: 0, parties: 0, paniers: 0 },
     serie: { n: 0, dernier: null, record: 0 },
@@ -170,7 +172,9 @@ function fusion(base, x) {
   o.oblig = { ...base.oblig, ...ob, gains: { ...base.oblig.gains, ...(ob.gains || {}) }, zones: { ...base.oblig.zones, ...(ob.zones || {}) } };
   const il = x.intro || {};
   o.intro = { ...base.intro, ...il, gains: { ...base.intro.gains, ...(il.gains || {}) }, zones: { ...base.intro.zones, ...(il.zones || {}) } };
-  if (!['admin', 'oblig', 'intro'].includes(o.matiere)) o.matiere = 'admin';
+  const ct = x.constit || {};
+  o.constit = { ...base.constit, ...ct, gains: { ...base.constit.gains, ...(ct.gains || {}) }, zones: { ...base.constit.zones, ...(ct.zones || {}) } };
+  if (!['admin', 'oblig', 'intro', 'constit'].includes(o.matiere)) o.matiere = 'admin';
   return o;
 }
 
@@ -220,7 +224,7 @@ export function alignerAdmin() {
 export let etat = etatInitial();
 export let rembourse = 0;
 // La progression de la matière ouverte, ou de celle demandée.
-export const M = (m = etat.matiere) => (m === 'oblig' ? etat.oblig : m === 'intro' ? etat.intro : etat);
+export const M = (m = etat.matiere) => (m === 'oblig' ? etat.oblig : m === 'intro' ? etat.intro : m === 'constit' ? etat.constit : etat);
 export const remplacerEtat = (e) => { etat = fusion(etatInitial(), e); migrer(); alignerAdmin(); sauver(); };
 
 // Les anciennes tenues disparaissent : ce qu'elles ont coûté revient en jetons.
@@ -348,7 +352,7 @@ export function ajouterSemaine(n) {
   etat.semaine.xp += n;
 }
 export const rang = (m = etat.matiere) => palier(matiereDe(m).rangs, M(m).xp);
-export const rangGeneral = () => palier(RANGS_GENERAL, etat.xp + etat.oblig.xp + (etat.intro?.xp || 0));
+export const rangGeneral = () => palier(RANGS_GENERAL, etat.xp + etat.oblig.xp + (etat.intro?.xp || 0) + (etat.constit?.xp || 0));
 
 // Pièces gagnées aujourd'hui dans une matière, et ce qu'il reste à gagner avant le plafond.
 export function gainsDuJour(m = etat.matiere) {

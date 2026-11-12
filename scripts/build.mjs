@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { lireContenu, lireObligations, lireObligations1, lireIntro, lireAdmin2 } from './parse.mjs';
+import { lireContenu, lireObligations, lireObligations1, lireIntro, lireAdmin2, lireConstit } from './parse.mjs';
 
 const SORTIE = 'docs';
 rmSync(SORTIE, { recursive: true, force: true });
@@ -24,6 +24,7 @@ writeFileSync(join(SORTIE, 'admin2.json'), JSON.stringify({ ...lireAdmin2(), ver
 writeFileSync(join(SORTIE, 'oblig1.json'), JSON.stringify({ ...lireObligations1(), version: date }));
 writeFileSync(join(SORTIE, 'intro.json'), JSON.stringify({ ...(await lireIntro()), version: date }));
 writeFileSync(join(SORTIE, 'intro2.json'), JSON.stringify({ ...(await lireIntro('intro2.mjs')), version: date }));
+writeFileSync(join(SORTIE, 'constit.json'), JSON.stringify({ ...(await lireConstit()), version: date }));
 
 const fichiers = [];
 (function parcourir(d) {

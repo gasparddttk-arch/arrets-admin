@@ -512,6 +512,15 @@ export const NOMS_MODES_OBLIG = {
   frise: ['Frise de la jurisprudence', 'Placer chaque décision à sa date'],
   plan: ['Le bon plan', 'Choisir le meilleur plan et diagnostiquer les autres'],
 };
+export const NOMS_MODES_CONSTIT = {
+  pouvoirs: ['L’architecte des pouvoirs', 'Relier les organes : qui élit, nomme, renverse, dissout'],
+  nuancier: ['Le nuancier des États', 'De l’État unitaire à la confédération, chaque État à sa nuance'],
+  plume: ['La plume du constituant', 'Rétablir un article, puis le sceller de sa source'],
+  mot: ['Le mot du juriste', 'Six essais pour trouver le mot d’une définition'],
+  quiadit: ['Qui a dit ?', 'Une citation de la plaquette, quatre auteurs'],
+  memory: ['Memory', 'Retrouver chaque notion et sa définition'],
+  frise: ['La frise', 'De la Grande Charte à 1830, chaque étape à sa date'],
+};
 export const NOMS_MODES_INTRO = {
   tri: ['Le tri du greffe', 'Droit, morale, religion ou convenance : jette la carte du bon côté'],
   mot: ['Le mot du juriste', 'Six essais pour trouver le mot d’une définition'],

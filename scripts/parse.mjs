@@ -395,13 +395,36 @@ export async function lireIntro(fichier = 'intro.mjs') {
     matiere: 'intro', zones: c.zones, arrets: [], articles, familles: [], juges: [], cas: [], qualifs: [], remedes: [],
     frises: c.frises, questions: [], lexique, syllogismes: [], sujets: c.sujets,
     defauts: Object.fromEntries(Object.entries(DEFAUTS).map(([k, [l, t]]) => [k, { l, t }])),
-    tri: c.tri.map(([t, k, w], i) => ({ id: `tri-${i}`, t, k, w })),
-    rangement: c.rangement.map(([t, k, w], i) => ({ id: `rg-${i}`, t, k, w })),
+    tri: (c.tri || []).map(([t, k, w], i) => ({ id: `tri-${i}`, t, k, w })),
+    rangement: (c.rangement || []).map(([t, k, w], i) => ({ id: `rg-${i}`, t, k, w })),
     citations: c.citations.map(([a, t, z, ctx], i) => ({ id: `cit-${i}`, a, nom: auteur(a), t, zones: [z], ctx: ctx || null })),
     idees: c.idees.map(([a, t, z]) => ({ a, nom: auteur(a), t, zones: [z] })),
     auteurs: c.auteurs,
-    scanner: c.scanner.map(([t, src, manque, w], i) => ({ id: `sc-${i}`, t, src, manque, w })),
+    scanner: (c.scanner || []).map(([t, src, manque, w], i) => ({ id: `sc-${i}`, t, src, manque, w })),
     mots: c.mots.map(([mot, indice, carte, z], i) => ({ id: `mot-${i}`, mot, indice, carte, zones: [z] })),
+  };
+}
+
+// L1, DROIT CONSTITUTIONNEL (Pr Le Divellec) : même forme que l'introduction, plus les données
+// des trois jeux propres à la matière (régimes, nuancier, textes).
+const COURTS = { ddhc: 'DDHC 1789', c1791: '1791', charte1814: 'Charte 1814', charte1830: 'Charte 1830', weimar: 'Weimar 1919', autriche: 'Autriche 1920' };
+export async function lireConstit() {
+  const c = await import(new URL('../content/constit.mjs', import.meta.url));
+  const base = await lireIntro('constit.mjs');
+  // Un texte à trous : « {bon|leurre|leurre} » devient un morceau à choisir.
+  const morceaux = (t) => t.split(/(\{[^}]+\})/).filter(Boolean).map((m) => {
+    if (!m.startsWith('{')) return typo(m);
+    const [bon, ...leurres] = m.slice(1, -1).split('|');
+    return { bon: typo(bon), leurres: leurres.map(typo) };
+  });
+  return {
+    ...base, matiere: 'constit', tri: [], rangement: [], scanner: [],
+    liensTypes: c.liensTypes,
+    regimes: c.regimes.map((r) => ({ ...r, nom: typo(r.nom), organes: r.organes.map(([id, n]) => [id, typo(n)]), liens: r.liens.map((l) => [l[0], l[1], l[2], typo(l[3])]), pieges: r.pieges.map((l) => [l[0], l[1], l[2], typo(l[3])]) })),
+    nuances: c.nuances,
+    nuancier: c.nuancier.map(([t, k, w], i) => ({ id: `nu-${i}`, t: typo(t), k, w: typo(w), zones: [2] })),
+    sources: Object.fromEntries(Object.entries(c.sources).map(([k, nom]) => [k, { k, nom: typo(nom), court: COURTS[k] }])),
+    textes: c.textes.map(([src, ref, t, zones], i) => ({ id: `tx-${i}`, src, ref, morceaux: morceaux(t), zones })),
   };
 }
 

@@ -236,7 +236,7 @@ function tirerOblig(ix, type, zones, dus, rng, deja) {
 // DUNK SHOT ------------------------------------------------------------------------
 // Une liste de questions rapides pour les chambres ouvertes. n : niveau de difficulté, de 1 à 3.
 export function questionsDunk(ix, zones, rng = Math.random) {
-  if (ix.matiere === 'intro') return questionsIntro(ix, zones, rng);
+  if (estL1(ix)) return questionsIntro(ix, zones, rng);
   const dans = dansZones(zones);
   const travaux = new Set(ix.zones.filter((z) => z.travaux).map((z) => z.id));
   const tag = (x) => (x.zones.every((z) => travaux.has(z)) ? 'En travaux' : null);
@@ -280,7 +280,7 @@ export function tirerDunk(liste, tir, dus, deja, rng = Math.random) {
 }
 
 export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new Set()) {
-  if (ix.matiere === 'intro') return tirerIntro(ix, type, zones, dus, rng, deja);
+  if (estL1(ix)) return tirerIntro(ix, type, zones, dus, rng, deja);
   if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, dus, rng, deja);
   const d = dispo(ix, zones);
   const prendre = (liste) => {
@@ -307,7 +307,7 @@ export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new S
 }
 
 export function composerDefi(ix, zones, dus, rng = Math.random) {
-  if (ix.matiere === 'intro') return composerDefiIntro(ix, zones, dus, rng);
+  if (estL1(ix)) return composerDefiIntro(ix, zones, dus, rng);
   const deja = new Set();
   if (ix.matiere === 'oblig') {
     const milieu = melange(['cas', choix(['remede', 'frise'], rng), choix(['remede', 'frise', 'plan'], rng)], rng);
@@ -319,7 +319,7 @@ export function composerDefi(ix, zones, dus, rng = Math.random) {
 
 // Audience solennelle : les cinq modes, plus une épreuve au hasard.
 export function composerBoss(ix, zone, rng = Math.random) {
-  if (ix.matiere === 'intro') return composerBossIntro(ix, zone, rng);
+  if (estL1(ix)) return composerBossIntro(ix, zone, rng);
   const deja = new Set();
   if (ix.matiere === 'oblig') return melange(['qualif', 'cas', 'remede', 'frise', 'plan', 'cas'], rng).map((t) => tirerRound(ix, t, [zone], [], rng, deja));
   const types = melange(['paires', 'puzzle', 'juge', 'plan', 'architecte', choix(['puzzle', 'juge'], rng)], rng);
@@ -329,9 +329,18 @@ export function composerBoss(ix, zone, rng = Math.random) {
 // L1, INTRODUCTION AU DROIT ----------------------------------------------------------------
 // Les exercices qu'une chambre peut nourrir. Le tri vient des chambres 1 et 2, le scanner de la 1,
 // le rangement de la 4, la frise des 5 et 6 ; le mot, Memory et Qui a dit ? puisent partout.
+const estL1 = (ix) => ix.matiere === 'intro' || ix.matiere === 'constit';
 export function typesIntro(ix, zones) {
   const z = (ids) => ids.some((i) => zones.includes(i));
   const t = ['memory', 'mot'];
+  if (ix.matiere === 'constit') {
+    if (ix.regimes.some(dansZones(zones))) t.push('pouvoirs');
+    if (z([2])) t.push('nuancier');
+    if (ix.textes.some(dansZones(zones))) t.push('plume');
+    if (ix.citations.filter(dansZones(zones)).length >= 3) t.push('quiadit');
+    if (ix.frises.some(dansZones(zones))) t.push('frise');
+    return t;
+  }
   if (z([1, 2])) t.push('tri');
   if (z([1])) t.push('scanner');
   if (z([4])) t.push('rangement');
@@ -409,6 +418,35 @@ export function tirerIntro(ix, type, zones, dus, rng = Math.random, deja = new S
     case 'frise': {
       const f = choix(ix.frises.filter(dans).length ? ix.frises.filter(dans) : ix.frises, rng);
       return { type, mot: 'étape', ...roundFrise(f, rng) };
+    }
+    case 'pouvoirs': {
+      // Construire le plus souvent ; parfois reconnaître un schéma tout fait.
+      const liste = ix.regimes.filter(dans);
+      const r = prendre(liste.length ? liste : ix.regimes);
+      const mode = rng() < 0.3 ? 'reconnaitre' : 'construire';
+      const propres = [...new Set([...r.liens, ...r.pieges].map((l) => l[2]))];
+      const autres = melange(Object.keys(ix.liensTypes).filter((k) => !propres.includes(k)), rng);
+      const verbes = Object.keys(ix.liensTypes).filter((k) => propres.includes(k) || autres.slice(0, Math.max(1, 5 - propres.length)).includes(k));
+      const options = melange([r, ...melange(ix.regimes.filter((x) => x.id !== r.id), rng).slice(0, 3)], rng).map((x) => ({ id: x.id, nom: x.nom }));
+      return { type, id: r.id, mode, regime: r, types: ix.liensTypes, verbes, options };
+    }
+    case 'nuancier': {
+      // Six jetons, au moins un par nuance quand c'est possible.
+      const libres = ix.nuancier.filter((x) => !deja.has(x.id));
+      const base = libres.length >= 6 ? libres : ix.nuancier;
+      const parNuance = ix.nuances.map((_, k) => melange(base.filter((x) => x.k === k), rng));
+      const pris = parNuance.map((l) => l[0]).filter(Boolean);
+      for (const x of melange(base.filter((y) => !pris.includes(y)), rng)) { if (pris.length >= 6) break; pris.push(x); }
+      for (const x of pris) deja.add(x.id);
+      return { type, nuances: ix.nuances, jetons: melange(pris, rng) };
+    }
+    case 'plume': {
+      const liste = ix.textes.filter(dans);
+      const t = prendre(liste.length ? liste : ix.textes);
+      const morceaux = t.morceaux.map((m) => (typeof m === 'string' ? m : { bon: m.bon, options: melange([m.bon, ...m.leurres], rng) }));
+      const autres = melange(Object.keys(ix.sources).filter((k) => k !== t.src), rng).slice(0, 3);
+      const sources = melange([t.src, ...autres], rng).map((k) => ix.sources[k]);
+      return { type, id: t.id, texte: { ...t, morceaux }, sources };
     }
     default: throw new Error('mode inconnu ' + type);
   }

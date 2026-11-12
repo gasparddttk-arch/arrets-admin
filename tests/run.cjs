@@ -38,6 +38,12 @@ const pasL1 = (p) => p.evaluate(() => {
   if (grille && !grille.querySelector('.retourne') && !grille.querySelector('.pleine')) { for (const l of grille.dataset.mot) q(`.mot-touche[data-touche="${l}"]`).click(); return clic(q('.mot-touche[data-touche="OK"]')); }
   const piece = q('.rg-piece[data-bon]'); if (piece) return clic(q(`.rg-colonne[data-col="${piece.dataset.bon}"]`));
   const med = q('.qad-medaillon[data-ok="true"]:not([disabled])'); if (med) return clic(med);
+  // Droit constitutionnel : l'architecte, le nuancier, la plume.
+  const ar = q('.ecran.pouvoirs[data-reste]');
+  if (ar && q('.ar-organe')) { const reste = JSON.parse(ar.dataset.reste); if (reste.length) { const [de, a, t] = reste[0]; q(`.ar-organe[data-id="${de}"]`).click(); q(`.ar-organe[data-id="${a}"]`).click(); const c = q(`.ar-choix[data-type="${t}"]`); return clic(c); } }
+  const jeton = q('.nu-jeton[data-bon]'); if (jeton && !jeton.style.opacity) return clic(q(`.nu-zone[data-k="${jeton.dataset.bon}"]`));
+  const trou = q('.pl-trou.cible'); if (trou) return clic(q(`.pl-tuile[data-mot="${trou.dataset.m}"]:not([disabled])`));
+  const sceau = q('.pl-sceau[data-ok="true"]:not([disabled])'); if (sceau) return clic(sceau);
   const cartes = [...document.querySelectorAll('.mem-carte:not(.trouvee):not(.ouverte)')];
   if (cartes.length && !document.querySelector('.mem-carte.ouverte:not(.trouvee)')) { const a = cartes[0]; const b2 = cartes.find((c) => c !== a && c.dataset.paire === a.dataset.paire); a.click(); b2.click(); return true; }
   return false;
@@ -845,8 +851,10 @@ async function debordement(p, nom) {
   assert.ok(await yan.locator('[data-annee="L3"]').isDisabled(), 'L3 fermée');
   await yan.screenshot({ path: CAP + 'annee.png' }); await debordement(yan, 'année');
   await yan.locator('[data-annee="L1"]').click(); await yan.waitForSelector('[data-equipe-l1="3"]');
-  assert.ok(await yan.locator('[data-equipe-l1="1"]').isDisabled(), 'équipe 1 en travaux');
-  await yan.locator('[data-equipe-l1="3"]').click(); await yan.waitForSelector('.tribune');
+  assert.ok(!(await yan.locator('[data-equipe-l1="1"]').isDisabled()), 'équipe 1 ouverte au droit constitutionnel');
+  await yan.locator('[data-equipe-l1="3"]').click(); await yan.waitForSelector('.porte-constit');
+  assert.equal(await yan.locator('.porte-intro').count(), 1, 'introduction proposée à l’équipe 3');
+  await yan.locator('.porte-intro').click(); await yan.waitForSelector('.tribune');
   let ea = await etat(yan); assert.equal(ea.annee, 'L1'); assert.equal(ea.equipeL1, 3); assert.equal(ea.matiere, 'intro', 'la L1 ouvre l’introduction au droit');
   assert.match(await yan.locator('.bouton-matiere').innerText(), /Introduction au droit/);
   await yan.reload(); await yan.waitForSelector('.tribune');
@@ -893,7 +901,8 @@ async function debordement(p, nom) {
   const de = await l2e.newPage(); de.on('pageerror', (x) => erreurs.push(x.message));
   de.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
   await de.goto(URLB + '?test&annee'); await de.locator('[data-annee="L1"]').click();
-  await de.locator('[data-equipe-l1="2"]').click(); await de.waitForSelector('.tribune');
+  await de.locator('[data-equipe-l1="2"]').click(); await de.waitForSelector('.porte-intro');
+  await de.locator('.porte-intro').click(); await de.waitForSelector('.tribune');
   let e2 = await etat(de); assert.equal(e2.equipeL1, 2); assert.equal(e2.matiere, 'intro');
   const ixE2 = await de.evaluate(() => ({ zones: window.__app.ix.zones.length, ids: window.__app.ix.articles.map((a) => a.id) }));
   assert.equal(ixE2.zones, 6); assert.ok(ixE2.ids.includes('preteur') && ixE2.ids.includes('droit-objectif'), 'notions de l’équipe 2 et notions communes');
@@ -923,6 +932,40 @@ async function debordement(p, nom) {
   }
   await l2e.close();
   log('L1 équipe 2 ok');
+
+  // L1, droit constitutionnel : ouvert à toutes les équipes, ses trois jeux propres, ses chambres en travaux.
+  const dc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const co = await dc.newPage(); co.on('pageerror', (x) => erreurs.push(x.message));
+  co.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
+  await co.goto(URLB + '?test&annee'); await co.locator('[data-annee="L1"]').click();
+  await co.locator('[data-equipe-l1="1"]').click(); await co.waitForSelector('.porte-constit');
+  assert.equal(await co.locator('.porte-intro').count(), 0, 'pas d’introduction pour l’équipe 1');
+  assert.match(await co.locator('.porte-constit').innerText(), /équipe 2/);
+  await debordement(co, 'matières L1'); await co.screenshot({ path: CAP + 'constit-matieres.png' });
+  await co.locator('.porte-constit').click(); await co.waitForSelector('.tribune');
+  assert.equal((await etat(co)).matiere, 'constit');
+  const ixC = await co.evaluate(() => ({ zones: window.__app.ix.zones.length, travaux: window.__app.ix.zones.filter((z) => z.travaux).length, notions: window.__app.ix.articles.length }));
+  assert.equal(ixC.zones, 10); assert.equal(ixC.travaux, 4); assert(ixC.notions >= 80, 'au moins quatre-vingts notions');
+  await co.evaluate(() => window.__app.aller('carte')); await co.waitForSelector('.salle');
+  await debordement(co, 'chambres constit'); await co.screenshot({ path: CAP + 'constit-chambres.png', fullPage: true });
+  await co.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; window.__app.aller('role'); });
+  for (const m of ['pouvoirs', 'nuancier', 'plume']) assert.equal(await co.locator(`.role-ligne[data-mode="${m}"]`).count(), 1, `mode ${m}`);
+  assert.equal(await co.locator('.role-ligne[data-mode="tri"]').count(), 0, 'pas de tri en droit constitutionnel');
+  for (const m of ['pouvoirs', 'pouvoirs', 'pouvoirs', 'nuancier', 'plume', 'plume', 'mot', 'quiadit', 'memory', 'frise']) {
+    await co.evaluate(() => window.__app.aller('role')); await co.locator(`.role-ligne[data-mode="${m}"]`).click();
+    await co.waitForSelector('.quitter'); await co.waitForTimeout(500); await co.screenshot({ path: CAP + `constit-${m}.png` }); await debordement(co, `constit ${m}`);
+    await jouerParfait(co); await textePropre(co); await debordement(co, `constit ${m} résultats`);
+    await co.tap('text=Retour au Palais'); await co.waitForSelector('.tribune');
+  }
+  const eC = await etat(co); assert(eC.constit.xp > 0, 'points en droit constitutionnel'); assert.equal(eC.intro.xp, 0, 'l’introduction ne bouge pas');
+  await co.tap('text=Défi du jour'); await jouerParfait(co); await co.tap('text=Retour au Palais'); await co.waitForSelector('.tribune');
+  for (const niv of [2, 3]) {
+    await co.evaluate(() => window.__app.aller('examen')); await co.locator(`.role-ligne[data-mode="niveau-${niv}"]`).click();
+    await co.waitForSelector('.quitter'); await jouer(co); await co.waitForSelector('.resultats'); await co.tap('text=Retour au Palais'); await co.waitForSelector('.tribune');
+  }
+  await co.evaluate(() => window.__app.aller('arrets')); assert.match(await co.locator('.page h1').innerText(), /Les notions/);
+  await dc.close();
+  log('droit constitutionnel ok');
 
   // Vers l'examen : Appel et Cassation, avec les épreuves à réponse libre, dans les deux matières.
   const ex = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });

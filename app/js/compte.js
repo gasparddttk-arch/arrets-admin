@@ -98,7 +98,7 @@ export const changerPseudo = (pseudo) => api(`profils?id=eq.${session.user.id}`,
 // Ce qui part en ligne : tout l'état, sauf la séance en cours et ce qui décrit le compte lui-même.
 function aEnvoyer() {
   const { enCours, compte, ...reste } = etat; void enCours; void compte;
-  return { ...reste, oblig: { ...etat.oblig, enCours: null }, intro: { ...etat.intro, enCours: null } };
+  return { ...reste, oblig: { ...etat.oblig, enCours: null }, intro: { ...etat.intro, enCours: null }, constit: { ...etat.constit, enCours: null } };
 }
 // Le nom d'une fiche à revoir, pour le rappel de Lexou : l'appli fournit le nom lisible.
 let nommer = () => null;
@@ -111,15 +111,15 @@ function ficheARevoir() {
 // Ce que voient les amis : jamais le détail des fiches.
 export function resume() {
   const j = jour(); const s = etat.serie;
-  const maitrises = ['admin', 'oblig', 'intro'].reduce((n, m) => n + Object.values(M(m).arrets || {}).filter((a) => a.b >= 5).length, 0);
+  const maitrises = ['admin', 'oblig', 'intro', 'constit'].reduce((n, m) => n + Object.values(M(m).arrets || {}).filter((a) => a.b >= 5).length, 0);
   return {
     jour: j, serie: s.dernier >= j - 1 ? s.n : 0, sceau: s.dernier === j, grade: rangGeneral().nom,
-    xp: (etat.xp || 0) + (etat.oblig?.xp || 0) + (etat.intro?.xp || 0), xpAdmin: etat.xp || 0, xpOblig: etat.oblig?.xp || 0, xpIntro: etat.intro?.xp || 0,
+    xp: (etat.xp || 0) + (etat.oblig?.xp || 0) + (etat.intro?.xp || 0) + (etat.constit?.xp || 0), xpAdmin: etat.xp || 0, xpOblig: etat.oblig?.xp || 0, xpIntro: etat.intro?.xp || 0,
     semaine: lundi(), xpSemaine: etat.semaine?.debut === lundi() ? etat.semaine.xp : 0,
     maitrises, annee: etat.annee || null, equipe: etat.annee === 'L1' ? etat.equipeL1 : etat.equipe || null, seances: etat.stats?.seances || 0, revoir: ficheARevoir(), insigne: etat.insigne || 'aucun',
   };
 }
-const poids = (e) => (e?.xp || 0) + (e?.oblig?.xp || 0) + (e?.intro?.xp || 0) + (e?.stats?.seances || 0);
+const poids = (e) => (e?.xp || 0) + (e?.oblig?.xp || 0) + (e?.intro?.xp || 0) + (e?.constit?.xp || 0) + (e?.stats?.seances || 0);
 
 let envoi = null;
 export async function envoyerProgression() {
