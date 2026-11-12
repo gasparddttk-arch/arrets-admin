@@ -196,6 +196,7 @@ export const adminSignalements = () => rpc('admin_signalements');
 export const adminTraiter = (signalement, fait) => rpc('admin_traiter', { signalement, fait });
 export const adminReglage = () => rpc('admin_lire_reglage');
 export const adminChangerReglage = (statut) => rpc('admin_reglage_nouveaux', { statut });
+export const adminNotifierCompte = (cible, type, donnees) => api('notifications', { method: 'POST', corps: { destinataire: cible, type, donnees: donnees || {}, de: session?.user?.id || null, pousser: true }, prefer: 'return=minimal' }).then(() => pousser()).catch(() => {});
 
 // AMIS --------------------------------------------------------------------------------
 export const monProfil = async () => (await api(`profils?id=eq.${session.user.id}&select=pseudo,code_ami,masquer,notifs,rappel`))?.[0];

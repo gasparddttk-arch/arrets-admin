@@ -17,7 +17,7 @@ import { jouerCas, jouerRemede, jouerFrise } from './jeux-oblig.js';
 import { lancerDunk } from './dunk.js';
 import { activerRappel, etatRappel, estInstallee, abonnementActuel } from './notif.js';
 import { SUPABASE_URL } from './config.js';
-import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifierCompte, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
 const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu,
@@ -1235,6 +1235,8 @@ const TEXTE_NOTIF = {
   defi_recu: (n) => `${n.pseudo} te lance un défi.`,
   defi_resultat: (n) => { const a = n.donnees.moi; const b = n.donnees.lui; return b > a ? `${n.pseudo} a battu ton score : ${pct(b)} contre ${pct(a)}.` : b === a ? `Égalité avec ${n.pseudo} : ${pct(b)}.` : `${n.pseudo} n’a pas battu ton score : ${pct(b)} contre ${pct(a)}.`; },
   ami_defi: (n) => `${n.pseudo} a fini son défi du jour.`,
+  place_testeur: () => 'Une place s’est libérée ! Tu as maintenant accès à Gdroit.',
+  maj_appli: (n) => n.donnees?.titre || 'Une nouvelle version de Gdroit est disponible.',
 };
 
 async function ecranAmis() {
@@ -1462,11 +1464,35 @@ async function ecranAdmin() {
     h('p', { class: 'aide-claire' }, `${quota.testeurs} testeurs sur ${quota.quota} places, ${Math.max(0, quota.quota - quota.testeurs)} restantes. ${quota.sans_acces ? `${pluriel(quota.sans_acces, 'compte')} sans accès.` : ''} Au-delà du quota, un nouveau compte arrive sans accès ; tu peux l’ouvrir depuis sa fiche.`),
     champQuota,
     h('button', { class: 'bouton-fantome', onClick: async () => { const n = Math.round(+champQuota.value); if (!(n >= 0)) return toast('Nombre invalide.'); try { await adminChangerQuota(n); toast(`Quota : ${n} testeurs.`); ecranAdmin(); } catch { toast('Changement refusé.'); } } }, 'Changer le quota'),
+    quota.sans_acces > 0 && Math.max(0, (quota.quota ?? 0) - (quota.testeurs ?? 0)) > 0 ? h('button', { class: 'bouton-or', onClick: async () => {
+      const placesDispos = Math.max(0, (quota.quota ?? 0) - (quota.testeurs ?? 0));
+      const enAttente = comptes.filter((c) => c.acces === 'aucun');
+      const aOuvrir = enAttente.slice(0, placesDispos);
+      if (!aOuvrir.length) return toast('Aucun compte en attente trouvé.');
+      let faits = 0;
+      for (const c of aOuvrir) {
+        try {
+          await adminStatut(c.id, 'testeur');
+          adminNotifierCompte(c.id, 'place_testeur');
+          faits++;
+        } catch { /* suivant */ }
+      }
+      toast(`${pluriel(faits, 'place ouverte')} et notifiée${faits > 1 ? 's' : ''}.`);
+      ecranAdmin();
+    } }, `Ouvrir ${Math.min(quota.sans_acces, Math.max(0, (quota.quota ?? 0) - (quota.testeurs ?? 0)))} place${Math.min(quota.sans_acces, Math.max(0, (quota.quota ?? 0) - (quota.testeurs ?? 0))) > 1 ? 's' : ''} en attente`) : null,
     h('h2', {}, `Retours des testeurs (${ouvertsR.length})`),
     retours.length ? h('ul', { class: 'articles' }, retours.map((x) => h('li', { class: `article admin-signal${x.traite ? ' traite' : ''}` }, h('div', {},
       h('b', {}, NOMS_RETOUR[x.genre] || x.genre), h('p', {}, x.texte),
       h('small', {}, `${x.pseudo || x.email || 'compte supprimé'}, ${quand(x.cree_le)}${x.ecran ? `, depuis ${x.ecran}` : ''}`),
       h('button', { class: 'bouton-lien', onClick: async () => { try { await adminTraiterRetour(x.id, !x.traite); ecranAdmin(); } catch { toast('Pas de connexion.'); } } }, x.traite ? 'Rouvrir' : 'Marquer comme traité'))))) : h('p', { class: 'aide-claire' }, 'Aucun retour pour l’instant.'),
+    h('h2', {}, 'Mise à jour de l’application'),
+    h('p', { class: 'aide-claire' }, 'Prévenir tous les testeurs qu’une nouvelle version est disponible.'),
+    h('button', { class: 'bouton-fantome', onClick: () => {
+      const testeurs = comptes.filter((c) => c.acces === 'testeur');
+      if (!testeurs.length) return toast('Aucun testeur.');
+      for (const t of testeurs) adminNotifierCompte(t.id, 'maj_appli', { titre: 'Une nouvelle version de Gdroit est disponible !' });
+      toast(`${pluriel(testeurs.length, 'testeur notifié')}.`);
+    } }, 'Notifier les testeurs d’une mise à jour'),
     h('h2', {}, 'Nouveaux comptes'),
     h('p', { class: 'aide-claire' }, 'Le statut donné à chaque nouvelle inscription. Passe à « Sans accès » le jour où l’appli devient payante : les comptes existants gardent leur statut.'),
     bascule,
@@ -1486,7 +1512,13 @@ function ficheCompte(c) {
   };
   const statut = moi ? null : h('div', { class: 'bascule' }, ['testeur', 'paye', 'aucun'].map((v) => h('button', { class: c.acces === v ? 'actif' : '', 'aria-pressed': String(c.acces === v), onClick: async () => {
     if (c.acces === v) return;
-    try { await adminStatut(c.id, v); voile.remove(); toast(`${c.pseudo || c.email} : ${NOMS_STATUT[v].toLowerCase()}.`); ecranAdmin(); } catch { toast('Changement refusé.'); }
+    try {
+      await adminStatut(c.id, v);
+      if (v === 'testeur') adminNotifierCompte(c.id, 'place_testeur');
+      voile.remove();
+      toast(`${c.pseudo || c.email} : ${NOMS_STATUT[v].toLowerCase()}${v === 'testeur' ? ' (notifié)' : ''}.`);
+      ecranAdmin();
+    } catch { toast('Changement refusé.'); }
   } }, NOMS_STATUT[v])));
   const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite admin-fiche', role: 'dialog', 'aria-label': `Compte de ${c.pseudo || c.email}` },
     h('h2', {}, c.pseudo || c.email), h('p', { class: 'aide-claire' }, c.email),
@@ -1570,11 +1602,31 @@ async function ouvrirCompte(params) {
 // Au-delà des places de test, le compte existe mais l'appli reste fermée.
 function ecranPlacesPrises() {
   afficherOnglets(false);
+  const conteneurAlerte = h('div', { class: 'places-alerte' });
+  etatRappel().then((r) => {
+    if (r === 'actif') {
+      conteneurAlerte.replaceChildren(h('p', { class: 'aide-claire' }, 'Tu seras prévenu par notification dès qu’une place s’ouvre.'));
+    } else {
+      conteneurAlerte.replaceChildren(h('button', { class: 'bouton-fantome', onClick: async () => {
+        try {
+          await activerRappel();
+          const s = await abonnementActuel();
+          if (s) await inscrireAppareil(s);
+          toast('C’est noté ! Tu seras prévenu dès qu’une place s’ouvre.');
+          conteneurAlerte.replaceChildren(h('p', { class: 'aide-claire' }, 'Tu seras prévenu par notification dès qu’une place s’ouvre.'));
+        } catch (err) {
+          toast(err.message || 'Notifications refusées.');
+        }
+      } }, 'Me prévenir dès qu’une place se libère'));
+    }
+  }).catch(() => {});
+
   racine.replaceChildren(h('main', { class: 'connexion' },
     chouette('pause', { taille: 170, tenue: false }),
     h('h1', {}, 'Les places de test sont prises'),
     h('p', { class: 'connexion-sous' }, 'Gdroit est en test fermé, et les places sont toutes occupées. Ton compte est bien créé : tu pourras entrer dès l’ouverture.'),
     h('p', { class: 'aide-claire' }, `Connecté : ${etat.compte?.email || 'ton compte'}.`),
+    conteneurAlerte,
     h('button', { class: 'bouton-fantome', onClick: () => location.reload() }, 'Réessayer'),
     h('button', { class: 'bouton-lien', onClick: async () => { await deconnexion(); remplacerEtat({}); location.reload(); } }, 'Se déconnecter')));
 }
@@ -1691,6 +1743,7 @@ function guideInstallation() {
 // DÉMARRAGE --------------------------------------------------------------------------
 function bandeauMiseAJour(reg) {
   if (document.querySelector('.maj')) return;
+  toast('Mise à jour disponible : touche pour recharger.');
   document.body.append(h('button', { class: 'maj', onClick: () => { reg.waiting?.postMessage('activer'); } }, 'Nouvelle version disponible : recharger'));
 }
 

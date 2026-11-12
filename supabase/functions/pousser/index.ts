@@ -15,6 +15,8 @@ const TEXTES: Record<string, (p: string, d: Record<string, unknown>) => [string,
     return ['Défi relevé', lui > moi ? `${p} a battu ton score : ${lui} % contre ${moi} %.` : lui === moi ? `Égalité avec ${p} : ${lui} %.` : `${p} n’a pas battu ton score : ${lui} % contre ${moi} %.`];
   },
   ami_defi: (p) => ['Défi du jour', `${p} a fini son défi du jour.`],
+  place_testeur: () => ['Place de test ouverte', 'Une place s’est libérée sur Gdroit ! Lexou t’attend au Palais.'],
+  maj_appli: (_, d) => ['Mise à jour de Gdroit', (d.titre as string) || 'Une nouvelle version est en ligne. Viens voir les nouveautés !'],
 };
 
 const entetes = { 'Access-Control-Allow-Origin': ORIGINE, 'Access-Control-Allow-Headers': 'authorization, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
@@ -41,9 +43,10 @@ Deno.serve(async (req) => {
   for (const n of liste) {
     const { data: apps } = await base.from('appareils').select('point, abonnement').eq('proprietaire', n.destinataire);
     const [title, body] = (TEXTES[n.type] || TEXTES.demande)(pseudo, n.donnees || {});
+    const url = n.type === 'place_testeur' || n.type === 'maj_appli' ? './' : './?amis';
     for (const a of apps || []) {
       try {
-        await webpush.sendNotification(a.abonnement, JSON.stringify({ title, body, ami: true, tag: `${n.type}-${n.id}` }), { TTL: 3600 * 12 });
+        await webpush.sendNotification(a.abonnement, JSON.stringify({ title, body, ami: true, tag: `${n.type}-${n.id}`, url }), { TTL: 3600 * 12 });
         envoyees++;
       } catch (e) {
         const code = (e as { statusCode?: number }).statusCode;
