@@ -377,9 +377,11 @@ export function lireContenu() {
 }
 
 // L1, introduction au droit : le contenu est écrit en JavaScript dans content/intro.mjs.
-export async function lireIntro() {
-  const c = await import(new URL('../content/intro.mjs', import.meta.url));
-  const SANS_LEXIQUE = new Set(['regle', 'decision', 'trois-adjectifs', 'qualites-code', 'coutumes-droit-ecrit', 'autonomie', 'generale-impersonnelle', 'lege', 'devoir-etre']);
+// L1 : l'équipe 3 dans intro.mjs, l'équipe 2 dans intro2.mjs, qui reprend l'équipe 3 et l'adapte à son cours.
+export async function lireIntro(fichier = 'intro.mjs') {
+  const c = await import(new URL(`../content/${fichier}`, import.meta.url));
+  const SANS_LEXIQUE = new Set(['regle', 'decision', 'trois-adjectifs', 'qualites-code', 'coutumes-droit-ecrit', 'autonomie', 'generale-impersonnelle', 'lege', 'devoir-etre',
+    'statut-personnel', 'auguste-comte', 'marxisme', 'invention-droit', 'redaction-coutumes', 'ordonnances', 'redacteurs', 'critere-sociologique', 'droit-commun-special']);
   const articles = c.notions.map((n, i) => ({
     id: n.id, num: String(i + 1), nom: n.nom, titre: n.nom, etiquette: n.etiquette, zones: n.z, imp: 2,
     regle: n.regle, c: n.c, ex: n.ex, pg: n.pg, mot: n.mot, ap: Object.fromEntries(n.z.map((z) => [z, n.regle])), article: 1, notion: 1,

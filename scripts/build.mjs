@@ -23,6 +23,7 @@ writeFileSync(join(SORTIE, 'oblig.json'), JSON.stringify({ ...lireObligations(),
 writeFileSync(join(SORTIE, 'admin2.json'), JSON.stringify({ ...lireAdmin2(), version: date }));
 writeFileSync(join(SORTIE, 'oblig1.json'), JSON.stringify({ ...lireObligations1(), version: date }));
 writeFileSync(join(SORTIE, 'intro.json'), JSON.stringify({ ...(await lireIntro()), version: date }));
+writeFileSync(join(SORTIE, 'intro2.json'), JSON.stringify({ ...(await lireIntro('intro2.mjs')), version: date }));
 
 const fichiers = [];
 (function parcourir(d) {

@@ -54,6 +54,8 @@ let ix = null; // Le contenu de la matière ouverte.
 const CONTENUS = {};
 const PAR_EQUIPE = {};
 const ADMIN_PAR_EQUIPE = {};
+const INTRO_PAR_EQUIPE = {};
+const indexerIntro = () => { CONTENUS.intro = INTRO_PAR_EQUIPE[etat.equipeL1] ||= indexer(INTRO_PAR_EQUIPE.brut[etat.equipeL1] || INTRO_PAR_EQUIPE.brut[3]); };
 const racine = document.getElementById('app');
 // Les termes juridiques soulignés : chaque nouvel écran est relu, avec le lexique de la matière ouverte.
 let lexiquePret = null; let relecture = 0;
@@ -136,7 +138,8 @@ function rejoindreEquipe(n) {
 const PROFS = { 1: 'Obligations : Pr Molfessis', 2: 'Administratif : Pr Plessix' };
 
 // L'année se choisit une fois, à l'arrivée. La L3 n'a pas encore de cours.
-const EQUIPES_L1 = [{ n: 1, pret: false }, { n: 2, pret: false }, { n: 3, pret: true, detail: 'Introduction au droit civil' }];
+const EQUIPES_L1 = [{ n: 1, pret: false }, { n: 2, pret: true, detail: 'Introduction au droit civil' }, { n: 3, pret: true, detail: 'Introduction au droit civil' }];
+const equipeL1Prete = (n) => EQUIPES_L1.some((e) => e.n === n && e.pret);
 function ecranAnnee() {
   afficherOnglets(false);
   const carte = (a, txt, pret, action) => h('button', { class: `porte porte-annee${pret ? '' : ' en-travaux'}`, 'data-annee': a, disabled: !pret, 'aria-disabled': pret ? null : 'true', onClick: () => { if (!pret) return; son('carte'); vibrer(8); action(); } },
@@ -158,16 +161,17 @@ function ecranEquipeL1() {
     h('span', { class: 'porte-txt' }, h('b', {}, `Équipe ${e.n}`), h('small', {}, e.pret ? e.detail : 'En travaux')));
   montrer(h('section', { class: 'choix' },
     h('div', { class: 'choix-tete' }, h('h1', {}, 'Quelle est ton équipe ?'), chouette('debout', { taille: 128, vivante: true, classe: 'chouette-guide' })),
-    h('p', { class: 'page-sous' }, 'Pour l’instant, seul le cours de l’équipe 3 est dans l’appli. Les autres arrivent.'),
+    h('p', { class: 'page-sous' }, 'Les cours des équipes 2 et 3 sont dans l’appli. L’équipe 1 arrive.'),
     h('div', { class: 'portes' }, EQUIPES_L1.map(choix)),
     h('button', { class: 'bouton-lien', onClick: ecranAnnee }, 'Changer d’année')));
 }
 
-// La L1 n'a qu'une matière pour l'instant : l'introduction au droit de l'équipe 3.
+// La L1 n'a qu'une matière pour l'instant : l'introduction au droit, selon l'équipe.
 function accueilL1() {
-  if (etat.equipeL1 !== 3) { ecranEquipeL1(); return; }
-  if (etat.matiere !== 'intro') { etat.matiere = 'intro'; filtre = { texte: '', zone: 0, type: 'arrets' }; sauver(); }
-  ix = CONTENUS.intro;
+  if (!equipeL1Prete(etat.equipeL1)) { ecranEquipeL1(); return; }
+  if (etat.matiere !== 'intro') { etat.matiere = 'intro'; sauver(); }
+  filtre = { texte: '', zone: 0, type: 'arrets' };
+  indexerIntro(); ix = CONTENUS.intro;
   aller('palais');
 }
 
@@ -1197,7 +1201,9 @@ function profil() {
     h('h2', {}, 'Images personnelles'), blocImages(),
     h('h2', {}, 'Ton année'),
     h('div', { class: 'bascule', 'data-annees': '' }, ['L1', 'L2', 'L3'].map((a) => h('button', { class: etat.annee === a ? 'actif' : '', disabled: a === 'L3', 'aria-pressed': etat.annee === a ? 'true' : 'false', onClick: () => { if (etat.annee === a) return; son('tap'); if (a === 'L1') ecranEquipeL1(); else { choisirAnnee('L2'); if (estIntro()) { etat.matiere = 'admin'; ix = CONTENUS.admin; filtre = { texte: '', zone: 0, type: 'arrets' }; sauver(); } carriereVue = null; profil(); } } }, a === 'L3' ? 'L3 bientôt' : a))),
-    etat.annee === 'L1' ? [h('h2', {}, 'Ton équipe de L1'), h('p', { class: 'aide-claire' }, `Équipe ${etat.equipeL1} : introduction au droit civil. Les équipes 1 et 2 arrivent bientôt.`)] : null,
+    etat.annee === 'L1' ? [h('h2', {}, 'Ton équipe de L1'),
+      h('div', { class: 'bascule', 'data-equipes-l1': '' }, EQUIPES_L1.filter((e) => e.pret).map((e) => h('button', { class: etat.equipeL1 === e.n ? 'actif' : '', 'aria-pressed': etat.equipeL1 === e.n ? 'true' : 'false', onClick: () => { if (etat.equipeL1 === e.n) return; son('tap'); choisirAnnee('L1', e.n); filtre = { texte: '', zone: 0, type: 'arrets' }; indexerIntro(); if (estIntro()) ix = CONTENUS.intro; toast(`Équipe ${e.n} : tes chambres et tes exercices sont prêts.`); profil(); } }, `Équipe ${e.n}`))),
+      h('p', { class: 'aide-claire' }, 'L’introduction au droit suit le cours de ton équipe. L’équipe 1 arrive bientôt. Tes notions communes, tes pièces et ta série te suivent.')] : null,
     etat.annee === 'L1' ? null : h('h2', {}, 'Ton équipe de L2'),
     etat.annee === 'L1' ? null : h('div', { class: 'bascule' }, [1, 2].map((n) => h('button', { class: etat.equipe === n ? 'actif' : '', 'aria-pressed': etat.equipe === n ? 'true' : 'false', onClick: () => { if (etat.equipe === n) return; son('tap'); rejoindreEquipe(n); toast(`Équipe ${n} : tes chambres et tes exercices sont prêts.`); profil(); } }, `Équipe ${n}`))),
     etat.annee === 'L1' ? null : h('p', { class: 'aide-claire' }, 'Le droit administratif et le droit des obligations suivent le cours de ton équipe. Tes pièces, ta série, tes tenues et les fiches communes te suivent.'),
@@ -1792,7 +1798,7 @@ async function demarrer() {
   // Une ouverture lente : la chouette patiente, montre en main.
   const attente = setTimeout(() => racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Le Palais ouvre ses portes'))), 700);
   if (params.has('decalage')) fixerDecalage(+params.get('decalage'));
-  const [admin, admin2, oblig2, oblig1, intro] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('admin2.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), fetch('intro.json').then((r) => r.json()), charger().then(chargerImages)]);
+  const [admin, admin2, oblig2, oblig1, intro, intro2] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('admin2.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), fetch('intro.json').then((r) => r.json()), fetch('intro2.json').then((r) => r.json()), charger().then(chargerImages)]);
   clearTimeout(attente);
   if (!(await ouvrirCompte(params))) { enregistrerServiceWorker(); return; }
   // Une ancienne sauvegarde connaît déjà le jour de la dernière séance.
@@ -1802,9 +1808,10 @@ async function demarrer() {
   PAR_EQUIPE[1] = oblig1; PAR_EQUIPE[2] = oblig2;
   // Les tests gardent l'administratif de l'équipe 1, sauf s'ils demandent une équipe.
   ADMIN_PAR_EQUIPE.brut = { 1: admin, 2: params.has('test') && !params.has('equipe') ? admin : admin2 };
-  indexerAdmin(); indexerObligations(); CONTENUS.intro = indexer(intro);
+  INTRO_PAR_EQUIPE.brut = { 2: intro2, 3: intro };
+  indexerAdmin(); indexerObligations(); indexerIntro();
   if (params.has('test') && !params.has('choix')) etat.matiere = ['oblig', 'intro'].includes(params.get('matiere')) ? params.get('matiere') : etat.matiere;
-  if (params.has('test') && params.get('matiere') === 'intro') { etat.annee = 'L1'; etat.equipeL1 = 3; }
+  if (params.has('test') && params.get('matiere') === 'intro') { etat.annee = 'L1'; etat.equipeL1 = +params.get('l1') || 3; indexerIntro(); }
   // Une matière qui n'est pas de l'année revient à la première de l'année.
   if (etat.annee && !matieresAnnee().some((m) => m.id === etat.matiere)) etat.matiere = matieresAnnee()[0].id;
   ix = CONTENUS[etat.matiere];

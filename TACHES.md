@@ -24,6 +24,12 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 ### 4. Cas pratique L1
 * **Statut** : ⚪ Attente suite du cours (sources du droit, jurisprudence).
 
+### 6. L1, introduction au droit, équipe 2 : relecture
+* **Statut** : 🟡 À relire par Gaspard
+* **Fichier concerné** : `content/intro2.mjs` (reprend `intro.mjs` et l'adapte)
+* **Détail** : même plan que l'équipe 3, six chambres. Notions communes au même id (progression partagée). Retirés car absents du cours de l'équipe 2 : règles supplétive et impérative, lex mercatoria, quieta non movere, jus et lex, Discours préliminaire, Bentham, Jestaz, Stendhal. Ajouts : Dunbar, harmonie sociale, critère sociologique, statut personnel au Liban, Comte, marxisme, droit commun et spécial, Schiavone, préteur, rédaction des coutumes, ordonnances, égalité civile, volontarisme, rédacteurs, Fenet, citations (Schmitt, saint Augustin, Paul, Labbé, Brassens, Roubier, Ripert, Carbonnier), sujet « Droit et religion ».
+* **Fonctionnement** : `etat.equipeL1` choisit le contenu (`intro2.json` ou `intro.json`) ; les chambres de l'autre équipe sont rangées dans `etat.intro.parEquipe`.
+
 ### 5. Droit administratif, équipe 2 (Pr Plessix) : relecture
 * **Statut** : 🟡 En ligne, à relire par Gaspard
 * **Fichiers concernés** : `content/admin2/*.txt` (arrêts, familles, juge, frises, sujets, commentaires)

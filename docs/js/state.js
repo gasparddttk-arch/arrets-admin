@@ -178,8 +178,19 @@ function fusion(base, x) {
 // Les fiches, les pièces, la série et les tenues restent communes.
 export function choisirAnnee(a, equipe) {
   etat.annee = a;
-  if (a === 'L1' && equipe) etat.equipeL1 = equipe;
+  if (a === 'L1' && equipe) changerEquipeL1(equipe);
   sauver();
+}
+
+// En L1 aussi, chaque équipe a ses chambres ; les notions communes restent acquises.
+export function changerEquipeL1(n) {
+  const o = etat.intro;
+  if (n === etat.equipeL1) return;
+  o.parEquipe = { ...o.parEquipe, [etat.equipeL1]: { zones: o.zones, enCours: o.enCours } };
+  const suite = o.parEquipe[n];
+  o.zones = suite?.zones || zonesVierges();
+  o.enCours = suite?.enCours || null;
+  etat.equipeL1 = n;
 }
 
 export function changerEquipe(n) {

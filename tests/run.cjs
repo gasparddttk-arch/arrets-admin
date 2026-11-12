@@ -888,6 +888,42 @@ async function debordement(p, nom) {
   await l1.close();
   log('L1 ok');
 
+  // L1, équipe 2 : son cours, ses jeux, et le passage d'une équipe à l'autre.
+  const l2e = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const de = await l2e.newPage(); de.on('pageerror', (x) => erreurs.push(x.message));
+  de.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
+  await de.goto(URLB + '?test&annee'); await de.locator('[data-annee="L1"]').click();
+  await de.locator('[data-equipe-l1="2"]').click(); await de.waitForSelector('.tribune');
+  let e2 = await etat(de); assert.equal(e2.equipeL1, 2); assert.equal(e2.matiere, 'intro');
+  const ixE2 = await de.evaluate(() => ({ zones: window.__app.ix.zones.length, ids: window.__app.ix.articles.map((a) => a.id) }));
+  assert.equal(ixE2.zones, 6); assert.ok(ixE2.ids.includes('preteur') && ixE2.ids.includes('droit-objectif'), 'notions de l’équipe 2 et notions communes');
+  assert.ok(!ixE2.ids.includes('lex-mercatoria'), 'pas de notion absente du cours de l’équipe 2');
+  await de.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; });
+  await de.evaluate(() => window.__app.aller('role'));
+  const modesL1 = await de.evaluate(() => [...document.querySelectorAll('.role-ligne[data-mode]')].map((x) => x.dataset.mode).filter((m) => m !== 'cas-l1' && m !== 'dunk'));
+  for (const m of modesL1) {
+    await de.evaluate(() => window.__app.aller('role')); await ouvrirMode(de, m);
+    await de.waitForSelector('.quitter'); await jouer(de); await de.waitForSelector('.resultats');
+    await textePropre(de); await debordement(de, `L1 équipe 2 ${m}`);
+    await de.tap('text=Retour au Palais'); await de.waitForSelector('.tribune');
+  }
+  e2 = await etat(de); assert(e2.intro.xp > 0, 'points gagnés en équipe 2');
+  await de.evaluate(() => { window.__app.etat().intro.zones.gagnees = [1]; window.__app.aller('profil'); });
+  await de.locator('[data-equipes-l1] button', { hasText: 'Équipe 3' }).click();
+  await de.waitForFunction(() => window.__app.etat().equipeL1 === 3);
+  e2 = await etat(de); assert.deepEqual(e2.intro.zones.gagnees, [], 'les chambres de l’équipe 3 sont à part');
+  assert.ok(!(await de.evaluate(() => window.__app.ix.articles.some((a) => a.id === 'preteur'))), 'contenu de l’équipe 3');
+  await de.locator('[data-equipes-l1] button', { hasText: 'Équipe 2' }).click();
+  await de.waitForFunction(() => window.__app.etat().equipeL1 === 2);
+  assert.deepEqual((await etat(de)).intro.zones.gagnees, [1], 'les chambres de l’équipe 2 reviennent');
+  for (let k = 0; k < 2; k++) for (const niv of [2, 3]) {
+    await de.evaluate(() => window.__app.aller('examen')); await de.locator(`.role-ligne[data-mode="niveau-${niv}"]`).click();
+    await de.waitForSelector('.quitter'); await jouer(de); await de.waitForSelector('.resultats');
+    await textePropre(de); await de.tap('text=Retour au Palais'); await de.waitForSelector('.tribune');
+  }
+  await l2e.close();
+  log('L1 équipe 2 ok');
+
   // Vers l'examen : Appel et Cassation, avec les épreuves à réponse libre, dans les deux matières.
   const ex = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
   const xe = await ex.newPage(); xe.on('pageerror', (x) => erreurs.push(x.message));
