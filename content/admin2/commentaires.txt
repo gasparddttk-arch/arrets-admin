@@ -1,0 +1,40 @@
+# Commentaires d'arrêt de l'équipe 2 : version courte et phrases à justifier.
+# &id du sujet
+# date: date de la décision    ref: juridiction et numéro    source: origine du texte
+# res: résumé des faits et de la procédure, rédigé pour l'appli
+# t: extrait cité mot pour mot, vérifié sur la source
+# j: partie || bonne phrase || leurre || leurre || pourquoi
+
+&c-tiktok
+date: 1er avril 2025
+ref: CE, Ass., n° 494511
+source: Plaquette de TD, équipe 2, cinquième document de la deuxième séance
+res: En mai 2024, la Nouvelle-Calédonie connaît des troubles d'une particulière gravité. Le Premier ministre interrompt l'accès au réseau social TikTok, utilisé pour diffuser des appels à la violence. L'état d'urgence est déclaré le lendemain. Des associations et des particuliers demandent au Conseil d'État d'annuler la décision.
+t: la survenue de circonstances exceptionnelles, de nature, notamment, à entraver le fonctionnement régulier des pouvoirs publics
+t: lorsqu'elle est dans l'impossibilité d'agir selon les normes en vigueur
+t: à la condition que de telles mesures soient indispensables au regard des circonstances prévalant à la date de la décision
+t: sous l'entier contrôle du juge administratif
+t: ne fait pas obstacle à ce que l'autorité administrative use, lorsque des circonstances exceptionnelles l'exigent, des pouvoirs mentionnés au point 2
+t: La liberté d'expression et de communication est d'autant plus précieuse que son exercice est une condition de la démocratie
+t: Or la décision attaquée procède à une interruption totale du service pour une durée indéterminée
+t: a ainsi porté une atteinte disproportionnée à la liberté d'expression
+j: 1a || lorsqu'elle est dans l'impossibilité d'agir selon les normes en vigueur || Or la décision attaquée procède à une interruption totale du service pour une durée indéterminée || La liberté d'expression et de communication est d'autant plus précieuse que son exercice est une condition de la démocratie || La condition centrale de la théorie : l'administration ne peut pas faire face avec les règles ordinaires.
+j: 1b || ne fait pas obstacle à ce que l'autorité administrative use, lorsque des circonstances exceptionnelles l'exigent, des pouvoirs mentionnés au point 2 || sous l'entier contrôle du juge administratif || a ainsi porté une atteinte disproportionnée à la liberté d'expression || La déclaration de l'état d'urgence n'efface pas les pouvoirs nés des circonstances exceptionnelles.
+j: 2a || à la condition que de telles mesures soient indispensables au regard des circonstances prévalant à la date de la décision || lorsqu'elle est dans l'impossibilité d'agir selon les normes en vigueur || ne fait pas obstacle à ce que l'autorité administrative use, lorsque des circonstances exceptionnelles l'exigent, des pouvoirs mentionnés au point 2 || Le juge exige une mesure indispensable : c'est le fondement du contrôle de proportionnalité.
+j: 2b || Or la décision attaquée procède à une interruption totale du service pour une durée indéterminée || la survenue de circonstances exceptionnelles, de nature, notamment, à entraver le fonctionnement régulier des pouvoirs publics || à la condition que de telles mesures soient indispensables au regard des circonstances prévalant à la date de la décision || Une coupure totale et sans limite de durée, sans recherche d'alternative, ne peut pas être indispensable.
+
+&c-euronaval
+date: 10 mars 2025
+ref: TC, n° C4336
+source: Plaquette de TD, équipe 2, douzième document de la sixième séance
+res: Le gouvernement interdit aux entreprises israéliennes d'exposer au salon Euronaval des matériels militaires susceptibles d'être utilisés à Gaza ou au Liban. L'organisateur privé du salon retire son stand à une société israélienne, qui saisit le tribunal de commerce de Paris. Celui-ci rejette le déclinatoire et suspend la mesure. Le préfet élève le conflit.
+t: dans le contexte du conflit au Proche-Orient
+t: lors du conseil de défense et de sécurité nationale s'étant tenu le 1er octobre 2024 sous la présidence du Président de la République
+t: dont la société SOGENA s'est bornée à tirer les conséquences
+t: n'est pas détachable de la conduite des relations internationales de la France
+t: la juridiction administrative et la juridiction judiciaire sont l'une et l'autre incompétentes pour en connaître
+t: c'est à bon droit que le conflit a été élevé
+j: 1a || dont la société SOGENA s'est bornée à tirer les conséquences || n'est pas détachable de la conduite des relations internationales de la France || c'est à bon droit que le conflit a été élevé || La société privée n'a rien décidé : elle a seulement exécuté la décision de l'État.
+j: 1b || lors du conseil de défense et de sécurité nationale s'étant tenu le 1er octobre 2024 sous la présidence du Président de la République || dont la société SOGENA s'est bornée à tirer les conséquences || la juridiction administrative et la juridiction judiciaire sont l'une et l'autre incompétentes pour en connaître || La décision vient du sommet de l'exécutif, en conseil de défense.
+j: 2a || n'est pas détachable de la conduite des relations internationales de la France || dans le contexte du conflit au Proche-Orient || dont la société SOGENA s'est bornée à tirer les conséquences || C'est le critère même de l'acte de gouvernement dans l'ordre international.
+j: 2b || la juridiction administrative et la juridiction judiciaire sont l'une et l'autre incompétentes pour en connaître || c'est à bon droit que le conflit a été élevé || n'est pas détachable de la conduite des relations internationales de la France || La conséquence de l'acte de gouvernement : aucun des deux ordres de juridiction ne peut le juger.

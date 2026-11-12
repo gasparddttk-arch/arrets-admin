@@ -83,9 +83,9 @@ function parseArrets(fichiers = ['arrets-1.txt', 'arrets-2.txt', 'arrets-3.txt']
   return out;
 }
 
-function parseFamilles() {
+function parseFamilles(fichier = 'familles.txt') {
   const out = []; let cur = null;
-  for (const raw of D('familles.txt').split('\n')) {
+  for (const raw of D(fichier).split('\n')) {
     const l = raw.trim();
     if (!l || l.startsWith('#')) continue;
     if (l.startsWith('%')) { const [id, titre] = l.slice(1).split('|').map((s) => s.trim()); cur = { id, titre: typo(titre), m: [] }; out.push(cur); continue; }
@@ -96,9 +96,9 @@ function parseFamilles() {
   return out;
 }
 
-function parseJuges() {
+function parseJuges(fichier = 'juge.txt') {
   const out = []; let cur = null;
-  for (const raw of D('juge.txt').split('\n')) {
+  for (const raw of D(fichier).split('\n')) {
     const l = raw.trim();
     if (!l || l.startsWith('#')) continue;
     if (l.startsWith('%')) { cur = { id: l.slice(1).trim(), rx: [] }; out.push(cur); continue; }
@@ -400,5 +400,49 @@ export async function lireIntro() {
     auteurs: c.auteurs,
     scanner: c.scanner.map(([t, src, manque, w], i) => ({ id: `sc-${i}`, t, src, manque, w })),
     mots: c.mots.map(([mot, indice, carte, z], i) => ({ id: `mot-${i}`, mot, indice, carte, zones: [z] })),
+  };
+}
+
+// DROIT ADMINISTRATIF, ÉQUIPE 2 (Pr Plessix) ----------------------------------------
+export const ZONES_ADMIN2 = [
+  { id: 1, titre: 'Un droit à part', lieu: 'Caractères et domaine du droit administratif' },
+  { id: 2, titre: 'La soumission au droit', lieu: 'Légalité, obligation d’agir, urgence, privilège du préalable' },
+  { id: 3, titre: 'Les sources internes', lieu: 'Constitution, Charte de l’environnement, PFRLR, PGD' },
+  { id: 4, titre: 'Les sources supranationales', lieu: 'Traités, Convention européenne, droit de l’Union' },
+  { id: 5, titre: 'Les conflits de normes', lieu: 'Loi, traité, Constitution : qui l’emporte ?' },
+  { id: 6, titre: 'L’administration au sens fonctionnel', lieu: 'Actes de gouvernement, justice, assemblées' },
+].map((z) => ({ ...z, titre: typo(z.titre) }));
+
+// Les fiches de l'équipe 1 reprises gardent leur identifiant : la progression suit l'étudiant qui change d'équipe.
+// Les exercices de l'équipe 1 (juge, faux jumeaux, syllogismes) qui portent sur ces fiches sont repris d'office.
+export function lireAdmin2() {
+  const b = lireContenu();
+  const parId = new Map(b.arrets.map((a) => [a.id, a]));
+  const arrets = parseArrets(['admin2/arrets.txt'], parId);
+  const connues = new Set(arrets.map((a) => a.id));
+  const zonesDe = new Map(arrets.map((a) => [a.id, a.zones]));
+  const juges = [...b.juges.filter((j) => connues.has(j.id)), ...parseJuges('admin2/juge.txt')];
+  const familles = [...b.familles.map((f) => ({ ...f, m: f.m.filter((x) => connues.has(x.id)) })).filter((f) => f.m.length >= 2), ...parseFamilles('admin2/familles.txt')];
+  const syllogismes = b.syllogismes.filter((x) => connues.has(x.carte)).map((x) => ({ ...x, zones: zonesDe.get(x.carte) }));
+  const frise = (f) => (f.herite ? { ...f, e: f.e.map((e) => ({ ...e, carte: connues.has(e.carte) ? e.carte : null })) } : f);
+  const sujet = (x) => {
+    if (!x.herite) return x;
+    const bon = { ...x.bon };
+    for (const k of ['1a', '1b', '2a', '2b']) bon[k] = { ...bon[k], ids: bon[k].ids.filter((id) => connues.has(id)) };
+    return { ...x, bon };
+  };
+  for (const j of juges) if (!connues.has(j.id)) throw new Error(`juge : fiche inconnue ${j.id}`);
+  for (const f of familles) for (const m of f.m) if (!connues.has(m.id)) throw new Error(`faux jumeaux : fiche inconnue ${m.id}`);
+  return {
+    matiere: 'admin',
+    zones: ZONES_ADMIN2,
+    arrets,
+    familles,
+    juges,
+    frises: parseFrises('admin2/frises.txt', b.frises).map(frise),
+    lexique: b.lexique,
+    syllogismes,
+    sujets: avecArret(parseSujets('admin2/sujets.txt', b.sujets), 'admin2/commentaires.txt').map(sujet),
+    defauts: b.defauts,
   };
 }

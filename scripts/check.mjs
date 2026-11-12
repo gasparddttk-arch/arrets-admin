@@ -1,10 +1,12 @@
 // Contrôle du contenu : références, champs obligatoires et règles anti-devinette.
-import { lireContenu, lireObligations, lireObligations1 } from './parse.mjs';
+import { lireContenu, lireObligations, lireObligations1, lireAdmin2 } from './parse.mjs';
 import { indexer, creerRng, optionsProbleme, blocsPuzzle, casJuge, roundPlan, planOf, roundArchitecte, grillePaires, composerDefi, composerBoss, questionsDunk, tirerDunk } from '../app/js/engine.js';
 
-const c = indexer(lireContenu());
-const erreurs = []; const notes = [];
-const err = (m) => erreurs.push(m);
+const erreurs = [];
+// Droit administratif : les deux équipes passent les mêmes contrôles (l'équipe 1 a en plus sa carte de 100 arrêts et ses histoires).
+function controlerAdmin(c, equipe) {
+const notes = [`DROIT ADMINISTRATIF, ÉQUIPE ${equipe}`];
+const err = (m) => erreurs.push(equipe === 1 ? m : `admin, équipe ${equipe} : ${m}`);
 for (const s of c.sujets) verifierArret(s, err);
 // Frises du droit administratif : années dans l'ordre, fiches existantes, question valide.
 const idsCartes = new Set(c.arrets.map((a) => a.id));
@@ -20,7 +22,7 @@ if (ids.size !== c.arrets.length) err('identifiants en double');
 
 const carte = c.arrets.filter((a) => !a.zones.includes(10));
 notes.push(`${carte.length} arrêts de la carte, ${c.arrets.length} au total, ${c.familles.length} familles, ${c.juges.length} cas du juge, ${c.sujets.length} sujets`);
-if (carte.length !== 100) err(`attendu 100 arrêts sur la carte, trouvé ${carte.length}`);
+if (equipe === 1 && carte.length !== 100) err(`attendu 100 arrêts sur la carte, trouvé ${carte.length}`);
 
 for (const a of c.arrets) {
   for (const k of ['h', 'q', 's', 'po']) if (!a[k]) err(`${a.id} : champ ${k} manquant`);
@@ -101,7 +103,7 @@ for (let i = 0; i < 400; i++) {
 }
 for (const s of c.sujets) roundPlan(c, s, rng), roundArchitecte(c, s, rng);
 for (const v of ['apport', 'annee', 'jumeaux']) for (let i = 0; i < 300; i++) {
-  const z = [1 + Math.floor(rng() * 10)]; const g = grillePaires(c, z, rng, 4, v);
+  const z = [1 + Math.floor(rng() * c.zones.length)]; const g = grillePaires(c, z, rng, 4, v);
   if (g.lignes.length < 2) err(`grille trop petite (${v}, zone ${z})`);
   if (new Set(g.lignes.map((l) => l.id)).size !== g.lignes.length) err('doublon dans une grille');
 }
@@ -116,6 +118,9 @@ for (let i = 0; i < 600; i++) {
   if (new Set(noms).size !== noms.length) err(`nom répété dans une grille : ${noms.join(', ')}`);
   if (new Set(g.lignes.map((l) => l.an)).size !== noms.length) err('année répétée dans une grille');
 }
+}
+controlerAdmin(indexer(lireContenu()), 1);
+controlerAdmin(indexer(lireAdmin2()), 2);
 
 // DROIT DES OBLIGATIONS -----------------------------------------------------------
 function controlerObligations(ob, equipe) {
@@ -197,7 +202,8 @@ controlerObligations(indexer(lireObligations(), 2), 2);
     if (n.cas < 2) erreurs.push(`équipe 1, chambre ${z.id} : deux cas au moins pour l'audience`);
   }
 }
-if (questionsDunk(c, c.zones.map((z) => z.id), Math.random).length < 300) erreurs.push('trop peu de questions de dunk en administratif');
+{ const a1 = indexer(lireContenu()); if (questionsDunk(a1, a1.zones.map((z) => z.id), Math.random).length < 300) erreurs.push('trop peu de questions de dunk en administratif'); }
+{ const a2 = indexer(lireAdmin2()); if (questionsDunk(a2, a2.zones.map((z) => z.id), Math.random).length < 200) erreurs.push('trop peu de questions de dunk en administratif, équipe 2'); }
 
 if (erreurs.length) { console.error(`\n${erreurs.length} erreur(s) :\n- ` + [...new Set(erreurs)].slice(0, 60).join('\n- ')); process.exit(1); }
 console.log('\nContenu valide.');

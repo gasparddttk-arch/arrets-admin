@@ -108,7 +108,7 @@ export function revelation(a, ix, { zoneId } = {}) {
       h('span', { class: 'annee' }, a.an),
       h('div', {}, h('h3', {}, a.court), h('p', { class: 'ref' }, a.ref))),
     h('p', { class: 'apport' }, a.ap[z] || Object.values(a.ap)[0]),
-    h('p', { class: 'histoire' }, a.h),
+    a.h ? h('p', { class: 'histoire' }, a.h) : null,
     jum.length ? h('div', { class: 'jumeaux' },
       h('h4', {}, 'À ne pas confondre avec'),
       h('ul', {}, jum.map((j) => h('li', {}, h('b', {}, `${ix.parId.get(j.id).court}, ${ix.parId.get(j.id).an}`), ' ', j.k)))) : null,
@@ -278,7 +278,7 @@ export async function jouerPuzzle(zone, ctx, round, ix) {
       barrePied(continuer('Passer au problème de droit', suite))));
     window.scrollTo(0, 0);
   });
-  const r1 = await qcm(zone, ctx, { surtitre: 'Vu ces faits et cette solution', question: 'Quel était le problème de droit\u00a0?', options: round.problemes.map((o) => ({ ...o })), pourquoiBon: 'C’est la question que l’arrêt tranche.', indice: `${a.h.split('. ')[0]}.` });
+  const r1 = await qcm(zone, ctx, { surtitre: 'Vu ces faits et cette solution', question: 'Quel était le problème de droit\u00a0?', options: round.problemes.map((o) => ({ ...o })), pourquoiBon: 'C’est la question que l’arrêt tranche.', indice: a.h ? `${a.h.split('. ')[0]}.` : undefined });
   const r2 = await qcm(zone, ctx, { surtitre: 'Dernière pièce', question: 'De quel arrêt s’agit-il\u00a0?', options: round.noms.map((n) => ({ t: `${n.nom}, ${n.an}`, ok: n.id === a.id, id: n.id })), pourquoiBon: a.ap[a.zones[0]] });
   if (!r2.ok) ctx.noter(a.id, false, r2.choix.id);
   const ok = bons === 4 && r1.ok && r2.ok;

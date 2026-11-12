@@ -53,6 +53,7 @@ function faireAppel(ids) {
 let ix = null; // Le contenu de la matière ouverte.
 const CONTENUS = {};
 const PAR_EQUIPE = {};
+const ADMIN_PAR_EQUIPE = {};
 const racine = document.getElementById('app');
 // Les termes juridiques soulignés : chaque nouvel écran est relu, avec le lexique de la matière ouverte.
 let lexiquePret = null; let relecture = 0;
@@ -125,11 +126,14 @@ function ouvrirMatiere(id) {
 }
 
 // Le groupe se choisit une fois. Il décide du cours et des exercices de droit des obligations.
+// Le choix vaut pour toute la L2 : droit des obligations et droit administratif.
 const indexerObligations = () => { CONTENUS.oblig = indexer(PAR_EQUIPE[etat.equipe], etat.equipe); CONTENUS.oblig.vus = () => (etat.oblig.exos ||= {}); };
+const indexerAdmin = () => { CONTENUS.admin = ADMIN_PAR_EQUIPE[etat.equipe] ||= indexer(ADMIN_PAR_EQUIPE.brut[etat.equipe]); };
 function rejoindreEquipe(n) {
-  changerEquipe(n); indexerObligations(); filtre = { texte: '', zone: 0, type: 'arrets' };
-  if (etat.matiere === 'oblig') ix = CONTENUS.oblig;
+  changerEquipe(n); indexerObligations(); indexerAdmin(); filtre = { texte: '', zone: 0, type: 'arrets' };
+  if (etat.matiere === 'oblig' || etat.matiere === 'admin') ix = CONTENUS[etat.matiere];
 }
+const PROFS = { 1: 'Obligations : Pr Molfessis', 2: 'Administratif : Pr Plessix' };
 
 // L'année se choisit une fois, à l'arrivée. La L3 n'a pas encore de cours.
 const EQUIPES_L1 = [{ n: 1, pret: false }, { n: 2, pret: false }, { n: 3, pret: true, detail: 'Introduction au droit civil' }];
@@ -174,8 +178,8 @@ function choisirEquipe() {
     h('span', { class: 'porte-txt' }, h('b', {}, `Équipe ${n}`), detail ? h('small', {}, detail) : null));
   montrer(h('section', { class: 'choix' },
     h('div', { class: 'choix-tete' }, h('h1', {}, 'Quelle est ton équipe ?'), chouette('debout', { taille: 128, vivante: true, classe: 'chouette-guide' })),
-    h('p', { class: 'page-sous' }, 'Tu ne verras que le cours et les exercices de ton équipe en droit des obligations. Tu pourras changer dans Profil.'),
-    h('div', { class: 'portes' }, choix(1, 'Cours du Pr Molfessis'), choix(2, null))));
+    h('p', { class: 'page-sous' }, 'Tu ne verras que le cours et les exercices de ton équipe, en droit administratif comme en droit des obligations. Tu pourras changer dans Profil.'),
+    h('div', { class: 'portes' }, choix(1, PROFS[1]), choix(2, PROFS[2]))));
 }
 
 function matieres() {
@@ -188,7 +192,7 @@ function matieres() {
       h('span', { class: 'porte-icone' }, icone(m.id === 'admin' ? 'palais' : 'balance', 34)),
       h('span', { class: 'porte-txt' },
         h('b', {}, m.nom),
-        h('small', {}, m.id === 'oblig' ? `${m.institution}, équipe ${etat.equipe}` : m.id === 'intro' ? `${m.institution}, équipe ${etat.equipeL1}` : m.institution),
+        h('small', {}, m.id === 'oblig' || m.id === 'admin' ? `${m.institution}, équipe ${etat.equipe}` : m.id === 'intro' ? `${m.institution}, équipe ${etat.equipeL1}` : m.institution),
         h('span', { class: 'porte-rang' }, r.nom),
         h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${r.part.toFixed(3)})` })),
         h('small', { class: 'porte-gain' }, gagnes >= PLAFOND_JOUR ? `Plafond atteint : ${monnaie(PLAFOND_JOUR)} aujourd’hui` : `${fmt(gagnes)} sur ${monnaie(PLAFOND_JOUR)} aujourd’hui`)));
@@ -290,7 +294,7 @@ function accueil() {
   const encours = M().enCours;
   montrer(
     barreHaut(),
-    h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); matieres(); } }, icone('matieres', 18), matiereDe(etat.matiere).nom, estOblig() ? `, équipe ${etat.equipe}` : estIntro() ? `, équipe ${etat.equipeL1}` : null),
+    h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); matieres(); } }, icone('matieres', 18), matiereDe(etat.matiere).nom, estIntro() ? `, équipe ${etat.equipeL1}` : `, équipe ${etat.equipe}`),
     aInstaller,
     h('section', { class: 'tribune', 'data-decor': etat.decor },
       h('div', { class: 'serie-bloc' },
@@ -721,7 +725,7 @@ function carte() {
   const audiences = gagnees.filter((id) => parcours.some((z) => z.id === id)).length;
   montrer(barreHaut(), h('section', { class: 'page page-chambres' },
     h('div', { class: 'chambres-tete' }, h('h1', {}, 'Chambres'), h('span', {}, `${audiences} audience${audiences > 1 ? 's' : ''} sur ${parcours.length}`)),
-    h('p', { class: 'page-sous' }, estOblig() ? `Droit des obligations, équipe ${etat.equipe}` : matiereDe(etat.matiere).nom), plan));
+    h('p', { class: 'page-sous' }, estIntro() ? matiereDe(etat.matiere).nom : `${matiereDe(etat.matiere).nom}, équipe ${etat.equipe}`), plan));
 }
 
 function chambreFermee(z) {
@@ -1194,9 +1198,9 @@ function profil() {
     h('h2', {}, 'Ton année'),
     h('div', { class: 'bascule', 'data-annees': '' }, ['L1', 'L2', 'L3'].map((a) => h('button', { class: etat.annee === a ? 'actif' : '', disabled: a === 'L3', 'aria-pressed': etat.annee === a ? 'true' : 'false', onClick: () => { if (etat.annee === a) return; son('tap'); if (a === 'L1') ecranEquipeL1(); else { choisirAnnee('L2'); if (estIntro()) { etat.matiere = 'admin'; ix = CONTENUS.admin; filtre = { texte: '', zone: 0, type: 'arrets' }; sauver(); } carriereVue = null; profil(); } } }, a === 'L3' ? 'L3 bientôt' : a))),
     etat.annee === 'L1' ? [h('h2', {}, 'Ton équipe de L1'), h('p', { class: 'aide-claire' }, `Équipe ${etat.equipeL1} : introduction au droit civil. Les équipes 1 et 2 arrivent bientôt.`)] : null,
-    etat.annee === 'L1' ? null : h('h2', {}, 'Équipe de droit des obligations'),
+    etat.annee === 'L1' ? null : h('h2', {}, 'Ton équipe de L2'),
     etat.annee === 'L1' ? null : h('div', { class: 'bascule' }, [1, 2].map((n) => h('button', { class: etat.equipe === n ? 'actif' : '', 'aria-pressed': etat.equipe === n ? 'true' : 'false', onClick: () => { if (etat.equipe === n) return; son('tap'); rejoindreEquipe(n); toast(`Équipe ${n} : tes chambres et tes exercices sont prêts.`); profil(); } }, `Équipe ${n}`))),
-    etat.annee === 'L1' ? null : h('p', { class: 'aide-claire' }, 'Le droit des obligations suit le cours de ton équipe. Tes pièces, ta série, tes tenues et les fiches communes te suivent.'),
+    etat.annee === 'L1' ? null : h('p', { class: 'aide-claire' }, 'Le droit administratif et le droit des obligations suivent le cours de ton équipe. Tes pièces, ta série, tes tenues et les fiches communes te suivent.'),
     h('h2', {}, 'Réglages'),
     h('div', { class: 'reglages' },
       interrupteur('Sons', 'son'),
@@ -1403,7 +1407,7 @@ async function releverDefi(id) {
   let d;
   try { d = await lireDefi(id); } catch { return toast('Pas de connexion.'); }
   if (!d || d.statut !== 'ouvert') return toast('Ce défi n’est plus ouvert.');
-  if (d.matiere === 'oblig' && d.equipe && d.equipe !== etat.equipe) return toast('Ce défi porte sur le cours de l’autre équipe.');
+  if (d.matiere !== 'intro' && d.equipe && d.equipe !== etat.equipe) return toast('Ce défi porte sur le cours de l’autre équipe.');
   changerMatiereSilencieux(d.matiere);
   lancer({ type: 'defi-ami', titre: `Défi de ${d.pseudo_auteur || 'ton ami'}`, rounds: d.rounds, defiAmi: { id: d.id, pseudo: d.pseudo_auteur, score: d.score_auteur } });
 }
@@ -1411,7 +1415,7 @@ async function releverDefi(id) {
 function suiteDefiAmi(S, moyenne) {
   const d = S.defiAmi; if (!d) return null;
   if (d.cible) {
-    creerDefi(d.cible, d.matiere, d.matiere === 'oblig' ? etat.equipe : null, d.rounds, Math.round(moyenne * 1000) / 1000)
+    creerDefi(d.cible, d.matiere, d.matiere === 'intro' ? null : etat.equipe, d.rounds, Math.round(moyenne * 1000) / 1000)
       .then(() => toast(`Défi envoyé à ${d.pseudo}.`)).catch(() => toast('Le défi n’a pas pu partir. Vérifie ta connexion.'));
     return h('p', { class: 'res-texte' }, `${d.pseudo} va recevoir les mêmes questions. À lui de battre tes ${pct(moyenne)}.`);
   }
@@ -1788,7 +1792,7 @@ async function demarrer() {
   // Une ouverture lente : la chouette patiente, montre en main.
   const attente = setTimeout(() => racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Le Palais ouvre ses portes'))), 700);
   if (params.has('decalage')) fixerDecalage(+params.get('decalage'));
-  const [admin, oblig2, oblig1, intro] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), fetch('intro.json').then((r) => r.json()), charger().then(chargerImages)]);
+  const [admin, admin2, oblig2, oblig1, intro] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('admin2.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), fetch('intro.json').then((r) => r.json()), charger().then(chargerImages)]);
   clearTimeout(attente);
   if (!(await ouvrirCompte(params))) { enregistrerServiceWorker(); return; }
   // Une ancienne sauvegarde connaît déjà le jour de la dernière séance.
@@ -1796,7 +1800,9 @@ async function demarrer() {
   // ?equipe=1 : les tests ouvrent directement une équipe, sans passer par la question.
   if (params.has('equipe')) changerEquipe(+params.get('equipe'));
   PAR_EQUIPE[1] = oblig1; PAR_EQUIPE[2] = oblig2;
-  CONTENUS.admin = indexer(admin); indexerObligations(); CONTENUS.intro = indexer(intro);
+  // Les tests gardent l'administratif de l'équipe 1, sauf s'ils demandent une équipe.
+  ADMIN_PAR_EQUIPE.brut = { 1: admin, 2: params.has('test') && !params.has('equipe') ? admin : admin2 };
+  indexerAdmin(); indexerObligations(); CONTENUS.intro = indexer(intro);
   if (params.has('test') && !params.has('choix')) etat.matiere = ['oblig', 'intro'].includes(params.get('matiere')) ? params.get('matiere') : etat.matiere;
   if (params.has('test') && params.get('matiere') === 'intro') { etat.annee = 'L1'; etat.equipeL1 = 3; }
   // Une matière qui n'est pas de l'année revient à la première de l'année.

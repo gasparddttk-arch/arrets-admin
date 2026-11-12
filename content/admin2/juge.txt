@@ -1,0 +1,91 @@
+# Le juge, c'est toi : équipe 2. Les cas de l'équipe 1 sur des fiches reprises sont ajoutés d'office.
+# %arrêt   c: le cas   d: décisions (la première est la bonne, séparées par " | ")
+# r: bon raisonnement   rx: mauvais raisonnement || pourquoi il est faux
+
+%saint-just
+c: Pour appliquer une loi récente, le préfet fait fermer un établissement et poser les scellés, sans passer par un juge. Le propriétaire de l'immeuble saisit le juge judiciaire, gardien de la propriété. Le préfet élève le conflit. Tu présides le Tribunal des conflits.
+d: Tu confirmes le conflit : l'exécution de la loi relève du juge administratif | Tu annules le conflit : le juge judiciaire protège la propriété | Tu interdis toute exécution forcée par l'administration
+r: Exécuter la loi est un acte administratif, jugé par le juge administratif.
+rx: Toute atteinte portée à la propriété privée relève par principe du seul juge judiciaire. || Faux : ici, l'acte contesté est une mesure d'exécution de la loi par l'administration.
+rx: L'administration ne peut jamais exécuter elle-même ses décisions. || Faux : l'exécution forcée est possible dans les cas que Romieu énumère.
+rx: Le préfet a agi comme simple particulier, propriétaire des scellés. || Faux : il agit en autorité publique, pour exécuter la loi.
+
+%heyries
+c: 1916. Un décret pris au début de la guerre a suspendu la règle qui impose de communiquer son dossier à un fonctionnaire avant de le sanctionner. Un dessinateur du génie, révoqué sans avoir vu son dossier, te demande d'annuler sa révocation.
+d: Tu rejettes la requête : le décret de guerre était légal | Tu annules : un décret ne suspend jamais une loi | Tu renvoies au Parlement, seul juge de la guerre
+r: Les services publics doivent tourner malgré la guerre : la suspension était légale.
+rx: Le principe de légalité interdit au gouvernement, en toute circonstance, d'écarter une loi. || Faux : en circonstances exceptionnelles, la légalité s'élargit, sous le contrôle du juge.
+rx: En temps de guerre, le juge n'a plus aucun contrôle à exercer sur l'administration. || Faux : le juge contrôle justement que les circonstances justifient la mesure.
+rx: La garantie de 1905 ne s'applique qu'aux militaires, pas aux civils du génie. || Faux : la loi de 1905 vise les fonctionnaires civils.
+
+%million-marais
+c: Une commune confie le service des pompes funèbres à une seule entreprise par un contrat de concession. Un concurrent soutient que ce contrat la met en situation d'abuser de sa position dominante. On te demande si le contrat est légal.
+d: Tu examines la concession au regard du droit de la concurrence | Tu refuses : la concurrence ne vise que les entreprises | Tu annules : toute concession est anticoncurrentielle
+r: L'acte administratif doit respecter le droit de la concurrence.
+rx: Une concession de service public échappe par nature au droit de la concurrence. || Faux : c'est précisément ce que l'arrêt refuse.
+rx: Seul le Conseil de la concurrence peut apprécier un abus de position dominante. || Faux : le juge administratif contrôle lui-même la légalité de l'acte au regard de ces règles.
+rx: Une concession exclusive confiée à une seule entreprise est toujours illégale en soi. || Faux : l'exclusivité n'est illégale que si elle conduit à un abus.
+
+%tiktok
+c: Une île connaît des émeutes d'une gravité extrême. Un réseau social diffuse des appels à la violence. Le Premier ministre en coupe l'accès, sans limite de durée et sans chercher de mesure plus ciblée. L'état d'urgence est déclaré le lendemain. Des associations te demandent d'annuler la coupure.
+d: Tu annules : l'atteinte à la liberté d'expression est disproportionnée | Tu rejettes : l'état d'urgence couvre toutes les mesures | Tu te déclares incompétent : c'est un acte de gouvernement
+r: En crise, seules les mesures indispensables et limitées sont permises.
+rx: Les circonstances exceptionnelles cessent d'exister dès que l'état d'urgence a été déclaré. || Faux : elles peuvent fonder d'autres mesures si aucune mesure de l'état d'urgence ne suffit.
+rx: Un réseau social étranger ne peut pas invoquer la liberté d'expression. || Faux : ce sont les utilisateurs et les associations qui l'invoquent, et la liberté d'accès à l'information.
+rx: Une mesure de maintien de l'ordre outre-mer est un acte de gouvernement. || Faux : c'est une mesure de police administrative, contrôlée par le juge.
+
+%rio
+c: Des associations prouvent que les policiers et gendarmes ne portent très souvent pas leur numéro d'identification, pourtant obligatoire. Elles ont demandé au ministre d'agir ; il n'a pas répondu. Elles te demandent d'annuler ce refus et d'ordonner des mesures.
+d: Tu annules le refus et enjoins au ministre d'agir dans un délai d'un an | Tu rejettes : le juge n'oblige pas l'administration à agir | Tu fixes toi-même la politique de maintien de l'ordre
+r: Une règle massivement ignorée révèle une carence que le juge sanctionne.
+rx: L'administration reste toujours libre de ne pas agir, et le juge n'y peut rien. || Faux : elle doit faire respecter la légalité, et le juge contrôle ses refus d'agir.
+rx: Le juge peut décider à la place du ministre de toute la politique de sécurité. || Faux : il ne se substitue pas aux pouvoirs publics pour définir une politique publique.
+rx: Les manquements individuels des agents relèvent uniquement du juge pénal, pas du ministre. || Faux : la question est celle de la carence du ministre, autorité administrative.
+
+%sgic
+c: Le gouvernement, compétent pour légiférer par décret dans certains territoires d'outre-mer, réserve aux architectes des missions jusque-là ouvertes aux ingénieurs-conseils. Leur syndicat soutient que le décret méconnaît des principes généraux du droit.
+d: Tu contrôles le décret au regard des principes généraux du droit | Tu refuses : sans loi, aucun principe ne lie le décret | Tu renvoies l'affaire devant le Conseil constitutionnel
+r: Les principes généraux du droit lient toute autorité réglementaire, même sans loi.
+rx: Les principes généraux du droit n'ont de valeur que s'ils sont repris par une loi. || Faux : le juge les dégage et les impose sans texte.
+rx: Un décret qui tient lieu de loi échappe au contrôle du juge administratif. || Faux : il reste un acte administratif, soumis aux principes généraux du droit.
+rx: Les principes généraux du droit ont valeur constitutionnelle. || Faux : ils sont infra-législatifs et supra-décrétaux.
+
+%annecy
+c: Un décret organise la consultation du public avant de délimiter les zones protégées autour des grands lacs de montagne. La commune soutient que, depuis la Charte de l'environnement, seule la loi pouvait fixer ces règles.
+d: Tu annules le décret : seule la loi pouvait fixer ces conditions | Tu rejettes : la Charte n'a qu'une valeur purement symbolique | Tu rejettes : la Charte ne s'adresse qu'au législateur
+r: La Charte a valeur constitutionnelle et réserve à la loi la participation du public.
+rx: La Charte de l'environnement est un simple programme, sans valeur juridique. || Faux : toutes ses dispositions ont valeur constitutionnelle.
+rx: Le gouvernement peut toujours régler par simple décret la procédure administrative. || Faux : la Charte a fait de cette matière une compétence de la loi.
+rx: Le juge administratif ne peut pas appliquer directement un texte constitutionnel. || Faux : il le fait depuis longtemps (Dehaene, 1950).
+
+%prince-napoleon
+c: Un prince de l'ancienne famille impériale, nommé général sous l'Empire, a disparu de la liste officielle des généraux. Le ministre refuse de l'y réinscrire. Le gouvernement soutient que cette décision, d'ordre politique, échappe à tout recours.
+d: Tu examines le recours au fond, malgré le mobile politique | Tu te déclares incompétent : c'est politique | Tu ordonnes de réinscrire le prince sans examen
+r: Le mobile politique ne suffit pas à faire un acte de gouvernement.
+rx: Tout acte inspiré par des raisons politiques est un acte de gouvernement. || Faux : c'est la théorie du mobile politique que l'arrêt abandonne.
+rx: Les membres de l'ancienne famille impériale ne peuvent pas saisir le juge. || Faux : le recours est recevable et examiné.
+rx: Le grade de général est un droit acquis que le ministre ne peut jamais retirer à son titulaire. || Faux : au fond, le grade avait été conféré au titre de la famille impériale.
+
+%prefet-guyane
+c: Faute de magistrats nommés par le gouvernement, les tribunaux de Guyane cessent de fonctionner. Des officiers ministériels, privés de leur activité, demandent réparation à l'État devant le juge civil. Le préfet élève le conflit.
+d: Tu confirmes le conflit : l'organisation de la justice relève du juge administratif | Tu annules : la justice relève du juge judiciaire | Tu déclares qu'aucun juge n'est compétent
+r: Ne pas nommer de magistrats touche à l'organisation de la justice.
+rx: Tout ce qui touche à la justice judiciaire relève toujours du seul juge judiciaire. || Faux : son organisation relève du juge administratif.
+rx: La nomination des magistrats par le gouvernement est un acte de gouvernement. || Faux : c'est un acte administratif d'organisation du service.
+rx: Le juge administratif apprécie la marche des procès en Guyane. || Faux : le litige ne demande aucune appréciation sur la marche des services judiciaires.
+
+%euronaval
+c: Le gouvernement interdit aux entreprises israéliennes d'exposer dans un salon militaire des matériels utilisables à Gaza ou au Liban. L'organisateur privé retire son stand à une entreprise, qui saisit le tribunal de commerce. Le préfet élève le conflit. Tu présides le Tribunal des conflits.
+d: Tu confirmes le conflit : ni le juge judiciaire ni le juge administratif ne sont compétents | Tu renvoies au tribunal de commerce : deux sociétés privées | Tu renvoies au juge administratif : décision de l'État
+r: La décision n'est pas détachable de la conduite des relations internationales.
+rx: Un litige qui oppose deux sociétés privées relève toujours du juge judiciaire. || Faux : l'organisateur se borne à exécuter la décision gouvernementale.
+rx: Un acte de gouvernement relève du juge administratif statuant en premier et dernier ressort. || Faux : un acte de gouvernement échappe à tout juge.
+rx: Le juge contrôle tous les actes du Président de la République pris en conseil de défense. || Faux : non quand ils touchent aux relations internationales.
+
+%extradition-kazakh
+c: La France accorde à la Russie l'extradition d'un opposant kazakh, réfugié au Royaume-Uni. Tout indique que le Kazakhstan a pesé sur la demande russe. L'opposant te demande d'annuler le décret.
+d: Tu annules le décret : l'extradition est demandée dans un but politique | Tu rejettes : l'extradition relève des relations internationales | Tu rejettes : les infractions de droit commun suffisent
+r: Un PFRLR interdit d'extrader quand la demande poursuit un but politique.
+rx: Un décret d'extradition touche aux relations avec un État étranger : c'est un acte de gouvernement. || Faux : il est détachable et contrôlé par le juge depuis longtemps.
+rx: Dès lors que les infractions sont de droit commun, le but de la demande est indifférent. || Faux : le juge recherche le but réel de la demande.
+rx: Seule la Convention européenne d'extradition peut fonder un refus. || Faux : le PFRLR suffit, et la Convention va dans le même sens.

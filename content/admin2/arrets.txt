@@ -1,0 +1,453 @@
+# Arrêts de l'équipe 2 (cours du Pr Plessix, séances de TD 2 à 6).
+# @id | nom | référence | juge | année | importance | chambres
+# =id | chambres | importance : reprend une fiche de l'équipe 1 (même identifiant, même progression) ; les lignes suivantes la complètent.
+# ap : apport   f : faits   pr : procédure   q : problème de droit   s : solution   po : portée   x : faux problème || pourquoi
+# Les arrêts des fiches de TD sont rédigés d'après leur texte reproduit dans la plaquette.
+
+# 1. Un droit à part : caractères et domaine du droit administratif
+=blanco | 1 | 3
+ap: Un droit spécial pour l'administration, loin du Code civil, et un juge pour l'appliquer
+=cadot | 1 | 2
+ap: Le Conseil d'État devient juge de droit commun : le droit administratif a son juge
+=bac-eloka | 1 | 2
+ap: Le service public ne suffit plus à fixer le domaine du droit administratif
+
+# 2. La soumission de l'administration au droit
+@saint-just | Société immobilière de Saint-Just | TC, 2 déc. 1902 | TC | 1902 | 3 | 2
+ap: L'exécution forcée : permise seulement dans des cas précis, sous le contrôle du juge administratif
+h: Lyon, été 1902. Le gouvernement ferme les établissements congréganistes non autorisés. Le préfet du Rhône fait poser les scellés sur l'immeuble d'une congrégation, sans passer par un juge. La société propriétaire de l'immeuble saisit le juge judiciaire pour les faire lever.
+f: En application de la législation de 1901 et 1902 sur les congrégations, le préfet du Rhône fait fermer d'office un établissement et poser les scellés. La Société immobilière de Saint-Just, propriétaire de l'immeuble, demande au juge judiciaire leur levée.
+pr: Le juge des référés se déclare compétent. Le préfet élève le conflit, et le Tribunal des conflits est saisi.
+q: L'exécution forcée d'une décision administrative par l'administration elle-même relève-t-elle du juge judiciaire, gardien de la propriété ?
+s: Non. La fermeture et l'apposition des scellés sont des actes administratifs pris pour exécuter la loi : le conflit est confirmé, le juge administratif est compétent.
+po: Les conclusions de Romieu fixent les conditions de l'exécution forcée : un texte sans autre sanction, une résistance certaine, une mesure légale, et, hors de ces cas, l'urgence : « quand la maison brûle, on ne va pas demander au juge l'autorisation d'y envoyer les pompiers ».
+x: Le préfet peut-il fermer les écoles des congrégations sans loi qui l'y autorise ? || La loi de 1901 l'y autorise : la question posée est celle de l'exécution forcée et du juge compétent.
+x: L'administration peut-elle exécuter elle-même une décision sans aucune limite, dès lors qu'elle est légale ? || Romieu pose au contraire des conditions strictes : c'est la portée, pas la question du Tribunal.
+
+@prefet-eure | Préfet de l'Eure | CE, 30 mai 1913 | CE | 1913 | 2 | 2
+h: L'État a une créance à recouvrer. Il pourrait émettre lui-même un titre exécutoire. Le préfet de l'Eure préfère demander au juge de condamner le débiteur, comme le ferait un simple créancier.
+ap: Le privilège du préalable : l'administration ne demande pas au juge ce qu'elle peut décider seule
+f: L'État réclame une somme à un débiteur. Plutôt que d'émettre lui-même un titre exécutoire, le préfet de l'Eure saisit le juge pour obtenir sa condamnation.
+pr: Le Conseil d'État est saisi de la demande présentée au nom de l'État.
+q: L'administration peut-elle demander au juge de prononcer une mesure qu'elle a le pouvoir de prendre elle-même ?
+s: Non. Elle peut émettre un titre exécutoire : sa demande au juge est irrecevable.
+po: Décision exécutoire et privilège du préalable : l'administration agit d'abord, et c'est au destinataire de saisir le juge. La règle vit toujours : l'arrêt Forge de Longuyon (2025) la reprend et en dessine les exceptions.
+nf: 1
+
+@heyries | Heyriès | CE, 28 juin 1918 | CE | 1918 | 3 | 2
+ap: Les circonstances exceptionnelles : en temps de guerre, l'administration peut écarter la loi pour que les services publics fonctionnent
+h: 1914, la guerre commence. Un décret suspend la règle de 1905 qui oblige à communiquer son dossier au fonctionnaire avant une sanction. M. Heyriès, dessinateur civil du génie, est révoqué en 1916 sans avoir vu son dossier.
+f: Un décret du 10 septembre 1914 suspend, pour la durée de la guerre, l'article 65 de la loi du 22 avril 1905 sur la communication du dossier. M. Heyriès, révoqué sans communication de son dossier, attaque sa révocation.
+pr: Le Conseil d'État est saisi d'un recours pour excès de pouvoir contre la révocation.
+q: Le gouvernement peut-il, en temps de guerre, suspendre par décret une garantie prévue par la loi ?
+s: Oui. Le Président de la République, chargé d'assurer l'exécution des lois, doit veiller à ce que les services publics restent en état de fonctionner malgré la guerre : le décret est légal, la requête rejetée.
+po: Naissance de la théorie des circonstances exceptionnelles. La légalité ne disparaît pas : elle s'élargit, sous le contrôle du juge. L'arrêt TikTok de 2025 en reprend la formule.
+x: Un fonctionnaire révoqué a-t-il droit à une indemnité quand la révocation est illégale ? || La question est celle de la légalité du décret qui suspend la garantie, pas de l'indemnité.
+x: Le Parlement peut-il voter pendant la guerre des lois suspendant les garanties des fonctionnaires ? || La question porte sur un décret du gouvernement, pas sur une loi.
+
+=lamotte | 2 | 3
+ap: Le recours pour excès de pouvoir existe même sans texte : un principe général du droit
+
+@million-marais | Société Million et Marais | CE, Sect., 3 nov. 1997 | CE | 1997 | 3 | 2,3
+h: Une commune confie à une seule entreprise, par concession, le service extérieur des pompes funèbres. Un concurrent, la société Million et Marais, s'estime évincé : selon lui, ce contrat place l'entreprise en position d'abuser de sa domination sur le marché.
+ap: L'administration est soumise au droit de la concurrence : le juge contrôle ses actes au regard de l'ordonnance de 1986
+f: Une commune confie par contrat de concession le service extérieur des pompes funèbres à une entreprise. Une société concurrente, Million et Marais, conteste la légalité de ce contrat en invoquant le droit de la concurrence.
+pr: Le Conseil d'État est saisi, sur renvoi de l'autorité judiciaire, d'une question de légalité du contrat.
+q: Un acte administratif, ici un contrat de concession de service public, doit-il respecter le droit de la concurrence ?
+s: Oui. Le juge vérifie que la concession ne place pas l'entreprise en situation d'abuser de sa position dominante. En l'espèce, ce n'est pas le cas : le contrat est légal.
+po: Le droit de la concurrence entre dans le bloc de légalité. L'administration, même quand elle sert l'intérêt général, ne se met pas à l'abri des règles du marché.
+x: Un litige né d'un contrat de concession relève-t-il toujours du juge judiciaire ? || La compétence n'est pas en cause : la question est celle des normes que l'acte doit respecter.
+x: Une commune peut-elle gérer elle-même son service des pompes funèbres en régie ? || Le mode de gestion n'est pas contesté : c'est la légalité du contrat au regard de la concurrence.
+
+@amiante | Ministre de l'emploi c/ Consorts Bourdignon (amiante) | CE, Ass., 3 mars 2004 | CE | 2004 | 2 | 2
+h: Pendant des années, des salariés respirent de l'amiante au travail. Le danger est connu, mais l'État ne prend pas de mesure de prévention suffisante. Ils meurent de maladies professionnelles, et leurs familles se tournent vers l'État.
+ap: L'obligation d'agir : l'État commet une faute en restant inactif face à un risque connu
+f: Des salariés exposés à l'amiante sont morts de maladies professionnelles. Leurs familles reprochent à l'État de n'avoir pris aucune mesure de prévention suffisante pendant des années, alors que le danger était connu.
+pr: Les cours administratives d'appel retiennent la responsabilité de l'État. Le ministre se pourvoit en cassation.
+q: L'État engage-t-il sa responsabilité en n'agissant pas contre un risque professionnel dont il connaît la gravité ?
+s: Oui. Il incombe aux autorités publiques de se tenir informées des dangers et d'arrêter les mesures les plus appropriées. Leur carence est fautive : les pourvois sont rejetés.
+po: L'administration n'est pas libre de rester inerte : quand la loi ou la situation l'impose, elle doit agir. C'est le pendant, en responsabilité, du contrôle des refus d'agir.
+nf: 1
+
+@hyeres | Commune d'Hyères | CE, 25 mars 1988 | CE | 1988 | 2 | 2
+h: 1980, festival de la bande dessinée d'Hyères. Un dessinateur prête ses planches originales pour l'exposition. Elles disparaissent. La commune se défend : le festival, c'est une association qui l'organisait, pas elle.
+ap: Un festival culturel peut être un service public : l'intérêt général culturel et touristique suffit
+f: En 1980, un dessinateur prête ses planches originales pour un festival de la bande dessinée à Hyères. Les dessins disparaissent. La commune soutient que le festival était organisé par une association, indépendante d'elle.
+pr: Le tribunal administratif de Nice condamne la commune. Elle fait appel devant le Conseil d'État.
+q: La commune doit-elle répondre de la perte des dessins prêtés pour le festival qu'elle a organisé ?
+s: Oui. L'association n'existait pas encore : le festival était organisé par la commune. Eu égard à son intérêt général culturel et touristique, il avait le caractère d'un service public, dont la commune répond.
+po: L'intérêt général fonde le service public, et le service public fonde la responsabilité de la personne publique. Le juge regarde ce qui se passe réellement, pas l'habillage.
+
+@hutin | Hutin | CE, avis, 23 févr. 2005 | CE | 2005 | 2 | 2
+h: Une maison brûle dans une zone exposée aux incendies. Sa propriétaire obtient un permis pour la reconstruire. Le maire le lui retire, au nom de la sécurité publique, mais sans respecter la procédure. Faut-il annuler un retrait que le maire était peut-être obligé de prononcer ?
+ap: Pas de compétence liée quand l'administration doit apprécier les faits : le pouvoir discrétionnaire est la règle
+f: Un permis de construire est accordé pour reconstruire une maison détruite par un incendie, dans une zone exposée à ce risque. Le maire le retire au nom de la sécurité publique. La propriétaire attaque le retrait, irrégulier en la forme.
+pr: Le tribunal administratif de Nice demande l'avis du Conseil d'État sur deux questions.
+q: Le maire était-il en situation de compétence liée, ce qui couvrirait l'irrégularité de forme du retrait ?
+s: Non. Refuser un permis pour atteinte à la sécurité publique implique une appréciation des faits : il n'y a pas compétence liée. Le droit de reconstruire n'est pas absolu face à un risque certain et prévisible.
+po: La compétence liée suppose que l'administration n'ait rien à apprécier. Dès qu'il faut peser les faits, elle a un pouvoir d'appréciation, et doit respecter la procédure.
+x: Un permis de construire illégal peut-il être retiré à tout moment, sans délai ? || L'avis ne porte pas sur le délai de retrait mais sur la compétence liée et sur le droit de reconstruire.
+
+@passe-sanitaire | Passe sanitaire (M. B. et autres) | CE, réf., 25 juill. 2021 | CE | 2021 | 2 | 2
+h: Juillet 2021, le variant Delta progresse. La loi permet d'exiger le passe sanitaire pour les « grands rassemblements ». Un décret fixe le seuil à 50 personnes. Des requérants y voient une lecture bien trop large de la loi et demandent la suspension.
+ap: Les circonstances exceptionnelles permettent au Premier ministre d'aller au-delà d'un régime législatif prévu pour la crise
+f: En juillet 2021, avec le variant Delta, un décret abaisse à 50 personnes le seuil à partir duquel le passe sanitaire est exigé pour entrer dans certains lieux. La loi visait les « grands rassemblements ». Des requérants en demandent la suspension.
+pr: Le juge des référés du Conseil d'État est saisi sur le fondement de l'article L. 521-1 du code de justice administrative.
+q: Le Premier ministre peut-il, en raison de la reprise de l'épidémie, étendre une mesure au-delà de ce que prévoit la loi qui organise la crise ?
+s: Oui. Il peut, par ses pouvoirs propres de police, prendre les mesures appropriées en cas de circonstances exceptionnelles, même quand un régime législatif existe. Aucun doute sérieux sur la légalité : la requête est rejetée.
+po: La police générale du Premier ministre (Labonne) et les circonstances exceptionnelles (Heyriès) se combinent : un régime législatif d'exception n'épuise pas les pouvoirs de l'administration.
+
+@rio | LDH et autres (identifiant des policiers) | CE, Ass., 11 oct. 2023 | CE | 2023 | 3 | 2
+h: Le numéro d'identification des policiers et des gendarmes doit être visible. Sur le terrain, il manque très souvent ou se lit mal. Des associations demandent au ministre de l'intérieur d'agir. Pas de réponse.
+ap: Le juge peut enjoindre à l'administration d'agir quand elle laisse méconnaître une règle de manière caractérisée
+f: Des associations demandent au ministre de l'intérieur de faire respecter par les policiers et gendarmes le port visible de leur numéro d'identification, et de rendre ce numéro plus lisible. Le ministre ne répond pas.
+pr: Les associations demandent au Conseil d'État d'annuler le refus implicite et d'enjoindre au ministre d'agir.
+q: Le juge peut-il obliger l'administration à prendre des mesures pour faire cesser la méconnaissance d'une règle de droit ?
+s: Oui. L'absence très fréquente de port du matricule caractérise une carence de l'administration : le refus est annulé, et le ministre doit agir dans les douze mois. Mais le juge ne se substitue pas aux pouvoirs publics pour définir une politique publique.
+po: L'administration a l'obligation d'agir pour assurer le respect de la légalité. Le juge contrôle ses refus d'agir et peut lui enjoindre des mesures précises.
+x: Les policiers qui ne portent pas leur matricule commettent-ils une faute pénale ? || La question est celle de la carence du ministre, pas de la responsabilité pénale des agents.
+x: Le juge peut-il fixer lui-même la doctrine du maintien de l'ordre ? || Il le refuse expressément : il ne se substitue pas aux pouvoirs publics.
+
+@tiktok | LDH, La Quadrature du net et autres (TikTok) | CE, Ass., 1er avr. 2025 | CE | 2025 | 3 | 2
+h: Mai 2024, la Nouvelle-Calédonie s'embrase. Sur TikTok circulent des appels à la violence. Le Premier ministre coupe l'accès au réseau, sans fixer de terme. Le lendemain, l'état d'urgence est déclaré. Des associations saisissent le Conseil d'État.
+ap: Les circonstances exceptionnelles existent même sous l'état d'urgence, mais les mesures doivent rester indispensables
+f: En mai 2024, en pleine émeute en Nouvelle-Calédonie, le Premier ministre interrompt l'accès à TikTok, utilisé pour inciter à la violence. L'état d'urgence est déclaré le lendemain. Des associations attaquent la décision.
+pr: Le Conseil d'État, en assemblée, est saisi de recours pour excès de pouvoir.
+q: Le Premier ministre peut-il, au titre des circonstances exceptionnelles, couper un réseau social, et à quelles conditions ?
+s: Il le peut, si aucune autre mesure, de l'état d'urgence ou du droit commun, ne suffit. Mais une interruption totale, pour une durée indéterminée, sans rechercher de mesure moins attentatoire, porte une atteinte disproportionnée à la liberté d'expression : la décision est annulée.
+po: Le Conseil d'État formule la théorie : circonstances d'une particulière gravité, impossibilité d'agir selon les normes en vigueur, mesures indispensables, sous l'entier contrôle du juge. L'état d'urgence ne l'efface pas.
+x: L'état d'urgence permet-il au ministre de couper tout service en ligne faisant l'apologie du terrorisme ? || L'arrêt écarte ce fondement : la coupure ne visait pas le terrorisme.
+x: Une plateforme étrangère peut-elle échapper au droit français ? || La question est celle des pouvoirs du Premier ministre en circonstances exceptionnelles.
+
+@forge-longuyon | Société La Forge de Longuyon | CE, 20 mai 2025 | CE | 2025 | 2 | 2
+h: Voies navigables de France attend toujours le paiement de taxes hydrauliques. Ses titres exécutoires ne servent à rien : en France, la société débitrice n'a plus de biens saisissables. Il reste ses biens en Belgique, et pour les saisir, il faut une décision de juge.
+ap: Le privilège du préalable a ses limites : la personne publique qui a émis un titre peut saisir le juge pour recouvrer à l'étranger
+f: Voies navigables de France réclame à une société des taxes et redevances hydrauliques impayées. Elle a déjà émis des titres exécutoires, mais la société a rendu ses biens en France insaisissables. VNF demande au juge une provision pour saisir ses biens en Belgique.
+pr: Le tribunal administratif rejette la demande, la cour administrative d'appel l'accueille, et la société se pourvoit en cassation.
+q: Une personne publique qui peut émettre un titre exécutoire peut-elle demander au juge de condamner son débiteur ?
+s: En principe non : elle est irrecevable à demander au juge ce qu'elle peut faire elle-même. Par exception, elle le peut si ses titres sont restés vains en France et qu'une décision de justice lui est utile pour recouvrer à l'étranger.
+po: L'arrêt reprend la jurisprudence Préfet de l'Eure et en dessine les exceptions : une créance contractuelle, ou l'utilité d'un jugement pour agir hors de France.
+
+# 3. Les sources internes du droit administratif
+=barel | 3 | 3
+=kone | 3,5 | 3
+x: Le Mali a-t-il le droit de demander l'extradition d'un ressortissant français ? || M. Koné n'est pas français ; la question est celle du but politique de l'extradition.
+x: La convention franco-malienne d'extradition l'emporte-t-elle sur la Constitution ? || Le Conseil d'État évite le conflit : il interprète la convention à la lumière du principe constitutionnel.
+=kpmg | 3 | 3
+=aramu | 3 | 2
+=peynet | 3 | 1
+=annamites | 3 | 2
+=liberte-association | 3 | 2
+=dehaene | 3 | 1
+=rubin-de-servens | 3 | 1
+
+@annecy | Commune d'Annecy | CE, Ass., 3 oct. 2008 | CE | 2008 | 3 | 3
+h: Un décret de 2006 fixe la façon dont on délimite, autour des grands lacs de montagne, les secteurs protégés. Le public doit être consulté. La commune d'Annecy attaque : depuis la Charte de l'environnement, c'était au Parlement d'en décider.
+ap: La Charte de l'environnement a valeur constitutionnelle et s'impose à l'administration
+f: Un décret de 2006 organise la procédure de délimitation, autour des grands lacs de montagne, des secteurs où s'appliquent les règles de protection. La commune d'Annecy en demande l'annulation.
+pr: Le Conseil d'État, en assemblée, est saisi d'un recours pour excès de pouvoir.
+q: Le gouvernement pouvait-il fixer par décret les modalités de participation du public dans une matière couverte par la Charte de l'environnement ?
+s: Non. Les droits et devoirs de la Charte ont valeur constitutionnelle, et son article 7 réserve à la loi les conditions de la participation du public. Le décret, pris par une autorité incompétente, est annulé.
+po: Toutes les dispositions de la Charte s'imposent aux pouvoirs publics. Le juge administratif fait jouer la répartition des compétences entre la loi et le règlement au service de la Constitution.
+x: La loi littoral s'applique-t-elle aux rives des lacs de montagne ? || Le fond du droit de l'urbanisme n'est pas en cause : c'est la compétence pour fixer la participation du public.
+x: Le Conseil d'État peut-il contrôler la conformité d'une loi à la Charte de l'environnement ? || Non, et ce n'est pas la question : l'acte attaqué est un décret.
+
+@extradition-kazakh | M. B. (extradition) | CE, Sect., 9 déc. 2016 | CE | 2016 | 2 | 3
+h: Un opposant kazakh vit réfugié au Royaume-Uni. La Russie demande son extradition à la France, et derrière la Russie, le Kazakhstan pèse. Le Premier ministre signe le décret. L'opposant demande au Conseil d'État de l'annuler.
+ap: Le PFRLR interdisant l'extradition dans un but politique s'impose au gouvernement
+f: Le Premier ministre accorde à la Russie l'extradition d'un ressortissant kazakh, opposant au régime, réfugié au Royaume-Uni. Les autorités kazakhes ont pesé sur la demande russe.
+pr: L'intéressé demande au Conseil d'État l'annulation du décret d'extradition.
+q: L'État peut-il extrader un étranger quand la demande est en réalité inspirée par un but politique ?
+s: Non. En vertu d'un principe fondamental reconnu par les lois de la République, l'État doit refuser l'extradition demandée dans un but politique. Le décret est annulé.
+po: Les PFRLR, dégagés par le Conseil d'État (Koné) ou le Conseil constitutionnel, sont des normes constitutionnelles directement opposables aux actes administratifs.
+
+@gazup | Société Gaz'up et autres | CE, 25 janv. 2023 | CE | 2023 | 2 | 3
+h: Un arrêté de 2022 revoit le classement des véhicules selon leurs émissions, celui qui ouvre ou ferme l'accès aux zones à faibles émissions. Les sociétés du gaz naturel pour véhicules l'attaquent : personne n'a consulté le public.
+ap: Le principe de participation du public de la Charte de l'environnement est invocable contre un arrêté
+f: Un arrêté de 2022 modifie le classement des véhicules selon leurs émissions, qui détermine l'accès aux zones à faibles émissions. Des sociétés du gaz naturel pour véhicules l'attaquent : il a été pris sans consultation du public.
+pr: Le Conseil d'État est saisi d'un recours pour excès de pouvoir.
+q: Un arrêté qui a une incidence sur l'environnement peut-il être adopté sans consultation du public ?
+s: Non. L'article 7 de la Charte, mis en œuvre par le code de l'environnement, imposait de consulter le public. L'arrêté, pris en outre par une ministre seule alors qu'il fallait trois ministres, est annulé.
+po: La Charte de l'environnement n'est pas une déclaration d'intention : ses principes, précisés par la loi, conditionnent la légalité des actes réglementaires.
+
+@demission-office | Mme B. (démission d'office) | CE, 10 nov. 2025 | CE | 2025 | 1 | 3
+h: Une conseillère départementale est condamnée à une peine d'inéligibilité, exécutoire tout de suite. Le préfet la déclare démissionnaire d'office. Elle conteste, en soutenant que la loi qu'on lui applique est contraire à la Déclaration de 1789.
+ap: Constater la fin d'un mandat après une condamnation n'est pas une sanction : l'article 8 de la Déclaration de 1789 ne s'applique pas
+f: Une conseillère départementale est condamnée à une peine d'inéligibilité avec exécution provisoire. Le préfet la déclare démissionnaire d'office. Elle conteste l'arrêté et soulève une question prioritaire de constitutionnalité.
+pr: Le tribunal administratif de Lille refuse de transmettre la question et rejette sa protestation. Elle fait appel devant le Conseil d'État.
+q: L'arrêté qui déclare un élu démissionnaire d'office après une condamnation est-il une sanction soumise aux principes de l'article 8 de la Déclaration de 1789 ?
+s: Non. Le préfet se borne à tirer les conséquences de la condamnation : ce n'est pas une sanction. Le refus de transmettre la question est confirmé.
+po: Les principes de l'article 8 (nécessité, légalité des peines) s'étendent à toute sanction ayant le caractère d'une punition, mais pas à un acte qui ne fait que constater.
+
+# 4. Les sources supranationales du droit administratif
+=gisti-1990 | 4 | 3
+=cohn-bendit | 4 | 2
+=gisti-fapil | 4 | 3
+=cheriet | 4 | 2
+=aquarone | 4 | 2
+
+@van-gend | Van Gend en Loos | CJCE, 5 févr. 1963 | CJCE | 1963 | 3 | 4
+h: Une entreprise néerlandaise importe un produit chimique d'Allemagne. Les Pays-Bas augmentent le droit de douane, alors que le traité de Rome interdit d'en créer de nouveaux. L'entreprise invoque le traité. Un particulier peut-il s'en prévaloir devant son juge ?
+ap: Le droit communautaire produit des effets directs et crée des droits que les juges nationaux doivent protéger
+f: Une entreprise néerlandaise importe un produit chimique d'Allemagne. Les Pays-Bas relèvent le droit de douane, malgré le traité de Rome qui interdit d'en créer de nouveaux. L'entreprise invoque le traité devant le juge néerlandais.
+pr: La juridiction néerlandaise pose une question préjudicielle à la Cour de justice.
+q: Un particulier peut-il invoquer devant son juge national une disposition du traité instituant la Communauté ?
+s: Oui. La Communauté constitue un nouvel ordre juridique, dont les sujets sont aussi les particuliers : l'article en cause produit des effets immédiats et engendre des droits individuels.
+po: Effet direct du droit communautaire. Avec Costa c/ ENEL (1964) et la primauté, c'est le socle que le juge administratif finira par accepter.
+x: Un État peut-il augmenter ses droits de douane après l'entrée en vigueur du traité ? || C'est le fond : la Cour répond d'abord sur l'invocabilité du traité par un particulier.
+x: Le juge national peut-il écarter une loi contraire au traité ? || C'est la primauté, affirmée l'année suivante dans Costa c/ ENEL.
+
+@levenez | Levenez | CE, 24 févr. 2006 | CE | 2006 | 2 | 4,5
+h: 1992. Une enfant naît avec un handicap que personne n'a décelé pendant la grossesse. Ses parents attaquent l'hôpital. En plein procès, une loi de 2002 exclut l'indemnisation des charges liées au handicap, et elle vaut pour les procès en cours.
+ap: Le juge écarte une loi qui s'applique aux instances en cours au mépris du droit au respect des biens de la Convention
+f: Une enfant naît en 1992 avec un handicap non décelé pendant la grossesse. Ses parents demandent réparation à l'hôpital. Pendant le procès, la loi du 4 mars 2002 exclut l'indemnisation des charges liées au handicap, et s'applique aux instances en cours.
+pr: La cour administrative d'appel de Nantes statue sans s'expliquer sur la loi nouvelle. Le Conseil d'État casse et règle l'affaire au fond.
+q: Une loi qui prive rétroactivement les parents de leur créance en réparation est-elle compatible avec l'article 1er du premier protocole additionnel ?
+s: Non. En s'appliquant aux instances en cours, la loi porte une atteinte disproportionnée aux créances que les parents pouvaient légitimement espérer : elle est écartée pour ce litige.
+po: Le contrôle de conventionnalité joue contre les lois rétroactives. La « créance » est un bien au sens de la Convention.
+
+@oip-2008 | Section française de l'OIP (matelas) | CE, 17 déc. 2008 | CE | 2008 | 2 | 4
+h: Dans les prisons, des détenus mettent le feu à leur matelas. L'Observatoire international des prisons demande au ministre d'équiper toutes les cellules de matelas à housse ignifugée qu'on ne peut pas retirer. Le ministre ne répond pas.
+ap: Le droit à la vie impose à l'administration pénitentiaire de protéger les détenus
+f: L'Observatoire international des prisons demande au ministre d'équiper toutes les cellules de matelas à housse ignifugée inamovible, pour éviter les incendies. Le ministre ne répond pas.
+pr: L'association demande au Conseil d'État l'annulation du refus implicite.
+q: Le refus de doter toutes les prisons de matelas ignifugés méconnaît-il l'obligation de protéger la vie des détenus ?
+s: Il existe une obligation de protéger la vie des détenus, vulnérables et dépendants de l'administration. Mais en l'espèce, eu égard aux mesures prises et aux risques des autres solutions, le refus n'est pas illégal : la requête est rejetée.
+po: La Convention européenne fonde des obligations positives de l'administration, dont le juge contrôle le respect au cas par cas.
+
+@fofana | Fofana | CE, Ass., 21 déc. 2012 | CE | 2012 | 2 | 4
+h: Une mère malienne craint que sa fille, née en France, soit excisée si elles retournent au Mali. Elle demande l'asile pour elle. L'OFPRA refuse, la Cour nationale du droit d'asile aussi.
+ap: Les enfants exposées à l'excision peuvent former un groupe social au sens de la convention de Genève
+f: Une mère malienne demande l'asile pour sa fille née en France, qui serait excisée en cas de retour au Mali. L'OFPRA puis la Cour nationale du droit d'asile rejettent sa demande.
+pr: Le Conseil d'État, en assemblée, est saisi d'un pourvoi en cassation.
+q: Une enfant exposée au risque d'excision appartient-elle à un groupe social justifiant le statut de réfugié ?
+s: Oui, dans une population où l'excision est une norme sociale, les enfants non mutilées constituent un groupe social. La décision de la Cour nationale du droit d'asile est annulée sur ce point.
+po: Le juge administratif interprète lui-même les traités (GISTI, 1990) et les lit avec la directive européenne qui les précise.
+
+@magistrat-sanction | M. A. et autres (sanction d'un magistrat) | CE, 6 avr. 2016 | CE | 2016 | 1 | 4
+h: Des justiciables se plaignent du comportement d'un magistrat devant le Conseil supérieur de la magistrature. Rien n'en sort. Ils veulent contester la décision, mais la loi le leur interdit. Ils invoquent la Convention européenne pour l'écarter.
+ap: Une stipulation de la Convention n'est pas un droit à tout : nul n'a droit à la sanction disciplinaire d'autrui
+f: Des justiciables, mécontents du comportement d'un magistrat, ont saisi le Conseil supérieur de la magistrature. Leur plainte n'aboutit pas, et la loi rend irrecevable leur recours contre la décision du conseil de discipline.
+pr: Ils se pourvoient devant le Conseil d'État et demandent d'écarter la loi au nom des articles 6 et 13 de la Convention.
+q: Les articles 6 et 13 de la Convention imposent-ils d'ouvrir aux justiciables un recours contre la décision disciplinaire visant un magistrat ?
+s: Non. Aucune stipulation de la Convention ne reconnaît le droit d'obtenir qu'un magistrat soit sanctionné : le pourvoi est rejeté.
+po: Pour écarter une loi au nom d'un traité, encore faut-il que le traité garantisse le droit invoqué.
+
+@alzheimer | Union France Alzheimer et autres | CE, 29 sept. 2023 | CE | 2023 | 2 | 4
+h: Un arrêté fixe les conditions médicales pour garder le droit de conduire. Des associations de malades l'attaquent en s'appuyant sur deux textes internationaux : la convention relative aux droits des personnes handicapées et la Charte sociale européenne.
+ap: Une stipulation qui appelle des actes complémentaires et ne régit que les relations entre États n'a pas d'effet direct
+f: Des associations de malades contestent un arrêté sur l'aptitude médicale à la conduite et invoquent la convention relative aux droits des personnes handicapées et la Charte sociale européenne.
+pr: Le Conseil d'État est saisi d'un recours pour excès de pouvoir.
+q: Les stipulations de la convention relative aux droits des personnes handicapées peuvent-elles être invoquées contre un acte réglementaire ?
+s: Non. Ces stipulations requièrent l'intervention d'actes complémentaires pour produire des effets à l'égard des particuliers et ont pour objet exclusif de régir les relations entre États : la requête est rejetée.
+po: Application des critères de GISTI et FAPIL (2012) : l'effet direct se juge stipulation par stipulation.
+
+@gabon | Société gabonaise d'édition et de communication | CE, Sect., 22 déc. 2023 | CE | 2023 | 2 | 4
+h: Au Gabon, la force publique démonte les panneaux publicitaires d'une société. Le Conseil d'État gabonais condamne l'État gabonais à l'indemniser. La société veut faire exécuter ces arrêts en France et saisit le tribunal administratif de Paris.
+ap: Le juge administratif rend l'exequatur des décisions administratives étrangères, sauf immunité de l'État étranger
+f: Le Conseil d'État gabonais a condamné l'État gabonais à indemniser une société dont la force publique avait démonté les panneaux publicitaires. La société demande au tribunal administratif de Paris de rendre ces arrêts exécutoires en France.
+pr: Le tribunal rejette la demande, faute de lien avec la France. La société se pourvoit en cassation.
+q: Le juge administratif français peut-il donner force exécutoire à des décisions administratives étrangères condamnant un État étranger ?
+s: Le juge administratif est compétent, et le défaut de lien avec la France n'est pas un motif de rejet. Mais le démontage relève de la souveraineté du Gabon, qui n'a pas renoncé à son immunité : la demande est rejetée.
+po: La coutume internationale de l'immunité des États s'impose au juge, dans la ligne d'Aquarone.
+
+@anafe | ANAFE et autres (frontières intérieures) | CE, 7 mars 2025 | CE | 2025 | 1 | 4
+h: Novembre 2024 : la France annonce à la Commission européenne qu'elle rétablit les contrôles à ses frontières intérieures, jusqu'en avril 2025. Des associations attaquent la décision.
+ap: Le juge contrôle la décision de rétablir les contrôles aux frontières au regard du code frontières Schengen
+f: Les autorités françaises notifient à la Commission européenne le rétablissement des contrôles aux frontières intérieures de l'espace Schengen, de novembre 2024 à avril 2025. Des associations attaquent la décision.
+pr: Le Conseil d'État est saisi d'un recours pour excès de pouvoir.
+q: La décision de réintroduire les contrôles aux frontières intérieures respecte-t-elle le règlement européen qui les encadre ?
+s: Oui. La menace pour l'ordre public et la sécurité intérieure et la proportionnalité de la mesure sont établies. Sans doute raisonnable sur le droit de l'Union, la requête est rejetée sans question préjudicielle.
+po: Un règlement européen s'applique directement : le juge administratif en est le juge de droit commun, et ne saisit la Cour de justice qu'en cas de doute.
+
+@narcotrafic | Association des avocats pénalistes | CE, 28 oct. 2025 | CE | 2025 | 1 | 4
+h: Une loi de 2025 crée, contre la criminalité organisée, des quartiers de détention de haute sécurité. Les avocats pénalistes attaquent le décret d'application : le régime imposé aux détenus irait trop loin au regard de la Convention européenne.
+ap: Le régime des quartiers de lutte contre la criminalité organisée est confronté aux articles 3 et 8 de la Convention
+f: Une loi de 2025 crée des quartiers de détention de haute sécurité contre la criminalité organisée. Le décret d'application est attaqué : il méconnaîtrait les droits des détenus garantis par la Convention européenne.
+pr: Le Conseil d'État est saisi d'un recours pour excès de pouvoir.
+q: Le décret organisant ces quartiers méconnaît-il l'interdiction des traitements inhumains et le droit à la vie familiale ?
+s: Non. Le décret impose de tenir compte de l'état de santé et fixe avec une précision suffisante les motifs et conditions d'affectation : la requête est rejetée.
+po: Le contrôle de conventionnalité porte sur les actes d'application de la loi, et exige précision et proportionnalité.
+
+@gisti-2025 | GISTI et autres (accord franco-britannique) | CE, 30 déc. 2025 | CE | 2025 | 2 | 4
+h: 2025 : la France et le Royaume-Uni signent un accord pour prévenir les traversées périlleuses de la Manche. Un décret le publie. Le GISTI l'attaque : un tel accord aurait dû passer par le Parlement.
+ap: Un accord qui ne modifie pas de dispositions législatives n'a pas à être ratifié par une loi
+f: La France et le Royaume-Uni signent en 2025 un accord sur la prévention des traversées périlleuses de la Manche. Un décret le publie. Le GISTI l'attaque : l'accord aurait dû être approuvé par une loi.
+pr: Le Conseil d'État est saisi d'un recours pour excès de pouvoir et d'une demande de suspension.
+q: L'accord entre-t-il dans les traités qui, selon l'article 53 de la Constitution, ne peuvent être approuvés qu'en vertu d'une loi ?
+s: Non. Ses stipulations ne touchent pas à des matières réservées à la loi et ne posent pas de règles différentes de celles de la loi. Le recours est rejeté.
+po: Le juge contrôle la régularité de la ratification des traités (SARL du parc d'activités de Blotzheim, 1998).
+
+@amazon | Société Amazon EU | CE, 13 mai 2026 | CE | 2026 | 2 | 4,5
+h: Pour protéger les librairies, un arrêté de 2023 impose un tarif minimal pour livrer un livre. Amazon l'attaque : la mesure gênerait la libre circulation des marchandises en Europe. Le Conseil d'État interroge d'abord la Cour de justice.
+ap: Après la réponse de la Cour de justice, le juge confronte le prix minimal de livraison des livres à la libre circulation
+f: Un arrêté de 2023 fixe un tarif minimal pour la livraison des livres, afin de protéger les librairies. Amazon l'attaque : il entraverait la libre circulation des marchandises.
+pr: Le Conseil d'État sursoit à statuer et pose une question préjudicielle. La Cour de justice répond le 18 décembre 2025.
+q: Le tarif minimal de livraison des livres est-il une entrave interdite par le droit de l'Union ?
+s: Une telle mesure peut être justifiée par un objectif d'intérêt général, ici la diversité culturelle, si elle est proportionnée. Les moyens sont écartés et la requête est rejetée.
+po: Le dialogue des juges en acte : renvoi préjudiciel, puis application par le juge national de l'interprétation donnée par la Cour.
+
+# 5. Les conflits de normes
+=nicolo | 5 | 3
+=sarran | 5 | 3
+=arcelor | 5 | 3
+=perreux | 4,5 | 3
+=gardedieu | 5 | 2
+=libre-pensee | 5 | 2
+=arrighi | 5 | 2
+=semoules | 5 | 1
+=jacques-vabre | 5 | 1
+=ivg | 5 | 2
+=snip | 5 | 1
+
+@sgic | Syndicat général des ingénieurs-conseils | CE, Sect., 26 juin 1959 | CE | 1959 | 3 | 3,5
+h: Le gouvernement peut, dans certains territoires d'outre-mer, régler par décret des matières qui relèvent en métropole de la loi. Il réserve aux architectes des missions que pouvaient aussi remplir les ingénieurs-conseils. Leur syndicat attaque.
+ap: Les principes généraux du droit s'imposent à toute autorité réglementaire, même en l'absence de loi
+f: Un décret de 1949 réserve aux architectes certaines missions dans les territoires d'outre-mer. Le Syndicat général des ingénieurs-conseils l'attaque : il méconnaîtrait des principes généraux du droit.
+pr: Le Conseil d'État, en section, est saisi d'un recours pour excès de pouvoir.
+q: Un décret pris dans une matière où le gouvernement légifère par décret doit-il respecter les principes généraux du droit ?
+s: Oui. Les principes généraux du droit s'imposent à toute autorité réglementaire, même en l'absence de dispositions législatives. En l'espèce, le décret ne les méconnaît pas : la requête est rejetée.
+po: Les PGD ont une valeur « infra-législative et supra-décrétale » (Chapus) : ils lient le règlement, y compris le règlement autonome de 1958, mais la loi peut y déroger.
+x: Les architectes ont-ils un monopole sur les plans de construction dans toute la France ? || La question porte sur un décret applicable outre-mer et sur la valeur des principes généraux.
+x: Le Conseil d'État peut-il contrôler la conformité d'une loi aux principes généraux du droit ? || Non, et ce n'est pas la question : l'acte attaqué est un décret.
+
+@paulin | Paulin | CE, 28 juill. 2000 | CE | 2000 | 2 | 5
+h: Un ancien fonctionnaire du Bureau international du travail paie l'impôt sur sa pension. Il invoque les immunités prévues par la Constitution de l'Organisation internationale du travail, et soutient que seule la Cour internationale de justice peut dire ce qu'elles couvrent.
+ap: Le juge administratif interprète lui-même les traités, sans renvoi à la Cour internationale de justice
+f: Un ancien fonctionnaire du Bureau international du travail est imposé sur sa pension. Il invoque les privilèges et immunités prévus par la Constitution de l'OIT, et soutient que leur interprétation revient à la Cour internationale de justice.
+pr: La cour administrative d'appel de Lyon rejette sa demande. Il se pourvoit en cassation.
+q: Le juge administratif doit-il renvoyer à la Cour internationale de justice l'interprétation de la Constitution de l'OIT ?
+s: Non. Le juge interprète lui-même les stipulations en cause, qui n'exonèrent pas la pension de l'impôt : le pourvoi est rejeté.
+po: Dans la ligne de GISTI (1990) : le juge administratif est juge du traité qu'il applique.
+
+# 6. L'administration au sens fonctionnel
+@prince-napoleon | Prince Napoléon | CE, 19 févr. 1875 | CE | 1875 | 3 | 6
+ap: Le mobile politique ne suffit plus à faire un acte de gouvernement
+h: 1873, la République est encore fragile. Le prince Napoléon-Joseph Bonaparte, cousin de Napoléon III, découvre que son nom a disparu de l'annuaire militaire des généraux. Le ministre de la guerre refuse de l'y rétablir.
+f: Le prince Napoléon, nommé général de division sous le Second Empire, n'est plus inscrit sur l'annuaire militaire. Il attaque le refus du ministre de l'y réinscrire.
+pr: Le Conseil d'État est saisi d'un recours contre la décision du ministre.
+q: Une décision prise pour des motifs politiques échappe-t-elle, pour cette seule raison, au contrôle du juge ?
+s: Non. Le Conseil d'État examine le recours au fond. Il le rejette : le grade avait été conféré au titre de la famille impériale, et non selon les règles de l'avancement militaire.
+po: Abandon de la théorie du mobile politique. Les actes de gouvernement se réduisent à des catégories : rapports avec le Parlement, relations internationales.
+x: Le Conseil d'État peut-il juger les actes du Président de la République ? || La question est celle du critère de l'acte de gouvernement, pas de l'auteur de l'acte.
+x: Un membre de l'ancienne famille impériale peut-il être banni du territoire ? || Ce n'est pas l'objet du recours, qui porte sur l'annuaire militaire.
+
+@chemins-de-fer-est | Compagnie des chemins de fer de l'Est | CE, 6 déc. 1907 | CE | 1907 | 2 | 6
+h: Le législateur charge le gouvernement de compléter une loi par un règlement d'administration publique. Des compagnies de chemin de fer attaquent ce règlement. Peut-on attaquer un acte que le gouvernement prend à la demande du législateur ?
+ap: Le règlement d'administration publique, pris sur invitation de la loi, reste un acte administratif soumis au juge
+f: Des compagnies de chemin de fer attaquent un règlement d'administration publique pris par le gouvernement à la demande du législateur.
+pr: Le Conseil d'État est saisi d'un recours pour excès de pouvoir.
+q: Un règlement pris sur délégation du législateur échappe-t-il au recours pour excès de pouvoir ?
+s: Non. Bien que pris sur invitation de la loi, ce règlement émane d'une autorité administrative : le recours est recevable.
+po: Le critère est organique et fonctionnel à la fois : un acte de l'exécutif, même proche de la loi, reste un acte administratif.
+nf: 1
+
+@prefet-guyane | Préfet de la Guyane | TC, 27 nov. 1952 | TC | 1952 | 3 | 6
+h: En Guyane, le gouvernement ne nomme pas de magistrats. Les tribunaux cessent de fonctionner. Des officiers ministériels de Cayenne, privés de leur activité, demandent réparation à l'État devant le juge civil.
+ap: Organisation du service public de la justice : juge administratif ; fonctionnement : juge judiciaire
+f: Des officiers ministériels de Cayenne demandent réparation à l'État : faute de magistrats nommés, les tribunaux de Guyane ont cessé de fonctionner pendant une période.
+pr: Ils saisissent le tribunal civil, puis la cour d'appel. Le préfet élève le conflit.
+q: Le litige né du défaut de constitution des tribunaux relève-t-il du juge judiciaire, juge de la justice ?
+s: Non. Les actes en cause touchent à l'organisation même du service public de la justice, indépendamment de toute appréciation sur la marche des services judiciaires : le conflit est confirmé, le juge administratif est compétent.
+po: La distinction organisation/fonctionnement délimite la fonction administrative dans la justice. L'acte juridictionnel et ce qui s'y rattache échappent au juge administratif.
+x: Les officiers ministériels de Guyane sont-ils des agents publics ? || Leur statut n'est pas en cause : la question est celle du juge compétent.
+x: Le juge administratif peut-il juger la façon dont un magistrat a tranché un procès ? || Justement non : c'est le fonctionnement de la justice, réservé au juge judiciaire.
+
+@oip-2003 | Section française de l'OIP (grâces collectives) | CE, 30 juin 2003 | CE | 2003 | 2 | 6
+h: Le 14 juillet, le Président de la République signe un décret de grâces collectives. Le garde des sceaux en précise l'application par circulaire. L'Observatoire international des prisons attaque cette circulaire.
+ap: Le juge administratif ne connaît pas des litiges relatifs à la nature et aux limites d'une peine
+f: Le Président de la République prend, le 14 juillet, un décret de grâces collectives. Le garde des sceaux le commente dans une circulaire. L'Observatoire international des prisons attaque la circulaire.
+pr: Le Conseil d'État est saisi d'un recours pour excès de pouvoir.
+q: Une circulaire sur l'application des grâces collectives relève-t-elle du juge administratif ?
+s: Non. Elle se rattache à l'exécution des peines prononcées par le juge judiciaire : la juridiction administrative est incompétente.
+po: Ce qui touche à l'exécution des décisions de justice pénale n'est pas de l'administration au sens fonctionnel.
+
+@commission-nanterre | Syndicat de la magistrature (commission d'enquête) | CE, Sect., 25 févr. 2005 | CE | 2005 | 1 | 6
+h: Le tribunal de grande instance de Nanterre connaît des dysfonctionnements. Le Premier ministre crée une commission pour mener une enquête administrative. Le Syndicat de la magistrature attaque sa création.
+ap: Le gouvernement peut organiser une enquête administrative sur le fonctionnement d'un tribunal
+f: Après des dysfonctionnements au tribunal de grande instance de Nanterre, le Premier ministre crée une commission chargée d'une enquête administrative. Le Syndicat de la magistrature l'attaque.
+pr: Le Conseil d'État, en section, est saisi d'un recours pour excès de pouvoir.
+q: Le Premier ministre pouvait-il constituer une commission chargée d'enquêter sur le fonctionnement d'une juridiction ?
+s: Oui. Aucun texte ni principe ne l'en empêchait : il peut s'éclairer sur le bon fonctionnement des services publics, y compris celui de la justice. La requête est rejetée.
+po: Le juge administratif contrôle ce qui relève de l'organisation de la justice, tout en préservant l'indépendance juridictionnelle.
+
+@gremetz | M. Gremetz | CE, réf., 28 mars 2011 | CE | 2011 | 2 | 6
+h: Un député est sanctionné par l'Assemblée nationale : censure avec exclusion temporaire et moitié de son indemnité retenue pendant deux mois. Il demande au juge des référés de suspendre la sanction.
+ap: Les actes d'une assemblée parlementaire envers ses membres échappent au juge administratif
+f: L'Assemblée nationale inflige à un député la censure avec exclusion temporaire et la privation de la moitié de son indemnité pendant deux mois. Il saisit le juge des référés.
+pr: Le juge des référés du Conseil d'État est saisi en référé-liberté.
+q: La sanction disciplinaire infligée à un député par l'Assemblée peut-elle être contestée devant le juge administratif ?
+s: Non. Le litige est manifestement étranger à la compétence de la juridiction administrative : la requête est rejetée.
+po: La fonction parlementaire n'est pas administrative. Seuls les actes que la loi soumet au juge (agents, marchés, responsabilité) lui reviennent.
+
+@acpr | A. c/ Autorité de contrôle prudentiel et de résolution | TC, 8 déc. 2014 | TC | 2014 | 2 | 6
+h: La commission bancaire dénonce un dirigeant au procureur, se constitue partie civile, puis conteste le non-lieu. Le dirigeant estime avoir été poursuivi sans raison et demande réparation à l'État. Mais quel juge saisir ?
+ap: Une autorité administrative qui agit dans un procès pénal relève, pour ce rôle, du juge judiciaire
+f: Un dirigeant poursuivi pénalement reproche à la commission bancaire de l'avoir dénoncé au procureur sans raison, puis de s'être constituée partie civile et d'avoir contesté le non-lieu. Il demande réparation à l'État.
+pr: Les juridictions administratives se déclarent partiellement incompétentes. Le Tribunal des conflits est saisi.
+q: Quel juge connaît de la responsabilité de l'État pour le comportement d'une autorité administrative dans une procédure pénale ?
+s: Le juge judiciaire, pour les fautes commises en se portant partie civile et en exerçant des recours : ces actes se rattachent au déroulement de la procédure judiciaire.
+po: Ce qui touche à la marche de la justice judiciaire n'est pas de l'administration, même quand l'auteur est une autorité administrative.
+
+@stage-procureur | M. B. (agrément par le procureur) | TC, 12 oct. 2015 | TC | 2015 | 2 | 6
+h: Au lieu de poursuivre, le procureur peut proposer un stage de sensibilisation à la sécurité routière. Pour organiser ces stages, il faut son agrément. Il le refuse à un candidat, qui veut contester ce refus.
+ap: L'agrément par le procureur d'un organisateur de stages est une mesure d'organisation du service public de la justice
+f: Un procureur de la République refuse d'agréer une personne pour organiser des stages de sensibilisation à la sécurité routière, proposés comme alternative aux poursuites. L'intéressé conteste ce refus.
+pr: Le Tribunal des conflits est saisi de la question de compétence.
+q: Le refus d'agrément décidé par un procureur relève-t-il du juge judiciaire ?
+s: Non. Il ne se rattache pas à la fonction juridictionnelle et n'influe pas sur le déroulement d'une procédure : c'est une mesure d'organisation du service public de la justice, qui relève du juge administratif.
+po: Application de Préfet de la Guyane : la qualité de magistrat de l'auteur ne suffit pas, c'est la nature de l'acte qui compte.
+
+@geneve | Association française des riverains de l'aéroport de Genève | CE, 27 mai 2019 | CE | 2019 | 2 | 6
+h: Les riverains de l'aéroport de Genève demandent au gouvernement de dénoncer l'accord franco-suisse sur le contrôle aérien et de rendre un avis négatif sur un projet suisse. Le gouvernement refuse tout.
+ap: Refuser de dénoncer un traité est un acte de gouvernement ; un acte détachable des relations internationales ne l'est pas
+f: Des riverains de l'aéroport de Genève demandent au gouvernement de dénoncer l'accord franco-suisse sur le contrôle aérien et d'émettre un avis négatif sur un projet suisse. Le gouvernement refuse.
+pr: L'association saisit le Conseil d'État.
+q: Le juge administratif peut-il contrôler le refus de dénoncer un traité, et le refus d'émettre un avis dans une consultation internationale ?
+s: Le refus de dénoncer l'accord n'est pas détachable de la conduite des relations internationales : incompétence. Le refus d'émettre un avis est détachable, mais il ne fait pas grief.
+po: La notion d'acte détachable réduit le domaine des actes de gouvernement dans l'ordre international.
+
+@paris-tennis | Société Paris Tennis | CE, 10 juill. 2020 | CE | 2020 | 2 | 6
+h: Les courts de tennis du jardin du Luxembourg appartiennent au domaine du Sénat. Le Sénat en confie l'exploitation à une ligue de tennis. Une société évincée attaque cette convention d'occupation.
+ap: Les contrats d'occupation du domaine des assemblées parlementaires relèvent du juge administratif
+f: Le Sénat autorise une ligue de tennis à exploiter les courts du jardin du Luxembourg par une convention d'occupation du domaine public. Une société évincée en demande l'annulation.
+pr: Le tribunal administratif rejette la demande, la cour administrative d'appel se déclare incompétente. La société se pourvoit en cassation.
+q: Le juge administratif est-il compétent pour un contrat d'occupation domaniale conclu par le Sénat ?
+s: Oui. La loi de 2003, éclairée par les travaux parlementaires, ne limite pas la compétence aux marchés publics : l'arrêt de la cour est annulé.
+po: Les assemblées ne sont pas des administrations, mais certains de leurs actes, désignés par la loi, relèvent du juge administratif.
+
+@afghans | M. N. (évacuation d'Afghanistan) | CE, réf., 25 août 2021 | CE | 2021 | 2 | 6
+h: Août 2021, Kaboul tombe. La France organise des évacuations. Des Afghans qui n'y ont pas accès demandent au juge d'ordonner qu'elles soient étendues pour les rapatrier.
+ap: L'organisation d'évacuations depuis un territoire étranger n'est pas détachable des relations internationales
+f: En août 2021, après la prise de Kaboul, des Afghans demandent au juge d'ordonner que le dispositif français d'évacuation soit complété pour les rapatrier.
+pr: Le juge des référés du Conseil d'État, en formation collégiale, est saisi.
+q: Le juge administratif peut-il ordonner à l'État d'organiser des évacuations depuis l'étranger ?
+s: Non. L'organisation de telles opérations n'est pas détachable de la conduite des relations internationales de la France : la juridiction administrative est incompétente.
+po: Un acte de gouvernement contemporain : la catégorie des relations internationales reste vivante.
+
+@csm-2023 | Syndicat de la magistrature (CSM) | CE, Ass., 11 oct. 2023 | CE | 2023 | 2 | 6
+h: Le président du Sénat nomme un magistrat honoraire au Conseil supérieur de la magistrature, comme personnalité qualifiée. Le Syndicat de la magistrature conteste ce choix. Un acte du président d'une assemblée peut-il être jugé ?
+ap: La nomination d'un membre du CSM par le président du Sénat est un acte administratif contrôlé par le Conseil d'État
+f: Le président du Sénat nomme un magistrat honoraire comme personnalité qualifiée au Conseil supérieur de la magistrature. Le Syndicat de la magistrature attaque la nomination.
+pr: Le Conseil d'État, en assemblée, est saisi d'un recours pour excès de pouvoir.
+q: L'acte du président d'une assemblée parlementaire qui nomme un membre du CSM relève-t-il du juge administratif ?
+s: Oui. Le CSM fait partie de l'organisation du service public de la justice : le Conseil d'État est compétent. Au fond, la nomination est légale, la requête rejetée.
+po: Le critère fonctionnel l'emporte sur l'auteur : un acte du président du Sénat peut être administratif quand il touche à l'organisation de la justice.
+
+@le-pen-2024 | Mme Le Pen (élection du président de l'Assemblée) | CE, 24 oct. 2024 | CE | 2024 | 2 | 6
+h: Une députée conteste l'élection du président de l'Assemblée nationale et de son bureau. Le Conseil constitutionnel s'est déclaré incompétent. Elle tente le Conseil d'État.
+ap: L'élection du président de l'Assemblée nationale est un acte parlementaire qu'aucun juge ne contrôle
+f: Une députée conteste l'élection du président de l'Assemblée nationale et des membres de son bureau. Le Conseil constitutionnel a décliné sa compétence.
+pr: Elle saisit le Conseil d'État.
+q: Le juge administratif peut-il connaître de l'élection du président de l'Assemblée nationale ?
+s: Non. Ces actes relèvent de l'exercice de la souveraineté nationale par les membres du Parlement : les requêtes sont rejetées comme portées devant une juridiction incompétente, sans renvoi au Tribunal des conflits.
+po: L'absence de juge ne crée pas une compétence : la fonction parlementaire échappe au juge administratif.
+
+@euronaval | Société Israël Shipyards Ltd c/ SOGENA | TC, 10 mars 2025 | TC | 2025 | 2 | 6
+h: Automne 2024. Le gouvernement interdit aux entreprises israéliennes d'exposer au salon Euronaval des matériels utilisables à Gaza ou au Liban. L'organisateur, une société privée, retire son stand à une entreprise israélienne. Celle-ci saisit le tribunal de commerce.
+ap: Une décision non détachable des relations internationales échappe aux deux ordres de juridiction, même exécutée par une société privée
+f: En 2024, le gouvernement interdit aux entreprises israéliennes d'exposer au salon Euronaval des matériels utilisables à Gaza ou au Liban. L'organisateur privé du salon retire son stand à une société israélienne, qui saisit le tribunal de commerce.
+pr: Le tribunal de commerce rejette le déclinatoire et ordonne la suspension des mesures. Le préfet élève le conflit.
+q: Le juge judiciaire peut-il connaître d'une mesure qu'une société privée prend pour exécuter une décision gouvernementale liée au conflit au Proche-Orient ?
+s: Non. La décision n'est pas détachable de la conduite des relations internationales : les deux ordres de juridiction sont incompétents, le conflit est confirmé.
+po: L'acte de gouvernement « contamine » la mesure privée qui se borne à l'exécuter.

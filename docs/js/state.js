@@ -135,7 +135,7 @@ function etatInitial() {
   return {
     v: 1, cree: jour(), xp: 0, jetons: 30,
     annee: null, equipeL1: 3,
-    matiere: 'admin', equipe: 2, equipeChoisie: false, gains: { jour: null, n: 0 },
+    matiere: 'admin', equipe: 2, equipeChoisie: false, adminEquipe: 2, adminParEquipe: {}, gains: { jour: null, n: 0 },
     oblig: matiereVierge(),
     intro: matiereVierge(),
     signalements: [],
@@ -163,6 +163,8 @@ function etatInitial() {
 
 function fusion(base, x) {
   const o = { ...base, ...x };
+  // Les sauvegardes d'avant l'équipe 2 d'administratif ont progressé sur le cours de l'équipe 1.
+  if (x.adminEquipe === undefined) o.adminEquipe = 1;
   for (const k of ['serie', 'zones', 'inv', 'stats', 'reglages', 'defi', 'compte', 'semaine', 'gains', 'dunk', 'chouette']) o[k] = { ...base[k], ...(x[k] || {}) };
   const ob = x.oblig || {};
   o.oblig = { ...base.oblig, ...ob, gains: { ...base.oblig.gains, ...(ob.gains || {}) }, zones: { ...base.oblig.zones, ...(ob.zones || {}) } };
@@ -190,14 +192,25 @@ export function changerEquipe(n) {
     etat.equipe = n;
   }
   etat.equipeChoisie = true;
+  alignerAdmin();
   sauver();
+}
+
+// L'administratif garde ses chambres à la racine de l'état : celles de l'autre équipe attendent à part.
+export function alignerAdmin() {
+  if (etat.adminEquipe === etat.equipe) return;
+  etat.adminParEquipe = { ...etat.adminParEquipe, [etat.adminEquipe]: { zones: etat.zones, enCours: etat.enCours } };
+  const suite = etat.adminParEquipe[etat.equipe];
+  etat.zones = suite?.zones || zonesVierges();
+  etat.enCours = suite?.enCours || null;
+  etat.adminEquipe = etat.equipe;
 }
 
 export let etat = etatInitial();
 export let rembourse = 0;
 // La progression de la matière ouverte, ou de celle demandée.
 export const M = (m = etat.matiere) => (m === 'oblig' ? etat.oblig : m === 'intro' ? etat.intro : etat);
-export const remplacerEtat = (e) => { etat = fusion(etatInitial(), e); migrer(); sauver(); };
+export const remplacerEtat = (e) => { etat = fusion(etatInitial(), e); migrer(); alignerAdmin(); sauver(); };
 
 // Les anciennes tenues disparaissent : ce qu'elles ont coûté revient en jetons.
 export function migrer() {
@@ -237,6 +250,7 @@ export async function charger() {
   if (!brut) brut = await lireSecours();
   if (brut) { try { etat = fusion(etatInitial(), JSON.parse(brut)); } catch { etat = etatInitial(); } }
   if ((etat.m || 0) < 2) { rembourse = migrer(); if (brut) sauver(); }
+  if (etat.adminEquipe !== etat.equipe) { alignerAdmin(); if (brut) sauver(); }
   if (!etat.annee && (etat.equipeChoisie || etat.stats.seances > 0)) { etat.annee = 'L2'; if (brut) sauver(); }
   try { await navigator.storage?.persist?.(); } catch { /* facultatif */ }
   return etat;
@@ -392,12 +406,13 @@ export function aRevoir(ix, zones) {
 }
 
 // Chapitres en travaux : ouverts dès le début, hors du défi du jour, le temps que le cours y arrive.
-// En administratif, le bonus TD rejoint le parcours dès que la troisième chambre est ouverte.
+// En administratif (équipe 1), le bonus TD rejoint le parcours dès que la troisième chambre est ouverte.
 export const zonesOuvertes = (ix) => {
   if (etat.reglages.toutOuvert) return ix.zones.map((z) => z.id);
   const o = M().zones.ouvertes;
   const libres = ix.zones.filter((z) => z.travaux).map((z) => z.id);
-  if (ix.matiere === 'admin' && o.length >= 3) libres.push(10);
+  const bonus = ix.zones.find((z) => z.bonus);
+  if (bonus && o.length >= 3) libres.push(bonus.id);
   return [...new Set([...o, ...libres])];
 };
 export const zonesDuJour = (ix) => {
@@ -431,7 +446,7 @@ export function evaluerTrophees(ix) {
     if (ix.familles.some((f) => f.m.every((m) => niveau(m.id) >= 4))) gagne('jumeaux');
     if (etat.zones.gagnees.length >= 1) gagne('boss1');
     if ((etat.zones.parfaites || []).length >= 1) gagne('bossParfait');
-    if ([1, 2, 3, 4, 5, 6, 7, 8, 9].every((z) => etat.zones.gagnees.includes(z))) gagne('bossTous');
+    if (ix.zones.filter((z) => !z.bonus && !z.travaux).every((z) => etat.zones.gagnees.includes(z.id))) gagne('bossTous');
   } else {
     const articles = Object.entries(etat.oblig.arrets).filter(([id, a]) => id.startsWith('a') && /^a\d/.test(id) && a.b >= 3);
     if (articles.length >= 30) gagne('art30');

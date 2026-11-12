@@ -1,0 +1,36 @@
+# Frises de l'équipe 2.
+# %id | titre | chambres     =id | chambres : reprend une frise de l'équipe 1.
+# p: ce que montre la frise
+# e: année | nom | ce qu'il décide, sans date | ce que ça change | fiche liée
+# q: question | rang de la bonne étape
+
+=juge-administratif | 1
+=pgd | 3
+=directives | 4
+=conventionnalite | 5
+=constitution-ue | 5
+=loi-ecran | 5
+
+%exception | Les pouvoirs de crise | 2
+p: Un siècle de crises, et toujours la même idée : la légalité s'élargit, le juge reste là.
+e: 1902 | Société immobilière de Saint-Just | L'administration peut exécuter elle-même la loi, dans des cas précis | L'exécution forcée a ses conditions | saint-just
+e: 1918 | Heyriès | En pleine guerre, un décret peut suspendre une garantie légale | Naissance des circonstances exceptionnelles | heyries
+e: 2021 | Passe sanitaire | Le Premier ministre peut aller au-delà du régime légal de crise | Un régime d'exception n'épuise pas les pouvoirs de police | passe-sanitaire
+e: 2025 | TikTok en Nouvelle-Calédonie | La coupure d'un réseau social sans alternative recherchée est annulée | Les mesures doivent rester indispensables | tiktok
+q: Quelle étape fait naître la théorie des circonstances exceptionnelles ? | 2
+
+%gouvernement | Le recul des actes de gouvernement | 6
+p: De la raison d'État aux seules relations internationales et rapports avec le Parlement.
+e: 1875 | Prince Napoléon | Le mobile politique ne fait plus l'acte de gouvernement | Le juge examine l'acte au fond | prince-napoleon
+e: 2019 | Riverains de l'aéroport de Genève | Refuser de dénoncer un traité échappe au juge, mais un avis est détachable | L'acte détachable réduit la catégorie | geneve
+e: 2021 | Évacuations d'Afghanistan | Organiser des évacuations depuis l'étranger n'est pas détachable | Les relations internationales restent hors du juge | afghans
+e: 2025 | Euronaval | Une décision exécutée par une société privée reste un acte de gouvernement | Aucun des deux juges n'est compétent | euronaval
+q: Quelle étape abandonne la théorie du mobile politique ? | 1
+
+%justice | La justice, entre deux juges | 6
+p: Organiser la justice est une activité administrative ; rendre la justice ne l'est pas.
+e: 1952 | Préfet de la Guyane | L'organisation du service public de la justice relève du juge administratif | Organisation et fonctionnement sont séparés | prefet-guyane
+e: 2003 | OIP, grâces collectives | Ce qui touche à l'exécution des peines échappe au juge administratif | La peine reste l'affaire du juge judiciaire | oip-2003
+e: 2014 | A. c/ ACPR | L'autorité qui agit comme partie civile relève du juge judiciaire | Le procès pénal n'est pas de l'administration | acpr
+e: 2023 | Syndicat de la magistrature, CSM | La nomination d'un membre du CSM est contrôlée par le Conseil d'État | Le critère fonctionnel l'emporte sur l'auteur | csm-2023
+q: Quelle étape pose la distinction entre organisation et fonctionnement ? | 1

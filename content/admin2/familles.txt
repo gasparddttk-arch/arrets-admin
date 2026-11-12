@@ -1,0 +1,120 @@
+# Faux jumeaux de l'équipe 2. Les familles de l'équipe 1 qui portent sur des fiches reprises sont ajoutées d'office.
+# %id | Titre
+# p: le piège    m: arrêt = ce qui le distingue
+
+%exception | Circonstances exceptionnelles
+p: Tous élargissent les pouvoirs de l'administration en temps de crise, mais pas avec la même issue.
+m: heyries = La guerre : un décret peut suspendre une garantie légale
+m: passe-sanitaire = L'épidémie : le Premier ministre va au-delà du régime légal de crise
+m: tiktok = L'émeute : coupure de TikTok annulée, faute d'être indispensable
+
+%preable | Agir seule ou passer par le juge
+p: Tous parlent du pouvoir de l'administration d'agir sans juge, mais à des moments différents.
+m: prefet-eure = Le principe : elle ne demande pas au juge ce qu'elle peut décider
+m: forge-longuyon = L'exception : un jugement utile pour saisir des biens à l'étranger
+m: saint-just = L'exécution forcée : permise seulement dans des cas précis
+
+%agir | L'obligation d'agir
+p: Tous reprochent à l'administration de ne rien faire, mais le juge n'en tire pas la même conséquence.
+m: amiante = Inaction fautive : l'État indemnise
+m: rio = Carence caractérisée : le juge enjoint d'agir
+m: oip-2008 = Obligation de protéger la vie, mais refus jugé légal
+
+%discretion | Apprécier ou exécuter
+p: Les deux portent sur la marge de l'administration, pas sur la même question.
+m: hutin = Pas de compétence liée quand il faut apprécier les faits
+m: lamotte = Le recours pour excès de pouvoir existe même sans texte
+
+%charte | La Charte de l'environnement
+p: Les deux font jouer l'article 7 de la Charte, mais l'un parle de compétence, l'autre de procédure.
+m: annecy = Valeur constitutionnelle : la participation du public relève de la loi
+m: gazup = Arrêté annulé, faute de consultation du public
+
+%pfrlr | PFRLR et principes généraux
+p: Tous sont des principes non écrits, mais ils n'ont pas la même valeur.
+m: annamites = Premier PFRLR, dégagé par le Conseil d'État
+m: kone = PFRLR dégagé par interprétation d'un traité
+m: extradition-kazakh = Le PFRLR de Koné annule une extradition politique
+m: sgic = Les PGD lient même le règlement pris sans loi
+
+%effet-direct | Invoquer une norme internationale
+p: Tous parlent d'effet direct, mais à des étapes différentes de l'histoire.
+m: van-gend = La Cour de justice crée l'effet direct du droit communautaire
+m: gisti-fapil = Les deux critères de l'effet direct d'une stipulation
+m: alzheimer = Une stipulation qui ne vise que les États n'est pas invocable
+
+%interpreter | Le juge et l'interprétation des traités
+p: Tous montrent le juge administratif face au texte du traité, chacun sur un point différent.
+m: gisti-1990 = Il interprète lui-même les traités
+m: paulin = Pas de renvoi à la Cour internationale de justice
+m: cheriet = Il vérifie lui-même la réciprocité
+m: fofana = Il lit la convention de Genève avec la directive
+
+%justice | La justice : organisation ou fonctionnement
+p: Tous touchent la justice, mais seuls certains actes relèvent du juge administratif.
+m: prefet-guyane = Organisation de la justice : juge administratif
+m: oip-2003 = Exécution des peines : juge administratif incompétent
+m: acpr = Partie civile dans un procès pénal : juge judiciaire
+m: stage-procureur = Agrément par le procureur : organisation, juge administratif
+m: csm-2023 = Nomination au CSM : le Conseil d'État est compétent
+
+%gouvernement | Actes de gouvernement
+p: Tous parlent d'actes que le juge ne contrôle pas, mais le domaine s'est réduit.
+m: prince-napoleon = Le mobile politique ne suffit plus
+m: geneve = Refus de dénoncer un traité : acte de gouvernement ; avis : détachable
+m: afghans = Évacuations depuis l'étranger : relations internationales
+m: euronaval = La décision exécutée par une société privée reste un acte de gouvernement
+
+%parlement | Les assemblées et le juge
+p: Tous visent une assemblée parlementaire, mais un seul ouvre la porte du juge.
+m: gremetz = Sanction d'un député : aucun juge
+m: le-pen-2024 = Élection du président de l'Assemblée : aucun juge
+m: paris-tennis = Contrat d'occupation du domaine du Sénat : juge administratif
+
+%service-public | Intérêt général et service public
+p: Tous mettent en jeu le service public, mais pour en tirer des conséquences différentes.
+m: hyeres = Un festival culturel est un service public communal
+m: million-marais = La concession de service public reste soumise à la concurrence
+m: bac-eloka = Le service public géré comme une entreprise relève du droit privé
+
+%pgd-contenu | Le contenu des principes généraux du droit
+p: Tous sont des principes généraux du droit, chacun avec son objet.
+m: barel = L'égal accès aux emplois publics, sans considération d'opinions
+m: kpmg = La sécurité juridique impose des mesures transitoires
+m: aramu = Les droits de la défense, même sans texte
+
+%constitution-actes | La Constitution face aux actes administratifs
+p: Tous confrontent un acte à la Constitution, avec des résultats opposés.
+m: rubin-de-servens = Article 16 : la décision de recourir est un acte de gouvernement
+m: demission-office = L'article 8 de 1789 ne vise que les sanctions
+m: annecy = La Charte réserve à la loi la participation du public
+
+%immunite | Coutume et immunités internationales
+p: Les deux appliquent des règles non écrites du droit international, à des niveaux différents.
+m: aquarone = La coutume ne l'emporte pas sur la loi
+m: gabon = L'immunité de l'État étranger fait échec à l'exequatur
+
+%convention-europeenne | La Convention européenne devant le juge
+p: Tous invoquent la Convention, avec des issues différentes.
+m: levenez = La loi rétroactive est écartée pour protéger une créance
+m: magistrat-sanction = Aucun droit à la sanction d'un magistrat
+m: narcotrafic = Les quartiers de haute sécurité respectent les articles 3 et 8
+m: oip-2008 = L'obligation de protéger la vie des détenus
+
+%union | Le droit de l'Union devant le juge administratif
+p: Tous appliquent le droit de l'Union, mais pas de la même manière.
+m: anafe = Un règlement appliqué sans renvoi, faute de doute
+m: amazon = Un renvoi préjudiciel, puis l'application de la réponse
+m: arcelor = La directive transposée confrontée à la Constitution par équivalence
+
+%traites-loi | Traités, loi et ratification
+p: Tous parlent du traité et de la loi, mais sous des angles différents.
+m: gisti-2025 = Un accord qui ne touche pas à la loi n'a pas à être ratifié par une loi
+m: gardedieu = La loi contraire à un traité engage la responsabilité de l'État
+m: nicolo = Le traité l'emporte sur la loi, même postérieure
+
+%fonction-administrative | Ce qui reste administratif
+p: Tous sont proches d'un autre pouvoir, et pourtant restent des actes administratifs.
+m: chemins-de-fer-est = Le règlement pris sur invitation de la loi
+m: commission-nanterre = L'enquête administrative sur un tribunal
+m: csm-2023 = La nomination d'un membre du CSM par le président du Sénat

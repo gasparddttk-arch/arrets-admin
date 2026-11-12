@@ -24,6 +24,13 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 ### 4. Cas pratique L1
 * **Statut** : ⚪ Attente suite du cours (sources du droit, jurisprudence).
 
+### 5. Droit administratif, équipe 2 (Pr Plessix) : relecture
+* **Statut** : 🟡 En ligne, à relire par Gaspard
+* **Fichiers concernés** : `content/admin2/*.txt` (arrêts, familles, juge, frises, sujets, commentaires)
+* **Détail** : cours et plaquette jusqu'à la séance 6 incluse. 71 fiches (42 nouvelles, 29 reprises de l'équipe 1 avec le même id, donc progression partagée). Six chambres : caractères, puis une par séance de TD (2 à 6).
+* **Points ouverts** : « Mme C.A. » (grand arrêt de la séance 5 de la plaquette) non identifié, donc absent. Fiches marquées `nf` (hors puzzle) : prefet-eure, amiante, chemins-de-fer-est.
+* **Fonctionnement** : le choix d'équipe vaut pour toute la L2. La progression des chambres d'administratif de l'autre équipe est rangée dans `etat.adminParEquipe` ; les anciennes sauvegardes sont considérées comme équipe 1 (`adminEquipe`).
+
 ---
 
 ## Modèle pour ajouter une nouvelle tâche

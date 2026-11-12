@@ -641,6 +641,52 @@ async function debordement(p, nom) {
   await anc.close();
   log('équipes ok');
 
+  // Droit administratif, équipe 2 : son cours, ses chambres, et la progression de l'équipe 1 rangée à part.
+  const ad = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const d2 = await ad.newPage(); d2.on('pageerror', (x) => erreurs.push(x.message));
+  d2.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
+  await d2.addInitScript(() => { if (!sessionStorage.getItem('pose')) { sessionStorage.setItem('pose', '1'); localStorage.setItem('arrets-admin.v1', JSON.stringify({ v: 1, m: 2, annee: 'L2', xp: 300, jetons: 50, equipe: 2, equipeChoisie: true, arrets: { blanco: { b: 4, d: 0, ok: 4, ko: 0, c: {} } }, zones: { ouvertes: [1, 2, 3], gagnees: [1, 2], parfaites: [] } })); } });
+  await d2.goto(URLB + '?test&equipe=2'); await d2.waitForSelector('.tribune');
+  let ad2 = await etat(d2);
+  assert.equal(ad2.adminEquipe, 2); assert.deepEqual(ad2.adminParEquipe['1'].zones.gagnees, [1, 2], 'chambres de l’équipe 1 rangées');
+  assert.deepEqual(ad2.zones.ouvertes, [1, 2], 'l’équipe 2 commence à ses premières chambres'); assert.equal(ad2.arrets.blanco.b, 4, 'fiche commune gardée');
+  const ix2 = await d2.evaluate(() => ({ zones: window.__app.ix.zones.length, bonus: window.__app.ix.zones.some((z) => z.bonus), ids: window.__app.ix.arrets.map((a) => a.id) }));
+  assert.equal(ix2.zones, 6); assert.equal(ix2.bonus, false);
+  assert.ok(ix2.ids.includes('tiktok') && ix2.ids.includes('blanco'), 'arrêts de l’équipe 2 et fiches reprises');
+  assert.ok(!ix2.ids.includes('eky'), 'pas d’arrêt propre à l’équipe 1');
+  for (let z = 1; z <= 6; z++) assert.ok(await d2.evaluate((id) => window.__app.ix.cartes.filter((a) => a.zones.includes(id)).length, z) >= 3, `chambre ${z} trop maigre`);
+  await d2.evaluate(() => window.__app.aller('carte')); await d2.waitForSelector('.salle');
+  assert.equal(await d2.locator('.salle').count(), 6, 'six chambres');
+  await debordement(d2, 'chambres admin équipe 2');
+  await d2.screenshot({ path: CAP + 'admin2-chambres.png', fullPage: true });
+  await d2.locator('.salle', { hasText: 'Un droit à part' }).locator('button').click();
+  await d2.tap('text=Audience solennelle'); await jouerParfait(d2);
+  assert.ok((await etat(d2)).zones.gagnees.includes(1), 'audience de l’équipe 2 gagnée');
+  await d2.tap('text=Retour au Palais');
+  await d2.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; });
+  for (const m of ['paires', 'puzzle', 'juge', 'plan', 'architecte', 'frise']) {
+    for (const g of m === 'plan' || m === 'architecte' ? ['D', 'C'] : ['hasard']) {
+      await d2.evaluate(() => window.__app.aller('role')); await ouvrirMode(d2, m, g);
+      await jouerParfait(d2); await textePropre(d2); await debordement(d2, `admin équipe 2 ${m}`);
+      await d2.tap('text=Retour au Palais');
+    }
+  }
+  await d2.evaluate(() => window.__app.matieres()); await d2.waitForSelector('.porte-admin');
+  assert.match(await d2.locator('.porte-admin').innerText(), /équipe 2/);
+  await d2.evaluate(() => window.__app.ouvrirMatiere('admin')); await d2.waitForSelector('.tribune');
+  await d2.evaluate(() => window.__app.aller('profil')); await d2.waitForSelector('.bascule');
+  await d2.locator('.bascule button', { hasText: 'Équipe 1' }).click();
+  await d2.waitForFunction(() => window.__app.etat().equipe === 1);
+  ad2 = await etat(d2);
+  assert.deepEqual(ad2.zones.gagnees, [1, 2], 'les chambres de l’équipe 1 reviennent');
+  assert.equal(await d2.evaluate(() => window.__app.ix.zones.length), 10);
+  await d2.locator('.bascule button', { hasText: 'Équipe 2' }).click();
+  await d2.waitForFunction(() => window.__app.etat().equipe === 2);
+  assert.deepEqual((await etat(d2)).zones.gagnees, [1], 'les chambres de l’équipe 2 reviennent');
+  assert.equal(await d2.evaluate(() => window.__app.ix.zones.length), 6);
+  await ad.close();
+  log('administratif équipe 2 ok');
+
   // Le son doit survivre à une interruption : l'iPhone peut figer le contexte sans rien dire.
   const audio = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
   await audio.addInitScript(() => {
