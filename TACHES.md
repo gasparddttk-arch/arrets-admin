@@ -56,3 +56,9 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
     - `supabase/functions/pousser/index.ts` : ajout des types `place_testeur` et `maj_appli` avec redirection directe vers `./`.
     - `app/css/app.css` : ajustement du style `.places-alerte`.
     - `npm run check` validé (100% vert) et `npm run build` exécuté pour `/docs`.
+- **12/11/2026 (Claude, revue)** :
+  - L'insertion directe dans `notifications` était refusée par la base (aucune règle d'insertion) : les notifications ne partaient pas. Remplacée par la fonction SQL `admin_notifier(cibles, genre, donnees)`, réservée à l'admin.
+  - L'edge function `pousser` n'envoie `place_testeur` et `maj_appli` que si l'appelant est admin ; redéployée.
+  - Écran « places prises » : message adapté si l'appli n'est pas installée sur l'écran d'accueil ou si les notifications sont refusées.
+  - Bandeau de mise à jour : plus de toast en double, et caché pendant une séance.
+  - Suite complète `tests/run.cjs` passée avant le merge.

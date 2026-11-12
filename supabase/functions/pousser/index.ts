@@ -1,5 +1,6 @@
 // Envoie sur les téléphones les notifications que l'appelant vient de créer (demande d'ami, défi, révision).
 // L'appelant est identifié par son jeton ; seules ses propres notifications des deux dernières minutes partent.
+// Place de test et mise à jour : seulement si l'appelant est l'administrateur.
 import webpush from 'npm:web-push@3.6.7';
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 
@@ -19,6 +20,8 @@ const TEXTES: Record<string, (p: string, d: Record<string, unknown>) => [string,
   maj_appli: (_, d) => ['Mise à jour de Gdroit', (d.titre as string) || 'Une nouvelle version est en ligne. Viens voir les nouveautés !'],
 };
 
+const ADMIN = new Set(['place_testeur', 'maj_appli']);
+
 const entetes = { 'Access-Control-Allow-Origin': ORIGINE, 'Access-Control-Allow-Headers': 'authorization, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
 
 Deno.serve(async (req) => {
@@ -33,20 +36,22 @@ Deno.serve(async (req) => {
   if (!prive) return new Response(JSON.stringify({ envoyees: 0, raison: 'cle absente' }), { headers: { ...entetes, 'Content-Type': 'application/json' } });
   webpush.setVapidDetails('https://github.com/gasparddttk-arch/arrets-admin', PUBLIQUE, prive);
 
+  const { data: prof } = await base.from('profils').select('pseudo, acces').eq('id', u.user.id).single();
+  const estAdmin = prof?.acces === 'admin';
   const depuis = new Date(Date.now() - 120000).toISOString();
-  const { data: liste } = await base.from('notifications').select('id, destinataire, type, donnees').eq('de', u.user.id).eq('pousser', true).is('pousse_le', null).gte('cree_le', depuis).limit(50);
+  const { data: brute } = await base.from('notifications').select('id, destinataire, type, donnees').eq('de', u.user.id).eq('pousser', true).is('pousse_le', null).gte('cree_le', depuis).limit(estAdmin ? 500 : 50);
+  const liste = (brute || []).filter((n) => estAdmin || !ADMIN.has(n.type));
   if (!liste?.length) return new Response(JSON.stringify({ envoyees: 0 }), { headers: { ...entetes, 'Content-Type': 'application/json' } });
   await base.from('notifications').update({ pousse_le: new Date().toISOString() }).in('id', liste.map((n) => n.id));
-  const { data: prof } = await base.from('profils').select('pseudo').eq('id', u.user.id).single();
   const pseudo = prof?.pseudo || 'Un ami';
   let envoyees = 0;
   for (const n of liste) {
     const { data: apps } = await base.from('appareils').select('point, abonnement').eq('proprietaire', n.destinataire);
     const [title, body] = (TEXTES[n.type] || TEXTES.demande)(pseudo, n.donnees || {});
-    const url = n.type === 'place_testeur' || n.type === 'maj_appli' ? './' : './?amis';
+    const lien = ADMIN.has(n.type) ? './' : './?amis';
     for (const a of apps || []) {
       try {
-        await webpush.sendNotification(a.abonnement, JSON.stringify({ title, body, ami: true, tag: `${n.type}-${n.id}`, url }), { TTL: 3600 * 12 });
+        await webpush.sendNotification(a.abonnement, JSON.stringify({ title, body, ami: true, tag: `${n.type}-${n.id}`, url: lien }), { TTL: 3600 * 12 });
         envoyees++;
       } catch (e) {
         const code = (e as { statusCode?: number }).statusCode;

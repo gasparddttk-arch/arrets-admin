@@ -17,7 +17,7 @@ import { jouerCas, jouerRemede, jouerFrise } from './jeux-oblig.js';
 import { lancerDunk } from './dunk.js';
 import { activerRappel, etatRappel, estInstallee, abonnementActuel } from './notif.js';
 import { SUPABASE_URL } from './config.js';
-import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifierCompte, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifier, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 
 const TOUS_JEUX = { ...JEUX, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu,
@@ -1235,7 +1235,7 @@ const TEXTE_NOTIF = {
   defi_recu: (n) => `${n.pseudo} te lance un défi.`,
   defi_resultat: (n) => { const a = n.donnees.moi; const b = n.donnees.lui; return b > a ? `${n.pseudo} a battu ton score : ${pct(b)} contre ${pct(a)}.` : b === a ? `Égalité avec ${n.pseudo} : ${pct(b)}.` : `${n.pseudo} n’a pas battu ton score : ${pct(b)} contre ${pct(a)}.`; },
   ami_defi: (n) => `${n.pseudo} a fini son défi du jour.`,
-  place_testeur: () => 'Une place s’est libérée ! Tu as maintenant accès à Gdroit.',
+  place_testeur: () => 'Une place s’est libérée : tu as maintenant accès à Gdroit.',
   maj_appli: (n) => n.donnees?.titre || 'Une nouvelle version de Gdroit est disponible.',
 };
 
@@ -1469,15 +1469,12 @@ async function ecranAdmin() {
       const enAttente = comptes.filter((c) => c.acces === 'aucun');
       const aOuvrir = enAttente.slice(0, placesDispos);
       if (!aOuvrir.length) return toast('Aucun compte en attente trouvé.');
-      let faits = 0;
+      const ouverts = [];
       for (const c of aOuvrir) {
-        try {
-          await adminStatut(c.id, 'testeur');
-          adminNotifierCompte(c.id, 'place_testeur');
-          faits++;
-        } catch { /* suivant */ }
+        try { await adminStatut(c.id, 'testeur'); ouverts.push(c.id); } catch { /* suivant */ }
       }
-      toast(`${pluriel(faits, 'place ouverte')} et notifiée${faits > 1 ? 's' : ''}.`);
+      if (ouverts.length) await adminNotifier(ouverts, 'place_testeur').catch(() => toast('Places ouvertes, notification non envoyée.'));
+      toast(`${pluriel(ouverts.length, 'place ouverte')} et notifiée${ouverts.length > 1 ? 's' : ''}.`);
       ecranAdmin();
     } }, `Ouvrir ${Math.min(quota.sans_acces, Math.max(0, (quota.quota ?? 0) - (quota.testeurs ?? 0)))} place${Math.min(quota.sans_acces, Math.max(0, (quota.quota ?? 0) - (quota.testeurs ?? 0))) > 1 ? 's' : ''} en attente`) : null,
     h('h2', {}, `Retours des testeurs (${ouvertsR.length})`),
@@ -1487,11 +1484,9 @@ async function ecranAdmin() {
       h('button', { class: 'bouton-lien', onClick: async () => { try { await adminTraiterRetour(x.id, !x.traite); ecranAdmin(); } catch { toast('Pas de connexion.'); } } }, x.traite ? 'Rouvrir' : 'Marquer comme traité'))))) : h('p', { class: 'aide-claire' }, 'Aucun retour pour l’instant.'),
     h('h2', {}, 'Mise à jour de l’application'),
     h('p', { class: 'aide-claire' }, 'Prévenir tous les testeurs qu’une nouvelle version est disponible.'),
-    h('button', { class: 'bouton-fantome', onClick: () => {
-      const testeurs = comptes.filter((c) => c.acces === 'testeur');
-      if (!testeurs.length) return toast('Aucun testeur.');
-      for (const t of testeurs) adminNotifierCompte(t.id, 'maj_appli', { titre: 'Une nouvelle version de Gdroit est disponible !' });
-      toast(`${pluriel(testeurs.length, 'testeur notifié')}.`);
+    h('button', { class: 'bouton-fantome', onClick: async (e) => {
+      e.currentTarget.disabled = true;
+      try { const n = await adminNotifier(null, 'maj_appli', { titre: 'Une nouvelle version est en ligne. Viens voir les nouveautés.' }); toast(n ? `${pluriel(n, 'compte notifié')}.` : 'Aucun compte à prévenir.'); } catch { toast('Envoi refusé.'); e.currentTarget.disabled = false; }
     } }, 'Notifier les testeurs d’une mise à jour'),
     h('h2', {}, 'Nouveaux comptes'),
     h('p', { class: 'aide-claire' }, 'Le statut donné à chaque nouvelle inscription. Passe à « Sans accès » le jour où l’appli devient payante : les comptes existants gardent leur statut.'),
@@ -1514,9 +1509,9 @@ function ficheCompte(c) {
     if (c.acces === v) return;
     try {
       await adminStatut(c.id, v);
-      if (v === 'testeur') adminNotifierCompte(c.id, 'place_testeur');
+      if (v === 'testeur' && c.acces === 'aucun') adminNotifier([c.id], 'place_testeur').catch(() => {});
       voile.remove();
-      toast(`${c.pseudo || c.email} : ${NOMS_STATUT[v].toLowerCase()}${v === 'testeur' ? ' (notifié)' : ''}.`);
+      toast(`${c.pseudo || c.email} : ${NOMS_STATUT[v].toLowerCase()}${v === 'testeur' && c.acces === 'aucun' ? ' (prévenu)' : ''}.`);
       ecranAdmin();
     } catch { toast('Changement refusé.'); }
   } }, NOMS_STATUT[v])));
@@ -1604,7 +1599,11 @@ function ecranPlacesPrises() {
   afficherOnglets(false);
   const conteneurAlerte = h('div', { class: 'places-alerte' });
   etatRappel().then((r) => {
-    if (r === 'actif') {
+    if (r === 'indisponible') {
+      conteneurAlerte.replaceChildren(h('p', { class: 'aide-claire' }, estInstallee() ? 'Ce téléphone ne reçoit pas les notifications.' : 'Pour être prévenu quand une place s’ouvre, ajoute Gdroit à ton écran d’accueil, puis reviens ici.'));
+    } else if (r === 'refuse') {
+      conteneurAlerte.replaceChildren(h('p', { class: 'aide-claire' }, 'Les notifications sont refusées pour Gdroit. Active-les dans les réglages du téléphone pour être prévenu.'));
+    } else if (r === 'actif') {
       conteneurAlerte.replaceChildren(h('p', { class: 'aide-claire' }, 'Tu seras prévenu par notification dès qu’une place s’ouvre.'));
     } else {
       conteneurAlerte.replaceChildren(h('button', { class: 'bouton-fantome', onClick: async () => {
@@ -1612,7 +1611,7 @@ function ecranPlacesPrises() {
           await activerRappel();
           const s = await abonnementActuel();
           if (s) await inscrireAppareil(s);
-          toast('C’est noté ! Tu seras prévenu dès qu’une place s’ouvre.');
+          toast('C’est noté : tu seras prévenu dès qu’une place s’ouvre.');
           conteneurAlerte.replaceChildren(h('p', { class: 'aide-claire' }, 'Tu seras prévenu par notification dès qu’une place s’ouvre.'));
         } catch (err) {
           toast(err.message || 'Notifications refusées.');
@@ -1743,7 +1742,6 @@ function guideInstallation() {
 // DÉMARRAGE --------------------------------------------------------------------------
 function bandeauMiseAJour(reg) {
   if (document.querySelector('.maj')) return;
-  toast('Mise à jour disponible : touche pour recharger.');
   document.body.append(h('button', { class: 'maj', onClick: () => { reg.waiting?.postMessage('activer'); } }, 'Nouvelle version disponible : recharger'));
 }
 

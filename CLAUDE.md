@@ -26,6 +26,12 @@
 3. **Sécurité et Secrets** :
    - Ne jamais committer de secrets ou clés privées dans Git.
    - Les modifications en base de données Supabase nécessitent la validation explicite de Gaspard.
+   - Tout ce qui est réservé à l'admin se vérifie côté serveur (fonction SQL avec `est_admin()`, ou contrôle dans l'edge function), jamais seulement en cachant un bouton.
+   - La table `notifications` n'accepte aucune insertion directe depuis l'appli : on passe par une fonction SQL (`admin_notifier` pour l'admin).
+4. **Mise en ligne** :
+   - `npm run check` ne vérifie que le contenu. Avant tout merge sur `main` : `npm run build`, puis la suite complète `NODE_PATH=$(npm root -g) node tests/run.cjs` (plus de 5 minutes ; mascotte-perso est parfois instable, relancer).
+   - Fusionner sur `main` publie l'appli (GitHub Pages, dossier `docs/`), pas les fonctions Supabase : une modification de `supabase/functions/*` se redéploie à part.
+   - Vérifier en ligne que `docs/sw.js` (VERSION) est bien servi.
 
 ---
 

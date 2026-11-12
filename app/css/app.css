@@ -1465,3 +1465,5 @@ html[data-effets='non'] .feuille { display: none; }
 .sc-temoin.manque .sc-voyant { background: var(--cire-vive); box-shadow: 0 0 10px var(--cire-vive); }
 .sc-temoin.sans-objet { opacity: .45; }
 .sc-bilan { display: block; margin-top: 6px; font: 600 13px var(--ui); color: var(--texte-2); }
+/* Le bandeau de mise à jour attend la fin de la séance. */
+body:has(#onglets[hidden]) .maj { display: none; }

@@ -907,6 +907,7 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .connexion .bouton-fantome { margin-top: 2px; }
 .connexion-code { margin-top: 14px; }
 .connexion-erreur { margin-bottom: 12px; color: var(--texte); background: rgba(200, 60, 60, .25); border-radius: 10px; padding: 8px 10px; }
+.places-alerte { margin: 8px 0; }
 .connexion-note { margin-top: auto; padding-top: 18px; }
 /* Administration */
 .admin-comptes li { list-style: none; }
@@ -1464,3 +1465,5 @@ html[data-effets='non'] .feuille { display: none; }
 .sc-temoin.manque .sc-voyant { background: var(--cire-vive); box-shadow: 0 0 10px var(--cire-vive); }
 .sc-temoin.sans-objet { opacity: .45; }
 .sc-bilan { display: block; margin-top: 6px; font: 600 13px var(--ui); color: var(--texte-2); }
+/* Le bandeau de mise à jour attend la fin de la séance. */
+body:has(#onglets[hidden]) .maj { display: none; }
