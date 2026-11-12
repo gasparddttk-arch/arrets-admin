@@ -837,7 +837,7 @@ async function debordement(p, nom) {
   assert.equal(await u.locator('.role-ligne').count(), 2, 'deux entrées sous le Défi');
   await u.locator('.tribune .figure-chouette').waitFor();
   await u.locator('.role-ligne[data-mode="vers-role"]').click();
-  assert.equal(await u.locator('.role-ligne').count(), 7, 'trois minutes, cinq exercices et Dunk');
+  assert.equal(await u.locator('.role-ligne').count(), 8, 'trois minutes, six exercices et Dunk');
   await u.screenshot({ path: CAP + 'palais-role.png' }); await debordement(u, 'le rôle');
   await u.locator('.bouton-matiere').click(); await u.waitForSelector('.tribune');
   await u.locator('.role-ligne[data-mode="vers-examen"]').click();
