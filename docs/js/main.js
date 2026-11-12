@@ -1254,8 +1254,11 @@ function blocCompte() {
     h('p', { class: 'aide-claire' }, dateSync ? `Progression copiée sur ton compte le ${dateSync}.` : 'Ta progression se copie sur ton compte après chaque séance.'),
     champ,
     h('button', { class: 'bouton-fantome', onClick: async () => { const v = champ.value.trim(); if (!v) return toast('Choisis un pseudo.'); try { await changerPseudo(v); etat.compte.pseudo = v; sauver(); toast('Pseudo enregistré.'); } catch { toast('Pas de connexion. Réessaie plus tard.'); } } }, 'Changer de pseudo'),
-    h('button', { class: 'bouton-lien', onClick: () => confirmerDeconnexion() }, 'Se déconnecter'));
+    h('button', { class: 'bouton-lien', onClick: () => confirmerDeconnexion() }, 'Se déconnecter'),
+    liensLegaux());
 }
+// Mentions légales et confidentialité : deux pages fixes, hors de l'appli.
+const liensLegaux = () => h('p', { class: 'liens-legaux' }, h('a', { href: 'mentions.html' }, 'Mentions légales'), h('a', { href: 'confidentialite.html' }, 'Confidentialité'));
 // AMIS --------------------------------------------------------------------------------
 const pct = (x) => `${Math.round((x || 0) * 100)} %`;
 const semaineDe = (r) => (r && r.semaine === lundi() ? r.xpSemaine || 0 : 0);
@@ -1592,7 +1595,8 @@ function ecranConnexion(erreur) {
     h('button', { class: 'bouton-or connexion-google', onClick: () => { if (navigator.onLine === false) return toast('Il faut du réseau pour se connecter.'); connexionGoogle(); } }, logoG(), 'Continuer avec Google'),
     // Le code par email attend un service d'envoi (SMTP) : ?email l'affiche pour les tests.
     EMAIL_ACTIF || new URLSearchParams(location.search).has('email') ? [h('p', { class: 'connexion-ou' }, 'ou'), email, envoyer, etape2] : null,
-    h('p', { class: 'aide-claire connexion-note' }, etat.stats.seances ? 'La progression déjà sur ce téléphone sera rattachée à ton compte.' : 'Un compte se crée à la première connexion.')));
+    h('p', { class: 'aide-claire connexion-note' }, etat.stats.seances ? 'La progression déjà sur ce téléphone sera rattachée à ton compte.' : 'Un compte se crée à la première connexion.'),
+    liensLegaux()));
 }
 function logoG() {
   const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
