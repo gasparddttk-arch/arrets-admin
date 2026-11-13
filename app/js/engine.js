@@ -249,15 +249,15 @@ export function roundMemoryL2(ix, zones, dus, rng = Math.random) {
   if (garde.length < 4) return null;
   return { type: 'memory', paires: melange(garde, rng), consigne: ix.matiere === 'oblig' ? 'Retrouve chaque article et son objet.' : 'Retrouve chaque arrêt et ce qu’il apporte.' };
 }
-// Tri : des situations à ranger dans leur chambre (obligations), des arrêts à ranger dans leur famille (administratif).
-export function roundTriL2(ix, zones, rng = Math.random) {
+// Le grand rangement : des articles et des arrêts tombent vers trois parties du cours, tirées au hasard à chaque partie.
+export function roundRangementL2(ix, zones, rng = Math.random) {
   const cartes = []; const bords = [];
   if (ix.matiere === 'oblig') {
     // Des articles et des arrêts à ranger dans la partie du cours qu'ils règlent : l'information, le dol, l'offre…
     // Les colonnes changent à chaque partie : trois ou quatre chambres tirées au hasard.
-    const choisies = melange(zones.filter((z) => ix.cartes.filter((x) => x.zones.includes(z) && (x.imp ?? 2) >= 2).length >= 2), rng).slice(0, 4);
+    const choisies = melange(zones.filter((z) => ix.cartes.filter((x) => x.zones.includes(z) && (x.imp ?? 2) >= 2).length >= 3), rng).slice(0, 3);
     if (choisies.length < 2) return null;
-    const parBord = choisies.length >= 3 ? 2 : 3;
+    const parBord = 3;
     for (const z of choisies) {
       // Une fiche rattachée à deux des chambres choisies serait ambiguë : on l'écarte.
       const propres = ix.cartes.filter((x) => x.zones.includes(z) && (x.imp ?? 2) >= 2 && x.zones.filter((y) => choisies.includes(y)).length === 1);
@@ -267,30 +267,30 @@ export function roundTriL2(ix, zones, rng = Math.random) {
         ? { t: x.nom, s: 'Code civil', k: z, w: `${x.titre}.`, carte: x.id }
         : { t: x.court, s: x.ref, k: z, w: `${x.ap?.[z] || Object.values(x.ap || {})[0] || ''}.`.replace(/\.\.$/, '.'), carte: x.id })));
     }
-    if (cartes.length < 4) return null;
-    return { type: 'tri', titre: 'Quelle partie du cours ?', consigne: 'Range chaque article et chaque arrêt dans la partie du cours qu’il règle.', bords: melange(bords, rng), cartes: melange(cartes, rng) };
+    if (cartes.length < 5) return null;
+    return { type: 'rangement', titre: 'Le grand rangement', colonnes: bords, pieces: melange(cartes, rng) };
   }
   const dans = dansZones(zones);
   const familles = melange(ix.familles.filter((f) => f.titre.length <= 44 && !/\?\s*$/.test(f.titre)), rng);
   const pris = new Set();
   for (const f of familles) {
-    if (bords.length === 4) break;
+    if (bords.length === 3) break;
     // Un arrêt rangé dans deux des familles choisies serait ambigu : on l'écarte.
     const membres = f.m.filter((m) => { const a = ix.parId.get(m.id); return a && dans(a) && !pris.has(m.id) && !(ix.famillesDe.get(m.id) || []).some((g) => g !== f && bords.some((b) => b.k === g.id)); });
     if (membres.length < 2) continue;
     bords.push({ k: f.id, nom: f.titre });
-    for (const m of melange(membres, rng).slice(0, 2)) { const a = ix.parId.get(m.id); pris.add(a.id); cartes.push({ t: a.court, s: `${a.ref}`, k: f.id, w: m.k, carte: a.id }); }
+    for (const m of melange(membres, rng).slice(0, 3)) { const a = ix.parId.get(m.id); pris.add(a.id); cartes.push({ t: a.court, s: `${a.ref}`, k: f.id, w: m.k, carte: a.id }); }
   }
   // Les familles déjà choisies ne doivent pas contenir les arrêts tirés pour une autre.
   const propres = cartes.filter((c) => !(ix.famillesDe.get(c.carte) || []).some((g) => g.id !== c.k && bords.some((b) => b.k === g.id)));
-  if (bords.length < 2 || propres.length < 4) return null;
-  return { type: 'tri', titre: 'Quelle famille ?', consigne: 'Range chaque arrêt dans sa famille de jurisprudence.', bords, cartes: melange(propres, rng) };
+  if (bords.length < 2 || propres.length < 5) return null;
+  return { type: 'rangement', titre: 'Le grand rangement', colonnes: bords, pieces: melange(propres, rng) };
 }
 
 function tirerOblig(ix, type, zones, dus, rng, deja) {
   if (type === 'atelier' && ix.ateliers?.length) return tirerAtelier(ix, zones, null, rng, deja);
   if (type === 'memory') { const r = roundMemoryL2(ix, zones, dus, rng); if (r) return r; type = 'qualif'; }
-  if (type === 'tri') { const r = roundTriL2(ix, zones, rng); if (r) return r; type = 'qualif'; }
+  if (type === 'rangement') { const r = roundRangementL2(ix, zones, rng); if (r) return r; type = 'qualif'; }
   const dans = dansZones(zones);
   const listes = { qualif: ix.qualifs.filter(dans), cas: ix.cas.filter(dans), remede: ix.remedes.filter(dans), frise: ix.frises.filter(dans), plan: ix.sujets.filter(dans) };
   const t = listes[type]?.length ? type : ['qualif', 'cas', 'remede', 'frise', 'plan'].find((k) => listes[k].length);
@@ -362,7 +362,7 @@ export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new S
   if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, dus, rng, deja);
   if (type === 'atelier' && ix.ateliers?.length) return tirerAtelier(ix, zones, null, rng, deja);
   if (type === 'memory') { const r = roundMemoryL2(ix, zones, dus, rng); if (r) return r; type = 'paires'; }
-  if (type === 'tri') { const r = roundTriL2(ix, zones, rng); if (r) return r; type = 'paires'; }
+  if (type === 'rangement') { const r = roundRangementL2(ix, zones, rng); if (r) return r; type = 'paires'; }
   const d = dispo(ix, zones);
   const prendre = (liste) => {
     const frais = liste.filter((x) => !deja.has(x.id));
@@ -392,10 +392,10 @@ export function composerDefi(ix, zones, dus, rng = Math.random) {
   const deja = new Set();
   if (ix.matiere === 'oblig') {
     const milieu = melange(['cas', choix(['remede', 'frise'], rng), choix(['remede', 'frise', 'plan'], rng)], rng);
-    return ['qualif', ...milieu, choix(['qualif', 'qualif', 'tri', 'memory'], rng)].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
+    return ['qualif', ...milieu, choix(['qualif', 'qualif', 'rangement', 'memory'], rng)].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
   }
   const ordre = melange(['puzzle', 'juge', choix(['plan', 'architecte'], rng)], rng);
-  return ['paires', ...ordre, choix(['paires', 'paires', 'tri', 'memory'], rng)].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
+  return ['paires', ...ordre, choix(['paires', 'paires', 'rangement', 'memory'], rng)].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
 }
 
 // Audience solennelle : les cinq modes, plus une épreuve au hasard.

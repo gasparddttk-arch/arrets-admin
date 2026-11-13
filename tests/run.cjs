@@ -197,7 +197,7 @@ async function debordement(p, nom) {
   await p.tap('text=Retour au Palais');
 
   // 2. Chaque mode, seul, plusieurs fois, pour couvrir le contenu.
-  for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte', 'Frise de la jurisprudence', 'Memory', 'Le tri du cours']) {
+  for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte', 'Frise de la jurisprudence', 'Memory', 'Le grand rangement']) {
     for (let i = 0; i < 3; i++) {
       await p.evaluate(() => window.__app.aller('role')); await p.locator('.role-ligne', { hasText: m }).click();
       if (await p.locator('.boite-genre').count()) await p.locator(`.boite-genre [data-genre="${['C', 'D', 'hasard'][i]}"]`).click();
@@ -484,7 +484,7 @@ async function debordement(p, nom) {
   const po = await b.newContext({ ...devices['iPhone 13'], viewport: { width: 320, height: 568 } });
   const q2 = await po.newPage(); q2.on('pageerror', (x) => erreurs.push(x.message));
   await q2.goto(URLB + '?test&matiere=oblig'); await q2.waitForSelector('.tribune');
-  for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan', 'memory', 'tri']) {
+  for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan', 'memory', 'rangement']) {
     await q2.evaluate(() => window.__app.aller('role')); await ouvrirMode(q2, m);
     await jouer(q2, { capture: 'oblig-petit' });
     await debordement(q2, `petit ${m}`);
@@ -673,7 +673,7 @@ async function debordement(p, nom) {
   assert.ok((await etat(d2)).zones.gagnees.includes(1), 'audience de l’équipe 2 gagnée');
   await d2.tap('text=Retour au Palais');
   await d2.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; });
-  for (const m of ['paires', 'puzzle', 'juge', 'plan', 'architecte', 'frise', 'memory', 'tri']) {
+  for (const m of ['paires', 'puzzle', 'juge', 'plan', 'architecte', 'frise', 'memory', 'rangement']) {
     for (const g of m === 'plan' || m === 'architecte' ? ['D', 'C'] : ['hasard']) {
       await d2.evaluate(() => window.__app.aller('role')); await ouvrirMode(d2, m, g);
       await jouerParfait(d2); await textePropre(d2); await debordement(d2, `admin équipe 2 ${m}`);

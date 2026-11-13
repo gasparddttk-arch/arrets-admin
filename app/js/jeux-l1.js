@@ -188,26 +188,32 @@ export function jouerMot(zone, ctx, round) {
 
 // LE GRAND RANGEMENT ---------------------------------------------------------------------------
 // Les disciplines tombent ; on les envoie dans leur colonne. Le droit pénal, mixte, rebondit ailleurs.
+// En L2, round.colonnes vient du cours : des articles et des arrêts tombent vers leurs parties du cours.
 const COLONNES = [['p', 'Droit public'], ['x', 'Mixte'], ['v', 'Droit privé']];
 export function jouerRangement(zone, ctx, round) {
   return new Promise((fini) => {
-    let i = 0; let bons = 0; let rate = false; let piece = null; let anim = null; let depart = 0; let duree0 = 7000; let fini_ = false;
+    const l2 = Array.isArray(round.colonnes);
+    // En L2, il faut le temps de lire un article ou un arrêt : la chute est plus lente.
+    let i = 0; let bons = 0; let rate = false; let piece = null; let anim = null; let depart = 0; let duree0 = l2 ? 9500 : 7000; let fini_ = false;
+    const plancher = l2 ? 5200 : 3200;
+    const colonnes = l2 ? round.colonnes.map((c) => [String(c.k), c.nom]) : COLONNES;
+    const nomDe = Object.fromEntries(colonnes);
     const tas = {}; const remplis = {};
-    const cols = COLONNES.map(([k, nom]) => {
+    const cols = colonnes.map(([k, nom]) => {
       tas[k] = h('div', { class: 'rg-tas' }); remplis[k] = 0;
-      return h('button', { class: 'rg-colonne', 'data-col': k, onClick: () => envoyer(k) }, tas[k], h('span', { class: 'rg-nom' }, nom));
+      return h('button', { class: 'rg-colonne', 'data-col': k, 'aria-label': `Ranger dans : ${nom}`, onClick: () => envoyer(k) }, tas[k], h('span', { class: 'rg-nom' }, nom));
     });
     const ciel = h('div', { class: 'rg-ciel' });
     const note = h('p', { class: 'rg-note' }, 'Touche la colonne où ranger la pièce.');
     const puits = h('div', { class: 'rg-puits' }, ciel, h('div', { class: 'rg-colonnes' }, cols));
-    const ecran = h('div', { class: 'ecran rangement' }, h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, 'Le grand rangement'), note), puits);
+    const ecran = h('div', { class: `ecran rangement${l2 ? ' rg-l2' : ''}` }, h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, round.titre || 'Le grand rangement'), note), puits);
     zone.replaceChildren(ecran);
 
     function lancerPiece() {
       if (i >= round.pieces.length) return conclure();
       rate = false;
       const p = round.pieces[i];
-      piece = h('div', { class: 'rg-piece', 'data-bon': repere(p.k) }, p.t);
+      piece = h('div', { class: 'rg-piece', 'data-bon': repere(String(p.k)) }, p.t, p.s ? h('small', {}, p.s) : null);
       ciel.replaceChildren(piece);
       depart = performance.now();
       const tomber = (t) => {
@@ -234,13 +240,14 @@ export function jouerRangement(zone, ctx, round) {
         setTimeout(() => { [...tas[k].children].slice(0, 3).forEach((b) => b.remove()); }, duree(500));
       }
       note.textContent = p.w; note.classList.add('explique');
-      i++; duree0 = Math.max(3200, duree0 - 380);
+      if (l2 && p.carte) ctx.noter(p.carte, juste);
+      i++; duree0 = Math.max(plancher, duree0 - 380);
       setTimeout(lancerPiece, duree(juste ? 350 : 900));
     }
     function envoyer(k) {
       if (!piece || fini_) return;
       const p = round.pieces[i];
-      if (k === p.k) {
+      if (String(k) === String(p.k)) {
         if (!rate) bons++;
         ctx.combo(!rate); son('valide'); vibrer(10);
         poser(k, !rate);
@@ -255,7 +262,7 @@ export function jouerRangement(zone, ctx, round) {
     function manque() {
       if (!rate) ctx.combo(false);
       rate = true; son('ko');
-      poser(round.pieces[i].k, false);
+      poser(String(round.pieces[i].k), false);
     }
     function conclure() {
       fini_ = true;
@@ -264,6 +271,8 @@ export function jouerRangement(zone, ctx, round) {
       fini();
       finEpreuve(zone, ctx, { score, parfait: bons === n },
         h('p', { class: 'surtitre' }, bons === n ? 'Tout est rangé du premier coup.' : `${plurielS(bons, 'pièce')} sur ${n} rangées du premier coup.`),
+        l2 ? h('article', { class: 'revelation' }, h('h3', {}, 'Le rangement'),
+          h('ul', { class: 'mem-recap' }, round.pieces.map((p) => h('li', {}, h('b', {}, p.t), ` : ${nomDe[String(p.k)]}. ${p.w}`)))) :
         h('article', { class: 'revelation' }, h('h3', {}, 'La carte du droit'),
           h('p', { class: 'apport' }, 'Le droit public organise les pouvoirs publics et leurs rapports avec les personnes privées ; le droit privé règle les rapports entre personnes privées. Le droit pénal, mixte, est rattaché au droit privé en France.')));
     }
