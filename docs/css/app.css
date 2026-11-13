@@ -1719,3 +1719,9 @@ body:has(#onglets[hidden]) .maj { display: none; }
 .tri-l2 .tri-pile { inset: 60px 50px; }
 .tri-sur { display: block; margin-bottom: 6px; color: var(--papier-texte); opacity: .7; font: 600 13px var(--ui); }
 .tri-l2 .tri-carte p { font-size: 18px; }
+
+/* Le grand rangement en L2 : articles et arrêts, colonnes aux noms du cours. */
+.rg-l2 .rg-piece { max-width: 78%; font-size: 16px; line-height: 1.2; }
+.rg-l2 .rg-piece small { display: block; margin-top: 3px; font: 600 11px var(--ui); opacity: .8; }
+.rg-l2 .rg-nom { font-size: 11.5px; line-height: 1.2; hyphens: auto; overflow-wrap: anywhere; }
+.rg-l2 .rg-bloc { font-size: 10.5px; }

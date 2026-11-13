@@ -459,7 +459,7 @@ function lancerMode(m, genre = null) {
     if (sujets.length) { source = { ...ix, sujets }; zones = ouvertes; }
   }
   const dus = aRevoir(ix, zones);
-  const n = m === 'paires' || m === 'qualif' ? 3 : estL1() ? (['quiadit', 'scanner', 'pouvoirs', 'nuancier'].includes(m) ? 1 : 2) : m === 'memory' ? 1 : 2;
+  const n = m === 'paires' || m === 'qualif' ? 3 : estL1() ? (['quiadit', 'scanner', 'pouvoirs', 'nuancier'].includes(m) ? 1 : 2) : m === 'memory' || m === 'rangement' ? 1 : 2;
   const deja = new Set();
   const titre = nomsModes()[m][0] + (genre && source !== ix ? (genre === 'C' ? ', commentaire' : ', dissertation') : '');
   lancer({ type: 'mode', mode: m, titre, rounds: Array.from({ length: n }, () => tirerRound(source, m, zones, dus, Math.random, deja)) });
@@ -1801,6 +1801,7 @@ const BULLES = {
   express: 'Trouve la phrase qui porte une partie, puis le bon plan.',
   syllogisme: 'Pose la règle, les faits, puis la conclusion. Attention : chaque case a son leurre.',
   tri: 'Fais glisser la carte vers le bon bord, ou touche le bord.',
+  rangement: 'Touche la colonne où ranger la pièce, avant qu’elle touche le sol.',
   memory: 'Retourne deux cartes : si elles vont ensemble, elles restent. Retiens bien les autres.',
   nuancier: 'Fais glisser chaque État vers sa nuance, de l’unitaire à la confédération.',
   casnu: 'Le cas sans les étapes nommées : à toi de savoir où tu en es. Le corrigé vient à la fin.',

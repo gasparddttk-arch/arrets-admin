@@ -506,7 +506,7 @@ export const NOMS_MODES = {
   architecte: ['Architecte', 'Construire un plan et y placer les arrêts'],
   frise: ['Frise de la jurisprudence', 'Placer chaque décision à sa date'],
   memory: ['Memory', 'Retrouver chaque arrêt et ce qu’il apporte'],
-  tri: ['Le tri du cours', 'Ranger chaque arrêt dans sa branche du cours'],
+  rangement: ['Le grand rangement', 'Ranger chaque arrêt dans sa branche du cours'],
 };
 export const NOMS_MODES_OBLIG = {
   atelier: ['L’atelier du cas pratique', 'Construire sa copie : faits, problèmes, syllogismes, conseil'],
@@ -516,7 +516,7 @@ export const NOMS_MODES_OBLIG = {
   frise: ['Frise de la jurisprudence', 'Placer chaque décision à sa date'],
   plan: ['Le bon plan', 'Choisir le meilleur plan et diagnostiquer les autres'],
   memory: ['Memory', 'Retrouver chaque article et son objet'],
-  tri: ['Le tri du cours', 'Ranger articles et arrêts dans la partie du cours qu’ils règlent'],
+  rangement: ['Le grand rangement', 'Ranger articles et arrêts dans la partie du cours qu’ils règlent'],
 };
 export const NOMS_MODES_CONSTIT = {
   pouvoirs: ['L’architecte des pouvoirs', 'Relier les organes : qui élit, nomme, renverse, dissout'],
