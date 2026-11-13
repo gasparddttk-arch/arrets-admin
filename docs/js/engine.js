@@ -253,20 +253,22 @@ export function roundMemoryL2(ix, zones, dus, rng = Math.random) {
 export function roundTriL2(ix, zones, rng = Math.random) {
   const cartes = []; const bords = [];
   if (ix.matiere === 'oblig') {
-    const parZone = new Map();
-    for (const q of ix.qualifs) {
-      if (q.zones.length !== 1 || !zones.includes(q.zones[0])) continue;
-      const z = q.zones[0];
-      parZone.set(z, [...(parZone.get(z) || []), ...q.m.map((m) => ({ t: m.t, k: z, w: `${m.n} (${m.a}).`, carte: m.carte }))]);
-    }
-    const choisies = melange([...parZone.keys()], rng).slice(0, 4);
+    // Des articles et des arrêts à ranger dans la partie du cours qu'ils règlent : l'information, le dol, l'offre…
+    // Les colonnes changent à chaque partie : trois ou quatre chambres tirées au hasard.
+    const choisies = melange(zones.filter((z) => ix.cartes.filter((x) => x.zones.includes(z) && (x.imp ?? 2) >= 2).length >= 2), rng).slice(0, 4);
     if (choisies.length < 2) return null;
     const parBord = choisies.length >= 3 ? 2 : 3;
     for (const z of choisies) {
+      // Une fiche rattachée à deux des chambres choisies serait ambiguë : on l'écarte.
+      const propres = ix.cartes.filter((x) => x.zones.includes(z) && (x.imp ?? 2) >= 2 && x.zones.filter((y) => choisies.includes(y)).length === 1);
+      const pris = melange(propres, rng).sort((x, y) => (y.imp ?? 2) - (x.imp ?? 2)).slice(0, parBord + 2);
       bords.push({ k: z, nom: ix.zones.find((x) => x.id === z)?.titre || `Chambre ${z}` });
-      cartes.push(...melange(parZone.get(z), rng).slice(0, parBord));
+      cartes.push(...melange(pris, rng).slice(0, parBord).map((x) => (x.article
+        ? { t: x.nom, s: 'Code civil', k: z, w: `${x.titre}.`, carte: x.id }
+        : { t: x.court, s: x.ref, k: z, w: `${x.ap?.[z] || Object.values(x.ap || {})[0] || ''}.`.replace(/\.\.$/, '.'), carte: x.id })));
     }
-    return { type: 'tri', titre: 'Quelle chambre ?', consigne: 'Quel problème de droit pose la situation ? Jette-la vers sa chambre.', bords: melange(bords, rng), cartes: melange(cartes, rng) };
+    if (cartes.length < 4) return null;
+    return { type: 'tri', titre: 'Quelle partie du cours ?', consigne: 'Range chaque article et chaque arrêt dans la partie du cours qu’il règle.', bords: melange(bords, rng), cartes: melange(cartes, rng) };
   }
   const dans = dansZones(zones);
   const familles = melange(ix.familles.filter((f) => f.titre.length <= 34), rng);

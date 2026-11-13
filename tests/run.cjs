@@ -197,7 +197,7 @@ async function debordement(p, nom) {
   await p.tap('text=Retour au Palais');
 
   // 2. Chaque mode, seul, plusieurs fois, pour couvrir le contenu.
-  for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte', 'Frise de la jurisprudence', 'Memory', 'Le tri des familles']) {
+  for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte', 'Frise de la jurisprudence', 'Memory', 'Le tri du cours']) {
     for (let i = 0; i < 3; i++) {
       await p.evaluate(() => window.__app.aller('role')); await p.locator('.role-ligne', { hasText: m }).click();
       if (await p.locator('.boite-genre').count()) await p.locator(`.boite-genre [data-genre="${['C', 'D', 'hasard'][i]}"]`).click();
