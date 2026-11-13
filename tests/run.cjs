@@ -21,6 +21,57 @@ async function textePropre(p) {
   assert.equal(tache, null, `Texte technique affiché : ${tache}`);
 }
 
+async function verifierContrasteOptions(p) {
+  const resultats = await p.evaluate(() => {
+    function parseRgb(color) {
+      const m = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (!m) return [255, 255, 255];
+      return [parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10)];
+    }
+    function luminance(rgb) {
+      const a = rgb.map((v) => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      });
+      return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+    }
+    function contraste(rgb1, rgb2) {
+      const l1 = luminance(rgb1);
+      const l2 = luminance(rgb2);
+      return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+    }
+    function getCouleurFond(el) {
+      let cur = el;
+      while (cur && cur !== document.body) {
+        const bg = window.getComputedStyle(cur).backgroundColor;
+        if (bg && bg !== 'transparent' && !bg.startsWith('rgba(0, 0, 0, 0)')) {
+          const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+          if (m && (m[4] === undefined || parseFloat(m[4]) > 0.5)) {
+            return [parseInt(m[1]), parseInt(m[2]), parseInt(m[3])];
+          }
+        }
+        cur = cur.parentElement;
+      }
+      return [10, 14, 34];
+    }
+    const options = [...document.querySelectorAll('.option:not(.retire)')];
+    return options.map((opt) => {
+      const t = opt.querySelector('.option-t') || opt;
+      const st = window.getComputedStyle(t);
+      const colTexte = parseRgb(st.color);
+      const colFond = getCouleurFond(opt);
+      const ratio = contraste(colTexte, colFond);
+      const opacite = parseFloat(st.opacity) * parseFloat(window.getComputedStyle(opt).opacity);
+      return { ratio, opacite };
+    });
+  });
+  assert(resultats.length > 0, 'options trouvées pour vérification de contraste');
+  for (const { ratio, opacite } of resultats) {
+    assert(ratio >= 4.5, `Contraste insuffisant (${ratio.toFixed(2)}:1, attendu >= 4.5:1)`);
+    assert(opacite >= 0.95, `Opacité réduite sur le texte (${opacite})`);
+  }
+}
+
 // Touche un élément pour de vrai ; s'il vient de disparaître, on passe.
 async function toucher(e) { try { await e.click({ timeout: 900 }); return true; } catch { return false; } }
 
@@ -423,6 +474,61 @@ async function debordement(p, nom) {
   await r.locator('.reglage', { hasText: 'Effets visuels' }).locator('input').click();
   assert.equal(await r.evaluate(() => document.documentElement.dataset.effets), 'non', 'effets coupés');
   await rose.close();
+
+  // Lisibilité : décor masqué pendant les épreuves, contraste des options, grade coupé en haut
+  const lis = await b.newContext({ ...devices['iPhone 13'] });
+  const lp = await lis.newPage(); lp.on('pageerror', (x) => erreurs.push(x.message));
+  await lp.goto(URLB + '?test'); await lp.waitForSelector('.tribune');
+
+  // Grade en haut : complet sans troncature sous 390 px, version courte sous 360 px
+  const txt390 = await lp.evaluate(() => document.querySelector('.haut-nom .nom-long')?.innerText.trim());
+  assert.equal(txt390, 'Auditeur de 2e classe', 'grade complet affiché sans troncature');
+  assert.equal(await lp.evaluate(() => window.getComputedStyle(document.querySelector('.haut-nom .nom-long')).display), 'inline');
+  assert.equal(await lp.evaluate(() => window.getComputedStyle(document.querySelector('.haut-nom .nom-court')).display), 'none');
+
+  await lp.setViewportSize({ width: 340, height: 600 });
+  assert.equal(await lp.evaluate(() => window.getComputedStyle(document.querySelector('.haut-nom .nom-court')).display), 'inline');
+  assert.equal(await lp.evaluate(() => window.getComputedStyle(document.querySelector('.haut-nom .nom-long')).display), 'none');
+  const txt340 = await lp.evaluate(() => document.querySelector('.haut-nom .nom-court')?.innerText.trim());
+  assert.equal(txt340, 'Auditeur 2e cl.', 'version courte du grade sous 360 px');
+  await lp.setViewportSize({ width: 390, height: 844 });
+
+  // Décor : feuilles du jardin visibles à l'accueil et aux résultats, masquées pendant les épreuves
+  await lp.evaluate(() => { window.__app.etat().decor = 'jardin'; window.__app.appliquerTheme(); window.__app.aller('palais'); });
+  await lp.waitForSelector('.tribune .feuille');
+  assert.equal(await lp.locator('.tribune .feuille').count(), 3, 'feuilles du jardin à l’accueil');
+
+  await lp.evaluate(() => window.__app.aller('role'));
+  await lp.locator('.role-ligne[data-mode="juge"]').click();
+  await lp.waitForSelector('.palais-portes', { state: 'detached' });
+  await lp.waitForSelector('.option');
+  await verifierContrasteOptions(lp);
+  await lp.screenshot({ path: CAP + 'qcm-contraste.png' });
+
+  // Pendant l'épreuve : les feuilles sont masquées
+  const feuillesVisibles = await lp.evaluate(() => {
+    const f = document.querySelectorAll('.feuille');
+    return [...f].some((el) => window.getComputedStyle(el).display !== 'none');
+  });
+  assert.strictEqual(feuillesVisibles, false, 'feuilles du décor masquées pendant l’épreuve');
+
+  await jouerParfait(lp);
+  await lp.waitForSelector('.resultats');
+  assert(await lp.locator('.res-scene .feuille').count() >= 3, 'feuilles du décor présentes sur l’écran de résultats');
+  await lp.screenshot({ path: CAP + 'resultats-jardin.png' });
+
+  // Grand rangement : lisibilité et capture
+  await lp.tap('text=Retour au Palais');
+  await lp.waitForSelector('.tribune');
+  await lp.evaluate(() => window.__app.aller('role'));
+  await lp.locator('.role-ligne[data-mode="rangement"]').click();
+  await lp.waitForSelector('.palais-portes', { state: 'detached' });
+  await lp.waitForSelector('.rg-colonne');
+  await debordement(lp, 'grand rangement lisible');
+  await lp.screenshot({ path: CAP + 'rangement-lisible.png' });
+  await lp.tap('.quitter'); await lp.tap('.boite .bouton-or');
+  await lis.close();
+  log('lisibilité ok');
 
   // 13. Sons : aucun ne sature, aucun n'est muet, en bleu comme en rose.
   const sn = await b.newContext({ ...devices['iPhone 13'] });
@@ -1106,6 +1212,8 @@ async function debordement(p, nom) {
     await mp.goto(URLB + '?test&matiere=intro'); await mp.waitForSelector('.tribune');
     await mp.evaluate(() => window.__app.aller('role')); await mp.locator('.role-ligne[data-mode="memory"]').click();
     await mp.waitForSelector('.mem-carte');
+    const lettres = await mp.evaluate(() => [...document.querySelectorAll('.mem-carte .mem-repere')].map((el) => el.innerText.trim()));
+    assert.deepEqual(lettres, ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'], 'repères distincts A à L sur le dos des cartes Memory');
     await mp.evaluate(() => { const c = [...document.querySelectorAll('.mem-carte')]; const a = c[0]; const z = c.find((x) => x.dataset.paire !== a.dataset.paire); a.click(); z.click(); });
     await mp.waitForTimeout(1500);
     assert.equal(await mp.locator('.mem-carte.ouverte').count(), 2, 'les deux cartes restent lisibles');

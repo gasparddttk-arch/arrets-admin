@@ -102,7 +102,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : plus aucune occurrence de `engrenage` ni de `machine` dans `atelier.js` et `app.css` ; test de l'atelier vert ; capture `atelier-mineure.png` en 390 px. Suite complète verte.
 
 ### [TÂCHE H] Lisibilité (Antigravity)
-- **Statut** : À faire
+- **Statut** : Fait le 13/11 (Antigravity), publié par Claude
 - **Fichiers concernés** : `app/css/app.css`, `app/js/main.js`, `tests/run.cjs`
 - **Détails de modification** :
   - **Décor pendant les épreuves** : les animations du décor choisi en boutique (ex. « Le jardin », feuilles qui tombent) restent sur le Palais et les écrans de résultats, mais s'arrêtent et se masquent pendant une épreuve (tout écran de jeu, du premier round à l'écran de fin exclu).
