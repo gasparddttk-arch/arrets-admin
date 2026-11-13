@@ -42,9 +42,12 @@
 ## Partage du travail (sans que Gaspard serve d'intermédiaire)
 Quand Gaspard donne une demande, Claude la découpe lui-même :
 - **Claude garde** : contenu juridique et pédagogique, choix de conception, textes visibles par les étudiants, Supabase, sécurité, tout ce qui est ambigu ou demande l'avis de Gaspard.
-- **Claude délègue à Antigravity** : ce qui est long mais mécanique et entièrement spécifié (code mort, tests à écrire, application d'une consigne précise, CSS décrit, série complète de tests, merge, mise en ligne et vérification de VERSION).
+- **Claude délègue à Antigravity** : ce qui est long mais mécanique et entièrement spécifié (code mort, tests à écrire, application d'une consigne précise, CSS décrit, série complète de tests). Claude garde le merge et la mise en ligne.
 - Pour déléguer : écrire la tâche dans `TACHES.md` (format ci-dessous, `- **Statut** : À faire`), la pousser sur `main` du dépôt gdroit, puis écrire la date dans `.antigravity/sonnette` sur le Mac (`date > $HOME/mnt/Desktop/arrets-admin-main/.antigravity/sonnette` via device_bash). Antigravity démarre aussitôt.
 - Pour le résultat : relire `TACHES.md` sur le Mac (statut, compte rendu, questions) et `~/Library/Logs/gdroit-antigravity.log`. Une tâche « Bloqué » revient à Claude.
+- Antigravity ne pousse jamais (pas d'accès GitHub sur le Mac). Pour publier son travail : sur le Mac, `git bundle create ~/Desktop/arrets-admin-main/.antigravity/branches.bundle main..antigravity/<x>` (device_bash), `device_stage_files`, puis ici `git fetch <bundle> antigravity/<x>`, merge sur `main` et push.
+- Pas de seconde suite complète si la branche d'Antigravity part du `main` actuel et que son statut indique une suite verte sur son dernier commit. Sinon (rebase, conflit, retouche de Claude) : relancer la suite.
+- Les commits qui ne touchent que `TACHES.md`, `AGENTS.md`, `CLAUDE.md` ou `scripts/antigravity/` ne demandent pas la suite complète.
 - Claude dit à Gaspard en une ligne ce qu'il a délégué.
 
 ## Format d'une consigne Claude pour Antigravity

@@ -68,7 +68,9 @@ Antigravity : voir `AGENTS.md` pour la marche à suivre. À faire dans l'ordre. 
 
 Demandé par Gaspard le 13/11. Chaque tâche indique qui la fait. **Claude** : contenu juridique, choix de conception, textes vus par les étudiants, Supabase. **Antigravity** : le code, une fois la consigne complète. Une tâche d'Antigravity n'est « À faire » que lorsque Claude a tout précisé ; sinon elle est « Attend Claude ».
 
-Ordre conseillé : F, G, H (gros effet, peu de risque), puis I, J, K, L, M.
+Ordre conseillé : N (pour aller plus vite ensuite), F, G, H, J, puis I, K, L, M.
+
+Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la publie.
 
 ### [TÂCHE F] Le banc de pièces : glisser au lieu de trier une carte à la fois (Antigravity)
 - **Statut** : À faire
@@ -109,6 +111,18 @@ Ordre conseillé : F, G, H (gros effet, peu de risque), puis I, J, K, L, M.
   - **Memory** : le dos des cartes porte un repère distinct par position (lettre A à L en petit, couleur `--texte-2`), pour qu'on s'y retrouve.
 - **Validation attendue** : captures avant/après (QCM, rangement, résultats avec le décor « jardin ») ; suite complète verte.
 
+### [TÂCHE N] Une suite de tests plus rapide (Antigravity)
+- **Statut** : À faire
+- **Fichiers concernés** : `tests/run.cjs`, `package.json`, éventuellement `app/js/main.js` (mode `?test` uniquement)
+- **Objectif** : la suite complète dure environ 30 minutes. Viser moins de 12 minutes sur le Mac, sans retirer aucune vérification.
+- **Détails de modification** :
+  1. **Mesurer d'abord** : chaque `log('… ok')` affiche aussi la durée du bloc en secondes. Noter dans la tâche les 10 blocs les plus lents.
+  2. **Lancer une partie** : `node tests/run.cjs --seul <mot>` ne joue que les blocs dont le nom contient ce mot (pour travailler vite sur une tâche ; la suite complète reste obligatoire avant publication).
+  3. **En parallèle** : découper les blocs en 3 groupes indépendants de durée voisine (chacun avec son propre navigateur et ses contextes), lancés en même temps par `npm test`, qui affiche le total et échoue si un groupe échoue. La commande actuelle doit continuer de marcher.
+  4. **Animations décoratives en `?test`** : portes du Palais, confettis, feuilles du décor, envols de cartes à durée nulle. Ne pas toucher aux délais qui font partie du jeu et qui sont testés (ex. l'erreur du Memory visible 3200 ms, la chute du grand rangement).
+- **Contraintes** : même nombre de blocs `ok` qu'avant (le vérifier et l'écrire dans la tâche).
+- **Validation attendue** : durée avant/après notée dans la tâche ; suite complète verte deux fois de suite.
+
 ### [TÂCHE I] Jouer d'abord, installer ensuite (Claude, puis Antigravity)
 - **Statut** : Attend Claude (choix du meilleur exercice par matière, d'après le suivi d'usage, et textes)
 - **Objectif** : quelqu'un qui ouvre gdroit.eu dans un navigateur joue tout de suite, sans compte ni notice. L'invitation à installer vient après, sur l'écran de fin.
@@ -120,10 +134,11 @@ Ordre conseillé : F, G, H (gros effet, peu de risque), puis I, J, K, L, M.
 - **À préciser par Claude** : le meilleur exercice de chaque matière, les textes des trois écrans, ce qui arrive si la personne refuse d'installer (rejouer un exercice ? se connecter dans le navigateur ?).
 
 ### [TÂCHE J] Les défis entre amis en L1 (Claude, puis Antigravity)
-- **Statut** : Attend Claude (migration Supabase, avec l'accord de Gaspard)
+- **Statut** : À faire
 - **Constat** : la fiche d'un ami ne propose que « Administratif » et « Obligations ». La base refuse aussi tout autre défi (`defis_amis_matiere_check` n'accepte que `admin` et `oblig`). Et le test « même équipe » compare l'équipe L1 de l'ami (`resume.equipe`) à l'équipe L2 de l'utilisateur.
-- **Partie Claude** : migration qui accepte `intro` et `constit` dans `defis_amis.matiere` ; ajouter `xpConstit` au `resume()`.
-- **Partie Antigravity** (une fois la migration faite) :
+- **Partie Claude (faite le 13/11, accord de Gaspard)** : la base accepte `intro` et `constit` dans `defis_amis.matiere`.
+- **Partie Antigravity** :
+  - Dans `resume()` (`app/js/compte.js`), ajouter `xpConstit: etat.constit?.xp || 0`.
   - Dans la fiche d'un ami, proposer les matières de l'année commune : deux L2 → Administratif, Obligations (même équipe L2) ; deux L1 → Droit constitutionnel (toujours), Introduction au droit (même équipe L1). Un L1 et un L2 : « Vous n'avez pas de matière en commun pour l'instant. »
   - Comparer `resume.annee` et `resume.equipe` avec `etat.annee` et l'équipe de la bonne année.
   - Le tableau de comparaison montre les lignes de l'année (L1 : Introduction, Constitutionnel ; L2 : Administratif, Obligations).
