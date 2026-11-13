@@ -43,6 +43,8 @@ const liste = ['./', ...fichiers.filter((f) => f !== 'index.html')];
 const sw = readFileSync(join(SORTIE, 'sw.js'), 'utf8').replace('__VERSION__', version).replace('__FICHIERS__', JSON.stringify(liste));
 writeFileSync(join(SORTIE, 'sw.js'), sw);
 writeFileSync(join(SORTIE, '.nojekyll'), '');
+// L'adresse du site : GitHub Pages sert docs/ sur gdroit.eu (et renvoie l'ancienne adresse github.io vers elle).
+writeFileSync(join(SORTIE, 'CNAME'), 'gdroit.eu\n');
 
 const taille = fichiers.reduce((s, f) => s + statSync(join(SORTIE, f)).size, 0);
 console.log(`docs/ prêt : ${fichiers.length} fichiers, ${(taille / 1024).toFixed(0)} Ko, version ${version}`);

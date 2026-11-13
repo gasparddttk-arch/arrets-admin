@@ -5,7 +5,8 @@ import webpush from 'npm:web-push@3.6.7';
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 
 const PUBLIQUE = 'BLsoEkbLXGZbRgEpqtBy4wC6et54RaMPURc8HDK1G3EfrZz0l8xiV7YkOy7sR9EJdsnckBqV6fxrdOlP4gNklQM';
-const ORIGINE = 'https://gasparddttk-arch.github.io';
+// Les adresses d'où l'appli peut appeler cette fonction : gdroit.eu, et l'ancienne adresse le temps du déménagement.
+const ORIGINES = ['https://gdroit.eu', 'https://www.gdroit.eu', 'https://gasparddttk-arch.github.io'];
 
 const TEXTES: Record<string, (p: string, d: Record<string, unknown>) => [string, string]> = {
   demande: (p) => ['Demande d’ami', `${p} veut t’ajouter sur Gdroit.`],
@@ -22,9 +23,13 @@ const TEXTES: Record<string, (p: string, d: Record<string, unknown>) => [string,
 
 const ADMIN = new Set(['place_testeur', 'maj_appli']);
 
-const entetes = { 'Access-Control-Allow-Origin': ORIGINE, 'Access-Control-Allow-Headers': 'authorization, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
+const corsPour = (req: Request) => {
+  const o = req.headers.get('origin') || '';
+  return { 'Access-Control-Allow-Origin': ORIGINES.includes(o) ? o : ORIGINES[0], 'Access-Control-Allow-Headers': 'authorization, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS', Vary: 'Origin' };
+};
 
 Deno.serve(async (req) => {
+  const entetes = corsPour(req);
   if (req.method === 'OPTIONS') return new Response(null, { headers: entetes });
   const prive = Deno.env.get('VAPID_PRIVATE_KEY');
   const url = Deno.env.get('SUPABASE_URL')!;
