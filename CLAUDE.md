@@ -49,6 +49,7 @@ Quand Gaspard donne une demande, Claude la découpe lui-même :
 - Pas de seconde suite complète si la branche d'Antigravity part du `main` actuel et que son statut indique une suite verte sur son dernier commit. Sinon (rebase, conflit, retouche de Claude) : relancer la suite.
 - Les commits qui ne touchent que `TACHES.md`, `AGENTS.md`, `CLAUDE.md` ou `scripts/antigravity/` ne demandent pas la suite complète.
 - Claude dit à Gaspard en une ligne ce qu'il a délégué.
+- **Suivi automatique** : après chaque sonnette, Claude programme un rappel dans cette conversation (`send_later`, environ 45 minutes). À chaque rappel : relire l'état du Mac (branches `antigravity/*`, statuts, `.antigravity/en-cours`), publier les tâches « Prêt pour Claude », traiter les « Bloqué », refaire sonner si la session s'est arrêtée alors qu'il reste des tâches « À faire », puis reprogrammer le rappel suivant tant qu'il reste du travail. Prévenir Gaspard en une ligne de ce qui a été publié.
 
 ## Format d'une consigne Claude pour Antigravity
 Lorsque Claude souhaite faire exécuter une tâche à Antigravity, il peut formuler son brief ainsi :
