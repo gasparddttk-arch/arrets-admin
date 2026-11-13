@@ -105,11 +105,29 @@ function appliquerTheme() {
   document.querySelector('meta[name="theme-color"]').setAttribute('content', { rose: '#FFE3EA', pastel: '#F4F1FA', verre: '#060A1C' }[etat.theme] || '#0A0E22');
 }
 
+export function raccourcirGrade(nom) {
+  if (!nom) return '';
+  return nom
+    .replace('Auditeur de 2e classe', 'Auditeur 2e cl.')
+    .replace('Auditeur de 1re classe', 'Auditeur 1re cl.')
+    .replace('Président adjoint du contentieux', 'Pdt adj. contentieux')
+    .replace('Vice-président du Conseil d’État', 'Vice-pdt Conseil d’État')
+    .replace('Auditeur à la Cour de cassation', 'Auditeur Cour de cass.')
+    .replace('Conseiller à la Cour de cassation', 'Conseiller Cour de cass.')
+    .replace('Premier président de la Cour de cassation', 'Premier pdt Cour de cass.');
+}
+
 function barreHaut() {
   const r = rang();
+  const nomCourt = r.nomCourt || raccourcirGrade(r.nom);
   return h('header', { class: 'haut' },
     h('button', { class: 'haut-rang', onClick: () => aller('progression'), 'aria-label': `${r.nom}${r.suivant ? `, encore ${fmt(r.suivant.xp - r.xp)} points avant ${r.suivant.nom}` : ''}. Voir ta progression` },
-      h('span', { class: 'haut-ligne' }, h('span', { class: 'haut-nom' }, etat.insigne !== 'aucun' ? icone(etat.insigne, 16) : null, r.nom), laurier(36)),
+      h('span', { class: 'haut-ligne' },
+        h('span', { class: 'haut-nom' },
+          etat.insigne !== 'aucun' ? icone(etat.insigne, 16) : null,
+          h('span', { class: 'nom-long' }, r.nom),
+          h('span', { class: 'nom-court' }, nomCourt)),
+        laurier(36)),
       h('span', { class: 'jauge', 'aria-hidden': 'true' }, h('i', { style: `transform:scaleX(${r.part.toFixed(3)})` }))),
     connecte() ? h('button', { class: 'haut-amis', onClick: () => aller('amis'), 'aria-label': nonLus ? `Amis, ${pluriel(nonLus, 'nouvelle')}` : 'Amis' }, icone('equipe', 26), nonLus ? h('span', { class: 'pastille' }, nonLus > 9 ? '9+' : String(nonLus)) : null) : null,
     h('button', { class: 'haut-jetons', onClick: () => aller('boutique'), 'aria-label': monnaie(etat.jetons) }, h('i', { class: 'jeton' }), fmt(etat.jetons)));
@@ -584,8 +602,8 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
     retardEpreuve = 0; finEnCours = false; S.aide = false;
     scene.className = 'scene'; scene.replaceChildren(); decor.replaceChildren();
     window.scrollTo(0, 0);
-    // Entre deux épreuves, un simple glissement, sans chouette.
-    if (S.i > 0 && effets() && scene.animate) scene.animate([{ transform: 'translateX(26px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 300, easing: 'cubic-bezier(.2,.7,.2,1)' });
+    // Entre deux épreuves, un simple glissement, sans chouette ni baisse d'opacité du texte.
+    if (S.i > 0 && effets() && scene.animate) scene.animate([{ transform: 'translateX(26px)' }, { transform: 'none' }], { duration: 300, easing: 'cubic-bezier(.2,.7,.2,1)' });
     Promise.resolve(TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
       console.error(e);
       scene.replaceChildren(h('div', { class: 'erreur' }, h('p', {}, 'Cette épreuve n’a pas pu s’afficher. Passe à la suivante.'), continuer('Continuer', () => ctx.fin({ score: 0, parfait: false }))));
@@ -678,7 +696,11 @@ function resultats(S, reussi) {
   const nombrePieces = h('dd', {}, `+${fmt(pieces)}`);
 
   const contenu = h('main', { class: 'resultats' },
-    h('div', { class: 'res-scene' }, figureFin, zoneSceau),
+    h('div', { class: 'res-scene' },
+      figureFin,
+      zoneSceau,
+      etat.decor === 'jardin' ? [1, 2, 3].map((i) => h('i', { class: `feuille f${i}`, 'aria-hidden': 'true' })) : null,
+      etat.decor === 'buren' ? h('span', { class: 'colonnes-buren', 'aria-hidden': 'true' }, [70, 40, 100, 55, 85].map((v, i) => h('i', { style: `height:${v}%;--i:${i}` }))) : null),
     h('h1', {}, S.type === 'boss' ? (reussi ? 'Audience gagnée' : 'Audience perdue') : pourcent === 100 ? 'Sans faute' : pourcent >= 70 ? 'Bien jugé' : 'À réviser'),
     textBoss ? h('p', { class: 'res-texte' }, textBoss) : null,
     ligneAmi,

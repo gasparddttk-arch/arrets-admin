@@ -394,9 +394,10 @@ export function jouerMemory(zone, ctx, round) {
     let ouvertes = []; let trouvees = 0; let coups = 0; let bloque = false;
     const erreurs = new Map();
     const dossier = h('span', { class: 'mem-dossier', 'aria-label': 'Paires trouvées' }, icone('note', 22), h('b', {}, '0'));
-    const els = cartes.map((c) => {
-      const el = h('button', { class: `mem-carte cote-${c.cote}`, 'data-paire': repere(c.p.id), 'aria-label': 'Carte retournée', onClick: () => retourner(c, el) },
-        h('span', { class: 'mem-dos', 'aria-hidden': 'true' }), h('span', { class: 'mem-face' }, c.t));
+    const els = cartes.map((c, i) => {
+      const repereLettre = String.fromCharCode(65 + i);
+      const el = h('button', { class: `mem-carte cote-${c.cote}`, 'data-paire': repere(c.p.id), 'aria-label': `Carte ${repereLettre}`, onClick: () => retourner(c, el) },
+        h('span', { class: 'mem-dos', 'aria-hidden': 'true' }, h('span', { class: 'mem-repere' }, repereLettre)), h('span', { class: 'mem-face' }, c.t));
       c.el = el; return el;
     });
     const consigne = h('p', { class: 'mem-consigne' }, round.consigne || 'Retrouve chaque notion et sa définition.');
