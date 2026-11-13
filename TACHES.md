@@ -9,7 +9,7 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 Antigravity : voir `AGENTS.md` pour la marche à suivre. À faire dans l'ordre. Chaque tâche se fait sur sa propre branche, puis `npm run check`, `npm run build` et la suite complète (`NODE_PATH=$(npm root -g) node tests/run.cjs`) avant tout merge sur `main`. Vérifier ensuite la VERSION servie sur https://gdroit.eu/sw.js. Le dépôt est `gasparddttk-arch/gdroit` : ne jamais pousser l'appli sur `arrets-admin` (page de déménagement seulement).
 
 ### [TÂCHE A] Retirer le code mort du tri L2
-- **Statut** : À faire
+- **Statut** : Fait le 13/11 (Antigravity, publié par Claude)
 - **Fichiers concernés** : `app/js/jeux-l1.js` (fonction `jouerTri`), `app/css/app.css` (bloc « Le tri en L2 », classes `.tri-l2`, `.tri-sur`)
 - **Objectif** : le tri L2 a été remplacé par le grand rangement ; `jouerTri` ne sert plus qu'à la L1.
 - **Détails de modification** :
@@ -19,7 +19,7 @@ Antigravity : voir `AGENTS.md` pour la marche à suivre. À faire dans l'ordre. 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte (blocs « L1 ok », « L1 équipe 2 ok »).
 
 ### [TÂCHE B] Test automatique de l'annonce aux testeurs
-- **Statut** : À faire
+- **Statut** : Fait le 13/11 (Antigravity, publié par Claude)
 - **Fichiers concernés** : `tests/run.cjs` (bloc du compte simulé, fonction `simuler`)
 - **Objectif** : vérifier l'écran Administration > « Mise à jour de l'application ».
 - **Détails de modification** :

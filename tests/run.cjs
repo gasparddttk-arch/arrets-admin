@@ -1316,6 +1316,7 @@ async function debordement(p, nom) {
       if (nom === 'admin_signalements') return json([{ id: 1, nom: 'Blanco', carte: 'blanco', texte: 'Date fausse', pseudo: 'Camille', cree_le: new Date().toISOString(), traite: false, equipe: 1 }]);
       if (nom === 'admin_lire_reglage') return json('testeur');
       if (nom === 'admin_quota') return json({ quota: 28, testeurs: 4, sans_acces: 0 });
+      if (nom === 'admin_notifier') return json(4);
       if (nom === 'admin_retours') return json([{ id: 1, genre: 'interface', texte: 'Le bouton est trop petit', ecran: 'Profil', pseudo: 'Camille', cree_le: new Date().toISOString(), traite: false }]);
       if (nom === 'mes_amis') return json([{ id: 'u-2', pseudo: 'Camille', equipe: 1, lien: 'ami', masque: false, resume: { jour: jourParis, serie: 3, sceau: true, grade: 'Licencié en droit', xp: 900, xpAdmin: 500, xpOblig: 400, semaine: lundiT, xpSemaine: 5240, maitrises: 12, equipe: 1, seances: 20 } }, { id: 'u-3', pseudo: 'Léa', lien: 'recue' }]);
       if (nom === 'mes_notifications') return json([{ id: 1, type: 'demande', pseudo: 'Léa', donnees: {}, cree_le: new Date().toISOString(), lu: false }, { id: 2, type: 'defi_recu', pseudo: 'Camille', donnees: { defi: 'd-1' }, cree_le: new Date().toISOString(), lu: false }]);
@@ -1378,6 +1379,17 @@ async function debordement(p, nom) {
   await k1.locator('.admin-compte[data-compte="u-1"]').click(); assert.equal(await k1.locator('.admin-fiche .bascule').count(), 0, 'pas de statut pour soi'); await k1.locator('.admin-fiche .bouton-lien').click();
   await k1.locator('text=Marquer comme traité').last().click(); await k1.waitForTimeout(300);
   assert(faux.rpc.some(([n, c]) => n === 'admin_traiter' && c.fait === true), 'signalement traité');
+  // Annonce aux testeurs : message libre et lien gdroit.eu
+  const texteAnnonce = 'Une nouvelle version est en ligne sur gdroit.eu !';
+  await k1.fill('textarea[aria-label="Message aux testeurs"]', texteAnnonce);
+  await k1.locator('button', { hasText: 'Notifier les testeurs' }).click();
+  for (let i = 0; i < 20 && !faux.rpc.some(([n]) => n === 'admin_notifier'); i++) await k1.waitForTimeout(100);
+  const appelNotif = faux.rpc.find(([n]) => n === 'admin_notifier');
+  assert(appelNotif, 'admin_notifier appelé');
+  assert.equal(appelNotif[1].genre, 'maj_appli');
+  assert.equal(appelNotif[1].donnees?.titre, texteAnnonce);
+  assert.equal(appelNotif[1].donnees?.url, 'https://gdroit.eu/');
+  log('annonce admin ok');
   // Les amis : nouvelles, classement, demande, défi lancé puis relevé, lien d'invitation.
   await k1.evaluate(() => window.__app.aller('palais')); await k1.waitForSelector('.haut-amis .pastille');
   await k1.waitForSelector('.defi-attente'); assert.match(await k1.locator('.defi-attente').innerText(), /Camille te défie/, 'défi reçu visible au Palais');
