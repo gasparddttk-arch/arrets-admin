@@ -191,7 +191,7 @@ export function reagir(score) {
 
 // Pluie de plumes pour les grandes victoires et les chambres ouvertes.
 export function plumes(n = 18) {
-  if (!effets() || (typeof location !== 'undefined' && new URLSearchParams(location.search).has('test'))) return;
+  if (!effets()) return;
   const v = h('div', { class: 'plumes', 'aria-hidden': 'true' }, Array.from({ length: n }, () => h('i', {
     style: `left:${(Math.random() * 100).toFixed(1)}%;--d:${(Math.random() * 0.8).toFixed(2)}s;--t:${(1.1 + Math.random() * 0.7).toFixed(2)}s;--r:${Math.round(Math.random() * 360)}deg;--x:${Math.round((Math.random() - 0.5) * 70)}px;--s:${(0.7 + Math.random() * 0.7).toFixed(2)}`,
   })));
