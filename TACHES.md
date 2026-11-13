@@ -64,6 +64,94 @@ Antigravity : voir `AGENTS.md` pour la marche à suivre. À faire dans l'ordre. 
 
 ---
 
+## Cahier des charges n° 2 (13/11/2026)
+
+Demandé par Gaspard le 13/11. Chaque tâche indique qui la fait. **Claude** : contenu juridique, choix de conception, textes vus par les étudiants, Supabase. **Antigravity** : le code, une fois la consigne complète. Une tâche d'Antigravity n'est « À faire » que lorsque Claude a tout précisé ; sinon elle est « Attend Claude ».
+
+Ordre conseillé : F, G, H (gros effet, peu de risque), puis I, J, K, L, M.
+
+### [TÂCHE F] Le banc de pièces : glisser au lieu de trier une carte à la fois (Antigravity)
+- **Statut** : À faire
+- **Fichiers concernés** : `app/js/ui.js` (nouveau composant), `app/js/games.js` (`jouerArchitecte`, `jouerPuzzle`), `app/css/app.css`, `tests/run.cjs`
+- **Objectif** : aujourd'hui, l'Architecte (plan de commentaire et de dissertation) et le Puzzle (fiche d'arrêt) montrent une seule carte à la fois avec « Écarter » et « Plus tard ». Gaspard veut voir toutes les pièces d'un coup, en bas, et les glisser vers les cases.
+- **Détails de modification** :
+  - Créer dans `ui.js` un composant `banc({ pieces, cases, ecart: true })` réutilisable (il servira aussi à la tâche K). En haut : les cases (parties du plan ou rubriques de la fiche). En bas : toutes les pièces restantes, sur plusieurs lignes, dans une zone qui défile si besoin. Au bout du banc : une case « Écartées » pour les pièces à ne pas garder.
+  - Glisser une pièce sur une case la pose (événements pointer, au doigt comme à la souris). Une case déjà occupée échange les deux pièces. Une pièce posée peut être reprise par glisser vers le banc ou vers une autre case.
+  - Sans glisser (accessibilité et petits écrans) : toucher une pièce la sélectionne, toucher une case la pose. Même logique pour « Écartées ».
+  - Supprimer les boutons « Écarter » et « Plus tard » de ces deux jeux. Le bouton « Vérifier » (Puzzle) ou « Comparer au plan modèle » (Architecte) s'active quand toutes les cases sont remplies.
+  - Barème, corrigé et écran de fin : inchangés.
+- **Contraintes** : DOM uniquement avec `h()`, tokens de `:root`, pas de bibliothèque de glisser-déposer. Pendant un glisser, la page ne défile pas (`touch-action: none` sur la pièce). Cibles de 44 px minimum. Une case survolée change de bordure (`--or`).
+- **Validation attendue** : les tests de l'Architecte et du Puzzle passent par le toucher-toucher ; ajouter un test qui fait un vrai glisser (Playwright `dragTo`) sur un iPhone 390 px, sans débordement (`debordement`). Suite complète verte.
+
+### [TÂCHE G] L'atelier du cas pratique sans rouages (Antigravity)
+- **Statut** : À faire
+- **Fichiers concernés** : `app/js/atelier.js` (étape « La mineure »), `app/css/app.css` (bloc `at-engrenage`, `at-machine`), `tests/run.cjs`
+- **Objectif** : Gaspard ne comprend pas les engrenages. On remplace la « machine » par un tableau simple : chaque condition de la règle, en face le fait qui la remplit.
+- **Détails de modification** :
+  - Supprimer les `span.at-engrenage`, leurs styles et les animations `at-tourne`. Garder la liste des conditions, numérotées « Condition 1 », « Condition 2 »…
+  - Chaque ligne : le texte de la condition, puis à droite son état écrit en toutes lettres une fois répondu : « Remplie : <fait> », « Non remplie », « Le cas ne le dit pas ». Couleur en plus du mot, jamais à la place (vert `--juste`, rouge `--faux`, orange `--orange-2`).
+  - Consigne, à la place de l'actuelle : « Pour chaque condition de la règle, choisis le fait du cas qui la remplit. »
+  - Textes de sortie, à la place de « la machine cale / tourne / hésite » :
+    - « Toutes les conditions sont remplies : la règle s'applique. »
+    - « Une condition n'est pas remplie : la règle ne s'applique pas. »
+    - « Une condition dépend d'un fait que le cas ne donne pas : il faut raisonner par hypothèse. »
+  - Les conditions « Posé par la loi » ou « Acquis plus haut » restent affichées comme remplies d'office, avec ce libellé.
+- **Contraintes** : rien d'autre ne change dans l'atelier (barème, copie corrigée, étapes).
+- **Validation attendue** : plus aucune occurrence de `engrenage` ni de `machine` dans `atelier.js` et `app.css` ; test de l'atelier vert ; capture `atelier-mineure.png` en 390 px. Suite complète verte.
+
+### [TÂCHE H] Lisibilité (Antigravity)
+- **Statut** : À faire
+- **Fichiers concernés** : `app/css/app.css`, `app/js/main.js`, `tests/run.cjs`
+- **Détails de modification** :
+  - **Décor pendant les épreuves** : les animations du décor choisi en boutique (ex. « Le jardin », feuilles qui tombent) restent sur le Palais et les écrans de résultats, mais s'arrêtent et se masquent pendant une épreuve (tout écran de jeu, du premier round à l'écran de fin exclu).
+  - **Contraste** : tout texte de réponse (`.option`, cartes, pièces, colonnes) doit avoir un contraste d'au moins 4,5:1 avec son fond, y compris pendant l'animation d'apparition (pas d'opacité réduite sur le texte, seulement sur le fond). Ajouter au test une vérification automatique du contraste des `.option` sur un QCM.
+  - **Grade coupé en haut** (« Auditeur de 2e cla… ») : afficher le grade sans troncature, sur deux lignes si besoin, ou en version courte (« Auditeur 2e cl. ») sous 360 px.
+  - **Memory** : le dos des cartes porte un repère distinct par position (lettre A à L en petit, couleur `--texte-2`), pour qu'on s'y retrouve.
+- **Validation attendue** : captures avant/après (QCM, rangement, résultats avec le décor « jardin ») ; suite complète verte.
+
+### [TÂCHE I] Jouer d'abord, installer ensuite (Claude, puis Antigravity)
+- **Statut** : Attend Claude (choix du meilleur exercice par matière, d'après le suivi d'usage, et textes)
+- **Objectif** : quelqu'un qui ouvre gdroit.eu dans un navigateur joue tout de suite, sans compte ni notice. L'invitation à installer vient après, sur l'écran de fin.
+- **Parcours visé** :
+  1. Premier écran dans le navigateur : « Tu es en… » L1 / L2, puis la matière (et l'équipe pour l'admin, les obligations et l'intro).
+  2. Une séance découverte d'un seul exercice, le meilleur de la matière (liste `DECOUVERTE` à revoir par Claude).
+  3. Écran de fin : le résultat, puis « Maintenant, installe Gdroit » avec le guide d'installation adapté au navigateur (déjà dans `guideInstallation()`), et « Ta série commence dans l'appli ».
+  4. Dans l'appli installée : connexion, puis le Palais.
+- **À préciser par Claude** : le meilleur exercice de chaque matière, les textes des trois écrans, ce qui arrive si la personne refuse d'installer (rejouer un exercice ? se connecter dans le navigateur ?).
+
+### [TÂCHE J] Les défis entre amis en L1 (Claude, puis Antigravity)
+- **Statut** : Attend Claude (migration Supabase, avec l'accord de Gaspard)
+- **Constat** : la fiche d'un ami ne propose que « Administratif » et « Obligations ». La base refuse aussi tout autre défi (`defis_amis_matiere_check` n'accepte que `admin` et `oblig`). Et le test « même équipe » compare l'équipe L1 de l'ami (`resume.equipe`) à l'équipe L2 de l'utilisateur.
+- **Partie Claude** : migration qui accepte `intro` et `constit` dans `defis_amis.matiere` ; ajouter `xpConstit` au `resume()`.
+- **Partie Antigravity** (une fois la migration faite) :
+  - Dans la fiche d'un ami, proposer les matières de l'année commune : deux L2 → Administratif, Obligations (même équipe L2) ; deux L1 → Droit constitutionnel (toujours), Introduction au droit (même équipe L1). Un L1 et un L2 : « Vous n'avez pas de matière en commun pour l'instant. »
+  - Comparer `resume.annee` et `resume.equipe` avec `etat.annee` et l'équipe de la bonne année.
+  - Le tableau de comparaison montre les lignes de l'année (L1 : Introduction, Constitutionnel ; L2 : Administratif, Obligations).
+  - `releverDefi` : pour l'intro, refuser si l'équipe L1 diffère (« Ce défi porte sur le cours de l'autre équipe »).
+  - Test : deux comptes L1 simulés se défient en constit puis en intro.
+
+### [TÂCHE K] Nouvel exercice « La formule » : lire la formule de la Cour, en déduire le plan (Claude, puis Antigravity)
+- **Statut** : Attend Claude (contenu)
+- **Idée** : les formules de la Cour de cassation et du Conseil d'État disent ce que le juge a contrôlé et avec quelle intensité, donc où se trouve le plan d'un commentaire. Inspiré d'une méthode vue sur TikTok (Juris'Up) ; ni ses textes ni ses plans ne sont repris.
+- **Trois temps, sur un arrêt du cours** :
+  1. **Lire** : l'extrait décisif de l'arrêt ; toucher la formule et dire ce qu'elle révèle (cassation pour violation de la loi, manque de base légale, rejet avec contrôle poussé, rejet avec contrôle léger, appréciation souveraine).
+  2. **Choisir** : trois squelettes de plan, un seul correspond au type de décision.
+  3. **Remplir** : glisser les morceaux de l'arrêt (règle, condition, conséquence) dans les crochets du squelette, avec le banc de pièces (tâche F), puis comparer au plan modèle propre à l'arrêt.
+- **Partie Claude** : 6 à 8 arrêts des obligations (équipe 1) dont la formule est nette, texte vérifié sur Judilibre ou Légifrance ; squelettes, pièges, plans modèles ; format de données dans `content/`. Puis l'administratif (formules du Conseil d'État : erreur de droit, erreur de qualification juridique, erreur manifeste d'appréciation, dénaturation).
+- **Exactitude** : c'est la cour d'appel qui « a violé » ou « a privé sa décision de base légale » ; la Cour de cassation le lui reproche.
+- **Partie Antigravity** : le moteur (`app/js/formule.js`), branché dans les modes d'examen (tâche L), tests.
+
+### [TÂCHE L] Les exercices de production réservés aux modes d'examen et aux audiences (Claude, puis Antigravity)
+- **Statut** : Attend Claude (répartition des exercices)
+- **Principe (Gaspard)** : les exercices de production (écrire, construire, remplir un plan) restent dans les modes d'examen (« Appel », « Cassation », « Partiel blanc ») et dans les épreuves difficiles, notamment l'audience qui valide une chambre. Les séances du quotidien restent courtes et en reconnaissance.
+- **Partie Claude** : revoir `NIVEAUX_EXAMEN` et `composerBoss` : quels exercices où, et le seuil pour gagner l'audience (au moins un exercice de production par audience).
+
+### [TÂCHE M] Une révision du jour fondée sur les erreurs, visible (Claude, puis Antigravity)
+- **Statut** : Attend Claude (conception)
+- **Constat** : la répétition espacée existe déjà (`noter`, `aRevoir`), mais elle est cachée dans le défi du jour et les révisions de chambre. Certains jeux ne notent pas les erreurs (vérifier chaque jeu : `ctx.noter`).
+- **Objectif** : sur le Palais, une entrée « À revoir aujourd'hui : N fiches » qui lance une séance faite uniquement de ce que l'étudiant a raté, et qui disparaît quand il n'y a rien à revoir.
+- **Partie Claude** : la règle (combien de fiches, quels exercices pour une fiche ratée), les textes.
+
 ## Tâches en attente (Roadmap)
 
 ### 1. Nom du professeur de l'équipe 3 en L1
