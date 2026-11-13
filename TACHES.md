@@ -68,7 +68,7 @@ Antigravity : voir `AGENTS.md` pour la marche à suivre. À faire dans l'ordre. 
 
 Demandé par Gaspard le 13/11. Chaque tâche indique qui la fait. **Claude** : contenu juridique, choix de conception, textes vus par les étudiants, Supabase. **Antigravity** : le code, une fois la consigne complète. Une tâche d'Antigravity n'est « À faire » que lorsque Claude a tout précisé ; sinon elle est « Attend Claude ».
 
-Ordre conseillé : N (pour aller plus vite ensuite), F, G, H, J, puis I, K, L, M.
+Ordre : F, G, H, J, N, I, L, M (Antigravity, dans l'ordre du fichier), puis K quand Claude aura écrit le contenu.
 
 Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la publie.
 
@@ -123,15 +123,28 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Contraintes** : même nombre de blocs `ok` qu'avant (le vérifier et l'écrire dans la tâche).
 - **Validation attendue** : durée avant/après notée dans la tâche ; suite complète verte deux fois de suite.
 
-### [TÂCHE I] Jouer d'abord, installer ensuite (Claude, puis Antigravity)
-- **Statut** : Attend Claude (choix du meilleur exercice par matière, d'après le suivi d'usage, et textes)
-- **Objectif** : quelqu'un qui ouvre gdroit.eu dans un navigateur joue tout de suite, sans compte ni notice. L'invitation à installer vient après, sur l'écran de fin.
-- **Parcours visé** :
-  1. Premier écran dans le navigateur : « Tu es en… » L1 / L2, puis la matière (et l'équipe pour l'admin, les obligations et l'intro).
-  2. Une séance découverte d'un seul exercice, le meilleur de la matière (liste `DECOUVERTE` à revoir par Claude).
-  3. Écran de fin : le résultat, puis « Maintenant, installe Gdroit » avec le guide d'installation adapté au navigateur (déjà dans `guideInstallation()`), et « Ta série commence dans l'appli ».
-  4. Dans l'appli installée : connexion, puis le Palais.
-- **À préciser par Claude** : le meilleur exercice de chaque matière, les textes des trois écrans, ce qui arrive si la personne refuse d'installer (rejouer un exercice ? se connecter dans le navigateur ?).
+### [TÂCHE I] Jouer d'abord, installer ensuite (Antigravity)
+- **Statut** : À faire
+- **Décisions de Gaspard (13/11)** : sans installation, on peut continuer sur le site (connexion dans le navigateur) ; l'invitation à installer revient après chaque séance. Le choix des exercices revient à Claude.
+- **Constat (suivi du 13/11)** : 217 ouvertures, 141 écrans de connexion, 37 connexions. La plupart des gens s'arrêtent à l'écran de connexion, avant d'avoir joué.
+- **Fichiers concernés** : `app/js/main.js` (`demarrer`, `ouvrirCompte`, `ecranConnexion`, `ecranAnnee`, `choisirEquipe`, `accueilL1`, `matieres`, `lancerDecouverte`, `resultats`), `app/css/app.css`, `tests/run.cjs`
+- **Parcours** :
+  1. **Visiteur** = navigateur (pas l'icône installée), non connecté, et qui n'a pas encore fini sa séance découverte dans ce navigateur. `ouvrirCompte` ne montre plus `ecranConnexion` à un visiteur : il passe au choix de l'année (`ecranAnnee`), puis de l'équipe (L2 : `choisirEquipe` ; L1 : équipe L1), puis de la matière. Au-dessus du choix de l'année, une ligne : « Essaie une minute, sans compte. »
+  2. Toucher une matière lance directement `lancerDecouverte(0)` (pas de Palais). Le parcours visiteur cache la barre d'onglets.
+  3. **Fin de la séance découverte d'un visiteur** : sous le résultat, à la place des boutons actuels, un bloc :
+     - titre « Maintenant, installe Gdroit » ;
+     - texte « Une icône sur ton écran d'accueil, ta série chaque jour, tes chambres qui s'ouvrent au fil du cours. » ;
+     - `guideInstallation()` (déjà adapté au navigateur) ;
+     - sur iPhone, une ligne : « Puis connecte-toi depuis l'icône : une connexion faite dans le navigateur ne la suit pas. » ;
+     - deux boutons discrets : « Encore une minute » (relance `lancerDecouverte(1)`, comme aujourd'hui) et « Continuer sur le site » (ouvre `ecranConnexion`).
+  4. Le visiteur qui revient plus tard dans le même navigateur, séance déjà faite : `ecranConnexion` comme aujourd'hui.
+  5. **Dans l'icône installée, non connecté** : `ecranConnexion` directement, sans le bloc « D'abord, mets Gdroit sur ton écran d'accueil » (il est déjà installé).
+  6. **Connecté dans le navigateur, sur téléphone** : après chaque séance, en bas de l'écran de résultats, un rappel court « Installe Gdroit : une icône, et tu n'as plus à repasser par le navigateur. » avec un bouton « Comment faire » (ouvre le guide) et « Plus tard » (masque le rappel jusqu'à la séance suivante). Rien sur ordinateur, rien dans l'icône installée.
+  7. Supprimer le bloc « Installe l'appli avant de jouer » de l'accueil et le bloc « D'abord, mets Gdroit… » de l'écran de connexion dans le navigateur : l'installation n'est plus demandée avant de jouer.
+- **Exercices de découverte** : `DECOUVERTE = { admin: ['juge', 'paires'], oblig: ['qualif', 'remede'], constit: ['nuancier', 'pouvoirs'], intro: ['tri', 'mot'] }`. Seul changement : en introduction, `mot` remplace `memory` en second (Memory : 56 % de réussite le premier jour, trop dur pour une première impression ; Le mot : 86 %, aucun abandon). À revoir avec une semaine de données.
+- **Suivi** : utiliser les types existants (`seance_debut` avec `{ seance: 'decouverte', visiteur: true }`, `installer_vu`, `installer_clic`, `decouverte_suite` avec `choix: 'site'` pour « Continuer sur le site »). Aucun nouveau type : la liste des types est contrôlée côté serveur.
+- **Contraintes** : les places de test (`acces: 'aucun'`) restent vérifiées à la connexion, comme aujourd'hui ; le visiteur n'écrit rien sur le serveur sauf le suivi.
+- **Validation attendue** : test « visiteur iPhone » (contexte iPhone, sans `?test` de compte : année → équipe → matière → découverte → bloc d'installation → « Continuer sur le site » → écran de connexion) ; test « icône installée non connectée » (pas de bloc d'installation) ; captures en 390 px. Suite complète verte.
 
 ### [TÂCHE J] Les défis entre amis en L1 (Claude, puis Antigravity)
 - **Statut** : À faire
@@ -145,27 +158,42 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
   - `releverDefi` : pour l'intro, refuser si l'équipe L1 diffère (« Ce défi porte sur le cours de l'autre équipe »).
   - Test : deux comptes L1 simulés se défient en constit puis en intro.
 
-### [TÂCHE K] Nouvel exercice « La formule » : lire la formule de la Cour, en déduire le plan (Claude, puis Antigravity)
+### [TÂCHE K] Nouvel exercice « La formule » : lire la formule du juge, en déduire le plan (Claude, puis Antigravity)
 - **Statut** : Attend Claude (contenu)
+- **Décisions de Gaspard (13/11)** : obligations, administratif et introduction au droit (L1). Version courte (lire la formule, choisir le squelette) dans les séances du quotidien ; version entière (avec le plan à remplir) dans les modes d'examen et les audiences.
 - **Idée** : les formules de la Cour de cassation et du Conseil d'État disent ce que le juge a contrôlé et avec quelle intensité, donc où se trouve le plan d'un commentaire. Inspiré d'une méthode vue sur TikTok (Juris'Up) ; ni ses textes ni ses plans ne sont repris.
 - **Trois temps, sur un arrêt du cours** :
-  1. **Lire** : l'extrait décisif de l'arrêt ; toucher la formule et dire ce qu'elle révèle (cassation pour violation de la loi, manque de base légale, rejet avec contrôle poussé, rejet avec contrôle léger, appréciation souveraine).
+  1. **Lire** : l'extrait décisif de l'arrêt ; toucher la formule et dire ce qu'elle révèle (cassation pour violation de la loi, manque de base légale, rejet avec contrôle poussé, rejet avec contrôle léger, appréciation souveraine ; au Conseil d'État : erreur de droit, erreur de qualification juridique, erreur manifeste d'appréciation, dénaturation).
   2. **Choisir** : trois squelettes de plan, un seul correspond au type de décision.
-  3. **Remplir** : glisser les morceaux de l'arrêt (règle, condition, conséquence) dans les crochets du squelette, avec le banc de pièces (tâche F), puis comparer au plan modèle propre à l'arrêt.
-- **Partie Claude** : 6 à 8 arrêts des obligations (équipe 1) dont la formule est nette, texte vérifié sur Judilibre ou Légifrance ; squelettes, pièges, plans modèles ; format de données dans `content/`. Puis l'administratif (formules du Conseil d'État : erreur de droit, erreur de qualification juridique, erreur manifeste d'appréciation, dénaturation).
+  3. **Remplir** (version entière seulement) : glisser les morceaux de l'arrêt (règle, condition, conséquence) dans les crochets du squelette, avec le banc de pièces (tâche F), puis comparer au plan modèle propre à l'arrêt.
+- **Partie Claude** : 6 à 8 arrêts par matière dont la formule est nette, texte vérifié sur Judilibre, Légifrance ou ArianeWeb ; squelettes, pièges, plans modèles ; format de données dans `content/`.
 - **Exactitude** : c'est la cour d'appel qui « a violé » ou « a privé sa décision de base légale » ; la Cour de cassation le lui reproche.
-- **Partie Antigravity** : le moteur (`app/js/formule.js`), branché dans les modes d'examen (tâche L), tests.
+- **Partie Antigravity** : le moteur (`app/js/formule.js`), ses deux versions, branché dans les séances (courte) et les modes d'examen et audiences (entière, tâche L), tests.
 
-### [TÂCHE L] Les exercices de production réservés aux modes d'examen et aux audiences (Claude, puis Antigravity)
-- **Statut** : Attend Claude (répartition des exercices)
-- **Principe (Gaspard)** : les exercices de production (écrire, construire, remplir un plan) restent dans les modes d'examen (« Appel », « Cassation », « Partiel blanc ») et dans les épreuves difficiles, notamment l'audience qui valide une chambre. Les séances du quotidien restent courtes et en reconnaissance.
-- **Partie Claude** : revoir `NIVEAUX_EXAMEN` et `composerBoss` : quels exercices où, et le seuil pour gagner l'audience (au moins un exercice de production par audience).
+### [TÂCHE L] La production réservée aux modes d'examen et aux audiences (Antigravity)
+- **Statut** : À faire
+- **Décisions de Gaspard (13/11)** : l'audience garde ses 3 vies, avec au moins un exercice de production qui compte comme les autres (le rater coûte une vie). « Première instance » reste un échauffement sans production ; la production commence à « Appel ».
+- **Définition** : exercices de **production** = `atelier`, `architecte`, `plaide`, `trous`, `syllogisme`, `casnu`, et plus tard `formule` en version entière. Tous les autres sont de reconnaissance.
+- **Fichiers concernés** : `app/js/engine.js` (`composerDefi`, `composerBoss`, `composerBossIntro`), `app/js/main.js` (`NIVEAUX_EXAMEN`, `lancerExpress`, `reviserZone`, `DECOUVERTE`), `tests/run.cjs`
+- **Détails de modification** :
+  1. Créer dans `engine.js` une liste exportée `PRODUCTION` avec ces types.
+  2. **Séances du quotidien sans production** : défi du jour, Trois minutes, révision d'une chambre, découverte, défi entre amis. Aujourd'hui, le défi du jour de l'administratif tire parfois `architecte` (`choix(['plan', 'architecte'])`) : le remplacer par `plan`. Vérifier qu'aucune autre composition du quotidien ne tire un type de `PRODUCTION`.
+  3. **Audiences (`composerBoss`, `composerBossIntro`)** : 6 épreuves dont exactement une de production, tirée parmi celles que la chambre peut nourrir. Ordre de préférence : obligations `atelier` (si un cas de la chambre existe), sinon `trous`, sinon `plaide` ; administratif `architecte`, sinon `atelier`, sinon `trous` ; L1 : `plume` (constitutionnel) ou `mot` à défaut, jusqu'à l'arrivée de `formule`. L'épreuve de production n'est jamais la première de l'audience. Les vies ne changent pas.
+  4. **Modes d'examen** : « Première instance » ne contient aucun type de `PRODUCTION` (vérifier, et corriger s'il y en a). « Appel », « Cassation » et « Partiel blanc » en contiennent au moins un par matière ; pour l'introduction et le constitutionnel, ajouter `plume` ou `mot` là où il n'y en a pas.
+- **Validation attendue** : un test qui compose 200 défis du jour, Trois minutes et révisions par matière (rng fixe) et vérifie qu'aucun ne contient de type de `PRODUCTION` ; 200 audiences par matière contiennent exactement une production, jamais en premier. Suite complète verte.
 
-### [TÂCHE M] Une révision du jour fondée sur les erreurs, visible (Claude, puis Antigravity)
-- **Statut** : Attend Claude (conception)
-- **Constat** : la répétition espacée existe déjà (`noter`, `aRevoir`), mais elle est cachée dans le défi du jour et les révisions de chambre. Certains jeux ne notent pas les erreurs (vérifier chaque jeu : `ctx.noter`).
-- **Objectif** : sur le Palais, une entrée « À revoir aujourd'hui : N fiches » qui lance une séance faite uniquement de ce que l'étudiant a raté, et qui disparaît quand il n'y a rien à revoir.
-- **Partie Claude** : la règle (combien de fiches, quels exercices pour une fiche ratée), les textes.
+### [TÂCHE M] La révision du jour, fondée sur les erreurs, visible sur le Palais (Antigravity)
+- **Statut** : À faire
+- **Décisions de Gaspard (13/11)** : 8 fiches au maximum par jour ; la finir pose le sceau du jour.
+- **Constat** : la répétition espacée existe (`noter`, `aRevoir` dans `state.js`), mais elle est cachée, et `aRevoir` mélange les fiches ratées, les fiches simplement dues et les fiches neuves.
+- **Fichiers concernés** : `app/js/state.js`, `app/js/engine.js`, `app/js/main.js` (`accueil`, `resultats`), les fichiers de jeux, `app/css/app.css`, `tests/run.cjs`
+- **Détails de modification** :
+  1. `aRattraper(ix, zones)` dans `state.js` : les fiches **dues aujourd'hui** (`d <= jour()`) **et déjà ratées au moins une fois** (`ko > 0`), les plus anciennes d'abord (`d` croissant), au plus 8.
+  2. **Sur le Palais**, quand la liste n'est pas vide : une entrée en tête, avant le défi du jour : « À revoir aujourd'hui » / « N fiches que tu as ratées reviennent. Environ 3 minutes. » Elle disparaît quand il n'y a rien à revoir ou que la révision du jour est faite.
+  3. **La séance** (`type: 'revision'`) : 3 épreuves qui tirent leurs cartes dans cette liste en priorité, avec les types qui acceptent une liste de fiches (`dus`) : administratif `paires`, `juge`, `paires` ; obligations `qualif`, `remede`, `qualif` ; introduction `memory`, `mot`, `memory` ; constitutionnel `mot`, `memory`, `mot`. Aucun type de `PRODUCTION` (tâche L).
+  4. **Écran de fin** : la liste des fiches revues, chacune avec « Revue, elle reviendra plus tard » ou « Encore ratée, elle revient demain ». La séance pose le sceau du jour comme une séance ordinaire.
+  5. **Chaque jeu note ses erreurs** : vérifier que tout jeu dont le round porte une fiche (`carte`, `c.carte`, `p.carte`, `id` de fiche) appelle `ctx.noter(fiche, juste)`. À vérifier en particulier : `jouerTri`, `jouerMot`, `jouerQuiADit`, `jouerScanner`, `jouerFrise`, `jouerPouvoirs`, `jouerNuancier`, `jouerPlume`. Lister dans la tâche ceux qui ont été complétés.
+- **Validation attendue** : test : une séance avec deux erreurs volontaires → le lendemain (`?decalage=1`), l'entrée « À revoir aujourd'hui » affiche 2 fiches → la séance les propose → après réussite, l'entrée disparaît. Suite complète verte.
 
 ## Tâches en attente (Roadmap)
 

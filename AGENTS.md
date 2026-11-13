@@ -10,7 +10,7 @@ Ce fichier est lu automatiquement. Il complète `CLAUDE.md` (règles d'architect
 5. Valider : `npm run check`, `npm run build`, puis `NODE_PATH=$(npm root -g) node tests/run.cjs`. Si un test échoue deux fois de suite, s'arrêter et noter l'erreur dans la tâche.
 6. **Ne jamais pousser ni merger.** Antigravity n'a pas d'accès en écriture à GitHub : c'est Claude qui récupère la branche sur le Mac et publie. Commit sur la branche uniquement.
 7. Sur la branche, passer le statut à `Prêt pour Claude (antigravity/<lettre>-<mot>, suite verte le JJ/MM à HHhMM sur <commit court>)`, ajouter une ligne dans « Dernières actions exécutées par Antigravity », commit.
-8. Revenir sur `main` (`git checkout main`) et enchaîner sur la tâche prête suivante (retour à l'étape 2). S'arrêter quand il n'y en a plus, puis résumer à Gaspard en deux phrases.
+8. Revenir sur `main` à jour (`git checkout main && git pull --ff-only`) et enchaîner sur la tâche prête suivante (retour à l'étape 2). S'arrêter quand il n'y en a plus, puis résumer à Gaspard en deux phrases.
 
 ## Exécution automatique
 Claude te lance directement (`agy -p` via `scripts/antigravity/lancer.sh`) quand il te confie une tâche. Personne ne répond alors : ne pose pas de question, note-la dans `TACHES.md` (« Question pour Claude : … »), passe le statut à `Bloqué` et arrête-toi. Enchaîne les tâches prêtes, chacune sur sa branche partie de `main`, puis arrête-toi.
