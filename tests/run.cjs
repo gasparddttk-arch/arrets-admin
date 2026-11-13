@@ -1198,12 +1198,100 @@ async function debordement(p, nom) {
     const gc = await b.newContext({ ...(cle.startsWith('Android') ? devices['Pixel 7'] : devices['iPhone 13']), userAgent: ua, serviceWorkers: 'block' });
     const gp = await gc.newPage(); gp.on('pageerror', (x) => erreurs.push(x.message));
     await gp.goto(URLB + '?test'); await gp.waitForSelector('.tribune');
+    await gp.evaluate(() => {
+      const s = document.createElement('section');
+      s.className = 'installer';
+      s.append(window.__app.guideInstallation());
+      document.querySelector('.tribune').append(s);
+    });
     await gp.waitForSelector(`.installer [data-guide="${cle}"]`);
     if (cle.includes('appli')) assert.equal(await gp.locator('.installer button', { hasText: 'Copier le lien' }).count(), 1, 'copier le lien');
     await gp.screenshot({ path: CAP + `installer-${cle.replace(/\W+/g, '-')}.png` }); await debordement(gp, `installation ${cle}`);
     await gc.close();
   }
   log('guide d’installation ok');
+
+  // Parcours visiteur iPhone (sans ?test de compte) : année → équipe → matière → découverte → bloc d'installation → « Continuer sur le site » → écran de connexion
+  {
+    const vc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+    const vp = await vc.newPage(); vp.on('pageerror', (x) => erreurs.push(x.message));
+    await vp.goto(URLB);
+    await vp.waitForSelector('.porte-annee');
+    assert(await vp.$('.choix-amorce'), 'amorce visiteur présente');
+    assert.equal(await vp.evaluate(() => document.querySelector('#onglets')?.hidden), true, 'onglets cachés pour le visiteur');
+    await vp.screenshot({ path: CAP + 'visiteur-annee.png' }); await debordement(vp, 'visiteur choix annee');
+
+    // Année L2
+    await vp.locator('.porte-annee[data-annee="L2"]').click();
+    await vp.waitForSelector('.porte-equipe');
+    await vp.screenshot({ path: CAP + 'visiteur-equipe.png' }); await debordement(vp, 'visiteur choix equipe');
+
+    // Équipe 1
+    await vp.locator('.porte-equipe[data-equipe="1"]').click();
+    await vp.waitForSelector('.porte-oblig');
+    assert.equal(await vp.$('.tribune'), null, 'pas de Palais avant la matière');
+    await vp.screenshot({ path: CAP + 'visiteur-matieres.png' }); await debordement(vp, 'visiteur choix matieres');
+
+    // Matière -> directement découverte (pas de Palais)
+    await vp.locator('.porte-oblig').click();
+    await vp.waitForSelector('.quitter');
+    assert.equal(await vp.$('.tribune'), null, 'pas de Palais pour le visiteur');
+
+    // Séance découverte
+    await jouerParfait(vp);
+    await vp.waitForSelector('.installer-visiteur');
+    assert(await vp.$('.installer-visiteur h2'), 'titre installer présent');
+    assert(await vp.$('.installer-note-ios'), 'note ios présente');
+    assert.equal(await vp.locator('button', { hasText: 'Encore une minute' }).count(), 1, 'bouton encore une minute');
+    assert.equal(await vp.locator('button', { hasText: 'Continuer sur le site' }).count(), 1, 'bouton continuer sur le site');
+    await vp.screenshot({ path: CAP + 'visiteur-fin.png' }); await debordement(vp, 'visiteur fin decouverte');
+
+    // « Continuer sur le site » ouvre l'écran de connexion sans bloc d'installation
+    await vp.locator('button', { hasText: 'Continuer sur le site' }).click();
+    await vp.waitForSelector('.connexion');
+    assert.equal(await vp.locator('.installer').count(), 0, 'pas de bloc d’installation sur écran de connexion');
+    await vp.screenshot({ path: CAP + 'visiteur-connexion.png' }); await debordement(vp, 'visiteur connexion');
+    await vc.close();
+  }
+  log('visiteur iPhone ok');
+
+  // Icône installée non connectée : écran de connexion directement, sans bloc d'installation
+  {
+    const ic = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+    const ip = await ic.newPage(); ip.on('pageerror', (x) => erreurs.push(x.message));
+    await ip.addInitScript(() => {
+      Object.defineProperty(navigator, 'standalone', { get: () => true });
+    });
+    await ip.goto(URLB);
+    await ip.waitForSelector('.connexion');
+    assert.equal(await ip.locator('.installer').count(), 0, 'pas de bloc d’installation dans l’icône installée');
+    await ip.screenshot({ path: CAP + 'icone-non-connectee.png' }); await debordement(ip, 'icône non connectée');
+    await ic.close();
+  }
+  log('icône installée non connectée ok');
+
+  // Connecté dans le navigateur sur téléphone : rappel d'installation après chaque séance
+  {
+    const tc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+    const tp = await tc.newPage(); tp.on('pageerror', (x) => erreurs.push(x.message));
+    await tp.goto(URLB + '?test&compte#access_token=jeton_test&refresh_token=refresh_test&expires_in=3600&token_type=bearer');
+    await tp.waitForSelector('.tribune');
+    await tp.evaluate(() => window.__app.resultats({ scores: [1], rounds: [{}], parfaites: 1, xp: 50, jetons: 5, comboMax: 3, touches: new Map() }, true));
+    await tp.waitForSelector('.resultats');
+    await tp.waitForSelector('.res-rappel-install');
+    assert.match(await tp.locator('.res-rappel-install p').innerText(), /Installe Gdroit/);
+    assert.equal(await tp.locator('.res-rappel-install button', { hasText: 'Comment faire' }).count(), 1);
+    assert.equal(await tp.locator('.res-rappel-install button', { hasText: 'Plus tard' }).count(), 1);
+    await tp.screenshot({ path: CAP + 'rappel-installation-resultats.png' }); await debordement(tp, 'rappel installation');
+    await tp.locator('.res-rappel-install button', { hasText: 'Comment faire' }).click();
+    await tp.waitForSelector('.boite .installer');
+    await tp.locator('.boite button', { hasText: 'Compris' }).click();
+    await tp.waitForSelector('.boite', { state: 'detached' });
+    await tp.locator('.res-rappel-install button', { hasText: 'Plus tard' }).click();
+    assert.equal(await tp.locator('.res-rappel-install').count(), 0, 'rappel masqué');
+    await tc.close();
+  }
+  log('rappel installation connecté ok');
 
   // Memory : deux cartes qui ne vont pas ensemble restent ouvertes le temps de les lire, puis se ferment d'un toucher.
   {

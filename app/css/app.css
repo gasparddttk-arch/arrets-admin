@@ -374,8 +374,17 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .guide-bloc > p { margin: 0; }
 .installer .bouton-fantome { color: var(--papier-texte); border-color: var(--papier-bord); }
 .installer-direct { width: 100%; }
-.installer-connexion { margin: 4px 0 14px; text-align: left; width: 100%; }
-.installer-connexion h2 { font-size: 19px; }
+.installer-visiteur { margin: 14px 0 0; text-align: left; width: 100%; }
+.installer-visiteur h2 { font-size: 20px; }
+.installer-visiteur .installer-note-ios { font-size: 15px; color: var(--papier-texte); opacity: .88; margin-top: 8px; }
+.visiteur-actions { display: grid; gap: 8px; margin-top: 14px; }
+.visiteur-actions .bouton-fantome { width: 100%; border-color: rgba(0, 0, 0, .25); color: var(--papier-texte); }
+.choix-amorce { font-size: 15px; font-weight: 600; color: var(--or); margin-bottom: 4px; }
+.res-rappel-install { margin-top: 16px; padding: 12px 14px; border-radius: var(--rayon); background: linear-gradient(180deg, var(--carte-haut), var(--carte-bas)); box-shadow: inset 0 0 0 1px var(--carte-bord); text-align: center; }
+.res-rappel-install p { font-size: 15px; line-height: 1.25; margin-bottom: 10px; color: var(--texte-2); }
+.res-rappel-actions { display: flex; gap: 10px; justify-content: center; align-items: center; }
+.res-rappel-actions .bouton-fantome { font-size: 14px; min-height: 38px; padding: 6px 12px; }
+.res-rappel-actions .bouton-lien { font-size: 14px; min-height: 38px; padding: 6px 8px; }
 .version { color: var(--texte-2); font-size: 15px; margin-top: 18px; }
 .images-perso { display: grid; gap: 10px; }
 .ligne-image { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: linear-gradient(180deg, var(--carte-haut), var(--carte-bas)); box-shadow: inset 0 0 0 1px var(--carte-bord); }
