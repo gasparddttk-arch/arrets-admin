@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "check": "node scripts/check.mjs",
-    "test": "node tests/run.cjs"
+    "test": "node tests/run.cjs --parallele"
   },
   "devDependencies": {
     "@fontsource/bodoni-moda": "5.3.0",

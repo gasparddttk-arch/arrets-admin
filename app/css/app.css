@@ -1381,6 +1381,11 @@ html[data-decor='buren'] .pips i.fait { background-image: repeating-linear-gradi
 @keyframes colonne-monte { from { transform: scaleY(0); } }
 .tribune[data-decor]:not([data-decor='aucun'])::before { display: none; }
 html[data-effets='non'] .feuille { display: none; }
+html[data-test='oui'] .feuille { animation: none !important; }
+html[data-test='oui'] .palais-portes .battant { transition: none !important; }
+html[data-test='oui'] .palais-portes.ouvre .battant { transition: none !important; }
+html[data-test='oui'] .code-envole { animation-duration: 0.01s !important; animation-delay: 0s !important; }
+html[data-test='oui'] .mem-carte.trouvee { animation-duration: 0.01s !important; animation-delay: 0s !important; }
 
 /* Décor pendant les épreuves : masqué et arrêté pendant toute épreuve */
 body:has(.scene) .feuille,

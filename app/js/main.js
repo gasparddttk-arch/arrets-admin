@@ -100,6 +100,7 @@ function appliquerTheme() {
   r.dataset.theme = etat.theme;
   r.dataset.decor = etat.decor || 'aucun';
   r.dataset.effets = effets() ? 'oui' : 'non';
+  if (new URLSearchParams(location.search).has('test')) r.dataset.test = 'oui';
   if (images.jeton) r.style.setProperty('--jeton-image', `url("${images.jeton}")`);
   else r.style.removeProperty('--jeton-image');
   document.querySelector('meta[name="theme-color"]').setAttribute('content', { rose: '#FFE3EA', pastel: '#F4F1FA', verre: '#060A1C' }[etat.theme] || '#0A0E22');
@@ -2009,6 +2010,7 @@ function surveillerFluidite() {
 
 async function demarrer() {
   const params = new URLSearchParams(location.search);
+  if (params.has('test')) document.documentElement.dataset.test = 'oui';
   { const c = contexte(); suivre('ouverture', { os: c.os, nav: c.nav, installee: estInstallee(), connecte: connecte(), largeur: innerWidth }); }
   // Un lien d'invitation survit à la connexion : le code attend dans le téléphone.
   if (params.get('ami')) { try { localStorage.setItem('gdroit-ami', params.get('ami')); } catch { /* rien */ } history.replaceState(null, '', location.pathname); }

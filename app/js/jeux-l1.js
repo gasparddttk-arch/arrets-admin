@@ -71,9 +71,10 @@ export function jouerTri(zone, ctx, round) {
         tampon.textContent = BORDS[k][0];
         carte.classList.add('tamponnee');
         son('marteau'); vibrer(14);
-        await attendre(420);
+        const enTest = typeof location !== 'undefined' && new URLSearchParams(location.search).has('test');
+        await attendre(enTest ? 20 : 420);
         carte.classList.add(`vole-${BORDS[k][1]}`);
-        await attendre(380);
+        await attendre(enTest ? 20 : 380);
         i++; occupe = false; suivante();
       } else {
         if (!rate) ctx.combo(false);
