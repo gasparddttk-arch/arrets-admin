@@ -6,9 +6,10 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 
 ## Cahier des charges pour Antigravity (13/11/2026)
 
-À faire dans l'ordre. Chaque tâche se fait sur sa propre branche, puis `npm run check`, `npm run build` et la suite complète (`NODE_PATH=$(npm root -g) node tests/run.cjs`) avant tout merge sur `main`. Vérifier ensuite la VERSION servie sur https://gdroit.eu/sw.js. Le dépôt est `gasparddttk-arch/gdroit` : ne jamais pousser l'appli sur `arrets-admin` (page de déménagement seulement).
+Antigravity : voir `AGENTS.md` pour la marche à suivre. À faire dans l'ordre. Chaque tâche se fait sur sa propre branche, puis `npm run check`, `npm run build` et la suite complète (`NODE_PATH=$(npm root -g) node tests/run.cjs`) avant tout merge sur `main`. Vérifier ensuite la VERSION servie sur https://gdroit.eu/sw.js. Le dépôt est `gasparddttk-arch/gdroit` : ne jamais pousser l'appli sur `arrets-admin` (page de déménagement seulement).
 
 ### [TÂCHE A] Retirer le code mort du tri L2
+- **Statut** : À faire
 - **Fichiers concernés** : `app/js/jeux-l1.js` (fonction `jouerTri`), `app/css/app.css` (bloc « Le tri en L2 », classes `.tri-l2`, `.tri-sur`)
 - **Objectif** : le tri L2 a été remplacé par le grand rangement ; `jouerTri` ne sert plus qu'à la L1.
 - **Détails de modification** :
@@ -18,6 +19,7 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte (blocs « L1 ok », « L1 équipe 2 ok »).
 
 ### [TÂCHE B] Test automatique de l'annonce aux testeurs
+- **Statut** : À faire
 - **Fichiers concernés** : `tests/run.cjs` (bloc du compte simulé, fonction `simuler`)
 - **Objectif** : vérifier l'écran Administration > « Mise à jour de l'application ».
 - **Détails de modification** :
@@ -27,12 +29,14 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 - **Validation attendue** : nouveau `log('annonce admin ok')`, suite complète verte.
 
 ### [TÂCHE C] Corrections iPhone des jeux L1 (attend les retours de Gaspard)
+- **Statut** : À faire, attend les retours iPhone de Gaspard
 - **Fichiers concernés** : `app/js/jeux-l1.js`, `app/css/app.css`
 - **Objectif** : appliquer les retours de Gaspard sur le tri, le rangement, Qui a dit ?, Memory et la frise, un retour par commit.
 - **Contraintes** : DOM uniquement avec `h()`, tokens CSS de `:root`, textes sobres. Vérifier chaque écran en 390 px de large (fonction `debordement` des tests).
 - **Validation attendue** : captures avant/après dans `tests/captures/`, suite complète verte.
 
 ### [TÂCHE D] Fin du déménagement (pas avant le 4 décembre 2026)
+- **Statut** : À faire, pas avant le 04/12/2026
 - **Fichiers concernés** : `supabase/functions/pousser/index.ts`
 - **Objectif** : quand plus personne n'utilise l'ancienne adresse (vérifier dans Administration > « Le parcours des testeurs » qu'aucune ouverture ne vient plus de github.io), ne plus accepter les appels depuis `https://gasparddttk-arch.github.io`.
 - **Détails de modification** :
