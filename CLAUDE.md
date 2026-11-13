@@ -39,6 +39,14 @@
 
 ---
 
+## Partage du travail (sans que Gaspard serve d'intermédiaire)
+Quand Gaspard donne une demande, Claude la découpe lui-même :
+- **Claude garde** : contenu juridique et pédagogique, choix de conception, textes visibles par les étudiants, Supabase, sécurité, tout ce qui est ambigu ou demande l'avis de Gaspard.
+- **Claude délègue à Antigravity** : ce qui est long mais mécanique et entièrement spécifié (code mort, tests à écrire, application d'une consigne précise, CSS décrit, série complète de tests, merge, mise en ligne et vérification de VERSION).
+- Pour déléguer : écrire la tâche dans `TACHES.md` (format ci-dessous, `- **Statut** : À faire`), la pousser sur `main` du dépôt gdroit, puis écrire la date dans `.antigravity/sonnette` sur le Mac (`date > $HOME/mnt/Desktop/arrets-admin-main/.antigravity/sonnette` via device_bash). Antigravity démarre aussitôt.
+- Pour le résultat : relire `TACHES.md` sur le Mac (statut, compte rendu, questions) et `~/Library/Logs/gdroit-antigravity.log`. Une tâche « Bloqué » revient à Claude.
+- Claude dit à Gaspard en une ligne ce qu'il a délégué.
+
 ## Format d'une consigne Claude pour Antigravity
 Lorsque Claude souhaite faire exécuter une tâche à Antigravity, il peut formuler son brief ainsi :
 
