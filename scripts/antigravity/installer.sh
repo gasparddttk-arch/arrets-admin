@@ -1,6 +1,6 @@
 #!/bin/bash
 # À lancer une fois dans le Terminal du Mac : bash ~/Desktop/arrets-admin-main/scripts/antigravity/installer.sh
-# Programme lancer.sh chaque jour à 20 h 13 (launchd rattrape le lancement au réveil si le Mac dormait).
+# Fait démarrer lancer.sh dès que Claude écrit dans .antigravity/sonnette. Aucun passage programmé.
 set -e
 ICI="$(cd "$(dirname "$0")" && pwd)"
 command -v agy >/dev/null || { echo "La commande agy (Antigravity CLI) est introuvable : installe-la, puis lance « agy » une fois pour te connecter."; exit 1; }
@@ -21,6 +21,7 @@ json.dump(r, open(chemin, 'w'), indent=2)
 print('Autorisations Antigravity :', ', '.join(allow))
 PY
 
+mkdir -p "$PROJET/.antigravity" && touch "$PROJET/.antigravity/sonnette"
 PLIST="$HOME/Library/LaunchAgents/eu.gdroit.antigravity.plist"
 mkdir -p "$HOME/Library/LaunchAgents"
 cat > "$PLIST" <<PL
@@ -29,13 +30,13 @@ cat > "$PLIST" <<PL
 <plist version="1.0"><dict>
   <key>Label</key><string>eu.gdroit.antigravity</string>
   <key>ProgramArguments</key><array><string>/bin/bash</string><string>$ICI/lancer.sh</string></array>
-  <key>StartCalendarInterval</key><dict><key>Hour</key><integer>20</integer><key>Minute</key><integer>13</integer></dict>
+  <key>WatchPaths</key><array><string>$PROJET/.antigravity/sonnette</string></array>
   <key>StandardOutPath</key><string>$HOME/Library/Logs/gdroit-antigravity.log</string>
   <key>StandardErrorPath</key><string>$HOME/Library/Logs/gdroit-antigravity.log</string>
 </dict></plist>
 PL
 launchctl bootout "gui/$(id -u)/eu.gdroit.antigravity" 2>/dev/null || true
 launchctl bootstrap "gui/$(id -u)" "$PLIST"
-echo "C'est programmé : chaque jour à 20 h 13, s'il y a une tâche prête."
+echo "C'est en place : Antigravity démarrera quand Claude lui confiera une tâche."
 echo "Journal : ~/Library/Logs/gdroit-antigravity.log"
 echo "Pour arrêter : launchctl bootout gui/$(id -u)/eu.gdroit.antigravity"

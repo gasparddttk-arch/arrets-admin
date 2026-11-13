@@ -13,7 +13,7 @@ Ce fichier est lu automatiquement. Il complète `CLAUDE.md` (règles d'architect
 8. Annoncer à Gaspard en deux phrases ce qui a changé, puis passer à la tâche suivante seulement s'il le demande.
 
 ## Exécution automatique
-`scripts/antigravity/lancer.sh` peut te lancer seul chaque soir (`agy -p`). Personne ne répond alors : ne pose pas de question, note-la dans `TACHES.md` (« Question pour Claude : … »), passe le statut à `Bloqué` et arrête-toi. Une seule tâche par lancement.
+Claude te lance directement (`agy -p` via `scripts/antigravity/lancer.sh`) quand il te confie une tâche. Personne ne répond alors : ne pose pas de question, note-la dans `TACHES.md` (« Question pour Claude : … »), passe le statut à `Bloqué` et arrête-toi. Une seule tâche par lancement.
 
 ## Interdits
 - Pousser quoi que ce soit sur le dépôt `arrets-admin` (il ne sert que la page de déménagement).
