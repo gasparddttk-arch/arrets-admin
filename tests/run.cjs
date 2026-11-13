@@ -1022,11 +1022,12 @@ async function debordement(p, nom) {
     const dc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
     const dp = await dc.newPage(); dp.on('pageerror', (x) => erreurs.push(x.message));
     await dp.goto(URLB + `?test&decouverte${mat === 'admin' ? '' : `&matiere=${mat}`}`); await dp.waitForSelector('.tribune');
-    await dp.locator('.cta[data-decouverte]').click(); await dp.waitForSelector('.quitter');
+    const sansPortes = () => dp.waitForFunction(() => !document.querySelector('.palais-portes'));
+    await sansPortes(); await dp.locator('.cta[data-decouverte]').click(); await dp.waitForSelector('.quitter');
     assert.equal(await dp.evaluate(() => JSON.parse(JSON.stringify(window.__app.etat())).stats.seances), 0);
     await jouerParfait(dp); await dp.waitForSelector('.decouverte-suite');
     if (mat === 'admin') { await dp.screenshot({ path: CAP + 'decouverte-fin.png' }); await debordement(dp, 'fin de la première séance'); }
-    await dp.locator('[data-encore]').click(); await dp.waitForSelector('.quitter');
+    await sansPortes(); await dp.locator('[data-encore]').click(); await dp.waitForSelector('.quitter');
     await jouerParfait(dp); await dp.waitForSelector('.decouverte-suite');
     await dp.tap('text=Retour au Palais'); await dp.waitForSelector('.tribune');
     assert.equal(await dp.locator('.cta[data-decouverte]').count(), 0, `${mat} : le Défi du jour reprend la main`);
