@@ -12,6 +12,9 @@ Ce fichier est lu automatiquement. Il complète `CLAUDE.md` (règles d'architect
 7. Passer le statut à `Fait le JJ/MM (Antigravity)`, ajouter une ligne dans « Dernières actions exécutées par Antigravity », commit et push de `TACHES.md`.
 8. Annoncer à Gaspard en deux phrases ce qui a changé, puis passer à la tâche suivante seulement s'il le demande.
 
+## Exécution automatique
+`scripts/antigravity/lancer.sh` peut te lancer seul chaque soir (`agy -p`). Personne ne répond alors : ne pose pas de question, note-la dans `TACHES.md` (« Question pour Claude : … »), passe le statut à `Bloqué` et arrête-toi. Une seule tâche par lancement.
+
 ## Interdits
 - Pousser quoi que ce soit sur le dépôt `arrets-admin` (il ne sert que la page de déménagement).
 - Modifier la base Supabase (tables, fonctions SQL, réglages) ou redéployer une fonction sans l'accord écrit de Gaspard dans la conversation.
