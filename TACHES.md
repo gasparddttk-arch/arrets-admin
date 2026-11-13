@@ -158,18 +158,27 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
   - `releverDefi` : pour l'intro, refuser si l'équipe L1 diffère (« Ce défi porte sur le cours de l'autre équipe »).
   - Test : deux comptes L1 simulés se défient en constit puis en intro.
 
-### [TÂCHE K] Nouvel exercice « La formule » : lire la formule du juge, en déduire le plan (Claude, puis Antigravity)
-- **Statut** : Attend Claude (contenu)
-- **Décisions de Gaspard (13/11)** : obligations, administratif et introduction au droit (L1). Version courte (lire la formule, choisir le squelette) dans les séances du quotidien ; version entière (avec le plan à remplir) dans les modes d'examen et les audiences.
-- **Idée** : les formules de la Cour de cassation et du Conseil d'État disent ce que le juge a contrôlé et avec quelle intensité, donc où se trouve le plan d'un commentaire. Inspiré d'une méthode vue sur TikTok (Juris'Up) ; ni ses textes ni ses plans ne sont repris.
-- **Trois temps, sur un arrêt du cours** :
-  1. **Lire** : l'extrait décisif de l'arrêt ; toucher la formule et dire ce qu'elle révèle (cassation pour violation de la loi, manque de base légale, rejet avec contrôle poussé, rejet avec contrôle léger, appréciation souveraine ; au Conseil d'État : erreur de droit, erreur de qualification juridique, erreur manifeste d'appréciation, dénaturation).
-  2. **Choisir** : trois squelettes de plan, un seul correspond au type de décision.
-  3. **Remplir** (version entière seulement) : glisser les morceaux de l'arrêt (règle, condition, conséquence) dans les crochets du squelette, avec le banc de pièces (tâche F), puis comparer au plan modèle propre à l'arrêt.
-- **Avancement (13/11)** : textes vérifiés sur Légifrance dans `notes/formule-verifs.md` : 6 arrêts d'obligations, 5 d'administratif. L'introduction L1 attend le chapitre du cours sur la jurisprudence (aucun arrêt dans le cours pour l'instant).
-- **Partie Claude** : 6 à 8 arrêts par matière dont la formule est nette, texte vérifié sur Judilibre, Légifrance ou ArianeWeb ; squelettes, pièges, plans modèles ; format de données dans `content/`.
-- **Exactitude** : c'est la cour d'appel qui « a violé » ou « a privé sa décision de base légale » ; la Cour de cassation le lui reproche.
-- **Partie Antigravity** : le moteur (`app/js/formule.js`), ses deux versions, branché dans les séances (courte) et les modes d'examen et audiences (entière, tâche L), tests.
+### [TÂCHE K] Nouvel exercice « La formule » : lire la formule du juge, en déduire le plan (Antigravity)
+- **Statut** : À faire
+- **Décisions de Gaspard (13/11)** : obligations, administratif et introduction au droit. Version courte (étapes 1 et 2) dans les séances du quotidien ; version entière (étapes 1 à 3) dans les modes d'examen et les audiences.
+- **Contenu (fait par Claude)** : `content/formules.mjs`, 11 arrêts (6 obligations équipe 1, 5 administratif) dont le texte a été vérifié sur Légifrance (`notes/formule-verifs.md`). Ne pas modifier les textes. L'introduction L1 viendra avec le chapitre du cours sur la jurisprudence.
+- **Fichiers concernés** : `scripts/build.mjs`, `scripts/check.mjs`, `app/js/formule.js` (nouveau), `app/js/engine.js`, `app/js/main.js`, `app/js/games.js`, `app/css/app.css`, `tests/run.cjs`
+- **Détails de modification** :
+  1. **Build** : écrire `docs/formules.json` à partir de `content/formules.mjs` (`TYPES`, `ARRETS`) ; le charger dans `demarrer()` avec les autres fichiers. Dans `indexer`, rattacher à chaque matière les entrées dont `matiere` correspond et dont `arret` existe dans les fiches de l'équipe courante (`equipes` contient l'équipe) ; une entrée prend les zones de sa fiche.
+  2. **Check** : vérifier que chaque `type` et chaque `piege` existe dans `TYPES` et diffère du type, que `extrait` a 3 parties, qu'il y a au moins un morceau `I`, un `II` et un leurre, et que la fiche `arret` existe dans les fichiers de chaque équipe listée.
+  3. **Moteur** (`app/js/formule.js`, `jouerFormule(zone, ctx, round)`, round `{ type: 'formule', entiere: bool, id }`) :
+     - **Étape 1, Lire** : l'arrêt (`ref`), l'extrait avec la formule (2e partie) en gras sur fond `--or` pâle. Question « Que révèle cette formule ? » ; réponses : `TYPES[type].nom` et les noms des deux types de `pieges`, mélangés. Après réponse : `TYPES[type].signe` puis `lecture`. Appeler `ctx.noter(arret, juste)`.
+     - **Étape 2, Choisir** : « Quel squelette de plan ? » ; trois cartes : le `squelette` du bon type et ceux des deux `pieges` (I et II, avec les crochets), mélangées. Après réponse, montrer sous chaque carte le `nom` du type correspondant.
+     - **Étape 3, Remplir** (seulement si `entiere`) : le squelette du bon type en cases I et II, les `morceaux` dans le banc de pièces de la tâche F (avec la case « Écartées »). Vérifier : chaque morceau `I` ou `II` à sa place, les leurres écartés ; montrer le `w` de chaque leurre mal placé. Puis le plan modèle (`modele.I`, `modele.II`) sous le titre « Le plan de cet arrêt ».
+     - Score : courte 0,5 + 0,5 ; entière 0,3 + 0,3 + 0,4 (part des morceaux bien placés).
+  4. **Branchement** :
+     - type `formule` dans `tirerRound` (obligations et administratif), seulement si la matière a au moins une entrée dans les zones demandées ;
+     - version courte : ajoutée à la rotation de la révision d'une chambre (`reviserZone`) et du défi du jour, au plus une fois par séance ;
+     - version entière : dans `PRODUCTION` (tâche L ; créer la liste si elle n'existe pas encore), dans « Appel », « Cassation » et « Partiel blanc » pour les obligations et l'administratif, et en premier choix de production des audiences quand la chambre en a une ;
+     - mode « La formule » dans la liste des modes (`games.js`), version entière.
+  5. Textes de l'interface : surtitre « La formule », étapes « Lire », « Choisir », « Remplir » ; pas d'autre texte que ceux du fichier de contenu et ceux-ci.
+- **Contraintes** : DOM avec `h()`, tokens de `:root`, 390 px sans débordement. Dépend de la tâche F (banc de pièces).
+- **Validation attendue** : test qui joue une version courte et une version entière en obligations (équipe 1) et en administratif (équipe 2), avec une mauvaise réponse à l'étape 1 (le `signe` s'affiche) ; captures `formule-lire.png`, `formule-remplir.png` ; suite complète verte.
 
 ### [TÂCHE L] La production réservée aux modes d'examen et aux audiences (Antigravity)
 - **Statut** : À faire
