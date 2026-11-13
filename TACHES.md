@@ -32,6 +32,12 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 * **Contrôle** : `npm run check` vérifie la structure de chaque cas. Les leurres ont été rallongés pour que la bonne réponse ne se reconnaisse pas à sa longueur.
 * **À faire** : nouveaux cas à chaque séance (inexécution, responsabilité ; en administratif, les séances suivantes).
 
+### 11. Domaine gdroit.eu
+* **Statut** : 🟢 En ligne
+* **Fait (13/11)** : gdroit.eu acheté chez OVH ; DNS vers GitHub Pages (4 A, www en CNAME) ; HTTPS forcé ; Supabase (Site URL et redirections) ; fonction `pousser` autorisée depuis gdroit.eu ; emails de connexion par Resend depuis connexion@gdroit.eu.
+* **Dépôts** : `gdroit` = l'appli ; `arrets-admin` = page de déménagement pour les anciennes installations (le service worker remplace l'ancienne appli par cette page).
+* **À faire** : prévenir les testeurs (annonce de l'admin) ; dans quelques semaines, retirer l'ancienne adresse des redirections Supabase et des origines de `pousser`.
+
 ### 10. Conversion : installation, première séance, suivi
 * **Statut** : 🟡 En ligne, à observer
 * **Constat (13/11)** : 56 inscrits, 16 ont fini une séance (29 %), 9 en ont fait trois ou plus.
