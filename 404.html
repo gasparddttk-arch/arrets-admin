@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0C1A47">
+  <title>Gdroit a déménagé</title>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="canonical" href="https://gdroit.eu/">
+  <script>
+    // Dans un navigateur, on part tout de suite sur gdroit.eu. Dans l'ancienne icône, on explique quoi faire.
+    var installee = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+    if (!installee) location.replace('https://gdroit.eu/' + location.search + location.hash);
+  </script>
+  <style>
+    :root { --fond: #0C1A47; --carte: #142559; --texte: #F3F1EA; --doux: #B9C2E3; --or: #F2C14E; --or-texte: #1B1405; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--fond); color: var(--texte); }
+    body { font: 17px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: max(28px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom)); }
+    main { max-width: 440px; margin: 0 auto; }
+    h1 { font: 700 30px/1.15 Georgia, 'Times New Roman', serif; margin: 8px 0 10px; }
+    .adresse { font: 700 22px Georgia, serif; color: var(--or); }
+    p { margin: 0 0 14px; color: var(--doux); }
+    .ouvrir { display: block; margin: 22px 0; padding: 16px; border-radius: 16px; background: var(--or); color: var(--or-texte); font-weight: 700; font-size: 19px; text-align: center; text-decoration: none; }
+    ol { margin: 0 0 18px; padding: 18px 18px 18px 38px; background: var(--carte); border-radius: 18px; }
+    li { margin: 0 0 10px; }
+    li:last-child { margin: 0; }
+    b { color: var(--texte); }
+    .rassure { font-size: 15px; }
+  </style>
+</head>
+<body>
+  <main>
+    <p>Gdroit</p>
+    <h1>Gdroit a déménagé</h1>
+    <p>L’appli est maintenant à l’adresse <span class="adresse">gdroit.eu</span>. Cette ancienne version ne fonctionne plus.</p>
+    <a class="ouvrir" href="https://gdroit.eu/" target="_blank" rel="noopener">Ouvrir gdroit.eu</a>
+    <ol id="etapes">
+      <li>Touche <b>Ouvrir gdroit.eu</b> : la page s’ouvre dans ton navigateur.</li>
+      <li>Ajoute Gdroit à ton écran d’accueil : sur iPhone, bouton <b>Partager</b> puis <b>Sur l’écran d’accueil</b> ; sur Android, menu <b>⋮</b> puis <b>Installer l’application</b>.</li>
+      <li>Ouvre la nouvelle icône et connecte-toi comme d’habitude.</li>
+      <li>Supprime cette ancienne icône : appui long dessus, puis <b>Supprimer l’app</b>.</li>
+    </ol>
+    <p class="rassure">Ta progression est enregistrée sur ton compte : tu la retrouves en te connectant sur gdroit.eu.</p>
+  </main>
+</body>
+</html>
