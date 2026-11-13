@@ -32,7 +32,7 @@ export const attendre = (ms) => new Promise((ok) => { setTimeout(ok, ms); });
 
 // Pluie de lumière pour les grands moments.
 export function confettis() {
-  if (!effets()) return;
+  if (!effets() || (typeof location !== 'undefined' && new URLSearchParams(location.search).has('test'))) return;
   const c = h('canvas', { class: 'confettis', 'aria-hidden': 'true' });
   document.body.append(c);
   const r = devicePixelRatio || 1; c.width = innerWidth * r; c.height = innerHeight * r;
@@ -89,8 +89,9 @@ export function slayDiva(figure = null) {
   const t = h('div', { class: 'slay', role: 'status' }, figure, h('strong', {}, 'Slay Diva'));
   document.body.append(t);
   confettis();
-  setTimeout(() => t.remove(), 1250);
-  return attendre(duree(900));
+  const enTest = typeof location !== 'undefined' && new URLSearchParams(location.search).has('test');
+  setTimeout(() => t.remove(), enTest ? 60 : 1250);
+  return attendre(enTest ? 60 : duree(900));
 }
 
 // BANC DE PIÈCES : glisser ou toucher pour poser les pièces dans leurs cases.

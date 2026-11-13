@@ -112,7 +112,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : captures avant/après (QCM, rangement, résultats avec le décor « jardin ») ; suite complète verte.
 
 ### [TÂCHE N] Une suite de tests plus rapide (Antigravity)
-- **Statut** : Reportée (13/11, 22 h 25) : deux sessions d'Antigravity se sont arrêtées en pleine tâche, sans doute à cause de la durée des suites répétées. Travail commencé sur `antigravity/n-tests` et `antigravity/n-tests-2`. Claude la reprendra lui-même. Antigravity : ne pas la prendre.
+- **Statut** : Fait le 13/11 (commencé par Antigravity, terminé par Claude) : suite complète en 8 min au lieu de 30, `npm test` (3 groupes en parallèle), `node tests/run.cjs --seul <mot>` pour une partie
 - **Fichiers concernés** : `tests/run.cjs`, `package.json`, éventuellement `app/js/main.js` (mode `?test` uniquement)
 - **Objectif** : la suite complète dure environ 30 minutes. Viser moins de 12 minutes sur le Mac, sans retirer aucune vérification.
 - **Détails de modification** :
@@ -124,7 +124,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : durée avant/après notée dans la tâche ; suite complète verte deux fois de suite.
 
 ### [TÂCHE I] Jouer d'abord, installer ensuite (Antigravity)
-- **Statut** : À faire
+- **Statut** : Fait le 13/11 (Antigravity), publié par Claude
 - **Décisions de Gaspard (13/11)** : sans installation, on peut continuer sur le site (connexion dans le navigateur) ; l'invitation à installer revient après chaque séance. Le choix des exercices revient à Claude.
 - **Constat (suivi du 13/11)** : 217 ouvertures, 141 écrans de connexion, 37 connexions. La plupart des gens s'arrêtent à l'écran de connexion, avant d'avoir joué.
 - **Fichiers concernés** : `app/js/main.js` (`demarrer`, `ouvrirCompte`, `ecranConnexion`, `ecranAnnee`, `choisirEquipe`, `accueilL1`, `matieres`, `lancerDecouverte`, `resultats`), `app/css/app.css`, `tests/run.cjs`

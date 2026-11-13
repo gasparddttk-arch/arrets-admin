@@ -100,6 +100,7 @@ function appliquerTheme() {
   r.dataset.theme = etat.theme;
   r.dataset.decor = etat.decor || 'aucun';
   r.dataset.effets = effets() ? 'oui' : 'non';
+  if (new URLSearchParams(location.search).has('test')) r.dataset.test = 'oui';
   if (images.jeton) r.style.setProperty('--jeton-image', `url("${images.jeton}")`);
   else r.style.removeProperty('--jeton-image');
   document.querySelector('meta[name="theme-color"]').setAttribute('content', { rose: '#FFE3EA', pastel: '#F4F1FA', verre: '#060A1C' }[etat.theme] || '#0A0E22');
@@ -149,6 +150,11 @@ async function compterNouvelles() {
 function ouvrirMatiere(id) {
   etat.matiere = id; ix = CONTENUS[id]; filtre = { texte: '', zone: 0, type: 'arrets' };
   sauver(); son('carte'); vibrer(8); suivre('matiere', { m: id });
+  if (estVisiteur()) {
+    afficherOnglets(false);
+    lancerDecouverte(0);
+    return;
+  }
   aller('palais');
 }
 
@@ -167,12 +173,23 @@ const PROFS = { 1: 'Obligations : Pr Molfessis', 2: 'Administratif : Pr Plessix'
 const EQUIPES_L1 = [{ n: 1, pret: true, intro: false, detail: 'Droit constitutionnel' }, { n: 2, pret: true, intro: true, detail: 'Introduction au droit et droit constitutionnel' }, { n: 3, pret: true, intro: true, detail: 'Introduction au droit et droit constitutionnel' }];
 const equipeL1Prete = (n) => EQUIPES_L1.some((e) => e.n === n && e.pret);
 const introOuverte = () => EQUIPES_L1.some((e) => e.n === etat.equipeL1 && e.intro);
+
+const decouverteFaite = () => Boolean(etat.decouverteFaite || etat.stats?.seances > 0);
+const estVisiteur = () => {
+  if (connecte() || estInstallee()) return false;
+  const p = new URLSearchParams(location.search);
+  if (p.has('compte')) return false;
+  if (p.has('test') && !p.has('visiteur')) return false;
+  return p.has('visiteur') || !decouverteFaite();
+};
+
 function ecranAnnee() {
   afficherOnglets(false);
   const carte = (a, txt, pret, action) => h('button', { class: `porte porte-annee${pret ? '' : ' en-travaux'}`, 'data-annee': a, disabled: !pret, 'aria-disabled': pret ? null : 'true', onClick: () => { if (!pret) return; son('carte'); vibrer(8); action(); } },
     h('span', { class: 'porte-icone porte-annee-n' }, a),
     h('span', { class: 'porte-txt' }, h('b', {}, a === 'L1' ? 'Première année' : a === 'L2' ? 'Deuxième année' : 'Troisième année'), h('small', {}, txt)));
   montrer(h('section', { class: 'choix' },
+    estVisiteur() ? h('p', { class: 'choix-amorce' }, 'Essaie une minute, sans compte.') : null,
     h('div', { class: 'choix-tete' }, h('h1', {}, 'Tu es en…'), chouette('debout', { taille: 128, vivante: true, classe: 'chouette-guide' })),
     h('p', { class: 'page-sous' }, 'Gdroit te montre les cours et les exercices de ton année. Tu pourras changer dans Profil.'),
     h('div', { class: 'portes' },
@@ -315,19 +332,10 @@ function accueil() {
     h('button', { class: 'bouton-or', disabled: etat.jetons < prixForclusion(), onClick: () => { if (relever()) { son('sceau'); vibrer(20); toast('Série rétablie.'); accueil(); } } },
       `Rétablir pour ${monnaie(prixForclusion())}`)) : null;
 
-  // Sur iPhone, le navigateur et l'icône de l'écran d'accueil ont chacun leur stockage.
-  const aInstaller = telephone() && !estInstallee()
-    ? h('section', { class: 'installer' },
-      h('h2', {}, 'Installe l’appli avant de jouer'),
-      h('p', {}, contexte().ios ? 'Une séance faite dans le navigateur ne suivrait pas dans l’icône : ta série repartirait de zéro.' : 'En appli, Gdroit s’ouvre en plein écran, d’un toucher, et peut te prévenir.'),
-      guideInstallation())
-    : null;
-
   const encours = M().enCours;
   montrer(
     barreHaut(),
     h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); matieres(); } }, icone('matieres', 18), matiereDe(etat.matiere).nom, estConstit() ? '' : estIntro() ? `, équipe ${etat.equipeL1}` : `, équipe ${etat.equipe}`),
-    aInstaller,
     h('section', { class: 'tribune', 'data-decor': etat.decor },
       h('div', { class: 'serie-bloc' },
         h('span', { class: 'serie-etiquette' }, 'Ta série'),
@@ -424,7 +432,7 @@ function blocDunk() {
 
 // La première séance d'une matière : un seul exercice, le plus parlant, une minute.
 // Le but : comprendre en jouant ce que fait Gdroit, puis avoir envie de relancer.
-const DECOUVERTE = { admin: ['juge', 'paires'], oblig: ['qualif', 'remede'], constit: ['nuancier', 'pouvoirs'], intro: ['tri', 'memory'] };
+const DECOUVERTE = { admin: ['juge', 'paires'], oblig: ['qualif', 'remede'], constit: ['nuancier', 'pouvoirs'], intro: ['tri', 'mot'] };
 const decouverteDue = () => {
   const p = new URLSearchParams(location.search);
   if (p.has('test') && !p.has('decouverte')) return false;
@@ -487,11 +495,13 @@ function lancerMode(m, genre = null) {
 const DUREE_PARTIEL = 20 * 60000;
 function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAmi = null }) {
   if (document.querySelector('.palais-portes')) return;
+  rappelMasque = false;
+  const vis = estVisiteur();
   const S = reprise
-    ? { ...reprise, rounds: JSON.parse(JSON.stringify(reprise.rounds)), touches: new Map(reprise.touches), nettoyer: [] }
-    : { rounds, titre, type, zone, long, defiAmi, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0 };
+    ? { ...reprise, rounds: JSON.parse(JSON.stringify(reprise.rounds)), touches: new Map(reprise.touches), nettoyer: [], visiteur: reprise.visiteur ?? vis }
+    : { rounds, titre, type, zone, long, defiAmi, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0, visiteur: vis };
   ({ type, titre, zone } = S);
-  if (!reprise) { S.debut = Date.now(); suivre('seance_debut', { seance: type, mode: mode || null, n: S.rounds.length, matiere: etat.matiere, premiere: !etat.stats.seances }); }
+  if (!reprise) { S.debut = Date.now(); suivre('seance_debut', { seance: type, mode: mode || null, n: S.rounds.length, matiere: etat.matiere, premiere: !etat.stats.seances, ...(vis ? { visiteur: true } : {}) }); }
   // Copie intacte des épreuves : c'est elle qui sert à reprendre après une coupure.
   const copie = JSON.stringify(S.rounds);
   function memoriser() {
@@ -525,7 +535,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
       h('p', {}, 'Quitter maintenant ? Cette séance ne comptera pas pour ta série.'),
       h('div', { class: 'boite-actions' },
         h('button', { class: 'bouton-lien sombre', onClick: () => voile.remove() }, 'Continuer la séance'),
-        h('button', { class: 'bouton-or', onClick: () => { voile.remove(); suivre('seance_quitte', { seance: S.type, i: S.i + 1, epreuve: S.rounds[S.i]?.type, matiere: etat.matiere, duree: S.debut ? Math.round((Date.now() - S.debut) / 1000) : null }); S.nettoyer.forEach((f) => f()); M().enCours = null; sauver(); aller('palais'); } }, 'Quitter'))));
+        h('button', { class: 'bouton-or', onClick: () => { voile.remove(); suivre('seance_quitte', { seance: S.type, i: S.i + 1, epreuve: S.rounds[S.i]?.type, matiere: etat.matiere, duree: S.debut ? Math.round((Date.now() - S.debut) / 1000) : null }); S.nettoyer.forEach((f) => f()); M().enCours = null; sauver(); if (estVisiteur()) matieres(); else aller('palais'); } }, 'Quitter'))));
     document.body.append(voile);
   }
 
@@ -644,11 +654,34 @@ function bilanPartiel(S) {
     h('p', { class: 'res-texte discret' }, 'Un repère pour savoir où travailler, pas une note.'));
 }
 
+let rappelMasque = false;
+function ouvrirGuideInstallModal() {
+  const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } },
+    h('div', { class: 'boite', role: 'dialog', 'aria-label': 'Installer Gdroit' },
+      h('h2', {}, 'Installer Gdroit'),
+      h('section', { class: 'installer' }, guideInstallation()),
+      h('div', { class: 'boite-actions' },
+        h('button', { class: 'bouton-or', onClick: () => voile.remove() }, 'Compris'))));
+  document.body.append(voile);
+}
+
+function rappelInstallationResultats() {
+  if (!connecte() || !telephone() || estInstallee() || rappelMasque) return null;
+  const bloc = h('div', { class: 'res-rappel-install' },
+    h('p', {}, 'Installe Gdroit : une icône, et tu n’as plus à repasser par le navigateur.'),
+    h('div', { class: 'res-rappel-actions' },
+      h('button', { class: 'bouton-fantome', onClick: () => ouvrirGuideInstallModal() }, 'Comment faire'),
+      h('button', { class: 'bouton-lien', onClick: () => { rappelMasque = true; bloc.remove(); } }, 'Plus tard')));
+  return bloc;
+}
+
 function resultats(S, reussi) {
   setTimeout(envoyerProgression, 1500);
   const avant = rang(); const avantGeneral = rangGeneral();
   const moyenne = S.scores.reduce((a, b) => a + b, 0) / (S.scores.length || 1);
   if (S.type === 'decouverte') M().decouverte = (M().decouverte || 0) + 1;
+  const vis = Boolean(S.visiteur);
+  if (vis) { etat.decouverteFaite = true; }
   suivre('seance_fin', { seance: S.type, matiere: etat.matiere, score: Math.round(moyenne * 100) / 100, n: S.rounds.length, duree: S.debut ? Math.round((Date.now() - S.debut) / 1000) : null, premiere: !etat.stats.seances });
   etat.stats.seances++;
   etat.chouette.seance = jour();
@@ -716,12 +749,20 @@ function resultats(S, reussi) {
     apresGeneral.i > avantGeneral.i ? h('div', { class: 'decret' }, h('p', {}, 'Carrière générale, tu deviens'), h('strong', {}, apresGeneral.nom)) : null,
     nouveaux.length ? h('ul', { class: 'res-trophees' }, nouveaux.map((t) => h('li', {}, medaille(metalDe(t.id), true), h('span', {}, h('b', {}, t.nom), h('small', {}, t.txt))))) : null,
     S.type === 'partiel' ? bilanPartiel(S) : null,
-    S.type === 'decouverte' ? h('section', { class: 'decouverte-suite' },
-      h('p', {}, M().decouverte > 1 ? 'Le Défi du jour enchaîne cinq exercices comme ceux-là, choisis selon ce que tu dois revoir : environ cinq minutes par jour.'
-        : 'C’est tout pour ta première séance. Chaque jour, le Défi du jour en enchaîne cinq comme celle-ci, choisis selon ce que tu dois revoir.')) : null,
-    aRevoirListe.length ? h('section', { class: 'res-revoir' }, h('h2', {}, 'À revoir'),
+    vis ? h('section', { class: 'installer installer-visiteur' },
+      h('h2', {}, 'Maintenant, installe Gdroit'),
+      h('p', {}, 'Une icône sur ton écran d’accueil, ta série chaque jour, tes chambres qui s’ouvrent au fil du cours.'),
+      guideInstallation(),
+      contexte().ios ? h('p', { class: 'aide-claire installer-note-ios' }, 'Puis connecte-toi depuis l’icône : une connexion faite dans le navigateur ne la suit pas.') : null,
+      h('div', { class: 'visiteur-actions' },
+        h('button', { class: 'bouton-fantome', 'data-encore': '', onClick: () => { suivre('decouverte_suite', { choix: 'encore', rang: M().decouverte }); lancerDecouverte(M().decouverte); } }, 'Encore une minute'),
+        h('button', { class: 'bouton-fantome', onClick: () => { suivre('decouverte_suite', { choix: 'site' }); ecranConnexion(); } }, 'Continuer sur le site')))
+      : S.type === 'decouverte' ? h('section', { class: 'decouverte-suite' },
+        h('p', {}, M().decouverte > 1 ? 'Le Défi du jour enchaîne cinq exercices comme ceux-là, choisis selon ce que tu dois revoir : environ cinq minutes par jour.'
+          : 'C’est tout pour ta première séance. Chaque jour, le Défi du jour en enchaîne cinq comme celle-ci, choisis selon ce que tu dois revoir.')) : null,
+    aRevoirListe.length && !vis ? h('section', { class: 'res-revoir' }, h('h2', {}, 'À revoir'),
       h('ul', {}, aRevoirListe.slice(0, 6).map((a) => h('li', {}, h('button', { onClick: () => { afficherOnglets(true); ongletCourant = 'arrets'; fiche(a.id); } }, h('b', {}, a.court), a.an ? ` ${a.an}` : ` ${a.titre}`))))) : null,
-    S.type === 'decouverte' ? h('div', { class: 'pied' },
+    vis ? null : S.type === 'decouverte' ? h('div', { class: 'pied' },
       continuer('Encore une minute', () => { suivre('decouverte_suite', { choix: 'encore', rang: M().decouverte }); lancerDecouverte(M().decouverte); }, { 'data-encore': '' }),
       h('button', { class: 'bouton-fantome', onClick: () => { suivre('decouverte_suite', { choix: 'defi', rang: M().decouverte }); lancerDefi(); } }, 'Faire le Défi du jour'),
       h('button', { class: 'bouton-lien', onClick: () => { suivre('decouverte_suite', { choix: 'palais', rang: M().decouverte }); aller('palais'); } }, 'Retour au Palais')) :
@@ -730,9 +771,10 @@ function resultats(S, reussi) {
       continuer('Retour au Palais', () => aller('palais')),
       S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null,
       connecte() ? h('button', { class: 'bouton-lien', onClick: () => faireRetour(`Résultats : ${S.titre}`) }, 'Faire un retour') : null),
+    rappelInstallationResultats(),
   );
   montrer(contenu);
-  if (S.type === 'decouverte') setTimeout(() => { if (document.querySelector('.resultats')) accueilTesteur(); }, 2600);
+  if (S.type === 'decouverte' && !vis) setTimeout(() => { if (document.querySelector('.resultats')) accueilTesteur(); }, 2600);
   if (effets()) {
     if (palier && !nouveauGrade && !grandeVictoire) figureFin.append(h('span', { class: 'chiffre-livre' }, String(v.n)));
     if (poseFin === 'tribune' && !images.mascotte) figureFin.append(codeEnvole());
@@ -1685,16 +1727,10 @@ function ecranConnexion(erreur) {
     try { await envoyerCode(email.value); etape2.hidden = false; code.focus(); toast('Code envoyé.'); } catch (err) { toast(err.message); } finally { envoyer.disabled = false; }
   } }, 'Recevoir un code par email');
   suivre('connexion_vue', { installee: estInstallee() });
-  // Sur téléphone, on installe d'abord : sur iPhone, une connexion faite dans le navigateur ne suit pas dans l'icône.
-  const installerDabord = telephone() && !estInstallee() && !new URLSearchParams(location.search).has('test');
   racine.replaceChildren(h('main', { class: 'connexion' },
-    chouette('clin', { taille: installerDabord ? 110 : 170, tenue: false }),
+    chouette('clin', { taille: 170, tenue: false }),
     h('h1', {}, 'Gdroit'),
-    installerDabord ? h('section', { class: 'installer installer-connexion' },
-      h('h2', {}, 'D’abord, mets Gdroit sur ton écran d’accueil'),
-      h('p', {}, contexte().ios ? 'Puis connecte-toi depuis l’icône : une connexion faite ici ne la suivrait pas.' : 'Puis connecte-toi depuis l’icône. Une minute, et c’est fait une fois pour toutes.'),
-      guideInstallation()) : null,
-    h('p', { class: 'connexion-sous' }, installerDabord ? 'Déjà dans l’appli, ou tu préfères rester ici ?' : 'Connecte-toi pour retrouver ta progression sur tous tes appareils.'),
+    h('p', { class: 'connexion-sous' }, 'Connecte-toi pour retrouver ta progression sur tous tes appareils.'),
     erreur ? h('p', { class: 'connexion-erreur', role: 'alert' }, erreur) : null,
     h('button', { class: 'bouton-or connexion-google', onClick: () => { if (navigator.onLine === false) return toast('Il faut du réseau pour se connecter.'); connexionGoogle(); } }, logoG(), 'Continuer avec Google'),
     // Le code par email part par Resend, depuis connexion@gdroit.eu.
@@ -1716,7 +1752,11 @@ async function ouvrirCompte(params) {
   if (!requis) return true;
   let erreur = null;
   try { if (retourConnexion()) suivre('connexion', { via: 'google' }); } catch (e) { erreur = e.message; }
-  if (!connecte()) { ecranConnexion(erreur); return false; }
+  if (!connecte()) {
+    if (estVisiteur()) return true;
+    ecranConnexion(erreur);
+    return false;
+  }
   if (navigator.onLine === false) return true;
   racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Ta progression arrive')));
   const delai = { depasse: false };
@@ -1906,7 +1946,7 @@ function faireRetour(ecran) {
 let invitationAndroid = null;
 addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); invitationAndroid = e; document.querySelectorAll('.installer-direct').forEach((b) => { b.hidden = false; }); });
 addEventListener('appinstalled', () => { invitationAndroid = null; suivre('installer_clic', { fait: true }); });
-const telephone = () => { const c = contexte(); return c.ios || c.android; };
+function telephone() { const c = contexte(); return c.ios || c.android; }
 function copierLien() {
   const lien = location.origin + location.pathname;
   (navigator.clipboard?.writeText(lien) || Promise.reject()).then(() => toast('Lien copié.'), () => toast(lien));
@@ -1970,6 +2010,7 @@ function surveillerFluidite() {
 
 async function demarrer() {
   const params = new URLSearchParams(location.search);
+  if (params.has('test')) document.documentElement.dataset.test = 'oui';
   { const c = contexte(); suivre('ouverture', { os: c.os, nav: c.nav, installee: estInstallee(), connecte: connecte(), largeur: innerWidth }); }
   // Un lien d'invitation survit à la connexion : le code attend dans le téléphone.
   if (params.get('ami')) { try { localStorage.setItem('gdroit-ami', params.get('ami')); } catch { /* rien */ } history.replaceState(null, '', location.pathname); }
@@ -1999,15 +2040,15 @@ async function demarrer() {
   for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click']) document.addEventListener(ev, reveillerAudio, { passive: true });
   const evenement = verifierSerie();
   // L'appli s'ouvre sur le choix de la matière. Les tests vont droit à la matière demandée.
-  if (params.has('test') && !params.has('annee') && !etat.annee) etat.annee = 'L2';
-  if (params.has('test') && !params.has('choix') && !params.has('annee')) aller('palais');
+  if (params.has('test') && !params.has('visiteur') && !params.has('annee') && !etat.annee) etat.annee = 'L2';
+  if (params.has('test') && !params.has('visiteur') && !params.has('choix') && !params.has('annee')) aller('palais');
   else if (!etat.annee) ecranAnnee();
   else if (etat.annee === 'L1') accueilL1();
   else if (!etat.equipeChoisie && (!params.has('test') || params.has('groupe'))) choisirEquipe();
   else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
-  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, rendreSon, NOMS_SONS, appliquerTheme };
+  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation };
   setTimeout(surveillerFluidite, 1200);
   precharger();
 
