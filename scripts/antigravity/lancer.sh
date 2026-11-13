@@ -19,6 +19,6 @@ VERROU=".antigravity/en-cours"
 touch "$VERROU"; trap 'rm -f "$VERROU"' EXIT
 
 dire "Lancement d'Antigravity."
-agy -p "Tâche suivante. Suis AGENTS.md à la lettre : une seule tâche, tests complets avant toute mise en ligne, arrêt et question notée dans TACHES.md au moindre doute. Personne ne te répondra pendant cette exécution." \
+agy -p "Tâche suivante. Suis AGENTS.md à la lettre : reprends une tâche commencée s'il y en a une, enchaîne les tâches prêtes, chacune sur sa branche, suite complète verte avant de la marquer Prêt pour Claude, ne pousse jamais. Au moindre doute, note la question dans TACHES.md et passe à la suite. Personne ne te répondra pendant cette exécution." \
   --output-format json >> "$JOURNAL" 2>&1
 dire "Fin d'Antigravity (code $?)."
