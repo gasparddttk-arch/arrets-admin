@@ -53,7 +53,9 @@ Deno.serve(async (req) => {
   for (const n of liste) {
     const { data: apps } = await base.from('appareils').select('point, abonnement').eq('proprietaire', n.destinataire);
     const [title, body] = (TEXTES[n.type] || TEXTES.demande)(pseudo, n.donnees || {});
-    const lien = ADMIN.has(n.type) ? './' : './?amis';
+    // Une annonce de l'admin peut ouvrir gdroit.eu : utile pour faire quitter une ancienne installation.
+    const vers = String((n.donnees as Record<string, unknown>)?.url || '');
+    const lien = ADMIN.has(n.type) ? (vers.startsWith('https://gdroit.eu/') ? vers : './') : './?amis';
     for (const a of apps || []) {
       try {
         await webpush.sendNotification(a.abonnement, JSON.stringify({ title, body, ami: true, tag: `${n.type}-${n.id}`, url: lien }), { TTL: 3600 * 12 });

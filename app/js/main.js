@@ -1547,11 +1547,13 @@ async function ecranAdmin() {
       h('small', {}, `${x.pseudo || x.email || 'compte supprimé'}, ${quand(x.cree_le)}${x.ecran ? `, depuis ${x.ecran}` : ''}`),
       h('button', { class: 'bouton-lien', onClick: async () => { try { await adminTraiterRetour(x.id, !x.traite); ecranAdmin(); } catch { toast('Pas de connexion.'); } } }, x.traite ? 'Rouvrir' : 'Marquer comme traité'))))) : h('p', { class: 'aide-claire' }, 'Aucun retour pour l’instant.'),
     h('h2', {}, 'Mise à jour de l’application'),
-    h('p', { class: 'aide-claire' }, 'Prévenir tous les testeurs qu’une nouvelle version est disponible.'),
+    h('p', { class: 'aide-claire' }, 'Prévenir tous les testeurs, avec le message de ton choix. Il s’affiche dans les notifications de l’appli, même dans une ancienne version, et sur le téléphone de ceux qui les ont activées. En le touchant, on ouvre gdroit.eu.'),
+    (() => { const champ = h('textarea', { class: 'champ', rows: 3, maxlength: 160, 'aria-label': 'Message aux testeurs' }); champ.value = 'Gdroit déménage sur gdroit.eu : ouvre gdroit.eu et réinstalle l’appli depuis là. Ta progression est conservée.'; return champ; })(),
     h('button', { class: 'bouton-fantome', onClick: async (e) => {
-      e.currentTarget.disabled = true;
-      try { const n = await adminNotifier(null, 'maj_appli', { titre: 'Une nouvelle version est en ligne. Viens voir les nouveautés.' }); toast(n ? `${pluriel(n, 'compte notifié')}.` : 'Tout le monde a déjà été prévenu il y a moins de 10 minutes.'); } catch { toast('Envoi refusé.'); e.currentTarget.disabled = false; }
-    } }, 'Notifier les testeurs d’une mise à jour'),
+      const b = e.currentTarget; const titre = b.previousElementSibling.value.trim() || 'Une nouvelle version est en ligne. Viens voir les nouveautés.';
+      b.disabled = true;
+      try { const n = await adminNotifier(null, 'maj_appli', { titre, url: 'https://gdroit.eu/' }); toast(n ? `${pluriel(n, 'compte notifié')}.` : 'Tout le monde a déjà été prévenu il y a moins de 10 minutes.'); } catch { toast('Envoi refusé.'); b.disabled = false; }
+    } }, 'Notifier les testeurs'),
     h('h2', {}, 'Nouveaux comptes'),
     h('p', { class: 'aide-claire' }, 'Le statut donné à chaque nouvelle inscription. Passe à « Sans accès » le jour où l’appli devient payante : les comptes existants gardent leur statut.'),
     bascule,
