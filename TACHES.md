@@ -73,7 +73,7 @@ Ordre : F, G, H, J, N, I, L, M (Antigravity, dans l'ordre du fichier), puis K qu
 Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la publie.
 
 ### [TÂCHE F] Le banc de pièces : glisser au lieu de trier une carte à la fois (Antigravity)
-- **Statut** : À faire
+- **Statut** : Fait le 13/11 (Antigravity), publié par Claude
 - **Fichiers concernés** : `app/js/ui.js` (nouveau composant), `app/js/games.js` (`jouerArchitecte`, `jouerPuzzle`), `app/css/app.css`, `tests/run.cjs`
 - **Objectif** : aujourd'hui, l'Architecte (plan de commentaire et de dissertation) et le Puzzle (fiche d'arrêt) montrent une seule carte à la fois avec « Écarter » et « Plus tard ». Gaspard veut voir toutes les pièces d'un coup, en bas, et les glisser vers les cases.
 - **Détails de modification** :
@@ -86,7 +86,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : les tests de l'Architecte et du Puzzle passent par le toucher-toucher ; ajouter un test qui fait un vrai glisser (Playwright `dragTo`) sur un iPhone 390 px, sans débordement (`debordement`). Suite complète verte.
 
 ### [TÂCHE G] L'atelier du cas pratique sans rouages (Antigravity)
-- **Statut** : À faire
+- **Statut** : Fait le 13/11 (Antigravity), publié par Claude
 - **Fichiers concernés** : `app/js/atelier.js` (étape « La mineure »), `app/css/app.css` (bloc `at-engrenage`, `at-machine`), `tests/run.cjs`
 - **Objectif** : Gaspard ne comprend pas les engrenages. On remplace la « machine » par un tableau simple : chaque condition de la règle, en face le fait qui la remplit.
 - **Détails de modification** :

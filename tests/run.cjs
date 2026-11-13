@@ -67,8 +67,15 @@ async function jouer(p, { capture = false, auHasard = false, max = 1500 } = {}) 
     }
     if (await pasL1(p)) { await p.waitForTimeout(120); continue; }
     // Dans la séance seulement : le pied des résultats ramènerait au Palais avant que le test ne les voie.
-    const pied = await p.$('.scene .pied button');
+    const pied = await p.$('.scene .pied button:not([disabled])');
     if (pied) { await toucher(pied); await p.waitForTimeout(15); continue; }
+    const pieceSelect = await p.$('.banc-piece.selectionnee, .banc-piece-posee.selectionnee');
+    if (pieceSelect) {
+      const caseCible = await p.$('.banc-case.vide, button.case-plan.vide, .banc-ecart');
+      if (caseCible) { await toucher(caseCible); await p.waitForTimeout(15); continue; }
+    }
+    const pieceBanc = await p.$('.banc-reserve .banc-piece');
+    if (pieceBanc) { await toucher(pieceBanc); await p.waitForTimeout(15); continue; }
     const sel = ['.chip:not([disabled]):not(.reussi)', '.option:not([disabled])', '.vers:not(.occupe)', 'button.case-plan:not(.pleine)', 'button.decision', '.etiquette-mot:not([disabled])', '.piece-syllo'];
     let fait = false;
     for (const s of sel) {
@@ -96,7 +103,7 @@ async function jouerParfait(p) {
       const clic = (e) => { e.click(); return true; };
       const rail = document.querySelector('.plans-rail'); const bon = document.querySelector('.plan-carte[data-ok="true"]');
       if (rail && bon && !document.querySelector('.plan-carte.juste') && !bon.classList.contains('centree')) { rail.scrollLeft = bon.offsetLeft - rail.firstChild.offsetLeft; return false; }
-      const pied = document.querySelector('.scene .pied button'); if (pied) return clic(pied);
+      const pied = document.querySelector('.scene .pied button:not([disabled])'); if (pied) return clic(pied);
       const chip = document.querySelector('.chip:not([disabled]):not(.reussi)');
       if (chip) {
         if (!chip.classList.contains('vise')) chip.click();
@@ -110,6 +117,23 @@ async function jouerParfait(p) {
       if (decision) { const c = document.querySelector(`.jalon-case[data-i="${decision.dataset.rang}"]`); return clic(c.classList.contains('cible') ? decision : c); }
       const caseS = document.querySelector('.case-syllo.cible');
       if (caseS) return clic(document.querySelector(`.piece-syllo[data-k="${caseS.dataset.k}"][data-ok="true"]`));
+      const pieceSelect = document.querySelector('.banc-piece.selectionnee, .banc-piece-posee.selectionnee');
+      if (pieceSelect) {
+        const ecart = document.querySelector('.banc-ecart');
+        if (pieceSelect.dataset.cle === 'piege' || pieceSelect.dataset.case === 'leurre') {
+          return clic(ecart);
+        }
+        if (pieceSelect.dataset.cle) {
+          const c = document.querySelector(`.banc-case[data-k="${pieceSelect.dataset.cle}"]`);
+          return clic(c);
+        }
+        if (pieceSelect.dataset.case) {
+          const c = document.querySelector(`.banc-case[data-c="${pieceSelect.dataset.case}"], .case-plan[data-c="${pieceSelect.dataset.case}"]`);
+          return clic(c);
+        }
+      }
+      const pieceBanc = document.querySelector('.banc-reserve .banc-piece');
+      if (pieceBanc) return clic(pieceBanc);
       const ecarter = document.querySelector('.dock-bas .bouton-fantome');
       const piece = document.querySelector('.carte-piece');
       if (piece) return piece.dataset.cle === 'piege' ? clic(ecarter) : clic(document.querySelector(`.vers[data-k="${piece.dataset.cle}"]`));
@@ -564,7 +588,7 @@ async function debordement(p, nom) {
   await c.evaluate(() => window.__app.aller('profil'));
   const png = await c.evaluate(() => { const k = document.createElement('canvas'); k.width = 200; k.height = 200; const g = k.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, 200, 200); g.fillStyle = '#0a0'; g.fillRect(50, 50, 100, 100); return k.toDataURL('image/png').split(',')[1]; });
   await c.locator('.ligne-image[data-type="mascotte"] input[type=file]').setInputFiles({ name: 'moi.png', mimeType: 'image/png', buffer: Buffer.from(png, 'base64') });
-  await c.waitForSelector('.ligne-image[data-type="mascotte"] img');
+  await c.waitForSelector('.ligne-image[data-type="mascotte"] .bouton-lien');
   await c.evaluate(() => window.__app.aller('palais'));
   await c.waitForSelector('.figure-chouette .mascotte-perso');
   assert.equal(await c.locator('.figure-chouette [data-pose]').count(), 0, 'image personnelle à l’accueil');
@@ -983,7 +1007,29 @@ async function debordement(p, nom) {
       const niv = [1, 2, 3, 'hasard'][k % 4];
       await ap.evaluate(() => window.__app.aller('role')); await ap.locator('.role-ligne[data-mode="atelier"]').click();
       await ap.locator(`[data-niveau="${niv}"]`).click(); await ap.waitForSelector('.at-dossier');
-      if (k === 0) { await ap.screenshot({ path: CAP + `atelier-${eq}.png` }); await debordement(ap, 'atelier dossier'); }
+      if (k === 0) {
+        await ap.screenshot({ path: CAP + `atelier-${eq}.png` });
+        await debordement(ap, 'atelier dossier');
+        if (eq === 1) {
+          while (!(await ap.$('.at-tableau'))) {
+            await pasL1(ap);
+            const pied = await ap.$('.scene .pied button');
+            if (pied) await toucher(pied);
+            const opt = await ap.$('.option[data-ok="true"]:not([disabled])');
+            if (opt) await toucher(opt);
+            await ap.waitForTimeout(50);
+          }
+          while (await ap.$('.at-jeton')) {
+            await ap.evaluate(() => {
+              const atJ = document.querySelector('.at-jeton[data-ok="true"]');
+              if (atJ) atJ.click();
+            });
+            await ap.waitForTimeout(100);
+          }
+          await debordement(ap, 'atelier mineure');
+          await ap.screenshot({ path: CAP + 'atelier-mineure.png' });
+        }
+      }
       await jouerParfait(ap); await textePropre(ap);
       await ap.tap('text=Retour au Palais'); await ap.waitForSelector('.tribune');
     }
@@ -1212,6 +1258,44 @@ async function debordement(p, nom) {
   }
   await cm.close();
   log('commentaire ok');
+
+  // Le banc de pièces : glisser réel (dragTo) sur un iPhone 390 px, sans débordement
+  const bp = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'allow' });
+  const pBanc = await bp.newPage();
+  pBanc.on('pageerror', (x) => erreurs.push(x.message));
+  await pBanc.goto(URLB + '?test');
+  await pBanc.waitForSelector('.tribune');
+  await pBanc.evaluate(() => window.__app.ouvrirMatiere('admin'));
+  await pBanc.waitForSelector('.tribune');
+  await pBanc.evaluate(() => window.__app.aller('role'));
+  await ouvrirMode(pBanc, 'puzzle');
+  await pBanc.waitForSelector('.palais-portes', { state: 'detached' });
+  await pBanc.waitForSelector('.banc-composant');
+  await debordement(pBanc, 'banc puzzle iPhone 390');
+
+  const piece1 = pBanc.locator('.banc-reserve .banc-piece').first();
+  const textePiece1 = (await piece1.innerText()).trim();
+  const caseCible = pBanc.locator('.banc-case').first();
+  await piece1.dragTo(caseCible);
+  assert.equal(await pBanc.locator('.banc-case.pleine').count(), 1, 'une case remplie après dragTo');
+  assert.ok((await caseCible.innerText()).includes(textePiece1.slice(0, 15)), 'la pièce glissée est dans la case');
+
+  const piece2 = pBanc.locator('.banc-reserve .banc-piece').first();
+  const ecart = pBanc.locator('.banc-ecart');
+  await piece2.dragTo(ecart);
+  assert.ok((await ecart.innerText()).includes('1'), 'compteur écartées incrémenté après dragTo');
+
+  const piecePosee = pBanc.locator('.banc-case.pleine .banc-piece-posee').first();
+  const reserve = pBanc.locator('.banc-reserve');
+  await piecePosee.dragTo(reserve);
+  assert.equal(await pBanc.locator('.banc-case.pleine').count(), 0, 'case libérée après dragTo vers le banc');
+
+  await debordement(pBanc, 'banc puzzle après glisser');
+  await pBanc.screenshot({ path: CAP + 'banc-glisser.png' });
+  await pBanc.tap('.quitter');
+  await pBanc.tap('.boite .bouton-or');
+  await bp.close();
+  log('banc glisser ok');
 
   // La frise : on place les décisions dans le désordre, puis on les remet en échangeant.
   const fr = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });

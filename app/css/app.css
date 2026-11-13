@@ -463,6 +463,157 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .lien { position: fixed; z-index: 40; height: 3px; margin-top: -1.500px; transform-origin: left center; border-radius: 2px; pointer-events: none; background: linear-gradient(90deg, var(--or-1), var(--juste)); box-shadow: 0 0 10px var(--or-2); animation: lien .44s ease-out both; }
 @keyframes lien { from { clip-path: inset(0 100% 0 0); opacity: 1; } 55% { clip-path: inset(0 0 0 0); opacity: 1; } to { clip-path: inset(0 0 0 0); opacity: 0; } }
 
+/* Le banc de pièces (Puzzle, Architecte, Formule) */
+.banc-composant { display: flex; flex-direction: column; gap: 14px; width: 100%; margin: 6px 0 14px; }
+.banc-cases { display: grid; gap: 7px; width: 100%; }
+.banc-case {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--carte-bord);
+  background: var(--carte-bas);
+  font-size: 16px;
+  line-height: 1.25;
+  text-align: left;
+  transition: box-shadow .15s, border-color .15s, background .15s;
+}
+.banc-case b { color: var(--titre-or); font-weight: 700; font-size: 15px; }
+.banc-case .vide { color: var(--texte-2); font-style: italic; font-size: 15px; }
+.banc-case.cible { box-shadow: inset 0 0 0 1.5px var(--or-3); background: rgba(242, 197, 92, .06); }
+.banc-case.survol {
+  box-shadow: inset 0 0 0 2px var(--or) !important;
+  background: rgba(242, 197, 92, .12) !important;
+}
+.banc-case.pleine {
+  background: linear-gradient(180deg, var(--carte-haut), var(--carte-bas));
+}
+.banc-case.selectionnee {
+  box-shadow: inset 0 0 0 2px var(--or), 0 0 8px rgba(242, 197, 92, .3);
+}
+
+.banc-piece-posee {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 34px;
+  color: var(--texte);
+  cursor: grab;
+  touch-action: none;
+}
+.banc-piece-posee.selectionnee {
+  color: var(--titre-or);
+  font-weight: 600;
+}
+
+.banc-reserve {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+  max-height: 230px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 2px;
+  border-radius: 14px;
+}
+.banc-piece {
+  flex: 1 1 calc(50% - 8px);
+  min-width: 130px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 15px;
+  line-height: 1.25;
+  background: linear-gradient(180deg, var(--papier-1), var(--papier-2));
+  color: var(--papier-texte);
+  box-shadow: inset 0 0 0 1px var(--papier-bord), 0 2px 6px var(--ombre);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  transition: transform .12s, box-shadow .12s, opacity .12s;
+}
+.banc-piece p { margin: 0; }
+.banc-piece:active { cursor: grabbing; }
+.banc-piece.selectionnee {
+  box-shadow: inset 0 0 0 2px var(--or), 0 4px 12px var(--ombre);
+  transform: scale(1.02);
+}
+.banc-piece.en-glisse, .banc-piece-posee.en-glisse {
+  opacity: .3;
+}
+
+.banc-ecart {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  min-width: 96px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1.5px dashed var(--cire-2);
+  color: var(--cire-vive);
+  background: var(--faux-fond);
+  font-weight: 600;
+  font-size: 14.5px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: box-shadow .15s, border-color .15s, background .15s;
+}
+.banc-ecart.a-selection {
+  border-color: var(--or-2);
+  color: var(--or-2);
+}
+.banc-ecart.survol {
+  border-color: var(--or) !important;
+  box-shadow: inset 0 0 0 2px var(--or) !important;
+  background: rgba(242, 197, 92, .14) !important;
+}
+.banc-ecart-nb {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--cire-2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.banc-avatar {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  max-width: 280px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  line-height: 1.25;
+  font-family: var(--corps);
+  background: linear-gradient(180deg, var(--papier-1), var(--papier-2));
+  color: var(--papier-texte);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .5), 0 0 0 2px var(--or);
+  transform: translate(-50%, -50%) rotate(2deg);
+  opacity: .95;
+}
+
 /* Puzzle : un paquet de pièces */
 .fiche-mini { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 2px 0 10px; }
 .mini { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; min-height: 58px; font-size: 15px; line-height: 1.1; color: var(--texte-2); border-radius: 11px; background: var(--carte-bas); box-shadow: inset 0 0 0 1px var(--carte-bord); }
@@ -741,6 +892,9 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
   .bonplan .aide { font-size: 16px; margin-bottom: 6px; }
   .squelette { gap: 4px; margin-bottom: 4px; }
   .case-plan { min-height: 34px; padding: 5px 9px; font-size: 16.500px; line-height: 1.12; border-radius: 9px; }
+  .banc-reserve { max-height: 180px; }
+  .banc-case { min-height: 44px; padding: 6px 10px; font-size: 15px; }
+  .banc-piece { min-height: 44px; padding: 6px 10px; font-size: 14px; }
   .tuile { min-height: 54px; padding: 8px 12px; font-size: 18.500px; }
   .dock-bas { margin-top: 7px; }
   .dock .bouton-fantome { min-height: 40px; padding: 3px 12px; font-size: 16px; }
@@ -752,6 +906,8 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
   .points button { height: 24px; }
 }
 @media (max-height: 620px) {
+  .banc-reserve { max-height: 140px; }
+  .banc-case { min-height: 44px; padding: 5px 8px; font-size: 14px; }
   .paquet { padding: 12px 0 10px; }
   .carte-piece { min-height: 130px; padding: 14px 16px; font-size: 19.500px; line-height: 1.24; }
   .dock-titre { display: none; }
@@ -1617,7 +1773,7 @@ body:has(#onglets[hidden]) .maj { display: none; }
 .pl-cite b { color: var(--titre-or); }
 .ar-scene.fige { width: min(100%, 340px, 36vh); }
 
-/* L'ATELIER DU CAS PRATIQUE : un dossier, un rail d'étapes, des engrenages, une copie corrigée en rouge. */
+/* L'ATELIER DU CAS PRATIQUE : un dossier, un rail d'étapes, les conditions de la règle, une copie corrigée en rouge. */
 .role-ligne[data-mode='atelier'] { --m1: #B5462E; --m2: #B5462E; }
 [data-theme='pastel'] .role-ligne[data-mode='atelier'] { --m1: #D9674C; --m2: #D9674C; }
 .at-niveau { display: grid; gap: 2px; text-align: left; }
@@ -1659,24 +1815,23 @@ body:has(#onglets[hidden]) .maj { display: none; }
 .at-rappel p { margin: 8px 0 0; font: 16px/1.45 var(--corps); }
 .at-acquis { margin: 0 0 10px; padding: 10px 12px; border-radius: 12px; background: var(--juste-fond); font: 15px/1.4 var(--ui); animation: nu-arrive .4s both; }
 .at-regle { margin: 0 0 12px; padding: 12px 14px; border-radius: 14px; background: var(--banc); font: 16px/1.45 var(--corps); box-shadow: inset 4px 0 0 var(--titre-or); }
-.at-machine { padding: 12px; border-radius: 18px; background: var(--banc); box-shadow: inset 0 0 0 1.5px var(--carte-bord); }
+.at-tableau { padding: 12px; border-radius: 18px; background: var(--banc); box-shadow: inset 0 0 0 1.5px var(--carte-bord); }
 .at-conds { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.at-cond { display: grid; grid-template-columns: 30px 1fr; gap: 4px 10px; align-items: center; padding: 10px; border-radius: 14px; background: var(--banc-fort); transition: box-shadow .25s, background .25s; }
-.at-cond-t { font: 600 15px/1.3 var(--ui); }
-.at-prise { grid-column: 2; font: italic 15px/1.3 var(--corps); color: var(--texte-2); }
+.at-cond { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 12px; border-radius: 14px; background: var(--banc-fort); transition: box-shadow .25s, background .25s; }
+.at-cond-gauche { display: flex; flex-direction: column; gap: 3px; flex: 1 1 auto; min-width: 0; }
+.at-cond-num { font: 700 12px/1.2 var(--ui); color: var(--titre-or); text-transform: uppercase; letter-spacing: .04em; }
+.at-cond-t { font: 600 15px/1.35 var(--ui); color: var(--texte); }
+.at-prise { flex: 0 0 auto; max-width: 50%; font: 600 13.5px/1.3 var(--ui); color: var(--texte-2); text-align: right; word-break: break-word; }
 .at-cond.cible { box-shadow: inset 0 0 0 2px var(--or); }
-.at-cond.remplie .at-prise, .at-cond.acquise .at-prise { color: var(--texte); }
-.at-cond.faux { box-shadow: inset 0 0 0 2px var(--faux); }
+.at-cond.remplie .at-prise, .at-cond.acquise .at-prise { color: var(--juste); }
+.at-cond.bloquee .at-prise { color: var(--faux); }
+.at-cond.doute .at-prise { color: var(--orange-2); }
 .at-cond.juste { box-shadow: inset 0 0 0 2px var(--juste); }
-.at-engrenage { grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle, var(--banc) 28%, transparent 30%), repeating-conic-gradient(var(--texte-2) 0 15deg, transparent 15deg 30deg); opacity: .5; }
-.at-cond.remplie .at-engrenage, .at-cond.acquise .at-engrenage { background: radial-gradient(circle, var(--banc-fort) 28%, transparent 30%), repeating-conic-gradient(var(--or) 0 15deg, transparent 15deg 30deg); opacity: 1; animation: at-tourne 2.4s linear infinite; }
-.at-cond.bloquee .at-engrenage { background: radial-gradient(circle, var(--banc-fort) 28%, transparent 30%), repeating-conic-gradient(var(--faux) 0 15deg, transparent 15deg 30deg); opacity: 1; }
-.at-cond.doute .at-engrenage { background: radial-gradient(circle, var(--banc-fort) 28%, transparent 30%), repeating-conic-gradient(var(--orange-2) 0 15deg, transparent 15deg 30deg); opacity: 1; animation: at-tourne 2.4s linear infinite alternate; }
-@keyframes at-tourne { to { transform: rotate(360deg); } }
+.at-cond.faux { box-shadow: inset 0 0 0 2px var(--faux); }
 .at-sortie { margin: 12px 2px 0; font: 700 15px/1.35 var(--ui); color: var(--texte-2); }
-.at-machine.tourne .at-sortie { color: var(--juste); }
-.at-machine.cale .at-sortie { color: var(--faux); }
-.at-machine.hesite .at-sortie { color: var(--orange-2); }
+.at-tableau.remplie .at-sortie { color: var(--juste); }
+.at-tableau.bloquee .at-sortie { color: var(--faux); }
+.at-tableau.doute .at-sortie { color: var(--orange-2); }
 .at-plateau { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-bottom: 16px; }
 .at-jeton { padding: 10px 14px; border: 0; border-radius: 12px; font: 600 14px/1.25 var(--ui); text-align: left; background: var(--papier-1); color: var(--papier-texte); box-shadow: 0 3px 0 rgba(0, 0, 0, .2), inset 0 0 0 1.5px var(--papier-bord); animation: pl-tombe .3s both; }
 .at-jeton.special { background: var(--banc-fort); color: var(--texte); box-shadow: 0 3px 0 rgba(0, 0, 0, .2); }
