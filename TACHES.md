@@ -112,7 +112,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : captures avant/après (QCM, rangement, résultats avec le décor « jardin ») ; suite complète verte.
 
 ### [TÂCHE N] Une suite de tests plus rapide (Antigravity)
-- **Statut** : À faire
+- **Statut** : Reportée (13/11, 22 h 25) : deux sessions d'Antigravity se sont arrêtées en pleine tâche, sans doute à cause de la durée des suites répétées. Travail commencé sur `antigravity/n-tests` et `antigravity/n-tests-2`. Claude la reprendra lui-même. Antigravity : ne pas la prendre.
 - **Fichiers concernés** : `tests/run.cjs`, `package.json`, éventuellement `app/js/main.js` (mode `?test` uniquement)
 - **Objectif** : la suite complète dure environ 30 minutes. Viser moins de 12 minutes sur le Mac, sans retirer aucune vérification.
 - **Détails de modification** :
