@@ -1,5 +1,5 @@
 // Les cinq modes de jeu. Chaque mode dessine son écran dans `zone` et appelle ctx.fin(resultat).
-import { h, toast, duree, lien, effets } from './ui.js';
+import { h, toast, duree, lien, effets, banc } from './ui.js';
 import { icone, marteau, salleAudience } from './visuels.js';
 import { son, vibrer } from './sons.js';
 import { etat, sauver } from './state.js';
@@ -201,59 +201,45 @@ export function jouerPaires(zone, ctx, round, ix) {
   ctx.nettoyage(() => clearInterval(minuteur));
 }
 
-// PUZZLE : un paquet de pièces à trier, une carte à la fois ------------------------
+// PUZZLE : un paquet de pièces à trier avec le banc ------------------------
 export async function jouerPuzzle(zone, ctx, round, ix) {
   const a = ix.parId.get(round.id);
-  const place = {};
-  let pile = round.blocs.map((b) => ({ ...b }));
-  let ecartees = [];
-  let anime = false;
+  let place = {};
 
   await new Promise((suite) => {
-    const envol = (classe, sonNom, apres) => {
-      if (anime) return;
-      anime = true;
-      son(sonNom); vibrer(8);
-      zone.querySelector('.carte-piece')?.classList.add(classe);
-      setTimeout(() => { anime = false; apres(); rendre(); }, duree(170));
-    };
-    const poser = (k) => envol('vers-haut', 'carte', () => { const b = pile.shift(); if (place[k]) pile.push(place[k]); place[k] = b; });
-    const ecarter = () => envol('vers-bas', 'ecart', () => ecartees.push(pile.shift()));
-    const plusTard = () => envol('vers-cote', 'carte', () => pile.push(pile.shift()));
-    const retirer = (s) => { const b = place[s.k]; delete place[s.k]; pile.unshift(b); son('retour'); rendre(); };
+    let valider;
+    const pieces = round.blocs.map((b) => ({
+      ...b,
+      attributs: {
+        'data-cle': repere(b.de === a.id ? b.k : 'piege'),
+      },
+    }));
+    const cases = round.slots.map((s) => ({
+      k: s.k,
+      l: s.l,
+      placeholder: 'Déposer ici',
+      attributs: {
+        'data-k': repere(s.k),
+      },
+    }));
 
-    function rendre() {
-      const complet = round.slots.every((s) => place[s.k]);
-      if (!complet && !pile.length) {
-        pile = ecartees; ecartees = [];
-        toast('Il manque des pièces : celles que tu as écartées reviennent.');
-      }
-      const mini = h('div', { class: 'fiche-mini' }, round.slots.map((s) => h('button', {
-        class: `mini ${place[s.k] ? 'pleine' : ''}`, disabled: !place[s.k],
-        'aria-label': place[s.k] ? `${s.l} rempli, toucher pour reprendre la pièce` : `${s.l} vide`,
-        onClick: () => retirer(s),
-      }, h('i', {}, place[s.k] ? icone('juste', 12) : null), s.l)));
+    const composant = banc({
+      pieces,
+      cases,
+      ecart: true,
+      onChangement: ({ place: p, complet }) => {
+        place = p;
+        if (valider) valider.disabled = !complet;
+      },
+    });
 
-      if (complet) {
-        zone.replaceChildren(h('div', { class: 'ecran puzzle' }, mini,
-          h('h2', { class: 'question' }, 'Ta fiche est prête'),
-          h('p', { class: 'aide' }, 'Touche une pièce pour la reprendre.'),
-          h('div', { class: 'revue' }, round.slots.map((s) => h('button', { class: 'revue-ligne', onClick: () => retirer(s) }, h('b', {}, s.l), h('span', {}, place[s.k].t)))),
-          barrePied(continuer('Vérifier', suite))));
-        return;
-      }
-      const carte = pile[0];
-      zone.replaceChildren(h('div', { class: 'ecran puzzle' }, mini,
-        h('div', { class: `paquet ${pile.length > 1 ? 'epais' : ''}` }, h('div', { class: 'pile' },
-          h('article', { class: 'carte-piece', 'data-cle': repere(carte.de === a.id ? carte.k : 'piege') }, h('p', {}, carte.t)))),
-        h('div', { class: 'dock' },
-          h('p', { class: 'dock-titre' }, 'Où va cette pièce\u00a0?'),
-          h('div', { class: 'vers-grille' }, round.slots.map((s) => h('button', { class: `vers ${place[s.k] ? 'occupe' : ''}`, 'data-k': s.k, onClick: () => poser(s.k) }, s.l))),
-          h('div', { class: 'dock-bas' },
-            fantome('ecarter', 'Écarter', ecarter),
-            fantome('plusTard', 'Plus tard', plusTard, { disabled: pile.length < 2 })))));
-    }
-    rendre();
+    valider = continuer('Vérifier', suite, { disabled: true });
+
+    zone.replaceChildren(h('div', { class: 'ecran puzzle' },
+      h('h2', { class: 'question' }, 'Reconstitue la fiche'),
+      h('p', { class: 'aide' }, 'Glisse chaque pièce dans sa rubrique, ou touche une pièce puis sa case.'),
+      composant.el,
+      barrePied(valider)));
     window.scrollTo(0, 0);
   });
 
@@ -418,47 +404,51 @@ export async function jouerPlan(zone, ctx, round) {
       Object.entries(s.arret.just).map(([c, j]) => h('div', { class: 'rubrique' }, h('h3', {}, `${NOM_PARTIE[c]}. ${s.bon[c].t}`), h('blockquote', {}, j.bon)))));
 }
 
-// ARCHITECTE : le plan se construit sous les yeux, un intitulé à la fois -----------------
+// ARCHITECTE : le plan se construit sous les yeux avec le banc -----------------
 export async function jouerArchitecte(zone, ctx, round, ix) {
-  const s = round.sujet; const place = {};
+  const s = round.sujet;
   const bandeau = s.arret ? bandeauArret(s) : null;
-  let pile = round.titres.map((t) => ({ ...t }));
-  let ecartes = [];
+  let place = {};
+
   await new Promise((suite) => {
-    function rendre() {
-      const complet = CASES.every((c) => place[c]);
-      if (!complet && !pile.length) {
-        pile = ecartes; ecartes = [];
-        toast('Il manque des intitulés : ceux que tu as écartés reviennent.');
-      }
-      const tuile = pile[0];
-      const lignes = CASES.map((c) => {
-        const t = place[c];
-        return h('button', {
-          class: `case-plan ${c.length === 1 ? 'partie' : 'sous'} ${t ? 'pleine' : ''} ${tuile && !t ? 'cible' : ''}`, 'data-c': repere(c),
-          'aria-label': `${NOM_CASE[c]} : ${t ? t.t : 'vide'}`,
-          onClick: () => {
-            if (tuile) { pile.shift(); if (t) pile.push(t); place[c] = tuile; son('carte'); vibrer(8); } else if (t) { delete place[c]; pile.unshift(t); son('retour'); }
-            rendre();
-          },
-        }, h('b', {}, NOM_CASE[c]), t ? h('span', {}, t.t) : h('span', { class: 'vide' }, 'À construire'));
-      });
-      const ecarter = () => { ecartes.push(pile.shift()); son('ecart'); vibrer(8); rendre(); };
-      const plusTard = () => { pile.push(pile.shift()); son('carte'); rendre(); };
-      zone.replaceChildren(h('div', { class: 'ecran architecte' },
-        h('div', { class: 'ecran-corps' }, bandeau, h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre), h('div', { class: 'squelette' }, lignes)),
-        h('div', { class: 'dock' },
-          tuile ? h('article', { class: 'tuile', 'data-case': repere(tuile.c || 'leurre') }, tuile.t) : null,
-          tuile ? h('div', { class: 'dock-bas' }, fantome('ecarter', 'Écarter', ecarter), fantome('plusTard', 'Plus tard', plusTard, { disabled: pile.length < 2 })) : null,
-          complet ? barrePied(continuer('Comparer au plan modèle', suite)) : null)));
-    }
-    rendre();
+    let valider;
+    const pieces = round.titres.map((t) => ({
+      ...t,
+      attributs: {
+        'data-case': repere(t.c || 'leurre'),
+      },
+    }));
+    const cases = CASES.map((c) => ({
+      k: c,
+      l: NOM_CASE[c],
+      classe: `case-plan ${c.length === 1 ? 'partie' : 'sous'}`,
+      placeholder: 'À construire',
+      attributs: {
+        'data-c': repere(c),
+      },
+    }));
+
+    const composant = banc({
+      pieces,
+      cases,
+      ecart: true,
+      onChangement: ({ place: p, complet }) => {
+        place = p;
+        if (valider) valider.disabled = !complet;
+      },
+    });
+
+    valider = continuer('Comparer au plan modèle', suite, { disabled: true });
+
+    zone.replaceChildren(h('div', { class: 'ecran architecte' },
+      h('div', { class: 'ecran-corps' }, bandeau, h('p', { class: 'surtitre' }, TYPE[s.type]), h('h2', { class: 'question' }, s.titre), composant.el),
+      barrePied(valider)));
     window.scrollTo(0, 0);
   });
   // A et B peuvent s'inverser au sein d'une partie : seul compte le bon rattachement.
   const bonneCase = (c) => {
     const t = place[c];
-    if (!t.c) return false;
+    if (!t || !t.c) return false;
     if (c.length === 1) return t.c === c;
     return t.c[0] === c[0] && t.c.length === 2;
   };

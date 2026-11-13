@@ -142,15 +142,18 @@ export async function jouerAtelier(zone, ctx, round, ix) {
     // La mineure : chaque condition reçoit son fait.
     etape(2 + i, `${ROMAINS[i]}. La mineure`);
     corps.append(h('p', { class: 'at-regle' }, h('b', {}, `${art} `), texte));
-    const lignes = s.conditions.map(([t, f, etat]) => {
+    const lignes = s.conditions.map(([t, f, etat], idx) => {
       const auto = !f && etat === 'oui';
-      return { t, f, etat, auto, el: h('li', { class: `at-cond${auto ? ' acquise' : ''}` }, h('span', { class: 'at-engrenage', 'aria-hidden': 'true' }), h('span', { class: 'at-cond-t' }, t),
+      return { t, f, etat, auto, el: h('li', { class: `at-cond${auto ? ' acquise' : ''}` },
+        h('div', { class: 'at-cond-gauche' },
+          h('span', { class: 'at-cond-num' }, `Condition ${idx + 1}`),
+          h('span', { class: 'at-cond-t' }, t)),
         h('span', { class: 'at-prise' }, auto ? (i > 0 ? 'Acquis plus haut' : 'Posé par la loi') : '…')) };
     });
-    const machine = h('div', { class: 'at-machine' }, h('ol', { class: 'at-conds' }, lignes.map((l) => l.el)), h('p', { class: 'at-sortie' }, 'La règle s’applique-t-elle ?'));
+    const tableau = h('div', { class: 'at-tableau' }, h('ol', { class: 'at-conds' }, lignes.map((l) => l.el)), h('p', { class: 'at-sortie' }, 'La règle s’applique-t-elle ?'));
     const plateau = h('div', { class: 'at-plateau' });
     const msg = note('');
-    corps.append(h('p', { class: 'at-consigne' }, 'Branche sur chaque condition le fait qualifié qui la remplit, ou dis qu’aucun ne la remplit, ou que le cas ne le dit pas.'), machine, msg, plateau);
+    corps.append(h('p', { class: 'at-consigne' }, 'Pour chaque condition de la règle, choisis le fait du cas qui la remplit.'), tableau, msg, plateau);
     for (const l of lignes) {
       if (l.auto) { res.conds.push({ l, ok: true, auto: true }); continue; }
       l.el.classList.add('cible');
@@ -164,7 +167,7 @@ export async function jouerAtelier(zone, ctx, round, ix) {
       res.conds.push({ l, ok, pris });
       l.el.classList.remove('cible');
       l.el.classList.add(l.etat === 'oui' ? 'remplie' : l.etat === 'non' ? 'bloquee' : 'doute', ok ? 'juste' : 'faux');
-      l.el.querySelector('.at-prise').textContent = l.etat === 'oui' ? cas.faits[l.f][0] : l.etat === 'non' ? 'Non remplie' : 'Le cas ne le dit pas';
+      l.el.querySelector('.at-prise').textContent = l.etat === 'oui' ? `Remplie : ${cas.faits[l.f][0]}` : l.etat === 'non' ? 'Non remplie' : 'Le cas ne le dit pas';
       const phrase = s.conditions.find((c) => c[0] === l.t)[3];
       msg.textContent = ok ? phrase : `Non. ${phrase}`; msg.className = `at-note ${ok ? 'juste' : 'faux'}`;
       son(ok ? 'ok' : 'ko'); vibrer(ok ? 10 : [20, 40, 20]);
@@ -172,9 +175,9 @@ export async function jouerAtelier(zone, ctx, round, ix) {
     }
     plateau.remove();
     const bloquee = s.conditions.some((c) => c[2] === 'non'); const doute = s.conditions.some((c) => c[2] === 'hypo');
-    const sortie = machine.querySelector('.at-sortie');
-    sortie.textContent = bloquee ? 'Une condition manque : la machine cale.' : doute ? 'Une condition dépend d’un fait inconnu : il faut raisonner par hypothèse.' : 'Toutes les conditions sont réunies : la machine tourne.';
-    machine.classList.add(bloquee ? 'cale' : doute ? 'hesite' : 'tourne');
+    const sortie = tableau.querySelector('.at-sortie');
+    sortie.textContent = bloquee ? 'Une condition n’est pas remplie : la règle ne s’applique pas.' : doute ? 'Une condition dépend d’un fait que le cas ne donne pas : il faut raisonner par hypothèse.' : 'Toutes les conditions sont remplies : la règle s’applique.';
+    tableau.classList.add(bloquee ? 'bloquee' : doute ? 'doute' : 'remplie');
     await suite(corps, s.exception ? 'Vérifier l’exception' : doute ? 'Raisonner par hypothèse' : 'Conclure');
 
     // L'exception : elle peut renverser ou limiter la solution.
