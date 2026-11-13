@@ -166,6 +166,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
   1. **Lire** : l'extrait décisif de l'arrêt ; toucher la formule et dire ce qu'elle révèle (cassation pour violation de la loi, manque de base légale, rejet avec contrôle poussé, rejet avec contrôle léger, appréciation souveraine ; au Conseil d'État : erreur de droit, erreur de qualification juridique, erreur manifeste d'appréciation, dénaturation).
   2. **Choisir** : trois squelettes de plan, un seul correspond au type de décision.
   3. **Remplir** (version entière seulement) : glisser les morceaux de l'arrêt (règle, condition, conséquence) dans les crochets du squelette, avec le banc de pièces (tâche F), puis comparer au plan modèle propre à l'arrêt.
+- **Avancement (13/11)** : textes vérifiés sur Légifrance dans `notes/formule-verifs.md` : 6 arrêts d'obligations, 5 d'administratif. L'introduction L1 attend le chapitre du cours sur la jurisprudence (aucun arrêt dans le cours pour l'instant).
 - **Partie Claude** : 6 à 8 arrêts par matière dont la formule est nette, texte vérifié sur Judilibre, Légifrance ou ArianeWeb ; squelettes, pièges, plans modèles ; format de données dans `content/`.
 - **Exactitude** : c'est la cour d'appel qui « a violé » ou « a privé sa décision de base légale » ; la Cour de cassation le lui reproche.
 - **Partie Antigravity** : le moteur (`app/js/formule.js`), ses deux versions, branché dans les séances (courte) et les modes d'examen et audiences (entière, tâche L), tests.
