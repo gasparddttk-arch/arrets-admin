@@ -35,6 +35,17 @@ Antigravity : voir `AGENTS.md` pour la marche à suivre. À faire dans l'ordre. 
 - **Contraintes** : DOM uniquement avec `h()`, tokens CSS de `:root`, textes sobres. Vérifier chaque écran en 390 px de large (fonction `debordement` des tests).
 - **Validation attendue** : captures avant/après dans `tests/captures/`, suite complète verte.
 
+### [TÂCHE E] Test automatique du grand rangement L2
+- **Statut** : À faire, après la tâche A
+- **Fichiers concernés** : `tests/run.cjs`
+- **Objectif** : vérifier que le grand rangement L2 prend ses colonnes dans le cours, en obligations comme en administratif.
+- **Détails de modification** :
+  - Ajouter un bloc qui ouvre, en `?test`, le mode « Le grand rangement » en obligations (équipe 1) puis en administratif.
+  - Vérifier : au moins 2 colonnes, chaque nom de colonne non vide et sans « ? » final ; chaque pièce qui tombe porte un texte ; un clic sur la bonne colonne la range ; un clic sur une mauvaise affiche l'explication.
+  - Aller au bout et vérifier que le récapitulatif s'affiche, sans débordement en 390 px (fonction `debordement`).
+  - Ne rien changer dans `app/` : si un défaut apparaît, s'arrêter et le noter (« Question pour Claude : … »).
+- **Validation attendue** : nouveau `log('rangement L2 ok')`, suite complète verte.
+
 ### [TÂCHE D] Fin du déménagement (pas avant le 4 décembre 2026)
 - **Statut** : À faire, pas avant le 04/12/2026
 - **Fichiers concernés** : `supabase/functions/pousser/index.ts`

@@ -8,7 +8,7 @@ Ce fichier est lu automatiquement. Il complète `CLAUDE.md` (règles d'architect
 3. Passer son statut à `En cours (Antigravity)` et créer une branche `antigravity/<lettre>-<mot>` (ex. `antigravity/a-tri-l2`).
 4. Faire exactement ce que dit la tâche, rien de plus. En cas de doute sur le sens juridique d'un contenu, s'arrêter et écrire la question dans la tâche (ligne « Question pour Claude : … »).
 5. Valider : `npm run check`, `npm run build`, puis `NODE_PATH=$(npm root -g) node tests/run.cjs` (plus de 5 minutes). Si un test échoue deux fois de suite, s'arrêter et noter l'erreur dans la tâche.
-6. Si tout est vert : commit, push de la branche, merge `--ff-only` sur `main`, push, puis vérifier que https://gdroit.eu/sw.js sert la nouvelle VERSION.
+6. Si tout est vert : commit, push de la branche, merge `--ff-only` sur `main`, push, puis vérifier que https://gdroit.eu/sw.js sert la nouvelle VERSION. Si le merge `--ff-only` échoue parce que `main` a avancé : `git rebase origin/main` ; en cas de conflit dans `docs/`, garder la version de `main` puis refaire `npm run build` ; relancer la suite complète avant de réessayer.
 7. Passer le statut à `Fait le JJ/MM (Antigravity)`, ajouter une ligne dans « Dernières actions exécutées par Antigravity », commit et push de `TACHES.md`.
 8. Annoncer à Gaspard en deux phrases ce qui a changé, puis passer à la tâche suivante seulement s'il le demande.
 
