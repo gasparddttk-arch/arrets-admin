@@ -271,7 +271,7 @@ export function roundTriL2(ix, zones, rng = Math.random) {
     return { type: 'tri', titre: 'Quelle partie du cours ?', consigne: 'Range chaque article et chaque arrêt dans la partie du cours qu’il règle.', bords: melange(bords, rng), cartes: melange(cartes, rng) };
   }
   const dans = dansZones(zones);
-  const familles = melange(ix.familles.filter((f) => f.titre.length <= 34), rng);
+  const familles = melange(ix.familles.filter((f) => f.titre.length <= 44 && !/\?\s*$/.test(f.titre)), rng);
   const pris = new Set();
   for (const f of familles) {
     if (bords.length === 4) break;

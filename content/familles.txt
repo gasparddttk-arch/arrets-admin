@@ -24,7 +24,7 @@ m: eky = Le règlement autonome reste soumis au Préambule de 1958
 m: liberte-association = Le Conseil constitutionnel entre en scène
 m: kone = Dernier PFRLR du Conseil d'État, par interprétation d'un traité
 
-%sommet | Qui est au sommet ?
+%sommet | La Constitution prime, selon le juge
 p: La réponse change selon le juge qui parle.
 m: dantzig = Vu de l'international : la Constitution n'est qu'un fait
 m: internationale-hg = Vu de Luxembourg : le droit communautaire prime tout
@@ -40,7 +40,7 @@ m: arcelor = 2007 : décret de transposition, recherche d'un équivalent, CE
 m: fdn = 2021 : la Constitution en défense, refus de l'ultra vires
 m: air-france = 2021 : premier principe d'identité, CC en QPC
 
-%invocabilite | Qui peut invoquer une directive ?
+%invocabilite | L'invocabilité des directives
 p: Luxembourg dit oui dès 1974, Paris attend 2009. Et l'État, lui, ne peut jamais.
 m: van-duyn = Oui, si claire et inconditionnelle
 m: ratti = Oui, une fois le délai expiré
@@ -82,7 +82,7 @@ m: anthroposophique = L'exécutif ne doit pas appliquer la loi inconventionnelle
 m: meyet-1999 = Une loi peut devenir incompatible avec le temps
 m: deprez = L'article 55 est une règle de conflit de normes
 
-%responsabilite | Qui paie, et à quel titre ?
+%responsabilite | La responsabilité de l'État normateur
 p: La nature de la responsabilité dépend de celui à qui la violation est imputée.
 m: veuve-renard = Faute : décret d'application jamais pris
 m: arizona-tobacco = Faute : règlement contraire à une directive
@@ -113,10 +113,10 @@ m: rubin-de-servens = Article 16 : décision et mesures
 m: force-5 = Ordonnance non ratifiée : QPC possible
 m: cfdt-finances = Le Conseil d'État garde les autres moyens
 
-%president-premier-ministre | Président ou Premier ministre ?
+%president-premier-ministre | Le partage des décrets à l'exécutif
 p: Chacun répond à une question différente sur les décrets.
 m: sicard = Signature inutile : le contreseing sauve le décret
-m: pelon = Qui sont les ministres responsables ?
+m: pelon = Contresignent ceux qui préparent et appliquent l'acte
 m: meyet-1992 = Délibéré en Conseil : le Président signe
 m: collas = Le Président peut rendre la main
 
@@ -138,7 +138,7 @@ m: credit-foncier = Le mot « directive », 1970
 m: jousselin = Le mot « lignes directrices », 2014
 m: gisti-2020 = Le recours contre tout document général, 2020
 
-%hierarchie-actes | Où sont les normes ?
+%hierarchie-actes | La hiérarchie des actes
 p: Dans le contrat, dans le règlement, dans la promulgation.
 m: seguey-tivoli = Une clause de contrat peut valoir norme
 m: clamart = L'acte individuel plie devant le règlement
