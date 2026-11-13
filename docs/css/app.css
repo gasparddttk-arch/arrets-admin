@@ -1711,15 +1711,6 @@ body:has(#onglets[hidden]) .maj { display: none; }
 .decouverte-suite { display: grid; gap: 10px; margin: 6px 0 4px; text-align: center; }
 .decouverte-suite p { color: var(--texte-2); font-size: 17px; }
 
-/* Le tri en L2 : des bords plus longs (chambres, familles), écrits à la verticale sur les côtés. */
-.tri-l2 .tri-bord { font-size: 13px; padding: 8px 12px; max-width: calc(100% - 24px); line-height: 1.2; text-align: center; }
-.tri-l2 .tri-gauche, .tri-l2 .tri-droite { writing-mode: vertical-rl; max-height: calc(100% - 120px); max-width: none; margin: 0; padding: 12px 8px; }
-.tri-l2 .tri-gauche { left: 6px; transform: translateY(-50%) rotate(180deg); }
-.tri-l2 .tri-droite { right: 6px; transform: translateY(-50%); }
-.tri-l2 .tri-pile { inset: 60px 50px; }
-.tri-sur { display: block; margin-bottom: 6px; color: var(--papier-texte); opacity: .7; font: 600 13px var(--ui); }
-.tri-l2 .tri-carte p { font-size: 18px; }
-
 /* Le grand rangement en L2 : articles et arrêts, colonnes aux noms du cours. */
 .rg-l2 .rg-piece { max-width: 78%; font-size: 16px; line-height: 1.2; }
 .rg-l2 .rg-piece small { display: block; margin-top: 3px; font: 600 11px var(--ui); opacity: .8; }

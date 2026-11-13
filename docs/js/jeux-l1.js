@@ -10,21 +10,18 @@ const plurielS = (n, s) => `${n} ${s}${n > 1 ? 's' : ''}`;
 
 // LE TRI DU GREFFE ---------------------------------------------------------------------------
 // Une carte ; on la jette vers un des bords. Le tampon tombe, la carte s'envole.
-// En L1 : droit, morale, religion, convenance. En L2, les bords viennent du cours (round.bords).
+// En L1 : droit, morale, religion, convenance.
 const BORDS = { d: ['Droit', 'haut'], m: ['Morale', 'droite'], r: ['Religion', 'bas'], c: ['Convenance', 'gauche'] };
-const COTES = ['haut', 'droite', 'bas', 'gauche'];
+const parCote = Object.fromEntries(Object.entries(BORDS).map(([k, [, cote]]) => [cote, k]));
 export function jouerTri(zone, ctx, round) {
   return new Promise((fini) => {
-    const l2 = Array.isArray(round.bords);
-    const bords = l2 ? Object.fromEntries(round.bords.map((b, i) => [String(b.k), [b.nom, COTES[i]]])) : BORDS;
-    const parCote = Object.fromEntries(Object.entries(bords).map(([k, [, cote]]) => [cote, k]));
     let i = 0; let bons = 0; let rate = false;
     const pile = h('div', { class: 'tri-pile' });
     const consigneBase = round.consigne || 'Jette la carte vers le bon bord.';
     const consigne = h('p', { class: 'tri-consigne' }, consigneBase);
     const compteur = h('span', { class: 'tri-compte' });
-    const boutons = Object.entries(bords).map(([k, [nom, cote]]) => h('button', { class: `tri-bord tri-${cote}`, 'data-bord': k, onClick: () => jeter(k) }, nom));
-    const terrain = h('div', { class: `tri-terrain${l2 ? ' tri-l2' : ''}` }, boutons, pile);
+    const boutons = Object.entries(BORDS).map(([k, [nom, cote]]) => h('button', { class: `tri-bord tri-${cote}`, 'data-bord': k, onClick: () => jeter(k) }, nom));
+    const terrain = h('div', { class: 'tri-terrain' }, boutons, pile);
     const ecran = h('div', { class: 'ecran tri' }, h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, round.titre || 'Le tri du greffe', ' ', compteur), consigne), terrain);
     zone.replaceChildren(ecran);
     let carte = null; let occupe = false;
@@ -34,7 +31,7 @@ export function jouerTri(zone, ctx, round) {
       rate = false;
       compteur.textContent = `${i + 1} sur ${round.cartes.length}`;
       const c = round.cartes[i];
-      carte = h('article', { class: 'tri-carte', 'data-bon': repere(c.k) }, c.s ? h('small', { class: 'tri-sur' }, c.s) : null, h('p', {}, c.t), h('span', { class: 'tri-tampon', 'aria-hidden': 'true' }));
+      carte = h('article', { class: 'tri-carte', 'data-bon': repere(c.k) }, h('p', {}, c.t), h('span', { class: 'tri-tampon', 'aria-hidden': 'true' }));
       pile.replaceChildren(carte);
       consigne.textContent = consigneBase;
       consigne.classList.remove('explique');
@@ -71,12 +68,11 @@ export function jouerTri(zone, ctx, round) {
       if (String(k) === String(c.k)) {
         if (!rate) bons++;
         ctx.combo(!rate);
-        if (l2 && c.carte) ctx.noter(c.carte, !rate);
-        tampon.textContent = l2 ? 'Rangé' : bords[k][0];
+        tampon.textContent = BORDS[k][0];
         carte.classList.add('tamponnee');
         son('marteau'); vibrer(14);
-        await attendre(l2 ? 360 : 420);
-        carte.classList.add(`vole-${bords[k][1]}`);
+        await attendre(420);
+        carte.classList.add(`vole-${BORDS[k][1]}`);
         await attendre(380);
         i++; occupe = false; suivante();
       } else {
@@ -85,8 +81,8 @@ export function jouerTri(zone, ctx, round) {
         son('ko'); vibrer([20, 40, 20]);
         carte.style.transform = '';
         carte.classList.remove('tremble'); void carte.offsetWidth; carte.classList.add('tremble');
-        const nom = bords[k][0];
-        consigne.textContent = l2 ? `Pas « ${nom} ». ${c.w}` : `Pas ${nom.toLowerCase() === 'droit' ? 'du droit' : `la ${nom.toLowerCase()}`}. ${c.w}`;
+        const nom = BORDS[k][0];
+        consigne.textContent = `Pas ${nom.toLowerCase() === 'droit' ? 'du droit' : `la ${nom.toLowerCase()}`}. ${c.w}`;
         consigne.classList.add('explique');
         for (const b of boutons) b.classList.toggle('indique', b.dataset.bord === String(c.k));
         await attendre(500);
@@ -100,10 +96,8 @@ export function jouerTri(zone, ctx, round) {
       fini();
       finEpreuve(zone, ctx, { score, parfait: bons === n },
         h('p', { class: 'surtitre' }, bons === n ? 'Tout est rangé du premier coup.' : `${plurielS(bons, 'carte')} sur ${n} du premier coup.`),
-        l2 ? h('article', { class: 'revelation' }, h('h3', {}, 'Le classement'),
-          h('ul', { class: 'mem-recap' }, round.cartes.map((c) => h('li', {}, h('b', {}, c.t), ` : ${bords[c.k][0]}. ${c.w}`))))
-          : h('article', { class: 'revelation' }, h('h3', {}, 'Ce qui fait le droit'),
-            h('p', { class: 'apport' }, 'La morale, la religion et les convenances règlent aussi nos conduites. Ce qui distingue le droit, c’est la sanction organisée par l’autorité publique.')));
+        h('article', { class: 'revelation' }, h('h3', {}, 'Ce qui fait le droit'),
+          h('p', { class: 'apport' }, 'La morale, la religion et les convenances règlent aussi nos conduites. Ce qui distingue le droit, c’est la sanction organisée par l’autorité publique.')));
     }
     suivante();
   });
