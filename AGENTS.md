@@ -7,6 +7,7 @@ Ce fichier est lu automatiquement. Il complète `CLAUDE.md` (règles d'architect
 2. **Une seule branche de travail : `antigravity/lot`.** Les tâches s'y empilent, l'une après l'autre.
    - Si elle n'existe pas : la créer à partir de la dernière branche `antigravity/*` dont le statut est « Prêt pour Claude », sinon à partir de `main`.
    - Avant chaque tâche : `git checkout antigravity/lot`, puis `git fetch origin && git merge --no-edit origin/main`.
+   - Depuis le 14/11, `tests/run.cjs` est découpé en trois groupes (`execGroupe1`, `execGroupe2`, `execGroupe3`) et chaque bloc est entouré de `if (matchSeul('<nom>')) { … }`. En cas de conflit sur ce fichier lors du merge : garder la version de `origin/main`, puis remettre les tests de la tâche dans un bloc `if (matchSeul('<nom>'))` à la fin du groupe le plus court (le groupe 1), avec leur `log('<nom> ok')`. Lancer la suite avec `npm test` (environ 8 minutes).
    - Les anciennes branches `antigravity/<lettre>-…` contiennent parfois un travail commencé (commits « WIP ») : pour reprendre cette tâche, l'apporter sur `antigravity/lot` (`git cherry-pick` des commits WIP, sans `docs/`) et la terminer.
 3. Ouvrir `TACHES.md`. Prendre la **première** tâche dont la ligne de statut est exactement `- **Statut** : À faire`.
 4. Faire exactement ce que dit la tâche, rien de plus. En cas de doute sur le sens juridique d'un contenu, s'arrêter et écrire la question dans la tâche (ligne « Question pour Claude : … »).
