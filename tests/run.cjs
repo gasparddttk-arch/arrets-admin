@@ -197,7 +197,7 @@ async function debordement(p, nom) {
   await p.tap('text=Retour au Palais');
 
   // 2. Chaque mode, seul, plusieurs fois, pour couvrir le contenu.
-  for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte', 'Frise de la jurisprudence']) {
+  for (const m of ['Paires', 'Puzzle d’arrêt', 'Le juge, c’est toi', 'Le bon plan', 'Architecte', 'Frise de la jurisprudence', 'Memory', 'Le tri des familles']) {
     for (let i = 0; i < 3; i++) {
       await p.evaluate(() => window.__app.aller('role')); await p.locator('.role-ligne', { hasText: m }).click();
       if (await p.locator('.boite-genre').count()) await p.locator(`.boite-genre [data-genre="${['C', 'D', 'hasard'][i]}"]`).click();
@@ -484,7 +484,7 @@ async function debordement(p, nom) {
   const po = await b.newContext({ ...devices['iPhone 13'], viewport: { width: 320, height: 568 } });
   const q2 = await po.newPage(); q2.on('pageerror', (x) => erreurs.push(x.message));
   await q2.goto(URLB + '?test&matiere=oblig'); await q2.waitForSelector('.tribune');
-  for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan']) {
+  for (const m of ['qualif', 'cas', 'remede', 'frise', 'plan', 'memory', 'tri']) {
     await q2.evaluate(() => window.__app.aller('role')); await ouvrirMode(q2, m);
     await jouer(q2, { capture: 'oblig-petit' });
     await debordement(q2, `petit ${m}`);
@@ -673,7 +673,7 @@ async function debordement(p, nom) {
   assert.ok((await etat(d2)).zones.gagnees.includes(1), 'audience de l’équipe 2 gagnée');
   await d2.tap('text=Retour au Palais');
   await d2.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; });
-  for (const m of ['paires', 'puzzle', 'juge', 'plan', 'architecte', 'frise']) {
+  for (const m of ['paires', 'puzzle', 'juge', 'plan', 'architecte', 'frise', 'memory', 'tri']) {
     for (const g of m === 'plan' || m === 'architecte' ? ['D', 'C'] : ['hasard']) {
       await d2.evaluate(() => window.__app.aller('role')); await ouvrirMode(d2, m, g);
       await jouerParfait(d2); await textePropre(d2); await debordement(d2, `admin équipe 2 ${m}`);
@@ -834,7 +834,7 @@ async function debordement(p, nom) {
   assert.equal(await u.locator('.role-ligne').count(), 2, 'deux entrées sous le Défi');
   await u.locator('.tribune .figure-chouette').waitFor();
   await u.locator('.role-ligne[data-mode="vers-role"]').click();
-  assert.equal(await u.locator('.role-ligne').count(), 8, 'trois minutes, six exercices et Dunk');
+  assert.equal(await u.locator('.role-ligne').count(), 10, 'trois minutes, huit exercices et Dunk');
   await u.screenshot({ path: CAP + 'palais-role.png' }); await debordement(u, 'le rôle');
   await u.locator('.bouton-matiere').click(); await u.waitForSelector('.tribune');
   await u.locator('.role-ligne[data-mode="vers-examen"]').click();
@@ -1016,6 +1016,58 @@ async function debordement(p, nom) {
     await at.close();
   }
   log('atelier administratif ok');
+
+  // La première séance : un exercice, une minute, puis « Encore une minute » et le Défi du jour.
+  for (const mat of ['admin', 'oblig', 'intro', 'constit']) {
+    const dc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+    const dp = await dc.newPage(); dp.on('pageerror', (x) => erreurs.push(x.message));
+    await dp.goto(URLB + `?test&decouverte${mat === 'admin' ? '' : `&matiere=${mat}`}`); await dp.waitForSelector('.tribune');
+    await dp.locator('.cta[data-decouverte]').click(); await dp.waitForSelector('.quitter');
+    assert.equal(await dp.evaluate(() => JSON.parse(JSON.stringify(window.__app.etat())).stats.seances), 0);
+    await jouerParfait(dp); await dp.waitForSelector('.decouverte-suite');
+    if (mat === 'admin') { await dp.screenshot({ path: CAP + 'decouverte-fin.png' }); await debordement(dp, 'fin de la première séance'); }
+    await dp.locator('[data-encore]').click(); await dp.waitForSelector('.quitter');
+    await jouerParfait(dp); await dp.waitForSelector('.decouverte-suite');
+    await dp.tap('text=Retour au Palais'); await dp.waitForSelector('.tribune');
+    assert.equal(await dp.locator('.cta[data-decouverte]').count(), 0, `${mat} : le Défi du jour reprend la main`);
+    await dc.close();
+  }
+  log('première séance ok');
+
+  // Le guide d'installation suit le navigateur : Chrome sur iPhone, Chrome sur Android, appli tierce.
+  const UA = {
+    'iOS-Chrome': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/140.0.7339.122 Mobile/15E148 Safari/604.1',
+    'iOS-Safari': devices['iPhone 13'].userAgent,
+    'Android-Chrome': devices['Pixel 7'].userAgent,
+    'iOS-dans une appli': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/22F76 Instagram 380.0.0.0 (iPhone14,5; iOS 18_5; fr_FR)',
+  };
+  for (const [cle, ua] of Object.entries(UA)) {
+    const gc = await b.newContext({ ...(cle.startsWith('Android') ? devices['Pixel 7'] : devices['iPhone 13']), userAgent: ua, serviceWorkers: 'block' });
+    const gp = await gc.newPage(); gp.on('pageerror', (x) => erreurs.push(x.message));
+    await gp.goto(URLB + '?test'); await gp.waitForSelector('.tribune');
+    await gp.waitForSelector(`.installer [data-guide="${cle}"]`);
+    if (cle.includes('appli')) assert.equal(await gp.locator('.installer button', { hasText: 'Copier le lien' }).count(), 1, 'copier le lien');
+    await gp.screenshot({ path: CAP + `installer-${cle.replace(/\W+/g, '-')}.png` }); await debordement(gp, `installation ${cle}`);
+    await gc.close();
+  }
+  log('guide d’installation ok');
+
+  // Memory : deux cartes qui ne vont pas ensemble restent ouvertes le temps de les lire, puis se ferment d'un toucher.
+  {
+    const mc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+    const mp = await mc.newPage(); mp.on('pageerror', (x) => erreurs.push(x.message));
+    await mp.goto(URLB + '?test&matiere=intro'); await mp.waitForSelector('.tribune');
+    await mp.evaluate(() => window.__app.aller('role')); await mp.locator('.role-ligne[data-mode="memory"]').click();
+    await mp.waitForSelector('.mem-carte');
+    await mp.evaluate(() => { const c = [...document.querySelectorAll('.mem-carte')]; const a = c[0]; const z = c.find((x) => x.dataset.paire !== a.dataset.paire); a.click(); z.click(); });
+    await mp.waitForTimeout(1500);
+    assert.equal(await mp.locator('.mem-carte.ouverte').count(), 2, 'les deux cartes restent lisibles');
+    await mp.locator('.mem-consigne').click();
+    await mp.waitForTimeout(600);
+    assert.equal(await mp.locator('.mem-carte.ouverte').count(), 0, 'un toucher les referme');
+    await mc.close();
+  }
+  log('memory lisible ok');
 
   // Vers l'examen : Appel et Cassation, avec les épreuves à réponse libre, dans les deux matières.
   const ex = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });

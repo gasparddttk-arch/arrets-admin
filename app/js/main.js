@@ -19,8 +19,9 @@ import { jouerCas, jouerRemede, jouerFrise } from './jeux-oblig.js';
 import { lancerDunk } from './dunk.js';
 import { activerRappel, etatRappel, estInstallee, abonnementActuel } from './notif.js';
 import { SUPABASE_URL } from './config.js';
-import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifier, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour } from './compte.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifier, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour, adminEntonnoir, adminParcours } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
+import { noter as suivre, contexte } from './suivi.js';
 
 const TOUS_JEUX = { ...JEUX, atelier: jouerAtelier, pouvoirs: jouerPouvoirs, nuancier: jouerNuancier, plume: jouerPlume, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu,
   tri: jouerTri, mot: jouerMot, rangement: jouerRangement, quiadit: jouerQuiADit, scanner: jouerScanner, memory: jouerMemory };
@@ -129,7 +130,7 @@ async function compterNouvelles() {
 // ÉCRAN DE CHOIX -----------------------------------------------------------------
 function ouvrirMatiere(id) {
   etat.matiere = id; ix = CONTENUS[id]; filtre = { texte: '', zone: 0, type: 'arrets' };
-  sauver(); son('carte'); vibrer(8);
+  sauver(); son('carte'); vibrer(8); suivre('matiere', { m: id });
   aller('palais');
 }
 
@@ -296,11 +297,11 @@ function accueil() {
     h('button', { class: 'bouton-or', disabled: etat.jetons < prixForclusion(), onClick: () => { if (relever()) { son('sceau'); vibrer(20); toast('Série rétablie.'); accueil(); } } },
       `Rétablir pour ${monnaie(prixForclusion())}`)) : null;
 
-  // Sur iPhone, Safari et l'icône de l'écran d'accueil ont chacun leur stockage.
-  const aInstaller = /iPhone|iPad|iPod/.test(navigator.userAgent) && !estInstallee()
+  // Sur iPhone, le navigateur et l'icône de l'écran d'accueil ont chacun leur stockage.
+  const aInstaller = telephone() && !estInstallee()
     ? h('section', { class: 'installer' },
       h('h2', {}, 'Installe l’appli avant de jouer'),
-      h('p', {}, 'Une séance faite dans Safari ne suivrait pas dans l’icône : ta série repartirait de zéro.'),
+      h('p', {}, contexte().ios ? 'Une séance faite dans le navigateur ne suivrait pas dans l’icône : ta série repartirait de zéro.' : 'En appli, Gdroit s’ouvre en plein écran, d’un toucher, et peut te prévenir.'),
       guideInstallation())
     : null;
 
@@ -325,6 +326,9 @@ function accueil() {
         h('button', { class: 'bouton-lien', onClick: () => { M().enCours = null; sauver(); accueil(); } }, 'Abandonner cette séance')) : null,
       defisEnAttente.length ? h('div', { class: 'defis-attente' }, defisEnAttente.slice(0, 2).map((d) => h('button', { class: 'bouton-or defi-attente', onClick: () => releverDefi(d.id) },
         `${d.pseudo || 'Un ami'} te défie : bats ses ${pct(d.score_auteur)}`))) : null,
+      decouverteDue() ? h('button', { class: 'cta brille', 'data-decouverte': '', onClick: () => lancerDecouverte(0) },
+        h('span', { class: 'cta-txt' }, h('b', {}, 'Ta première séance'), h('small', { class: 'cta-sous' }, 'Un seul exercice, une minute')),
+        h('span', { class: 'cta-jouer', 'aria-hidden': 'true' }, svg('<svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>'))) :
       h('button', { class: 'cta brille', onClick: lancerDefi },
         h('span', { class: 'cta-txt' }, h('b', {}, 'Défi du jour'), h('small', { class: 'cta-sous' }, dus ? `5 épreuves, ${pluriel(dus, motFiche())} à revoir` : '5 épreuves, environ 5 minutes')),
         h('span', { class: 'cta-jouer', 'aria-hidden': 'true' }, svg('<svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>'))),
@@ -400,6 +404,20 @@ function blocDunk() {
         d.infini ? h('button', { class: 'bouton-fantome', onClick: () => jouer('infini') }, 'Infini') : h('button', { class: 'bouton-fantome', onClick: () => aller('boutique') }, icone('cadenas', 16), 'Infini'))));
 }
 
+// La première séance d'une matière : un seul exercice, le plus parlant, une minute.
+// Le but : comprendre en jouant ce que fait Gdroit, puis avoir envie de relancer.
+const DECOUVERTE = { admin: ['juge', 'paires'], oblig: ['qualif', 'remede'], constit: ['nuancier', 'pouvoirs'], intro: ['tri', 'memory'] };
+const decouverteDue = () => {
+  const p = new URLSearchParams(location.search);
+  if (p.has('test') && !p.has('decouverte')) return false;
+  return !M().decouverte && !M().xp && !M().enCours;
+};
+function lancerDecouverte(rang = 0) {
+  const modes = DECOUVERTE[etat.matiere] || DECOUVERTE.admin;
+  const mode = modes[rang % modes.length];
+  const zones = etat.matiere === 'constit' && mode === 'nuancier' ? [...new Set([...zonesDuJour(ix), 2])] : zonesDuJour(ix);
+  lancer({ type: 'decouverte', mode, titre: rang ? 'Encore une minute' : 'Ta première séance', rounds: [tirerRound(ix, mode, zones, [], Math.random, new Set())] });
+}
 function lancerDefi() {
   const zones = zonesDuJour(ix);
   lancer({ type: 'defi', titre: 'Défi du jour', rounds: composerDefi(ix, zones, aRevoir(ix, zones)) });
@@ -441,7 +459,7 @@ function lancerMode(m, genre = null) {
     if (sujets.length) { source = { ...ix, sujets }; zones = ouvertes; }
   }
   const dus = aRevoir(ix, zones);
-  const n = m === 'paires' || m === 'qualif' ? 3 : estL1() ? (['quiadit', 'scanner', 'pouvoirs', 'nuancier'].includes(m) ? 1 : 2) : 2;
+  const n = m === 'paires' || m === 'qualif' ? 3 : estL1() ? (['quiadit', 'scanner', 'pouvoirs', 'nuancier'].includes(m) ? 1 : 2) : m === 'memory' ? 1 : 2;
   const deja = new Set();
   const titre = nomsModes()[m][0] + (genre && source !== ix ? (genre === 'C' ? ', commentaire' : ', dissertation') : '');
   lancer({ type: 'mode', mode: m, titre, rounds: Array.from({ length: n }, () => tirerRound(source, m, zones, dus, Math.random, deja)) });
@@ -455,6 +473,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
     ? { ...reprise, rounds: JSON.parse(JSON.stringify(reprise.rounds)), touches: new Map(reprise.touches), nettoyer: [] }
     : { rounds, titre, type, zone, long, defiAmi, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0 };
   ({ type, titre, zone } = S);
+  if (!reprise) { S.debut = Date.now(); suivre('seance_debut', { seance: type, mode: mode || null, n: S.rounds.length, matiere: etat.matiere, premiere: !etat.stats.seances }); }
   // Copie intacte des épreuves : c'est elle qui sert à reprendre après une coupure.
   const copie = JSON.stringify(S.rounds);
   function memoriser() {
@@ -488,7 +507,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
       h('p', {}, 'Quitter maintenant ? Cette séance ne comptera pas pour ta série.'),
       h('div', { class: 'boite-actions' },
         h('button', { class: 'bouton-lien sombre', onClick: () => voile.remove() }, 'Continuer la séance'),
-        h('button', { class: 'bouton-or', onClick: () => { voile.remove(); S.nettoyer.forEach((f) => f()); M().enCours = null; sauver(); aller('palais'); } }, 'Quitter'))));
+        h('button', { class: 'bouton-or', onClick: () => { voile.remove(); suivre('seance_quitte', { seance: S.type, i: S.i + 1, epreuve: S.rounds[S.i]?.type, matiere: etat.matiere, duree: S.debut ? Math.round((Date.now() - S.debut) / 1000) : null }); S.nettoyer.forEach((f) => f()); M().enCours = null; sauver(); aller('palais'); } }, 'Quitter'))));
     document.body.append(voile);
   }
 
@@ -537,6 +556,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
       finEnCours = true;
       S.nettoyer.forEach((f) => f()); S.nettoyer = [];
       S.scores.push(res.score); if (res.parfait) S.parfaites++;
+      suivre('epreuve', { seance: S.type, i: S.i + 1, epreuve: S.rounds[S.i]?.type, score: Math.round(res.score * 100) / 100 });
       // Deux pièces pour une épreuve réussie, une pour une épreuve à moitié réussie.
       // En appel, des points seulement : rater exprès ne doit rien rapporter.
       if (S.type !== 'appel') S.jetons += res.score >= 0.8 ? PIECES_EPREUVE : res.score >= 0.4 ? 1 : 0;
@@ -610,6 +630,8 @@ function resultats(S, reussi) {
   setTimeout(envoyerProgression, 1500);
   const avant = rang(); const avantGeneral = rangGeneral();
   const moyenne = S.scores.reduce((a, b) => a + b, 0) / (S.scores.length || 1);
+  if (S.type === 'decouverte') M().decouverte = (M().decouverte || 0) + 1;
+  suivre('seance_fin', { seance: S.type, matiere: etat.matiere, score: Math.round(moyenne * 100) / 100, n: S.rounds.length, duree: S.debut ? Math.round((Date.now() - S.debut) / 1000) : null, premiere: !etat.stats.seances });
   etat.stats.seances++;
   etat.chouette.seance = jour();
   etat.stats.comboMax = Math.max(etat.stats.comboMax, S.comboMax);
@@ -672,8 +694,15 @@ function resultats(S, reussi) {
     apresGeneral.i > avantGeneral.i ? h('div', { class: 'decret' }, h('p', {}, 'Carrière générale, tu deviens'), h('strong', {}, apresGeneral.nom)) : null,
     nouveaux.length ? h('ul', { class: 'res-trophees' }, nouveaux.map((t) => h('li', {}, medaille(metalDe(t.id), true), h('span', {}, h('b', {}, t.nom), h('small', {}, t.txt))))) : null,
     S.type === 'partiel' ? bilanPartiel(S) : null,
+    S.type === 'decouverte' ? h('section', { class: 'decouverte-suite' },
+      h('p', {}, M().decouverte > 1 ? 'Le Défi du jour enchaîne cinq exercices comme ceux-là, choisis selon ce que tu dois revoir : environ cinq minutes par jour.'
+        : 'C’est tout pour ta première séance. Chaque jour, le Défi du jour en enchaîne cinq comme celle-ci, choisis selon ce que tu dois revoir.')) : null,
     aRevoirListe.length ? h('section', { class: 'res-revoir' }, h('h2', {}, 'À revoir'),
       h('ul', {}, aRevoirListe.slice(0, 6).map((a) => h('li', {}, h('button', { onClick: () => { afficherOnglets(true); ongletCourant = 'arrets'; fiche(a.id); } }, h('b', {}, a.court), a.an ? ` ${a.an}` : ` ${a.titre}`))))) : null,
+    S.type === 'decouverte' ? h('div', { class: 'pied' },
+      continuer('Encore une minute', () => { suivre('decouverte_suite', { choix: 'encore', rang: M().decouverte }); lancerDecouverte(M().decouverte); }, { 'data-encore': '' }),
+      h('button', { class: 'bouton-fantome', onClick: () => { suivre('decouverte_suite', { choix: 'defi', rang: M().decouverte }); lancerDefi(); } }, 'Faire le Défi du jour'),
+      h('button', { class: 'bouton-lien', onClick: () => { suivre('decouverte_suite', { choix: 'palais', rang: M().decouverte }); aller('palais'); } }, 'Retour au Palais')) :
     h('div', { class: 'pied' },
       S.type !== 'appel' && aRevoirListe.length ? h('button', { class: 'bouton-or', 'data-appel': '', onClick: () => faireAppel(aRevoirListe.map((a) => a.id)) }, 'Faire appel') : null,
       continuer('Retour au Palais', () => aller('palais')),
@@ -681,6 +710,7 @@ function resultats(S, reussi) {
       connecte() ? h('button', { class: 'bouton-lien', onClick: () => faireRetour(`Résultats : ${S.titre}`) }, 'Faire un retour') : null),
   );
   montrer(contenu);
+  if (S.type === 'decouverte') setTimeout(() => { if (document.querySelector('.resultats')) accueilTesteur(); }, 2600);
   if (effets()) {
     if (palier && !nouveauGrade && !grandeVictoire) figureFin.append(h('span', { class: 'chiffre-livre' }, String(v.n)));
     if (poseFin === 'tribune' && !images.mascotte) figureFin.append(codeEnvole());
@@ -1493,6 +1523,7 @@ async function ecranAdmin() {
   const NOMS_RETOUR = Object.fromEntries(GENRES_RETOUR);
   const ouvertsR = retours.filter((x) => !x.traite);
   corps.replaceChildren(
+    blocEntonnoir(comptes),
     h('h2', {}, 'Places de test'),
     h('p', { class: 'aide-claire' }, `${quota.testeurs} testeurs sur ${quota.quota} places, ${Math.max(0, quota.quota - quota.testeurs)} restantes. ${quota.sans_acces ? `${pluriel(quota.sans_acces, 'compte')} sans accès.` : ''} Au-delà du quota, un nouveau compte arrive sans accès ; tu peux l’ouvrir depuis sa fiche.`),
     champQuota,
@@ -1529,6 +1560,43 @@ async function ecranAdmin() {
     signalements.length ? h('ul', { class: 'articles' }, lignesSignal) : h('p', { class: 'aide-claire' }, 'Aucun signalement pour l’instant.'));
 }
 
+// Où l'on décroche : le parcours depuis l'ouverture du lien jusqu'aux séances régulières.
+function blocEntonnoir(comptes) {
+  const n = comptes.filter((c) => c.acces !== 'admin');
+  const depuis = [['Comptes créés', n.length], ['Au moins une séance', n.filter((c) => (c.seances ?? 0) >= 1).length], ['Trois séances ou plus', n.filter((c) => (c.seances ?? 0) >= 3).length], ['Vus ces 7 derniers jours', n.filter((c) => c.vu_le && Date.now() - new Date(c.vu_le) < 7 * 864e5).length]];
+  const barres = (lignes) => { const max = Math.max(1, ...lignes.map(([, v]) => v)); return h('ul', { class: 'entonnoir' }, lignes.map(([nom, v], i) => h('li', {},
+    h('span', {}, nom), h('b', {}, String(v), i && lignes[0][1] ? h('small', {}, ` ${Math.round((v / lignes[0][1]) * 100)} %`) : null), h('i', { style: `--p:${Math.round((v / max) * 100)}%` })))); };
+  const periode = h('div', { class: 'bascule' });
+  const detail = h('div', { class: 'entonnoir-detail' }, h('p', { class: 'aide-claire' }, 'Chargement du suivi…'));
+  const charger = async (jours) => {
+    periode.replaceChildren(...[[7, '7 jours'], [30, '30 jours'], [365, 'Tout']].map(([j, nom]) => h('button', { class: j === jours ? 'actif' : '', 'aria-pressed': String(j === jours), onClick: () => charger(j) }, nom)));
+    try {
+      const e = await adminEntonnoir(jours);
+      const med = e.durees?.mediane_s;
+      detail.replaceChildren(
+        barres(e.etapes.map((x) => [x.nom, x.n])),
+        med ? h('p', { class: 'aide-claire' }, `Durée médiane d’une séance finie : ${Math.round(med / 60 * 10) / 10} min, sur ${pluriel(e.durees.n, 'séance')}.`) : null,
+        e.decouverte?.finies ? h('p', { class: 'aide-claire' }, `Première séance d’une minute : ${pluriel(e.decouverte.finies, 'personne')} l’ont finie, ${e.decouverte.relancent} ont relancé.`) : null,
+        e.navigateurs?.length ? [h('h3', {}, 'Téléphones et navigateurs'), barres(e.navigateurs.map((x) => [x.nom || 'inconnu', x.n]))] : null,
+        e.abandons?.length ? [h('h3', {}, 'Où l’on quitte une séance'), barres(e.abandons.map((x) => [x.nom, x.n]))] : null);
+    } catch { detail.replaceChildren(h('p', { class: 'aide-claire' }, 'Suivi indisponible pour le moment.')); }
+  };
+  charger(30);
+  return h('section', { class: 'admin-suivi' }, h('h2', {}, 'Le parcours des testeurs'),
+    h('p', { class: 'aide-claire' }, 'Depuis le début, d’après les comptes :'), barres(depuis),
+    h('h3', {}, 'Étape par étape'), h('p', { class: 'aide-claire' }, 'Depuis la mise en place du suivi, personnes ou téléphones distincts, toi exclu.'), periode, detail);
+}
+const NOMS_EVENEMENT = { ouverture: 'Ouvre Gdroit', installer_vu: 'Voit le guide d’installation', installer_clic: 'Installe', connexion_vue: 'Écran de connexion', connexion: 'Se connecte', matiere: 'Choisit une matière', seance_debut: 'Commence une séance', epreuve: 'Finit une épreuve', seance_fin: 'Finit la séance', seance_quitte: 'Quitte la séance', decouverte_suite: 'Après la première séance' };
+function ligneParcours(e) {
+  const d = e.d || {};
+  const precis = e.t === 'ouverture' ? [d.os, d.nav, d.installee ? 'appli installée' : 'navigateur'].filter(Boolean).join(', ')
+    : e.t === 'matiere' ? d.m : e.t === 'epreuve' ? `${d.epreuve}, ${Math.round((d.score ?? 0) * 100)} %`
+      : e.t === 'seance_debut' ? `${d.seance}${d.mode ? `, ${d.mode}` : ''}, ${d.n} épreuve${d.n > 1 ? 's' : ''}`
+        : e.t === 'seance_fin' ? `${d.seance}, ${Math.round((d.score ?? 0) * 100)} %${d.duree ? `, ${Math.round(d.duree / 6) / 10} min` : ''}`
+          : e.t === 'seance_quitte' ? `${d.seance}, à l’épreuve ${d.i} (${d.epreuve})` : e.t === 'decouverte_suite' ? d.choix : '';
+  return h('li', {}, h('b', {}, NOMS_EVENEMENT[e.t] || e.t), precis ? ` : ${precis}` : '', h('small', {}, ` ${quand(e.q)}`));
+}
+
 function ficheCompte(c) {
   const moi = c.id === etat.compte?.id;
   const montant = h('input', { class: 'code', type: 'number', inputmode: 'numeric', min: 1, max: 100000, placeholder: 'Nombre de jetons', 'aria-label': 'Nombre de jetons' });
@@ -1557,6 +1625,11 @@ function ficheCompte(c) {
     h('div', { class: 'admin-duo' }, h('button', { class: 'bouton-or', onClick: jetons(1) }, 'Ajouter'), h('button', { class: 'bouton-fantome', onClick: jetons(-1) }, 'Retirer')),
     h('h3', {}, 'Statut'),
     moi ? h('p', { class: 'aide-claire' }, 'Ton compte reste administrateur.') : statut,
+    h('h3', {}, 'Parcours'),
+    (() => { const zoneP = h('div', { class: 'parcours' }, h('button', { class: 'bouton-fantome', onClick: async () => {
+      zoneP.replaceChildren(h('p', { class: 'aide-claire' }, 'Chargement…'));
+      try { const ev = await adminParcours(c.id); zoneP.replaceChildren(ev.length ? h('ol', { class: 'parcours-liste' }, ev.slice(0, 60).map(ligneParcours)) : h('p', { class: 'aide-claire' }, 'Rien depuis la mise en place du suivi.')); } catch { zoneP.replaceChildren(h('p', { class: 'aide-claire' }, 'Parcours indisponible.')); }
+    } }, 'Voir son parcours')); return zoneP; })(),
     h('div', { class: 'boite-actions' }, h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Fermer'))));
   document.body.append(voile);
 }
@@ -1580,17 +1653,24 @@ function ecranConnexion(erreur) {
     h('button', { class: 'bouton-or', onClick: async (e) => {
       if (code.value.replace(/\s/g, '').length < 6) return toast('Tape le code reçu.');
       const bouton = e.currentTarget; bouton.disabled = true;
-      try { await verifierCode(email.value, code.value); location.reload(); } catch (err) { toast(err.message); bouton.disabled = false; }
+      try { await verifierCode(email.value, code.value); suivre('connexion', { via: 'email' }); location.reload(); } catch (err) { toast(err.message); bouton.disabled = false; }
     } }, 'Valider le code'));
   const envoyer = h('button', { class: 'bouton-fantome', onClick: async () => {
     if (!/^\S+@\S+\.\S+$/.test(email.value.trim())) return toast('Adresse email incomplète.');
     envoyer.disabled = true;
     try { await envoyerCode(email.value); etape2.hidden = false; code.focus(); toast('Code envoyé.'); } catch (err) { toast(err.message); } finally { envoyer.disabled = false; }
   } }, 'Recevoir un code par email');
+  suivre('connexion_vue', { installee: estInstallee() });
+  // Sur téléphone, on installe d'abord : sur iPhone, une connexion faite dans le navigateur ne suit pas dans l'icône.
+  const installerDabord = telephone() && !estInstallee() && !new URLSearchParams(location.search).has('test');
   racine.replaceChildren(h('main', { class: 'connexion' },
-    chouette('clin', { taille: 170, tenue: false }),
+    chouette('clin', { taille: installerDabord ? 110 : 170, tenue: false }),
     h('h1', {}, 'Gdroit'),
-    h('p', { class: 'connexion-sous' }, 'Connecte-toi pour retrouver ta progression sur tous tes appareils.'),
+    installerDabord ? h('section', { class: 'installer installer-connexion' },
+      h('h2', {}, 'D’abord, mets Gdroit sur ton écran d’accueil'),
+      h('p', {}, contexte().ios ? 'Puis connecte-toi depuis l’icône : une connexion faite ici ne la suivrait pas.' : 'Puis connecte-toi depuis l’icône. Une minute, et c’est fait une fois pour toutes.'),
+      guideInstallation()) : null,
+    h('p', { class: 'connexion-sous' }, installerDabord ? 'Déjà dans l’appli, ou tu préfères rester ici ?' : 'Connecte-toi pour retrouver ta progression sur tous tes appareils.'),
     erreur ? h('p', { class: 'connexion-erreur', role: 'alert' }, erreur) : null,
     h('button', { class: 'bouton-or connexion-google', onClick: () => { if (navigator.onLine === false) return toast('Il faut du réseau pour se connecter.'); connexionGoogle(); } }, logoG(), 'Continuer avec Google'),
     // Le code par email attend un service d'envoi (SMTP) : ?email l'affiche pour les tests.
@@ -1611,7 +1691,7 @@ async function ouvrirCompte(params) {
   const requis = Boolean(SUPABASE_URL) && !(params.has('test') && !params.has('compte'));
   if (!requis) return true;
   let erreur = null;
-  try { retourConnexion(); } catch (e) { erreur = e.message; }
+  try { if (retourConnexion()) suivre('connexion', { via: 'google' }); } catch (e) { erreur = e.message; }
   if (!connecte()) { ecranConnexion(erreur); return false; }
   if (navigator.onLine === false) return true;
   racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Ta progression arrive')));
@@ -1690,16 +1770,18 @@ function priseEnMain(depuisProfil = false) {
   let i = 0;
   const contenu = h('div', { class: 'boite prise-en-main', role: 'dialog', 'aria-label': 'Prise en main' });
   const voile = h('div', { class: 'voile' }, contenu);
-  const fermer = () => { voile.remove(); etat.reglages.priseEnMain = true; sauver(); if (!depuisProfil) setTimeout(accueilTesteur, 300); };
+  const fermer = (jouer = false) => { voile.remove(); etat.reglages.priseEnMain = true; sauver(); if (!depuisProfil && !jouer) setTimeout(accueilTesteur, 300); };
+  const premiereFois = !depuisProfil && decouverteDue() && document.querySelector('.tribune');
   const rendre = () => {
     const [pose, titre, texte] = PRISE_EN_MAIN[i];
     const dernier = i === PRISE_EN_MAIN.length - 1;
     contenu.replaceChildren(chouette(pose, { taille: 130, tenue: false }), h('h2', {}, titre), h('p', {}, texte),
       h('div', { class: 'pips-prise', 'aria-label': `Écran ${i + 1} sur ${PRISE_EN_MAIN.length}` }, PRISE_EN_MAIN.map((_, k) => h('i', { class: k === i ? 'actif' : '' }))),
       h('div', { class: 'boite-actions' },
-        dernier ? h('button', { class: 'bouton-or', onClick: () => { fermer(); if (!depuisProfil && document.querySelector('.tribune')) lancerDefi(); } }, depuisProfil ? 'Terminer' : 'Faire mon premier défi')
-          : h('button', { class: 'bouton-or', onClick: () => { i++; son('tap'); rendre(); } }, 'Suivant'),
-        h('button', { class: 'bouton-lien', onClick: fermer }, dernier ? 'Plus tard' : 'Passer')));
+        premiereFois ? h('button', { class: 'bouton-or', 'data-essayer': '', onClick: () => { fermer(true); lancerDecouverte(0); } }, 'Essayer : une minute') : null,
+        dernier ? (premiereFois ? null : h('button', { class: 'bouton-or', onClick: () => { fermer(); if (!depuisProfil && document.querySelector('.tribune')) lancerDefi(); } }, depuisProfil ? 'Terminer' : 'Faire mon premier défi'))
+          : h('button', { class: premiereFois ? 'bouton-fantome' : 'bouton-or', onClick: () => { i++; son('tap'); rendre(); } }, premiereFois && i === 0 ? 'Visite rapide' : 'Suivant'),
+        h('button', { class: 'bouton-lien', onClick: () => fermer() }, dernier ? 'Plus tard' : 'Passer')));
   };
   rendre(); document.body.append(voile);
 }
@@ -1718,6 +1800,9 @@ const BULLES = {
   trous: 'Touche les mots dans l’ordre des trous.',
   express: 'Trouve la phrase qui porte une partie, puis le bon plan.',
   syllogisme: 'Pose la règle, les faits, puis la conclusion. Attention : chaque case a son leurre.',
+  tri: 'Fais glisser la carte vers le bon bord, ou touche le bord.',
+  memory: 'Retourne deux cartes : si elles vont ensemble, elles restent. Retiens bien les autres.',
+  nuancier: 'Fais glisser chaque État vers sa nuance, de l’unitaire à la confédération.',
   casnu: 'Le cas sans les étapes nommées : à toi de savoir où tu en es. Le corrigé vient à la fin.',
   appel: 'Tes erreurs reviennent sous une autre forme. Gagne l’appel pour les sortir du carnet.',
 };
@@ -1737,7 +1822,7 @@ function accueilTesteur() {
   const voile = h('div', { class: 'voile' }, h('div', { class: 'boite accueil-testeur', role: 'dialog', 'aria-label': 'Bienvenue, testeur' },
     chouette('clin', { taille: 120, tenue: false }),
     h('h2', {}, 'Tu es testeur'),
-    h('p', {}, 'Tu fais partie des 28 premiers testeurs de Gdroit. Le but, c’est d’abord de t’amuser en révisant.'),
+    h('p', {}, 'Tu fais partie des premiers testeurs de Gdroit. Le but, c’est d’abord de t’amuser en révisant.'),
     h('p', {}, 'Mais tu as aussi un rôle : repérer ce qui cloche. Une erreur de droit, un écran confus, un bouton qui ne marche pas, une idée : touche « Faire un retour », dans ton profil ou en fin de séance. C’est lu par le créateur de l’appli.'),
     h('div', { class: 'boite-actions' }, h('button', { class: 'bouton-or', onClick: () => { voile.remove(); setTimeout(demanderNotifs, 400); } }, 'C’est parti'))));
   document.body.append(voile);
@@ -1791,11 +1876,54 @@ function faireRetour(ecran) {
   document.body.append(voile); texte.focus();
 }
 
+// L'installation sur l'écran d'accueil, expliquée pour le navigateur qu'on a dans la main.
+// Android (Chrome, Edge, Samsung) propose sa propre fenêtre : un bouton suffit quand elle est prête.
+let invitationAndroid = null;
+addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); invitationAndroid = e; document.querySelectorAll('.installer-direct').forEach((b) => { b.hidden = false; }); });
+addEventListener('appinstalled', () => { invitationAndroid = null; suivre('installer_clic', { fait: true }); });
+const telephone = () => { const c = contexte(); return c.ios || c.android; };
+function copierLien() {
+  const lien = location.origin + location.pathname;
+  (navigator.clipboard?.writeText(lien) || Promise.reject()).then(() => toast('Lien copié.'), () => toast(lien));
+}
 function guideInstallation() {
-  return h('ol', { class: 'guide' },
-    h('li', {}, 'Dans Safari, touche le bouton Partager.'),
-    h('li', {}, 'Choisis « Sur l’écran d’accueil », puis Ajouter.'),
-    h('li', {}, 'Ouvre l’appli depuis sa nouvelle icône.'));
+  const c = contexte();
+  suivre('installer_vu', { os: c.os, nav: c.nav });
+  const etapes = (...l) => h('ol', { class: 'guide', 'data-guide': `${c.os}-${c.nav}` }, l.map((x) => h('li', {}, x)));
+  const icone = 'Ouvre Gdroit depuis sa nouvelle icône, sur l’écran d’accueil.';
+  if (c.inapp) {
+    return h('div', { class: 'guide-bloc' },
+      h('p', {}, c.ios ? 'Tu es dans le navigateur d’une autre appli : l’installation n’y marche pas. Ouvre d’abord Gdroit dans Safari.' : 'Tu es dans le navigateur d’une autre appli : l’installation n’y marche pas. Ouvre d’abord Gdroit dans Chrome.'),
+      etapes(c.ios ? 'Touche les trois points ou l’icône de boussole, puis « Ouvrir dans Safari ». Sinon, copie le lien et colle-le dans Safari.' : 'Touche les trois points, puis « Ouvrir dans Chrome ». Sinon, copie le lien et colle-le dans Chrome.', 'Suis ensuite les étapes qui s’affichent.'),
+      h('button', { class: 'bouton-fantome', onClick: copierLien }, 'Copier le lien'));
+  }
+  if (c.ios && c.nav === 'Chrome') {
+    return etapes('Dans Chrome, touche le bouton Partager, à droite de la barre d’adresse (un carré avec une flèche vers le haut). S’il n’y est pas, touche « ⋯ » en bas, puis Partager.',
+      'Fais défiler et choisis « Sur l’écran d’accueil », puis Ajouter.', icone);
+  }
+  if (c.ios && c.nav !== 'Safari') {
+    return h('div', { class: 'guide-bloc' }, h('p', {}, 'Le plus simple : ouvre ce lien dans Safari, puis suis les étapes.'),
+      etapes('Copie le lien, ouvre Safari et colle-le dans la barre d’adresse.', 'Touche le bouton Partager (un carré avec une flèche), puis « Sur l’écran d’accueil ».', icone),
+      h('button', { class: 'bouton-fantome', onClick: copierLien }, 'Copier le lien'));
+  }
+  if (c.ios) {
+    return etapes('Dans Safari, touche le bouton Partager (un carré avec une flèche vers le haut). S’il n’est pas visible, touche d’abord « ⋯ ».',
+      'Fais défiler et choisis « Sur l’écran d’accueil », puis Ajouter.', icone);
+  }
+  const direct = h('button', { class: 'bouton-or installer-direct', hidden: !invitationAndroid, onClick: async () => {
+    if (!invitationAndroid) return;
+    suivre('installer_clic', { os: c.os, nav: c.nav });
+    invitationAndroid.prompt();
+    const r = await invitationAndroid.userChoice.catch(() => null);
+    if (r?.outcome === 'accepted') toast('Gdroit est sur ton écran d’accueil.');
+    invitationAndroid = null; direct.hidden = true;
+  } }, 'Installer Gdroit');
+  const manuel = c.nav === 'Samsung'
+    ? etapes('Touche le menu (trois traits) en bas à droite.', 'Choisis « Ajouter la page à », puis « Écran d’accueil ».', icone)
+    : c.nav === 'Firefox'
+      ? etapes('Touche les trois points, puis « Installer » ou « Ajouter à l’écran d’accueil ».', icone)
+      : etapes(`Dans ${c.nav === 'Edge' ? 'Edge' : 'Chrome'}, touche les trois points en haut à droite.`, 'Choisis « Ajouter à l’écran d’accueil » ou « Installer l’application », puis Installer.', icone);
+  return h('div', { class: 'guide-bloc' }, direct, manuel);
 }
 
 // DÉMARRAGE --------------------------------------------------------------------------
@@ -1817,6 +1945,7 @@ function surveillerFluidite() {
 
 async function demarrer() {
   const params = new URLSearchParams(location.search);
+  { const c = contexte(); suivre('ouverture', { os: c.os, nav: c.nav, installee: estInstallee(), connecte: connecte(), largeur: innerWidth }); }
   // Un lien d'invitation survit à la connexion : le code attend dans le téléphone.
   if (params.get('ami')) { try { localStorage.setItem('gdroit-ami', params.get('ami')); } catch { /* rien */ } history.replaceState(null, '', location.pathname); }
   // Une ouverture lente : la chouette patiente, montre en main.

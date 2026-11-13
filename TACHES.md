@@ -32,6 +32,14 @@ Ce fichier sert de carnet de transmission entre **Claude** (qui conçoit et brie
 * **Contrôle** : `npm run check` vérifie la structure de chaque cas. Les leurres ont été rallongés pour que la bonne réponse ne se reconnaisse pas à sa longueur.
 * **À faire** : nouveaux cas à chaque séance (inexécution, responsabilité ; en administratif, les séances suivantes).
 
+### 10. Conversion : installation, première séance, suivi
+* **Statut** : 🟡 En ligne, à observer
+* **Constat (13/11)** : 56 inscrits, 16 ont fini une séance (29 %), 9 en ont fait trois ou plus.
+* **Fait** : guide d'installation selon le navigateur (Safari, Chrome iPhone, Chrome/Edge/Samsung Android avec bouton direct, navigateurs d'applis type Instagram) ; sur téléphone, l'écran de connexion propose d'installer d'abord. Première séance d'une matière = un seul exercice (admin : le juge ; oblig : qualifier ; constit : le nuancier ; intro : le tri), puis « Encore une minute » ou le Défi du jour. Message testeur sans « 28 ». Memory L1 : deux cartes ratées restent ouvertes 3 s ou jusqu'au toucher.
+* **Suivi** : table `evenements` (Supabase) via `noter_evenements` ; entonnoir et parcours par compte dans l'admin (`admin_entonnoir`, `admin_parcours`). Page confidentialité mise à jour.
+* **L2** : Memory (arrêt et ce qu'il apporte / article et son objet) et tri (arrêts par famille / situations par chambre), dans Le rôle et parfois en dernière épreuve du Défi.
+* **À faire** : relire les chiffres dans une semaine (admin > Le parcours des testeurs).
+
 ### 9. Obligations, équipe 1 : chambres 13 et 14
 * **Statut** : 🟡 En ligne, à relire par Gaspard
 * **Détail** : la violence (TD 5) n'est plus en travaux ; nouvelle chambre « L'ordre public » (TD 6 : licéité, corps humain, GPA, bonnes mœurs, Gleeden, cagnotte, ostéopathe 2025). Fichiers `content/oblig1/*.txt`.

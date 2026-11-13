@@ -9,17 +9,23 @@ const attendre = (ms) => new Promise((r) => setTimeout(r, duree(ms)));
 const plurielS = (n, s) => `${n} ${s}${n > 1 ? 's' : ''}`;
 
 // LE TRI DU GREFFE ---------------------------------------------------------------------------
-// Une norme sur une carte ; on la jette vers un des quatre bords. Le tampon tombe, la carte s'envole.
+// Une carte ; on la jette vers un des bords. Le tampon tombe, la carte s'envole.
+// En L1 : droit, morale, religion, convenance. En L2, les bords viennent du cours (round.bords).
 const BORDS = { d: ['Droit', 'haut'], m: ['Morale', 'droite'], r: ['Religion', 'bas'], c: ['Convenance', 'gauche'] };
+const COTES = ['haut', 'droite', 'bas', 'gauche'];
 export function jouerTri(zone, ctx, round) {
   return new Promise((fini) => {
+    const l2 = Array.isArray(round.bords);
+    const bords = l2 ? Object.fromEntries(round.bords.map((b, i) => [String(b.k), [b.nom, COTES[i]]])) : BORDS;
+    const parCote = Object.fromEntries(Object.entries(bords).map(([k, [, cote]]) => [cote, k]));
     let i = 0; let bons = 0; let rate = false;
     const pile = h('div', { class: 'tri-pile' });
-    const consigne = h('p', { class: 'tri-consigne' }, 'Jette la carte vers le bon bord.');
+    const consigneBase = round.consigne || 'Jette la carte vers le bon bord.';
+    const consigne = h('p', { class: 'tri-consigne' }, consigneBase);
     const compteur = h('span', { class: 'tri-compte' });
-    const boutons = Object.entries(BORDS).map(([k, [nom, cote]]) => h('button', { class: `tri-bord tri-${cote}`, 'data-bord': k, onClick: () => jeter(k) }, nom));
-    const terrain = h('div', { class: 'tri-terrain' }, boutons, pile);
-    const ecran = h('div', { class: 'ecran tri' }, h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, 'Le tri du greffe ', compteur), consigne), terrain);
+    const boutons = Object.entries(bords).map(([k, [nom, cote]]) => h('button', { class: `tri-bord tri-${cote}`, 'data-bord': k, onClick: () => jeter(k) }, nom));
+    const terrain = h('div', { class: `tri-terrain${l2 ? ' tri-l2' : ''}` }, boutons, pile);
+    const ecran = h('div', { class: 'ecran tri' }, h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, round.titre || 'Le tri du greffe', ' ', compteur), consigne), terrain);
     zone.replaceChildren(ecran);
     let carte = null; let occupe = false;
 
@@ -28,9 +34,9 @@ export function jouerTri(zone, ctx, round) {
       rate = false;
       compteur.textContent = `${i + 1} sur ${round.cartes.length}`;
       const c = round.cartes[i];
-      carte = h('article', { class: 'tri-carte', 'data-bon': repere(c.k) }, h('p', {}, c.t), h('span', { class: 'tri-tampon', 'aria-hidden': 'true' }));
+      carte = h('article', { class: 'tri-carte', 'data-bon': repere(c.k) }, c.s ? h('small', { class: 'tri-sur' }, c.s) : null, h('p', {}, c.t), h('span', { class: 'tri-tampon', 'aria-hidden': 'true' }));
       pile.replaceChildren(carte);
-      consigne.textContent = 'Jette la carte vers le bon bord.';
+      consigne.textContent = consigneBase;
       consigne.classList.remove('explique');
       brancher(carte);
     }
@@ -55,21 +61,22 @@ export function jouerTri(zone, ctx, round) {
       el.addEventListener('pointercancel', lacher);
     }
     const direction = (dx, dy, seuil) => (Math.max(Math.abs(dx), Math.abs(dy)) < seuil ? null
-      : Math.abs(dy) > Math.abs(dx) ? (dy < 0 ? 'd' : 'r') : (dx > 0 ? 'm' : 'c'));
+      : parCote[Math.abs(dy) > Math.abs(dx) ? (dy < 0 ? 'haut' : 'bas') : (dx > 0 ? 'droite' : 'gauche')] || null);
 
     async function jeter(k) {
       if (occupe || !carte) return;
       const c = round.cartes[i];
       occupe = true;
       const tampon = carte.querySelector('.tri-tampon');
-      if (k === c.k) {
+      if (String(k) === String(c.k)) {
         if (!rate) bons++;
         ctx.combo(!rate);
-        tampon.textContent = BORDS[k][0];
+        if (l2 && c.carte) ctx.noter(c.carte, !rate);
+        tampon.textContent = l2 ? 'Rangé' : bords[k][0];
         carte.classList.add('tamponnee');
         son('marteau'); vibrer(14);
-        await attendre(420);
-        carte.classList.add(`vole-${BORDS[k][1]}`);
+        await attendre(l2 ? 360 : 420);
+        carte.classList.add(`vole-${bords[k][1]}`);
         await attendre(380);
         i++; occupe = false; suivante();
       } else {
@@ -78,9 +85,10 @@ export function jouerTri(zone, ctx, round) {
         son('ko'); vibrer([20, 40, 20]);
         carte.style.transform = '';
         carte.classList.remove('tremble'); void carte.offsetWidth; carte.classList.add('tremble');
-        consigne.textContent = `Pas ${BORDS[k][0].toLowerCase() === 'droit' ? 'du droit' : `la ${BORDS[k][0].toLowerCase()}`}. ${c.w}`;
+        const nom = bords[k][0];
+        consigne.textContent = l2 ? `Pas « ${nom} ». ${c.w}` : `Pas ${nom.toLowerCase() === 'droit' ? 'du droit' : `la ${nom.toLowerCase()}`}. ${c.w}`;
         consigne.classList.add('explique');
-        for (const b of boutons) b.classList.toggle('indique', b.dataset.bord === c.k);
+        for (const b of boutons) b.classList.toggle('indique', b.dataset.bord === String(c.k));
         await attendre(500);
         occupe = false;
       }
@@ -91,9 +99,11 @@ export function jouerTri(zone, ctx, round) {
       ctx.gain(Math.round(30 * score) + (bons === n ? 8 : 0));
       fini();
       finEpreuve(zone, ctx, { score, parfait: bons === n },
-        h('p', { class: 'surtitre' }, bons === n ? 'Tout le greffe est rangé du premier coup.' : `${plurielS(bons, 'carte')} sur ${n} du premier coup.`),
-        h('article', { class: 'revelation' }, h('h3', {}, 'Ce qui fait le droit'),
-          h('p', { class: 'apport' }, 'La morale, la religion et les convenances règlent aussi nos conduites. Ce qui distingue le droit, c’est la sanction organisée par l’autorité publique.')));
+        h('p', { class: 'surtitre' }, bons === n ? 'Tout est rangé du premier coup.' : `${plurielS(bons, 'carte')} sur ${n} du premier coup.`),
+        l2 ? h('article', { class: 'revelation' }, h('h3', {}, 'Le classement'),
+          h('ul', { class: 'mem-recap' }, round.cartes.map((c) => h('li', {}, h('b', {}, c.t), ` : ${bords[c.k][0]}. ${c.w}`))))
+          : h('article', { class: 'revelation' }, h('h3', {}, 'Ce qui fait le droit'),
+            h('p', { class: 'apport' }, 'La morale, la religion et les convenances règlent aussi nos conduites. Ce qui distingue le droit, c’est la sanction organisée par l’autorité publique.')));
     }
     suivante();
   });
@@ -386,9 +396,10 @@ export function jouerMemory(zone, ctx, round) {
         h('span', { class: 'mem-dos', 'aria-hidden': 'true' }), h('span', { class: 'mem-face' }, c.t));
       c.el = el; return el;
     });
+    const consigne = h('p', { class: 'mem-consigne' }, round.consigne || 'Retrouve chaque notion et sa définition.');
     const ecran = h('div', { class: 'ecran memory' }, h('div', { class: 'ecran-corps' },
       h('div', { class: 'mem-tete' }, h('p', { class: 'surtitre' }, 'Memory'), dossier),
-      h('p', { class: 'mem-consigne' }, 'Retrouve chaque notion et sa définition.'),
+      consigne,
       h('div', { class: 'mem-grille' }, els)));
     zone.replaceChildren(ecran);
     async function retourner(c, el) {
@@ -409,8 +420,17 @@ export function jouerMemory(zone, ctx, round) {
       } else {
         bloque = true; son('ecart');
         for (const z of [x, y]) erreurs.set(z.p, (erreurs.get(z.p) || 0) + 1);
-        await attendre(850);
+        // Le temps de lire les deux cartes : elles restent ouvertes, puis se referment seules, ou d'un toucher.
+        consigne.textContent = 'Pas une paire. Lis bien, puis touche l’écran pour continuer.';
+        await new Promise((ok) => {
+          const t = setTimeout(fermer, 3200);
+          const tap = () => fermer();
+          function fermer() { clearTimeout(t); ecran.removeEventListener('pointerdown', tap); ok(); }
+          setTimeout(() => ecran.addEventListener('pointerdown', tap), 450);
+        });
+        consigne.textContent = round.consigne || 'Retrouve chaque notion et sa définition.';
         for (const z of [x, y]) { z.el.classList.remove('ouverte'); z.el.setAttribute('aria-label', 'Carte retournée'); }
+        await attendre(250);
         bloque = false;
       }
     }

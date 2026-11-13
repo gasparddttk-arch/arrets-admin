@@ -230,4 +230,18 @@ export const envoyerRetour = (genre, texte, ecran) => api('retours', { method: '
 export const adminQuota = () => rpc('admin_quota');
 export const adminChangerQuota = (n) => rpc('admin_changer_quota', { n });
 export const adminRetours = () => rpc('admin_retours');
+export const adminEntonnoir = (jours) => rpc('admin_entonnoir', { jours });
+export const adminParcours = (cible) => rpc('admin_parcours', { cible });
+
+// Le suivi d'usage : un lot d'étapes, envoyé connecté ou non (l'ouverture précède le compte).
+export async function envoyerEvenements(appareil, lot) {
+  let t = SUPABASE_CLE;
+  if (connecte()) { try { t = await jeton(); } catch { t = SUPABASE_CLE; } }
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/noter_evenements`, {
+    method: 'POST', keepalive: true,
+    headers: { apikey: SUPABASE_CLE, Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ appareil, lot }),
+  });
+  if (!r.ok) throw new Error(`Suivi indisponible (${r.status})`);
+}
 export const adminTraiterRetour = (retour, fait) => rpc('admin_traiter_retour', { retour, fait });

@@ -363,6 +363,13 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .code { width: 100%; background: var(--carte-bas); color: var(--texte); border: 0; box-shadow: inset 0 0 0 1px var(--carte-bord); border-radius: 10px; padding: 10px 12px; font-size: 16px; margin-top: 10px; display: block; }
 .code::placeholder { color: var(--texte-2); }
 .guide { list-style: decimal; padding-left: 22px; }
+.guide li + li { margin-top: 6px; }
+.guide-bloc { display: grid; gap: 10px; }
+.guide-bloc > p { margin: 0; }
+.installer .bouton-fantome { color: var(--papier-texte); border-color: var(--papier-bord); }
+.installer-direct { width: 100%; }
+.installer-connexion { margin: 4px 0 14px; text-align: left; width: 100%; }
+.installer-connexion h2 { font-size: 19px; }
 .version { color: var(--texte-2); font-size: 15px; margin-top: 18px; }
 .images-perso { display: grid; gap: 10px; }
 .ligne-image { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: linear-gradient(180deg, var(--carte-haut), var(--carte-bas)); box-shadow: inset 0 0 0 1px var(--carte-bord); }
@@ -1690,3 +1697,25 @@ body:has(#onglets[hidden]) .maj { display: none; }
 .at-copie p { margin: 6px 0; }
 .at-rouge { color: #C2264F; text-decoration-thickness: 2px; }
 .at-correction { color: #C2264F; font-style: italic; }
+
+/* Administration : le parcours des testeurs. */
+.entonnoir { display: grid; gap: 8px; margin: 8px 0 14px; }
+.entonnoir li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: baseline; font-size: 16px; }
+.entonnoir li b { font-family: var(--ui); font-variant-numeric: tabular-nums; }
+.entonnoir li small { color: var(--texte-2); font-weight: 400; }
+.entonnoir li i { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--banc-fort); position: relative; overflow: hidden; }
+.entonnoir li i::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--or); border-radius: 3px; }
+.admin-suivi h3 { margin-top: 10px; }
+.parcours-liste { display: grid; gap: 6px; font-size: 15px; max-height: 50vh; overflow: auto; padding-left: 18px; }
+.parcours-liste small { color: var(--texte-2); }
+.decouverte-suite { display: grid; gap: 10px; margin: 6px 0 4px; text-align: center; }
+.decouverte-suite p { color: var(--texte-2); font-size: 17px; }
+
+/* Le tri en L2 : des bords plus longs (chambres, familles), écrits à la verticale sur les côtés. */
+.tri-l2 .tri-bord { font-size: 13px; padding: 8px 12px; max-width: calc(100% - 24px); line-height: 1.2; text-align: center; }
+.tri-l2 .tri-gauche, .tri-l2 .tri-droite { writing-mode: vertical-rl; max-height: calc(100% - 120px); max-width: none; margin: 0; padding: 12px 8px; }
+.tri-l2 .tri-gauche { left: 6px; transform: translateY(-50%) rotate(180deg); }
+.tri-l2 .tri-droite { right: 6px; transform: translateY(-50%); }
+.tri-l2 .tri-pile { inset: 60px 50px; }
+.tri-sur { display: block; margin-bottom: 6px; color: var(--papier-texte); opacity: .7; font: 600 13px var(--ui); }
+.tri-l2 .tri-carte p { font-size: 18px; }
