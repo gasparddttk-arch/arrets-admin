@@ -199,7 +199,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : `npm test` vert ; capture `memory-memorise.png` en 390 px, sans débordement.
 
 ### [TÂCHE L] La production réservée aux modes d'examen et aux audiences (Antigravity)
-- **Statut** : À faire
+- **Statut** : Prêt pour Claude (suite verte le 14/11 à 02h21 sur ab06d71)
 - **Décisions de Gaspard (13/11)** : l'audience garde ses 3 vies, avec au moins un exercice de production qui compte comme les autres (le rater coûte une vie). « Première instance » reste un échauffement sans production ; la production commence à « Appel ».
 - **Définition** : exercices de **production** = `atelier`, `architecte`, `plaide`, `trous`, `syllogisme`, `casnu`, et plus tard `formule` en version entière. Tous les autres sont de reconnaissance.
 - **Fichiers concernés** : `app/js/engine.js` (`composerDefi`, `composerBoss`, `composerBossIntro`), `app/js/main.js` (`NIVEAUX_EXAMEN`, `lancerExpress`, `reviserZone`, `DECOUVERTE`), `tests/run.cjs`
@@ -305,6 +305,14 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 ---
 
 ## Dernières actions exécutées par Antigravity
+- **14/11/2026 (Tâche L)** :
+  - `app/js/engine.js` : export de `PRODUCTION` et du helper `estProduction`, implémentation de `roundTrous` et `roundPlaide` intégrés à `tirerRound` et `tirerOblig`.
+  - Retrait d'`architecte` du défi du jour administratif dans `composerDefi` (remplacé par `plan`) et exclusion de `plume` dans `composerDefiIntro`.
+  - `composerBoss` et `composerBossIntro` : composition des 6 épreuves de chaque audience avec exactement une épreuve de production selon l'ordre de préférence fixé (obligations : formule entière > atelier > trous > plaide ; administratif : formule entière > architecte > atelier > trous > plaide ; L1 : formule entière > plume > mot à défaut), jamais en première position.
+  - `app/js/main.js` : remplacement de `plume` par `nuancier` dans les Trois minutes de droit constitutionnel (`lancerExpress`) et filtrage de `plume` dans `reviserZone`. Vérification des niveaux d'examen (`NIVEAUX_EXAMEN`).
+  - `app/js/examen.js` : réutilisation de `roundTrous` et `roundPlaide` partagés depuis `engine.js`.
+  - `tests/run.cjs` : ajout du bloc de test `production` (groupe 1) validant 200 défis du jour, Trois minutes et révisions sans production par matière (rng fixe), et 200 audiences par matière contenant exactement une production jamais en premier.
+  - Suite de tests validée : `npm run check`, `npm run build`, `npm test` vert (538.0s).
 - **14/11/2026 (Tâche O)** :
   - `app/js/jeux-l1.js` : phase de mémorisation initiale au lancement du Memory : 12 cartes visibles (`ouverte`), non cliquables, consigne avec compte à rebours dynamique de 20s (`.mem-rebours`) et bouton discret « C’est mémorisé » (`.mem-pret`) qui referme les cartes immédiatement.
   - Nettoyage du chronomètre si le joueur quitte l'écran ou au terme des 20s.
