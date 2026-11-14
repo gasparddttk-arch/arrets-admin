@@ -29,7 +29,7 @@ Antigravity : voir `AGENTS.md` pour la marche à suivre. À faire dans l'ordre. 
 - **Validation attendue** : nouveau `log('annonce admin ok')`, suite complète verte.
 
 ### [TÂCHE C] Corrections iPhone des jeux L1 (attend les retours de Gaspard)
-- **Statut** : À faire, attend les retours iPhone de Gaspard
+- **Statut** : En attente : premier passage de Gaspard sur iPhone le 14/11 sans défaut relevé ; retours plus tard
 - **Fichiers concernés** : `app/js/jeux-l1.js`, `app/css/app.css`
 - **Objectif** : appliquer les retours de Gaspard sur le tri, le rangement, Qui a dit ?, Memory et la frise, un retour par commit.
 - **Contraintes** : DOM uniquement avec `h()`, tokens CSS de `:root`, textes sobres. Vérifier chaque écran en 390 px de large (fonction `debordement` des tests).
@@ -231,7 +231,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 * **Action** : Ajouter le nom du professeur dès communication par Gaspard.
 
 ### 2. Relecture et ajustement du contenu L1
-* **Statut** : 🟡 En attente de relecture Gaspard
+* **Statut** : 🟢 Relu par Gaspard le 14/11 : cohérent, rien à corriger
 * **Fichier concerné** : `content/intro.mjs`
 * **Détail** : Relire les 87 notions, les cartes de tri, citations, mots et scanner. Appliquer les corrections éventuelles.
 
