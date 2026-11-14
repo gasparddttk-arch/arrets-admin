@@ -1044,6 +1044,57 @@ async function execGroupe1(b, PORT, erreurs) {
     await rc.close();
     log('rangement L2 ok');
   }
+
+  // 14b. Animations de passage d'écran et du Palais (Tâche P)
+  if (matchSeul('animations')) {
+    const ac = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR' });
+    const ap = await ac.newPage();
+    await ap.goto(`${URLB}?test&anim`);
+    await ap.waitForSelector('.tribune');
+
+    await debordement(ap, 'Palais initial avec animations');
+
+    // Navigation Palais -> Vers l'examen
+    await ap.locator('.role-ligne[data-mode="vers-examen"]').click();
+
+    // 1. Le nouvel écran est cliquable tout de suite
+    const btnNiveau1 = ap.locator('.role-ligne[data-mode="niveau-1"]');
+    assert(await btnNiveau1.isVisible(), 'Nouvel écran visible tout de suite');
+    const pointerEvents = await btnNiveau1.evaluate((el) => window.getComputedStyle(el).pointerEvents);
+    assert.notEqual(pointerEvents, 'none', 'Nouvel écran cliquable tout de suite');
+
+    // Débordement pendant l'animation
+    await debordement(ap, 'Pendant animation navigation');
+
+    // 2. Le clone sortant a disparu au bout de 700 ms
+    await ap.waitForTimeout(700);
+    const clonesRestants = await ap.locator('.clone-sortant').count();
+    assert.equal(clonesRestants, 0, 'Le clone sortant a disparu au bout de 700 ms');
+
+    // Débordement après l'animation
+    await debordement(ap, 'Après animation navigation');
+
+    // 3. Navigation retour vers le Palais
+    await ap.locator('.bouton-matiere:has-text("Retour au Palais")').click();
+    await ap.waitForSelector('.tribune');
+    await debordement(ap, 'Pendant animation retour');
+
+    await ap.waitForTimeout(700);
+    assert.equal(await ap.locator('.clone-sortant').count(), 0, 'Le clone sortant de retour a disparu au bout de 700 ms');
+    await debordement(ap, 'Palais après retour');
+
+    // 4. Test navigation par onglet (Chambres)
+    await ap.locator('button.onglet[data-onglet="carte"]').click();
+    await ap.waitForSelector('.page');
+    await debordement(ap, 'Pendant animation onglet');
+
+    await ap.waitForTimeout(700);
+    assert.equal(await ap.locator('.clone-sortant').count(), 0, 'Le clone sortant d’onglet a disparu au bout de 700 ms');
+    await debordement(ap, 'Chambres après animation');
+
+    await ac.close();
+    log('animations ok');
+  }
 }
 
 // -----------------------------------------------------------------------------

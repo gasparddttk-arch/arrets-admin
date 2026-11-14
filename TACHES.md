@@ -224,7 +224,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : test : une séance avec deux erreurs volontaires → le lendemain (`?decalage=1`), l'entrée « À revoir aujourd'hui » affiche 2 fiches → la séance les propose → après réussite, l'entrée disparaît. Suite complète verte.
 
 ### [TÂCHE P] Animations : passages d'écran et ouverture du Palais (Antigravity)
-- **Statut** : À faire
+- **Statut** : Prêt pour Claude (vidéos dans .antigravity/videos)
 - **Demande de Gaspard (14/11)** : le style graphique est bon mais manque de mouvement. Priorités : passages d'écran et Palais à l'ouverture. Intensité : très expressive (rebonds, effet ressort), sans gêner quand on enchaîne. **Rien n'est mis en ligne avant que Gaspard ait vu une vidéo de chaque animation.** Ne pas merger : livrer sur `antigravity/lot` avec les vidéos.
 - **Fichiers concernés** : `app/js/main.js` (`montrer`, `aller`, `lancer`, `accueil`, `resultats`, barre d'onglets), `app/css/app.css` (keyframes regroupées dans un bloc « Mouvement »), `tests/run.cjs`
 - **Courbes et durées (tokens à ajouter dans `:root`)** : `--ressort: cubic-bezier(.34, 1.56, .64, 1)` (dépassement), `--sortie: cubic-bezier(.4, 0, 1, 1)`, `--t-court: 180ms`, `--t-moyen: 340ms`, `--t-long: 520ms`. Aucune animation ne dépasse 700 ms au total ; l'écran reste cliquable dès le premier instant (jamais de `pointer-events: none` sur le nouvel écran).
@@ -335,6 +335,19 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 ---
 
 ## Dernières actions exécutées par Antigravity
+- **14/11/2026 (Tâche P)** :
+  - `app/css/app.css` : ajout des tokens de mouvement dans `:root` (`--ressort`, `--sortie`, `--t-court`, `--t-moyen`, `--t-long`), règles pour `.clone-sortant`, gestion de la pastille d'onglet unique `.onglet-pastille`, adaptation accessibilité pour `prefers-reduced-motion` et `[data-effets='non']` / `[data-effets='leger']`, ajout de `overflow-x: clip` sur `html, body`.
+  - `app/js/main.js` :
+    - Mise en place des transitions synchrones dans `montrer()` avec clonage de l'écran sortant (`.clone-sortant`) et Web Animations API selon le sens (`avant`, `arriere`, `onglet`, `neutre`).
+    - Orientation du sens de navigation dans `aller()` et sur tous les boutons retour (`fixerSens('arriere')`).
+    - Animation d'entrée des épreuves en carte sur la table et rebond de la pastille dans `lancer()`.
+    - Cascade d'entrée des cartes de statistiques, rebond du titre et défilement progressif des nombres sur 600ms dans `resultats()`.
+    - Animations d'ouverture du Palais conditionnées par `animerPalais` : descente du bandeau supérieur, montée avec rebond de la carte série, défilement du compteur de série, apparition en cascade des sceaux de la semaine avec effet cachet sur aujourd'hui, saut de la chouette, cascade des tuiles du Palais et pop du compteur de jetons en cas de gain.
+    - Glissement fluide de la pastille `.onglet-pastille` dans `afficherOnglets()` et rebond sur l'icône touchée.
+    - Respect des réglages d'effets visuels et désactivation en mode test sauf si `&anim` est présent.
+  - `tests/run.cjs` : ajout du bloc de test `animations` (groupe 1) vérifiant sous `?test&anim` la disparition du clone sous 700ms, l'interactivité immédiate du nouvel écran et l'absence de débordement horizontal pendant et après l'animation.
+  - `scripts/antigravity/videos-p.cjs` : génération automatique des 5 vidéos de démonstration sur iPhone 13 dans `.antigravity/videos/` (`P1-passages.webm`, `P2-epreuves.webm`, `P3-resultats.webm`, `P4-palais.webm`, `P5-onglets.webm`).
+  - Validation : `npm run check`, `npm run build`, suite complète `NODE_PATH=$(npm root -g) node tests/run.cjs --parallele` 100% verte (514.9s).
 - **14/11/2026 (Tâche L)** :
   - `app/js/engine.js` : export de `PRODUCTION` et du helper `estProduction`, implémentation de `roundTrous` et `roundPlaide` intégrés à `tirerRound` et `tirerOblig`.
   - Retrait d'`architecte` du défi du jour administratif dans `composerDefi` (remplacé par `plan`) et exclusion de `plume` dans `composerDefiIntro`.
