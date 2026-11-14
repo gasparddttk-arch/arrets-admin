@@ -253,6 +253,117 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Contraintes** : DOM avec `h()` uniquement ; une seule feuille `app/css/app.css` ; pas de bibliothèque ; animer seulement `transform` et `opacity` ; ne pas toucher aux animations existantes des jeux.
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte, les 5 vidéos présentes. Statut : `Prêt pour Claude (vidéos dans .antigravity/videos)`. **Ne pas considérer la tâche comme publiable** : Claude montre les vidéos à Gaspard avant tout merge.
 
+## Cahier des charges n° 3 : corrections de l'audit du 14/11 (15–20/11/2026)
+
+Plan complet : https://claude.ai/artifact/4uVgRbEGp8ExbrvpTpbAfL (rapport : `notes/audit-securite-code.md`).
+Antigravity ne prend que les tâches au statut exact « À faire ». Les autres sont prévues un jour précis : Claude passe leur statut à « À faire » le matin du jour prévu. Au plus 2 h 45 de travail par session ; si une tâche déborde, s'arrêter proprement (commit « WIP »), statut « Prêt pour Claude (incomplet) », et noter où l'on en est.
+Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 1 de `tests/run.cjs`.
+
+### [TÂCHE 1a] Mode test réservé à la machine locale
+- **Statut** : À faire
+- **Fichiers concernés** : `app/js/ui.js`, `app/js/main.js`, `app/js/suivi.js`, `app/js/chouette.js`, `app/js/jeux-l1.js`, `tests/run.cjs`
+- **Objectif** : aujourd'hui `https://gdroit.eu/?test` ouvre l'appli sans compte et écrit les bonnes réponses dans le DOM. `?test` ne doit plus rien changer hors de la machine de développement.
+- **Détails de modification** :
+  - Dans `ui.js`, ajouter et exporter : `export const modeTest = () => typeof location !== 'undefined' && new URLSearchParams(location.search).has('test') && ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);`
+  - Remplacer **chaque** lecture de `has('test')` par `modeTest()`, en gardant les autres conditions telles quelles (ex. `p.has('test') && !p.has('anim')` devient `modeTest() && !p.has('anim')`). Occurrences au 15/11 : chouette.js 143 et 177 ; jeux-l1.js 75 ; main.js 103, 208, 287, 509, 735, 2149, 2223, 2298, 2411, 2428, 2431, 2432, 2442, 2443, 2446, 2450 ; suivi.js 26 ; ui.js 35 et 92. Vérifier par `grep -n "has('test')" app/js/*.js` qu'il n'en reste aucune.
+  - `suivi.js` n'importe pas `ui.js` : y importer `modeTest` depuis `./ui.js` (pas d'import circulaire : ui.js n'importe ni suivi.js ni compte.js).
+- **Contraintes** : aucun changement de comportement sur localhost (toute la suite existante doit rester verte sans modification).
+- **Test à ajouter** (`matchSeul('mode test')`) : servir `docs/` comme les autres tests, ouvrir `http://127.0.0.1:<port>/?test` et vérifier que `window.__app` existe ; puis ouvrir `http://gdroit.localhost:<port>/?test` (Chromium résout `*.localhost` vers la machine) et vérifier que `window.__app` est `undefined` et qu'aucun élément `[data-ok]` n'existe.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
+### [TÂCHE 7a] Une épreuve qui plante ne bloque plus la séance
+- **Statut** : À faire
+- **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
+- **Objectif** : une erreur levée immédiatement par un jeu échappe aujourd'hui au `.catch` et fige la séance.
+- **Détails de modification** :
+  - Ligne ~940 : remplacer `Promise.resolve(TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {` par `Promise.resolve().then(() => TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {` (corps du catch inchangé). Ajouter dans ce catch : `suivre('erreur', { type: String(r.type).slice(0, 30), m: String(e?.message || e).slice(0, 120) });`.
+  - Dans `demarrer()`, à côté des écouteurs `online` / `visibilitychange` (~ligne 2464), ajouter : `window.addEventListener('unhandledrejection', (e) => suivre('erreur', { m: String(e.reason?.message || e.reason).slice(0, 120) }));`
+- **Test à ajouter** (`matchSeul('epreuve en erreur')`) : en mode test, lancer via `window.__app` une séance dont un round a `type: 'inexistant'` ; vérifier que le texte « Cette épreuve n’a pas pu s’afficher » apparaît et que « Continuer » mène à l'épreuve suivante ou aux résultats.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
+### [TÂCHE 7b] Minuteurs et écouteurs arrêtés quand on quitte une épreuve
+- **Statut** : Prévu le lundi 16/11
+- **Fichiers concernés** : `app/js/jeux-l1.js`, `app/js/dunk.js`, `app/js/main.js`, `tests/run.cjs`
+- **Objectif** : après « Quitter », certaines boucles continuent sur un écran détaché.
+- **Détails de modification** (le contexte de jeu offre `ctx.nettoyage(fonction)`, appelée à la sortie de séance) :
+  - `jeux-l1.js`, mot mystère (~ligne 140) : juste après `document.addEventListener('keydown', physique);`, ajouter `ctx.nettoyage(() => document.removeEventListener('keydown', physique));`.
+  - `jeux-l1.js`, pièces qui tombent (~ligne 210–223) : ajouter `ctx.nettoyage(() => { cancelAnimationFrame(anim); fini_ = true; });` à la création du jeu (adapter le nom des variables si besoin).
+  - `dunk.js` (~ligne 135) : ajouter `ctx.nettoyage(() => clearInterval(minuteur));` une fois, à la création.
+  - `main.js`, chrono du partiel (~ligne 828) : après `const tic = setInterval(...)`, ajouter `S.nettoyer.push(() => clearInterval(tic));`.
+- **Test à ajouter** (`matchSeul('quitter en cours')`) : lancer une séance en mode test, quitter au milieu d'une épreuve dunk puis d'une épreuve « pièces » ; attendre 3 s ; aucune erreur `pageerror`, et `document.querySelectorAll('.dunk, .rg-piece').length === 0`.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
+### [TÂCHE 5a] Défi d'ami illisible refusé proprement
+- **Statut** : Prévu le lundi 16/11
+- **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
+- **Détails de modification** : dans `releverDefi` (~ligne 1925), juste après le test `d.statut !== 'ouvert'`, ajouter :
+  `if (!Array.isArray(d.rounds) || !d.rounds.length || d.rounds.length > 8 || d.rounds.some((r) => !r || !TOUS_JEUX[r.type])) return toast('Ce défi est illisible.');`
+- **Test à ajouter** (`matchSeul('defi illisible')`) : intercepter avec `page.route` l'appel `rpc/lire_defi` pour renvoyer un défi ouvert dont `rounds` vaut `[{ "type": "inexistant" }]`, appeler `releverDefi` (l'exposer dans `window.__app` si besoin) et vérifier le toast « Ce défi est illisible. » et l'absence de séance.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
+### [TÂCHE 3b] Appareils : inscription par la fonction serveur, désinscription à la déconnexion
+- **Statut** : Prévu le mardi 17/11 (après la mise en base de `inscrire_appareil` par Claude)
+- **Fichiers concernés** : `app/js/compte.js`, `app/js/notif.js`, `tests/run.cjs`
+- **Détails de modification** :
+  - `compte.js` ligne ~226 : `inscrireAppareil` devient `(abonnement) => rpc('inscrire_appareil', { point: abonnement.endpoint, abonnement })`.
+  - Ajouter `export const retirerAppareil = (point) => api(\`appareils?point=eq.${encodeURIComponent(point)}\`, { method: 'DELETE', prefer: 'return=minimal' });`
+  - Dans `deconnexion()` (ligne ~81), avant l'appel `logout` : récupérer l'abonnement (`const reg = await navigator.serviceWorker?.getRegistration(); const ab = await reg?.pushManager?.getSubscription();`), puis si `ab` : `try { await retirerAppareil(ab.endpoint); } catch {}` et `try { await ab.unsubscribe(); } catch {}`. Tout dans des `try`, la déconnexion ne doit jamais échouer à cause de ça.
+- **Test à ajouter** (`matchSeul('deconnexion appareil')`) : avec `page.route`, simuler une session et un abonnement (ou vérifier simplement qu'une requête `DELETE .../appareils?point=` part quand un abonnement existe) ; sans abonnement, la déconnexion se fait sans erreur.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
+### [TÂCHE 4c] Envoi après un achat ; confirmation avant une déconnexion qui perdrait des données
+- **Statut** : Prévu le mardi 17/11
+- **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
+- **Détails de modification** :
+  - Dans `acheter(item)` (~ligne 1433), après la sauvegarde de l'achat réussi : `setTimeout(envoyerProgression, 1000);` (la fin de séance envoie déjà, ligne ~1002).
+  - Les deux boutons « Se déconnecter » (lignes ~2105 et ~2206) appellent une nouvelle fonction `async function seDeconnecter()` :
+    1. `const ok = await envoyerProgression();`
+    2. si `ok === false` et `etat.modifie > (etat.compte?.sync || 0)` : ouvrir un voile (même modèle que les autres fenêtres, classe `voile` + `boite`) avec le titre « Ta dernière séance n’est pas encore sauvegardée », le texte « Te déconnecter maintenant l’effacera de ce téléphone. Reconnecte-toi à internet pour la garder. » et deux boutons : « Rester connecté » (ferme le voile) et « Me déconnecter quand même » (continue) ;
+    3. sinon, ou après confirmation : `await deconnexion(); remplacerEtat({}); location.reload();`.
+  - Textes à reprendre exactement (apostrophes typographiques comprises).
+- **Test à ajouter** (`matchSeul('deconnexion hors ligne')`) : simuler `navigator.onLine === false` (`context.setOffline(true)`) avec un état modifié ; cliquer « Se déconnecter » : la fenêtre apparaît ; « Rester connecté » la ferme sans déconnecter.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
+### [TÂCHE 11a] Politique de sécurité du contenu (CSP)
+- **Statut** : Prévu le mercredi 18/11
+- **Fichiers concernés** : `app/index.html`, `app/partager.html`, `scripts/build.mjs`, `tests/run.cjs`
+- **Détails de modification** :
+  - Dans les deux pages, ajouter dans `<head>` : `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; media-src 'self' blob:; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">`.
+  - Vérifier qu'aucun `<script>` en ligne n'existe dans `app/index.html` (sinon le déplacer dans un fichier `.js`).
+- **Test à ajouter** (`matchSeul('csp')`) : ouvrir l'accueil, une séance, la boutique et `partager.html` en collectant les messages console ; échouer si un message contient « Content Security Policy ».
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte (aucune violation CSP dans toute la suite : ajouter si possible la vérification console aux pages existantes).
+
+### [TÂCHE 8b] Sauvegarde groupée
+- **Statut** : Prévu le mercredi 18/11
+- **Fichiers concernés** : `app/js/state.js`, `tests/run.cjs`
+- **Détails de modification** :
+  - `sauver()` (ligne ~274) met `etat.modifie = Date.now()` tout de suite, mais l'écriture (`JSON.stringify`, `localStorage.setItem`, `ecrireSecours`) passe dans une fonction `ecrire()` appelée par un `setTimeout(ecrire, 300)` (un seul minuteur à la fois : `clearTimeout` avant).
+  - Exporter `sauverMaintenant()` qui annule le minuteur et appelle `ecrire()` tout de suite. L'appeler sur `visibilitychange` (page cachée) et `pagehide`, enregistrés une fois dans `state.js`.
+- **Test à ajouter** (`matchSeul('sauvegarde groupee')`) : finir une séance, recharger aussitôt la page (moins de 300 ms), vérifier que les points de la séance sont toujours là.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
+### [TÂCHE 7c] Fenêtres accessibles au clavier
+- **Statut** : Prévu le jeudi 19/11 (à finir le vendredi 20/11 si besoin)
+- **Fichiers concernés** : `app/js/ui.js`, `app/js/main.js`, `app/js/atelier.js`, `app/js/lexique.js`, `tests/run.cjs`
+- **Détails de modification** :
+  - Dans `ui.js`, exporter `ouvrirVoile(boite, { fermer } = {})` : crée `h('div', { class: 'voile' }, boite)`, pose sur `boite` `role="dialog"` (si absent) et `aria-modal="true"`, l'ajoute au `body`, mémorise `document.activeElement`, place le focus sur le premier élément focalisable de la boîte (sinon sur la boîte avec `tabindex="-1"`), ferme sur Échap et sur un clic dans le voile hors de la boîte, garde Tab dans la boîte, et à la fermeture retire l'écouteur clavier et rend le focus à l'élément mémorisé. Renvoie une fonction `fermer()`.
+  - Remplacer les 17 créations de voile de `main.js` (`grep -n "class: 'voile'" app/js/main.js`) par `ouvrirVoile(...)`, sans changer leur contenu ni leurs textes. Les boutons qui faisaient `voile.remove()` appellent la fonction `fermer` renvoyée.
+  - `atelier.js` ligne ~57, `lexique.js` ligne ~34 et `ui.js` ligne ~374 (`role: 'button'`) : ajouter `onKeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } }`.
+- **Contraintes** : rendu visuel identique ; ne pas toucher au voile de Lexou en colère (`.colere-voile`, il gère déjà Échap).
+- **Test à ajouter** (`matchSeul('fenetres clavier')`) : ouvrir « Faire un retour » et la boutique : le focus est dans la boîte, Échap ferme, le focus revient au bouton d'origine.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
+### [TÂCHE 8a] Lexou : une planche décodée à la fois
+- **Statut** : Prévu le vendredi 20/11
+- **Fichiers concernés** : `app/js/lexou.js`
+- **Objectif** : aujourd'hui toutes les planches d'une animation sont décodées avant le départ (près de 100 Mo de mémoire sur iPhone).
+- **Détails de modification** :
+  - `lexouAnime` attend seulement la planche 0 puis lance ; pendant la lecture de la planche k, il précharge la planche k+1 (`new Image()` + `decode()`). Si la planche suivante n'est pas prête quand on y arrive, rester sur la dernière image affichée et réessayer à l'image suivante.
+  - `prechargerLexou(nom)` garde son comportement (toutes les planches) : il sert au voile de Lexou en colère, qui doit être prêt d'un coup.
+  - Dans `tic`, ne réécrire `background-image` / `background-position` que si l'indice d'image a changé.
+- **Contraintes** : aucun changement visible. Claude enregistre une vidéo avant/après pour Gaspard avant publication.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
 ## Tâches en attente (Roadmap)
 
 ### 1. Nom du professeur de l'équipe 3 en L1
