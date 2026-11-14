@@ -1715,7 +1715,7 @@ async function execGroupe3(b, PORT, erreurs) {
   // 37. Annonce admin & Compte
   if (matchSeul('annonce admin') || matchSeul('compte')) {
     const SUPA = 'https://jhpgxisxayceixmppxuu.supabase.co';
-    const faux = { progression: null, envois: [], signalements: [], otp: [], rpc: [], pousse: 0, defi: null, retours: [], acces: 'admin' };
+    const faux = { progression: null, envois: [], signalements: [], otp: [], rpc: [], pousse: 0, defi: null, retours: [], acces: 'admin', amis: null, defis: null, lire_defi: null, notifications: null };
     const jourParis = (() => { const t = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).split('-').map(Number); return Math.floor(Date.UTC(t[0], t[1] - 1, t[2]) / 864e5); })();
     const lundiT = jourParis - ((new Date(jourParis * 864e5).getUTCDay() + 6) % 7);
     const simuler = async (ctx) => ctx.route(SUPA + '/**', async (route) => {
@@ -1740,13 +1740,16 @@ async function execGroupe3(b, PORT, erreurs) {
         if (nom === 'admin_quota') return json({ quota: 28, testeurs: 4, sans_acces: 0 });
         if (nom === 'admin_notifier') return json(4);
         if (nom === 'admin_retours') return json([{ id: 1, genre: 'interface', texte: 'Le bouton est trop petit', ecran: 'Profil', pseudo: 'Camille', cree_le: new Date().toISOString(), traite: false }]);
-        if (nom === 'mes_amis') return json([{ id: 'u-2', pseudo: 'Camille', equipe: 1, lien: 'ami', masque: false, resume: { jour: jourParis, serie: 3, sceau: true, grade: 'Licencié en droit', xp: 900, xpAdmin: 500, xpOblig: 400, semaine: lundiT, xpSemaine: 5240, maitrises: 12, equipe: 1, seances: 20 } }, { id: 'u-3', pseudo: 'Léa', lien: 'recue' }]);
-        if (nom === 'mes_notifications') return json([{ id: 1, type: 'demande', pseudo: 'Léa', donnees: {}, cree_le: new Date().toISOString(), lu: false }, { id: 2, type: 'defi_recu', pseudo: 'Camille', donnees: { defi: 'd-1' }, cree_le: new Date().toISOString(), lu: false }]);
-        if (nom === 'mes_defis') return json([{ id: 'd-1', recu: true, autre: 'u-2', pseudo: 'Camille', matiere: 'admin', score_auteur: 0.5, statut: 'ouvert', cree_le: new Date().toISOString() }]);
+        if (nom === 'mes_amis') return json(faux.amis || [{ id: 'u-2', pseudo: 'Camille', equipe: 1, lien: 'ami', masque: false, resume: { jour: jourParis, serie: 3, sceau: true, grade: 'Licencié en droit', xp: 900, xpAdmin: 500, xpOblig: 400, semaine: lundiT, xpSemaine: 5240, maitrises: 12, equipe: 1, seances: 20 } }, { id: 'u-3', pseudo: 'Léa', lien: 'recue' }]);
+        if (nom === 'mes_notifications') return json(faux.notifications || [{ id: 1, type: 'demande', pseudo: 'Léa', donnees: {}, cree_le: new Date().toISOString(), lu: false }, { id: 2, type: 'defi_recu', pseudo: 'Camille', donnees: { defi: 'd-1' }, cree_le: new Date().toISOString(), lu: false }]);
+        if (nom === 'mes_defis') return json(faux.defis || [{ id: 'd-1', recu: true, autre: 'u-2', pseudo: 'Camille', matiere: 'admin', score_auteur: 0.5, statut: 'ouvert', cree_le: new Date().toISOString() }]);
         if (nom === 'mes_bloques') return json([]);
         if (nom === 'demander_ami') return json('envoyee');
         if (nom === 'creer_defi') { faux.defi = corps; return json('d-2'); }
-        if (nom === 'lire_defi') return json({ id: 'd-1', statut: 'ouvert', matiere: 'admin', equipe: null, score_auteur: 0.5, pseudo_auteur: 'Camille', rounds: faux.defi.rounds });
+        if (nom === 'lire_defi') {
+          if (faux.lire_defi) return json(typeof faux.lire_defi === 'function' ? faux.lire_defi(corps) : faux.lire_defi);
+          return json({ id: 'd-1', statut: 'ouvert', matiere: 'admin', equipe: null, score_auteur: 0.5, pseudo_auteur: 'Camille', rounds: faux.defi?.rounds || [] });
+        }
         return route.fulfill({ status: 204 });
       }
       if (u.pathname === '/rest/v1/profils') return route.fulfill({ status: 204 });
@@ -1843,6 +1846,86 @@ async function execGroupe3(b, PORT, erreurs) {
     assert.equal(faux.rpc.find(([n]) => n === 'repondre_defi')[1].defi, 'd-1', 'score renvoyé');
     assert.match(await k1.locator('.resultats').innerText(), /Camille/, 'comparaison avec Camille');
     await k1.tap('text=Retour au Palais');
+    // Défis entre amis en L1 : comparaison, matières selon l'équipe et refus si équipe différente en intro.
+    await k1.evaluate(() => {
+      const e = window.__app.etat();
+      e.annee = 'L1';
+      e.equipeL1 = 2;
+      if (!e.constit || !e.constit.zones) e.constit = { xp: 150, zones: { ouvertes: [1, 2], gagnees: [], parfaites: [] }, arrets: {}, gains: { jour: null, n: 0 } };
+      else e.constit.xp = 150;
+      if (!e.intro || !e.intro.zones) e.intro = { xp: 80, zones: { ouvertes: [1, 2], gagnees: [], parfaites: [] }, arrets: {}, gains: { jour: null, n: 0 } };
+      else e.intro.xp = 80;
+      window.__app.sauver();
+      window.__app.ouvrirMatiere('constit');
+    });
+    await k1.waitForSelector('.tribune');
+    faux.amis = [
+      { id: 'u-4', pseudo: 'Sacha', lien: 'ami', masque: false, resume: { grade: 'Étudiant', annee: 'L1', equipe: 2, xp: 500, xpConstit: 300, xpIntro: 200, serie: 4, maitrises: 8, seances: 15, jour: jourParis, semaine: lundiT, xpSemaine: 500 } },
+      { id: 'u-5', pseudo: 'Robin', lien: 'ami', masque: false, resume: { grade: 'Étudiant', annee: 'L1', equipe: 3, xp: 400, xpConstit: 400, xpIntro: 0, serie: 2, maitrises: 5, seances: 10, jour: jourParis, semaine: lundiT, xpSemaine: 400 } },
+      { id: 'u-2', pseudo: 'Camille', lien: 'ami', masque: false, resume: { grade: 'Licencié en droit', annee: 'L2', equipe: 1, xp: 900, xpAdmin: 500, xpOblig: 400, serie: 3, maitrises: 12, seances: 20, jour: jourParis, semaine: lundiT, xpSemaine: 900 } },
+    ];
+    await k1.locator('.haut-amis').click(); await k1.waitForSelector('.classement');
+    // 1. Ami en L2 alors qu'on est en L1 : message d'absence de matière commune, pas de bouton de défi
+    await k1.locator('.ami-ligne', { hasText: 'Camille' }).click(); await k1.waitForSelector('.comparer');
+    assert.match(await k1.locator('.admin-fiche').innerText(), /Vous n’avez pas de matière en commun/, 'pas de matière commune L1/L2');
+    assert.equal(await k1.locator('.admin-fiche .admin-duo button').count(), 0, 'aucun bouton de défi pour une autre année');
+    await k1.locator('.admin-fiche .bouton-lien', { hasText: 'Fermer' }).click();
+    await k1.waitForSelector('.admin-fiche', { state: 'detached' });
+    // 2. Ami en L1 d'une autre équipe : constit permis, intro désactivée
+    await k1.locator('.ami-ligne', { hasText: 'Robin' }).click(); await k1.waitForSelector('.comparer');
+    assert.match(await k1.locator('.admin-fiche').innerText(), /L’introduction au droit se défie entre membres de la même équipe/, 'avertissement autre équipe intro');
+    assert.equal(await k1.locator('.admin-fiche button', { hasText: 'Droit constitutionnel' }).getAttribute('disabled'), null, 'constit actif');
+    assert.notEqual(await k1.locator('.admin-fiche button', { hasText: 'Introduction au droit' }).getAttribute('disabled'), null, 'intro désactivée pour autre équipe');
+    await k1.locator('.admin-fiche .bouton-lien', { hasText: 'Fermer' }).click();
+    await k1.waitForSelector('.admin-fiche', { state: 'detached' });
+    // 3. Ami en L1 de la même équipe : tableau avec intro et constit, les deux défis possibles
+    await k1.locator('.ami-ligne', { hasText: 'Sacha' }).click(); await k1.waitForSelector('.comparer');
+    const txtComparer = await k1.locator('.comparer').innerText();
+    assert.match(txtComparer, /Constitutionnel/, 'ligne constit dans comparer');
+    assert.match(txtComparer, /Introduction/, 'ligne intro dans comparer');
+    assert(!txtComparer.includes('Administratif'), 'pas de ligne admin en L1');
+    assert.equal(await k1.locator('.admin-fiche button', { hasText: 'Droit constitutionnel' }).getAttribute('disabled'), null, 'constit actif');
+    assert.equal(await k1.locator('.admin-fiche button', { hasText: 'Introduction au droit' }).getAttribute('disabled'), null, 'intro active même équipe');
+    // Lancer un défi en Droit constitutionnel
+    faux.defi = null;
+    await k1.locator('.admin-fiche .bouton-or', { hasText: 'Droit constitutionnel' }).click();
+    await jouer(k1);
+    for (let i = 0; i < 30 && !faux.defi; i++) await k1.waitForTimeout(100);
+    assert(faux.defi && faux.defi.invite === 'u-4' && faux.defi.matiere === 'constit' && faux.defi.equipe === null, 'défi constit envoyé sans équipe');
+    await k1.tap('text=Retour au Palais'); await k1.waitForSelector('.tribune');
+    // Lancer un défi en Introduction au droit
+    await k1.locator('.haut-amis').click(); await k1.waitForSelector('.classement');
+    await k1.locator('.ami-ligne', { hasText: 'Sacha' }).click(); await k1.waitForSelector('.comparer');
+    faux.defi = null;
+    await k1.locator('.admin-fiche .bouton-or', { hasText: 'Introduction au droit' }).click();
+    await jouer(k1);
+    for (let i = 0; i < 30 && !faux.defi; i++) await k1.waitForTimeout(100);
+    assert(faux.defi && faux.defi.invite === 'u-4' && faux.defi.matiere === 'intro' && faux.defi.equipe === 2, 'défi intro envoyé avec equipeL1');
+    await k1.tap('text=Retour au Palais'); await k1.waitForSelector('.tribune');
+    // Relever un défi en intro de l'autre équipe : refusé
+    faux.lire_defi = { id: 'd-intro-diff', statut: 'ouvert', matiere: 'intro', equipe: 3, score_auteur: 0.7, pseudo_auteur: 'Robin', rounds: [] };
+    await k1.evaluate(() => window.__app.releverDefi('d-intro-diff'));
+    await k1.waitForFunction(() => document.querySelector('.toast')?.innerText.includes('autre équipe'));
+    // Relever un défi en intro de la même équipe
+    const roundsIntro = faux.defi.rounds;
+    faux.defis = [{ id: 'd-intro-meme', recu: true, autre: 'u-4', pseudo: 'Sacha', matiere: 'intro', score_auteur: 0.6, statut: 'ouvert', cree_le: new Date().toISOString() }];
+    faux.lire_defi = { id: 'd-intro-meme', statut: 'ouvert', matiere: 'intro', equipe: 2, score_auteur: 0.6, pseudo_auteur: 'Sacha', rounds: roundsIntro };
+    await k1.locator('.haut-amis').click(); await k1.waitForSelector('.classement');
+    await k1.locator('.amis .bouton-or', { hasText: 'Relever' }).first().click();
+    await jouer(k1);
+    for (let i = 0; i < 30 && !faux.rpc.some(([n, c]) => n === 'repondre_defi' && c.defi === 'd-intro-meme'); i++) await k1.waitForTimeout(100);
+    assert(faux.rpc.some(([n, c]) => n === 'repondre_defi' && c.defi === 'd-intro-meme'), 'score défi intro renvoyé');
+    await k1.tap('text=Retour au Palais'); await k1.waitForSelector('.tribune');
+    // Rétablir L2 pour la suite du test
+    await k1.evaluate(() => {
+      const e = window.__app.etat();
+      e.annee = 'L2';
+      e.equipe = 1;
+      window.__app.sauver();
+      window.__app.ouvrirMatiere('admin');
+    });
+    await k1.waitForSelector('.tribune');
+    faux.amis = null; faux.defis = null; faux.lire_defi = null;
     faux.rpc.length = 0;
     await k1.goto(URLB + '?test&compte&ami=WXYZ-2345'); await k1.waitForSelector('.boite');
     await k1.locator('.boite .bouton-or').click();

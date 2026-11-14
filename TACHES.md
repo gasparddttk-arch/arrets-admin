@@ -147,7 +147,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : test « visiteur iPhone » (contexte iPhone, sans `?test` de compte : année → équipe → matière → découverte → bloc d'installation → « Continuer sur le site » → écran de connexion) ; test « icône installée non connectée » (pas de bloc d'installation) ; captures en 390 px. Suite complète verte.
 
 ### [TÂCHE J] Les défis entre amis en L1 (Claude, puis Antigravity)
-- **Statut** : À faire
+- **Statut** : Fait le 14/11 (Antigravity), publié par Claude
 - **Constat** : la fiche d'un ami ne propose que « Administratif » et « Obligations ». La base refuse aussi tout autre défi (`defis_amis_matiere_check` n'accepte que `admin` et `oblig`). Et le test « même équipe » compare l'équipe L1 de l'ami (`resume.equipe`) à l'équipe L2 de l'utilisateur.
 - **Partie Claude (faite le 13/11, accord de Gaspard)** : la base accepte `intro` et `constit` dans `defis_amis.matiere`.
 - **Partie Antigravity** :
