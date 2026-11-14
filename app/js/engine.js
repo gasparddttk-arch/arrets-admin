@@ -9,6 +9,15 @@ export function creerRng(seed = Date.now()) {
 export const melange = (a, rng = Math.random) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
 export const choix = (a, rng = Math.random) => a[Math.floor(rng() * a.length)];
 export const PRODUCTION = ['atelier', 'architecte', 'plaide', 'trous', 'syllogisme', 'casnu', 'formule'];
+export const estProduction = (r, matiere = null) => {
+  if (!r) return false;
+  const t = typeof r === 'string' ? r : r.type;
+  if (t === 'formule') return typeof r === 'object' ? Boolean(r.entiere) : true;
+  if (PRODUCTION.includes(t)) return true;
+  if (matiere === 'constit') return t === 'plume' || t === 'mot';
+  if (matiere === 'intro') return t === 'mot';
+  return false;
+};
 
 export function indexer(c, equipe = 2, dataFormules = null) {
   // « Meyet (1992) » : le nom court évite d'écrire l'année deux fois, ou de la souffler.
@@ -220,6 +229,40 @@ export function roundFrise(x, rng = Math.random) {
 const fichesDe = (t, x) => (t === 'qualif' ? x.m.map((m) => m.carte) : t === 'frise' ? x.e.map((e) => e.carte).filter(Boolean) : x.liens || []);
 
 // L'atelier du cas pratique : un cas des chambres ouvertes, au niveau demandé si possible.
+export function roundTrous(ix, zones, dus = [], deja = new Set(), rng = Math.random) {
+  const dans = dansZones(zones);
+  const articles = (ix.articles || []).filter((a) => dans(a) && a.regle && a.regle.split(' ').length >= 10);
+  const frais = articles.filter((x) => !deja.has(x.id));
+  const base = frais.length ? frais : articles;
+  const a = choix(base.length ? base : (ix.articles || []).filter((x) => x.regle && x.regle.split(' ').length >= 10), rng);
+  if (!a) return null;
+  deja.add(a.id);
+  const mots = a.regle.split(' ');
+  const candidats = mots.map((m, i) => ({ m: m.replace(/[,.;:]$/, ''), i })).filter(({ m, i }) => i > 1 && m.length >= 6 && /^[a-zà-ÿ'’-]+$/i.test(m));
+  const trous = melange(candidats, rng).slice(0, Math.min(3, candidats.length)).sort((x, y) => x.i - y.i);
+  if (trous.length < 2) return null;
+  const autres = (ix.articles || []).filter((b) => b !== a && b.regle).flatMap((b) => b.regle.split(' ').map((m) => m.replace(/[,.;:]$/, '')).filter((m) => m.length >= 6 && /^[a-zà-ÿ'’-]+$/i.test(m)));
+  const leurres = melange([...new Set(autres)].filter((m) => !trous.some((t) => t.m === m)), rng).slice(0, 2);
+  return { type: 'trous', id: a.id, nom: a.nom, titre: a.titre, mots, trous: trous.map((t) => ({ i: t.i, m: t.m })), etiquettes: melange([...trous.map((t) => t.m), ...leurres], rng) };
+}
+
+export function roundPlaide(ix, zones, dus = [], deja = new Set(), rng = Math.random) {
+  const dans = dansZones(zones);
+  const arrets = (ix.arrets || []).filter((a) => dans(a) && !a.nf && a.q && a.s);
+  const questions = (ix.questions || []).filter(dans).map((q, i) => ({ ...q, id: `q-${i}-${q.q.length}` }));
+  const deQuestion = ix.matiere === 'oblig' && questions.length && (!arrets.length || rng() < 0.5);
+  if (deQuestion) {
+    const frais = questions.filter((x) => !deja.has(x.id));
+    const q = choix(frais.length ? frais : questions, rng);
+    if (q) { deja.add(q.id); return { type: 'plaide', carte: null, contexte: 'Question de cours', question: q.q, attendu: q.bonne }; }
+  }
+  const frais = arrets.filter((x) => !deja.has(x.id));
+  const a = choix(frais.length ? frais : arrets.length ? arrets : (ix.arrets || []).filter((x) => !x.nf && x.q && x.s), rng);
+  if (!a) return null;
+  deja.add(a.id);
+  return { type: 'plaide', carte: a.id, contexte: `${a.court || a.nom}, ${a.an}`, question: a.q, attendu: a.s };
+}
+
 export function tirerAtelier(ix, zones, niveau = null, rng = Math.random, deja = new Set()) {
   const tous = ix.ateliers || [];
   const dans = tous.filter(dansZones(zones));
@@ -300,6 +343,8 @@ function tirerOblig(ix, type, zones, dus, rng, deja, entiere = false) {
     if (r) return r;
     type = 'qualif';
   }
+  if (type === 'trous') { const r = roundTrous(ix, zones, dus, deja, rng); if (r) return r; type = 'qualif'; }
+  if (type === 'plaide') { const r = roundPlaide(ix, zones, dus, deja, rng); if (r) return r; type = 'qualif'; }
   if (type === 'atelier' && ix.ateliers?.length) return tirerAtelier(ix, zones, null, rng, deja);
   if (type === 'memory') { const r = roundMemoryL2(ix, zones, dus, rng); if (r) return r; type = 'qualif'; }
   if (type === 'rangement') { const r = roundRangementL2(ix, zones, rng); if (r) return r; type = 'qualif'; }
@@ -394,6 +439,8 @@ export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new S
   if (estL1(ix)) return tirerIntro(ix, type, zones, dus, rng, deja);
   if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, dus, rng, deja, entiere);
   if (type === 'atelier' && ix.ateliers?.length) return tirerAtelier(ix, zones, null, rng, deja);
+  if (type === 'trous') { const r = roundTrous(ix, zones, dus, deja, rng); if (r) return r; type = 'paires'; }
+  if (type === 'plaide') { const r = roundPlaide(ix, zones, dus, deja, rng); if (r) return r; type = 'paires'; }
   if (type === 'memory') { const r = roundMemoryL2(ix, zones, dus, rng); if (r) return r; type = 'paires'; }
   if (type === 'rangement') { const r = roundRangementL2(ix, zones, rng); if (r) return r; type = 'paires'; }
   const d = dispo(ix, zones);
@@ -429,7 +476,7 @@ export function composerDefi(ix, zones, dus, rng = Math.random) {
     const milieu = melange(['cas', choix(pool, rng), choix(['remede', 'frise', 'plan'], rng)], rng);
     return ['qualif', ...milieu, choix(['qualif', 'qualif', 'rangement', 'memory'], rng)].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
   }
-  const pool = ['plan', 'architecte', ...(aFormule ? ['formule'] : [])];
+  const pool = ['plan', ...(aFormule ? ['formule'] : [])];
   const ordre = melange(['puzzle', 'juge', choix(pool, rng)], rng);
   return ['paires', ...ordre, choix(['paires', 'paires', 'rangement', 'memory'], rng)].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
 }
@@ -439,18 +486,72 @@ export function composerBoss(ix, zone, rng = Math.random) {
   if (estL1(ix)) return composerBossIntro(ix, zone, rng);
   const deja = new Set();
   const aFormule = (ix.formules || []).some((f) => f.zones.includes(zone));
+  let prodRound = null;
   if (aFormule) {
-    const fRound = tirerFormule(ix, [zone], true, rng, deja);
-    if (ix.matiere === 'oblig') {
-      const autres = melange(['qualif', 'cas', 'remede', 'frise', 'plan'], rng).slice(0, 5).map((t) => tirerRound(ix, t, [zone], [], rng, deja));
-      return [autres[0], fRound, ...autres.slice(1)];
+    prodRound = tirerFormule(ix, [zone], true, rng, deja);
+  } else if (ix.matiere === 'oblig') {
+    const aAtelier = (ix.ateliers || []).some(dansZones([zone]));
+    const aTrous = (ix.articles || []).some((a) => dansZones([zone])(a) && a.regle && a.regle.split(' ').length >= 10);
+    if (aAtelier) {
+      prodRound = tirerAtelier(ix, [zone], null, rng, deja);
+    } else if (aTrous) {
+      prodRound = roundTrous(ix, [zone], [], deja, rng);
+    } else {
+      prodRound = roundPlaide(ix, [zone], [], deja, rng) || roundTrous(ix, [zone], [], deja, rng);
     }
-    const autres = melange(['paires', 'puzzle', 'juge', 'plan'], rng).slice(0, 5).map((t) => tirerRound(ix, t, [zone], [], rng, deja));
-    return [autres[0], fRound, ...autres.slice(1)];
+  } else {
+    // administratif : architecte, sinon atelier, sinon trous
+    const aSujets = (ix.sujets || []).some(dansZones([zone]));
+    const aAtelier = (ix.ateliers || []).some(dansZones([zone]));
+    const aTrous = (ix.articles || []).some((a) => dansZones([zone])(a) && a.regle && a.regle.split(' ').length >= 10);
+    if (aSujets) {
+      const s = choix(ix.sujets.filter(dansZones([zone])), rng);
+      deja.add(s.id);
+      prodRound = { type: 'architecte', ...roundArchitecte(ix, s, rng) };
+    } else if (aAtelier) {
+      prodRound = tirerAtelier(ix, [zone], null, rng, deja);
+    } else if (aTrous) {
+      prodRound = roundTrous(ix, [zone], [], deja, rng);
+    } else {
+      prodRound = roundPlaide(ix, [zone], [], deja, rng) || roundTrous(ix, [zone], [], deja, rng);
+    }
   }
-  if (ix.matiere === 'oblig') return melange(['qualif', 'cas', 'remede', 'frise', 'plan', 'cas'], rng).map((t) => tirerRound(ix, t, [zone], [], rng, deja));
-  const types = melange(['paires', 'puzzle', 'juge', 'plan', 'architecte', choix(['puzzle', 'juge'], rng)], rng);
-  return types.map((t) => tirerRound(ix, t, [zone], [], rng, deja));
+
+  // 5 épreuves de reconnaissance
+  let autres = [];
+  if (ix.matiere === 'oblig') {
+    const pool = ['qualif', 'cas', 'remede', 'frise', 'plan'];
+    const dispo = pool.filter((t) => {
+      if (t === 'qualif') return (ix.qualifs || []).some(dansZones([zone]));
+      if (t === 'cas') return (ix.cas || []).some(dansZones([zone]));
+      if (t === 'remede') return (ix.remedes || []).some(dansZones([zone]));
+      if (t === 'frise') return (ix.frises || []).some(dansZones([zone]));
+      if (t === 'plan') return (ix.sujets || []).some(dansZones([zone]));
+      return false;
+    });
+    const base = dispo.length ? dispo : pool;
+    const typesAutres = melange(base, rng).slice(0, 5);
+    while (typesAutres.length < 5) typesAutres.push(choix(base, rng));
+    autres = typesAutres.map((t) => tirerRound(ix, t, [zone], [], rng, deja));
+  } else {
+    const d = dispo(ix, [zone]);
+    const pool = ['paires', 'puzzle', 'juge', 'plan', 'frise'];
+    const dispoAdmin = pool.filter((t) => {
+      if (t === 'paires') return true;
+      if (t === 'puzzle') return d.puzzle.length > 0;
+      if (t === 'juge') return d.juges.length > 0;
+      if (t === 'plan') return d.sujets.length > 0;
+      if (t === 'frise') return d.frises.length > 0;
+      return false;
+    });
+    const base = dispoAdmin.length ? dispoAdmin : ['paires', 'puzzle', 'juge', 'plan'];
+    const typesAutres = melange(base, rng).slice(0, 5);
+    while (typesAutres.length < 5) typesAutres.push(choix(base, rng));
+    autres = typesAutres.map((t) => tirerRound(ix, t, [zone], [], rng, deja));
+  }
+
+  const pos = 1 + Math.floor(rng() * 5);
+  return [...autres.slice(0, pos), prodRound, ...autres.slice(pos)];
 }
 
 // L1, INTRODUCTION AU DROIT ----------------------------------------------------------------
@@ -581,17 +682,34 @@ export function tirerIntro(ix, type, zones, dus, rng = Math.random, deja = new S
 
 export function composerDefiIntro(ix, zones, dus, rng = Math.random) {
   const deja = new Set();
-  const dispo = typesIntro(ix, zones);
+  const dispo = typesIntro(ix, zones).filter((t) => t !== 'plume');
   const jeux = melange(dispo.filter((t) => !['memory', 'mot'].includes(t)), rng);
   const milieu = [jeux[0] || 'mot', 'mot', jeux[1] || 'memory'];
   return ['memory', ...melange(milieu, rng), jeux[2] || 'memory'].map((t) => tirerIntro(ix, t, zones, dus, rng, deja));
 }
 export function composerBossIntro(ix, zone, rng = Math.random) {
   const deja = new Set();
+  const aFormule = (ix.formules || []).some((f) => f.zones.includes(zone));
+  let prodRound = null;
+  let prodType = null;
+  if (aFormule) {
+    prodRound = tirerFormule(ix, [zone], true, rng, deja);
+    prodType = 'formule';
+  } else if (ix.matiere === 'constit') {
+    prodType = (ix.textes || []).some(dansZones([zone])) ? 'plume' : 'mot';
+    prodRound = tirerIntro(ix, prodType, [zone], [], rng, deja);
+  } else {
+    prodType = 'mot';
+    prodRound = tirerIntro(ix, prodType, [zone], [], rng, deja);
+  }
   const dispo = typesIntro(ix, [zone]);
-  const types = melange([...dispo, ...dispo].slice(0, 6), rng);
-  while (types.length < 6) types.push(choix(dispo, rng));
-  return types.map((t) => tirerIntro(ix, t, [zone], [], rng, deja));
+  const poolRec = dispo.filter((t) => t !== 'plume' && t !== 'mot' && t !== 'formule');
+  const baseRec = poolRec.length ? poolRec : (ix.matiere === 'constit' ? ['memory', 'pouvoirs', 'nuancier'] : ['memory', 'quiadit', 'rangement']);
+  const typesAutres = melange(baseRec, rng).slice(0, 5);
+  while (typesAutres.length < 5) typesAutres.push(choix(baseRec, rng));
+  const autres = typesAutres.map((t) => tirerIntro(ix, t, [zone], [], rng, deja));
+  const pos = 1 + Math.floor(rng() * 5);
+  return [...autres.slice(0, pos), prodRound, ...autres.slice(pos)];
 }
 
 // Dunk en L1 : la notion d'après sa définition, la définition d'après la notion, l'auteur d'une citation.

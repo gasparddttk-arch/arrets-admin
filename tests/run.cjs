@@ -806,6 +806,76 @@ async function execGroupe1(b, PORT, erreurs) {
 
     log('formule ok');
   }
+
+  // 14b. Production réservée aux examens et aux audiences
+  if (matchSeul('production')) {
+    const { indexer, composerDefi, composerBoss, estProduction, creerRng, tirerRound, melange, typesIntro } = await import('../app/js/engine.js');
+    const read = (f) => JSON.parse(fs.readFileSync('docs/' + f));
+    const matieres = [
+      { mat: 'admin', eq: 1, f: 'content.json' },
+      { mat: 'admin', eq: 2, f: 'admin2.json' },
+      { mat: 'oblig', eq: 1, f: 'oblig1.json' },
+      { mat: 'oblig', eq: 2, f: 'oblig.json' },
+      { mat: 'intro', eq: 2, f: 'intro.json' },
+      { mat: 'constit', eq: 2, f: 'constit.json' },
+    ];
+    const formes = read('formules.json');
+
+    for (const m of matieres) {
+      const ix = indexer(read(m.f), m.eq, formes);
+      const rng = creerRng(77);
+      const zones = ix.zones.map((z) => z.id);
+
+      // 200 défis du jour : aucun type de production
+      for (let i = 0; i < 200; i++) {
+        const rounds = composerDefi(ix, zones, [], rng);
+        for (const r of rounds) {
+          assert(!estProduction(r), `Production trouvée dans défi ${m.mat} eq ${m.eq} : ${r.type}`);
+        }
+      }
+
+      // 200 Trois minutes : aucun type de production
+      for (let i = 0; i < 200; i++) {
+        const types = m.mat === 'constit' ? ['pouvoirs', 'mot', 'nuancier'] : m.mat === 'intro' ? ['tri', 'mot', 'memory'] : m.mat === 'oblig' ? ['qualif', 'remede', 'qualif'] : ['paires', 'puzzle', 'paires'];
+        const deja = new Set();
+        const rounds = types.map((t) => tirerRound(ix, t, zones, [], rng, deja));
+        for (const r of rounds) {
+          assert(!estProduction(r), `Production trouvée dans Trois minutes ${m.mat} : ${r.type}`);
+        }
+      }
+
+      // 200 Révisions : aucun type de production
+      for (let i = 0; i < 200; i++) {
+        const z = zones[i % zones.length];
+        const deja = new Set();
+        let rounds = [];
+        if (m.mat === 'intro' || m.mat === 'constit') {
+          const dispo = melange(typesIntro(ix, [z]).filter((t) => t !== 'memory' && t !== 'plume'), rng);
+          rounds = ['memory', dispo[0], dispo[1] || 'mot'].map((t) => tirerRound(ix, t, [z], [], rng, deja));
+        } else {
+          const base = m.mat === 'oblig' ? 'qualif' : 'paires';
+          const pool = m.mat === 'oblig' ? ['cas', 'remede', 'frise'] : ['puzzle', 'juge', 'plan'];
+          if ((ix.formules || []).some((f) => f.zones.includes(z))) pool.push('formule');
+          const types = melange(pool, rng);
+          rounds = [base, types[0], base].map((t) => tirerRound(ix, t, [z], [], rng, deja));
+        }
+        for (const r of rounds) {
+          assert(!estProduction(r), `Production trouvée dans Révision ${m.mat} : ${r.type}`);
+        }
+      }
+
+      // 200 audiences : exactement une production, jamais en premier
+      for (let i = 0; i < 200; i++) {
+        const z = zones[i % zones.length];
+        const rounds = composerBoss(ix, z, rng);
+        assert.equal(rounds.length, 6, `Audience ${m.mat} taille != 6`);
+        const prods = rounds.map((r, idx) => ({ r, idx })).filter(({ r }) => estProduction(r, m.mat));
+        assert.equal(prods.length, 1, `Audience ${m.mat} eq ${m.eq} zone ${z} : ${prods.length} production(s) (${rounds.map((r) => r.type).join(', ')})`);
+        assert.notEqual(prods[0].idx, 0, `Audience ${m.mat} eq ${m.eq} zone ${z} : production en premier (${rounds[0].type})`);
+      }
+    }
+    log('production ok');
+  }
 }
 
 // -----------------------------------------------------------------------------
