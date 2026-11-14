@@ -1320,6 +1320,9 @@ html[data-effets='non']::after { animation: none; }
 .role-ligne { background: var(--m1, var(--banc)); box-shadow: none; border-radius: 26px; }
 .bouton-or { border-radius: 999px; background: var(--or); box-shadow: inset 0 -4px 0 var(--or-ombre); min-height: 52px; }
 .bouton-fantome { border-radius: 999px; border: 0; background: var(--banc); }
+/* Sur la feuille claire d'installation, le bouton reste clair : texte sombre lisible. */
+.installer .bouton-fantome { background: rgba(0, 0, 0, .07); color: var(--papier-texte); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .14); }
+.installer .bouton-fantome:active { background: rgba(0, 0, 0, .13); }
 .bouton-matiere { border-radius: 999px; background: var(--banc); }
 
 /* Chambres : le chemin épuré */
