@@ -80,7 +80,7 @@ export async function jouerFormule(zone, ctx, round, ix) {
 
           ecran.append(barrePied(continuer('Continuer', suite)));
         },
-      }, opt.nom);
+      }, h('span', { class: 'option-marque', 'aria-hidden': 'true' }), h('span', { class: 'option-t' }, opt.nom));
       if (opt.ok) bonBouton = btn;
       zoneReponse.append(btn);
     });
