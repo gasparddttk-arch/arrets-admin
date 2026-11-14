@@ -4,6 +4,7 @@ import { icone, marteau, salleAudience } from './visuels.js';
 import { son, vibrer } from './sons.js';
 import { etat, sauver } from './state.js';
 import { jumeaux, melange, CASES } from './engine.js';
+import { jouerFormule } from './formule.js';
 
 const NOM_CASE = { 1: 'I', '1a': 'A', '1b': 'B', 2: 'II', '2a': 'A', '2b': 'B' };
 const TYPE = { D: 'Dissertation', C: 'Commentaire' };
@@ -486,8 +487,9 @@ export async function jouerArchitecte(zone, ctx, round, ix) {
   ctx.fin({ score, parfait: ok });
 }
 
-export const JEUX = { paires: jouerPaires, puzzle: jouerPuzzle, juge: jouerJuge, plan: jouerPlan, architecte: jouerArchitecte, qualif: jouerPaires };
+export const JEUX = { paires: jouerPaires, puzzle: jouerPuzzle, juge: jouerJuge, plan: jouerPlan, architecte: jouerArchitecte, qualif: jouerPaires, formule: jouerFormule };
 export const NOMS_MODES = {
+  formule: ['La formule', 'Lire la formule du juge, en déduire le squelette et le plan'],
   atelier: ['L’atelier du cas pratique', 'Construire sa copie : faits, problèmes, syllogismes, conseil'],
   paires: ['Paires', 'Relier arrêts, apports et années, contre la montre'],
   puzzle: ['Puzzle d’arrêt', 'Reconstituer la fiche, puis trouver le problème de droit'],
@@ -499,6 +501,7 @@ export const NOMS_MODES = {
   rangement: ['Le grand rangement', 'Ranger chaque arrêt dans sa branche du cours'],
 };
 export const NOMS_MODES_OBLIG = {
+  formule: ['La formule', 'Lire la formule du juge, en déduire le squelette et le plan'],
   atelier: ['L’atelier du cas pratique', 'Construire sa copie : faits, problèmes, syllogismes, conseil'],
   cas: ['Le juge du cas pratique', 'Suivre la méthode, étape par étape, jusqu’au jugement'],
   qualif: ['Qualifier les faits', 'Relier des faits à la bonne notion, contre la montre'],

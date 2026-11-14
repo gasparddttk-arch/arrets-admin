@@ -159,7 +159,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
   - Test : deux comptes L1 simulés se défient en constit puis en intro.
 
 ### [TÂCHE K] Nouvel exercice « La formule » : lire la formule du juge, en déduire le plan (Antigravity)
-- **Statut** : À faire
+- **Statut** : Fait le 14/11 (commencé par Antigravity, terminé par Claude). Version courte dans le défi du jour et la révision des chambres ; version entière dans le mode « La formule », « Appel », « Cassation », « Partiel blanc » et les audiences. La liste `PRODUCTION` existe déjà dans `engine.js` (tâche L : la compléter).
 - **Décisions de Gaspard (13/11)** : obligations, administratif et introduction au droit. Version courte (étapes 1 et 2) dans les séances du quotidien ; version entière (étapes 1 à 3) dans les modes d'examen et les audiences.
 - **Contenu (fait par Claude)** : `content/formules.mjs`, 11 arrêts (6 obligations équipe 1, 5 administratif) dont le texte a été vérifié sur Légifrance (`notes/formule-verifs.md`). Ne pas modifier les textes. L'introduction L1 viendra avec le chapitre du cours sur la jurisprudence.
 - **Fichiers concernés** : `scripts/build.mjs`, `scripts/check.mjs`, `app/js/formule.js` (nouveau), `app/js/engine.js`, `app/js/main.js`, `app/js/games.js`, `app/css/app.css`, `tests/run.cjs`

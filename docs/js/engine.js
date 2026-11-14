@@ -8,8 +8,9 @@ export function creerRng(seed = Date.now()) {
 }
 export const melange = (a, rng = Math.random) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
 export const choix = (a, rng = Math.random) => a[Math.floor(rng() * a.length)];
+export const PRODUCTION = ['atelier', 'architecte', 'plaide', 'trous', 'syllogisme', 'casnu', 'formule'];
 
-export function indexer(c, equipe = 2) {
+export function indexer(c, equipe = 2, dataFormules = null) {
   // « Meyet (1992) » : le nom court évite d'écrire l'année deux fois, ou de la souffler.
   for (const a of c.arrets) a.court = a.nom.replace(/\s*\(\d{4}\)$/, '');
   const articles = c.articles || [];
@@ -24,9 +25,15 @@ export function indexer(c, equipe = 2) {
   }
   // Une équipe ne voit que le contenu commun et le sien.
   const garde = (x) => !x.eq || x.eq === 'c' || x.eq === String(equipe);
-  return { ...c, matiere: c.matiere || 'admin', familles, juges: c.juges || [], articles, cartes, parId, famillesDe,
+  const mFormules = dataFormules?.arrets || c.formules || [];
+  const mat = c.matiere || 'admin';
+  const formules = mFormules
+    .filter((f) => f.matiere === mat && f.equipes?.includes(equipe) && parId.has(f.arret))
+    .map((f) => ({ ...f, zones: parId.get(f.arret).zones }));
+  const typesFormules = dataFormules?.types || c.typesFormules || {};
+  return { ...c, matiere: mat, familles, juges: c.juges || [], articles, cartes, parId, famillesDe,
     cas: (c.cas || []).filter(garde), remedes: (c.remedes || []).filter(garde), frises: (c.frises || []).filter(garde),
-    qualifs: c.qualifs || [], questions: c.questions || [] };
+    qualifs: c.qualifs || [], questions: c.questions || [], formules, typesFormules };
 }
 
 // Faux jumeaux : les arrêts qui partagent une famille.
@@ -287,7 +294,12 @@ export function roundRangementL2(ix, zones, rng = Math.random) {
   return { type: 'rangement', titre: 'Le grand rangement', colonnes: bords, pieces: melange(propres, rng) };
 }
 
-function tirerOblig(ix, type, zones, dus, rng, deja) {
+function tirerOblig(ix, type, zones, dus, rng, deja, entiere = false) {
+  if (type === 'formule') {
+    const r = tirerFormule(ix, zones, entiere, rng, deja);
+    if (r) return r;
+    type = 'qualif';
+  }
   if (type === 'atelier' && ix.ateliers?.length) return tirerAtelier(ix, zones, null, rng, deja);
   if (type === 'memory') { const r = roundMemoryL2(ix, zones, dus, rng); if (r) return r; type = 'qualif'; }
   if (type === 'rangement') { const r = roundRangementL2(ix, zones, rng); if (r) return r; type = 'qualif'; }
@@ -357,9 +369,30 @@ export function tirerDunk(liste, tir, dus, deja, rng = Math.random) {
   return { ...q, options: melange([{ t: q.bonne, ok: true }, ...q.faux.map((t) => ({ t, ok: false }))], rng) };
 }
 
-export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new Set()) {
+export function tirerFormule(ix, zones, entiere = false, rng = Math.random, deja = new Set()) {
+  const dans = (f) => f.zones.some((z) => zones.includes(z));
+  const pool = (ix.formules || []).filter(dans);
+  if (!pool.length) return null;
+  const frais = pool.filter((f) => !deja.has(f.id));
+  const f = choix(frais.length ? frais : pool, rng);
+  deja.add(f.id);
+  return {
+    type: 'formule',
+    entiere: Boolean(entiere),
+    id: f.id,
+    formule: f,
+    types: ix.typesFormules,
+  };
+}
+
+export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new Set(), entiere = false) {
+  if (type === 'formule') {
+    const r = tirerFormule(ix, zones, entiere, rng, deja);
+    if (r) return r;
+    type = ix.matiere === 'oblig' ? 'qualif' : 'paires';
+  }
   if (estL1(ix)) return tirerIntro(ix, type, zones, dus, rng, deja);
-  if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, dus, rng, deja);
+  if (ix.matiere === 'oblig') return tirerOblig(ix, type, zones, dus, rng, deja, entiere);
   if (type === 'atelier' && ix.ateliers?.length) return tirerAtelier(ix, zones, null, rng, deja);
   if (type === 'memory') { const r = roundMemoryL2(ix, zones, dus, rng); if (r) return r; type = 'paires'; }
   if (type === 'rangement') { const r = roundRangementL2(ix, zones, rng); if (r) return r; type = 'paires'; }
@@ -390,11 +423,14 @@ export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new S
 export function composerDefi(ix, zones, dus, rng = Math.random) {
   if (estL1(ix)) return composerDefiIntro(ix, zones, dus, rng);
   const deja = new Set();
+  const aFormule = (ix.formules || []).some((f) => f.zones.some((z) => zones.includes(z)));
   if (ix.matiere === 'oblig') {
-    const milieu = melange(['cas', choix(['remede', 'frise'], rng), choix(['remede', 'frise', 'plan'], rng)], rng);
+    const pool = ['remede', 'frise', ...(aFormule ? ['formule'] : [])];
+    const milieu = melange(['cas', choix(pool, rng), choix(['remede', 'frise', 'plan'], rng)], rng);
     return ['qualif', ...milieu, choix(['qualif', 'qualif', 'rangement', 'memory'], rng)].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
   }
-  const ordre = melange(['puzzle', 'juge', choix(['plan', 'architecte'], rng)], rng);
+  const pool = ['plan', 'architecte', ...(aFormule ? ['formule'] : [])];
+  const ordre = melange(['puzzle', 'juge', choix(pool, rng)], rng);
   return ['paires', ...ordre, choix(['paires', 'paires', 'rangement', 'memory'], rng)].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
 }
 
@@ -402,6 +438,16 @@ export function composerDefi(ix, zones, dus, rng = Math.random) {
 export function composerBoss(ix, zone, rng = Math.random) {
   if (estL1(ix)) return composerBossIntro(ix, zone, rng);
   const deja = new Set();
+  const aFormule = (ix.formules || []).some((f) => f.zones.includes(zone));
+  if (aFormule) {
+    const fRound = tirerFormule(ix, [zone], true, rng, deja);
+    if (ix.matiere === 'oblig') {
+      const autres = melange(['qualif', 'cas', 'remede', 'frise', 'plan'], rng).slice(0, 5).map((t) => tirerRound(ix, t, [zone], [], rng, deja));
+      return [autres[0], fRound, ...autres.slice(1)];
+    }
+    const autres = melange(['paires', 'puzzle', 'juge', 'plan'], rng).slice(0, 5).map((t) => tirerRound(ix, t, [zone], [], rng, deja));
+    return [autres[0], fRound, ...autres.slice(1)];
+  }
   if (ix.matiere === 'oblig') return melange(['qualif', 'cas', 'remede', 'frise', 'plan', 'cas'], rng).map((t) => tirerRound(ix, t, [zone], [], rng, deja));
   const types = melange(['paires', 'puzzle', 'juge', 'plan', 'architecte', choix(['puzzle', 'juge'], rng)], rng);
   return types.map((t) => tirerRound(ix, t, [zone], [], rng, deja));

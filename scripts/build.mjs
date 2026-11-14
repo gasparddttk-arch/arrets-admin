@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { lireContenu, lireObligations, lireObligations1, lireIntro, lireAdmin2, lireConstit, lireAteliers } from './parse.mjs';
+import { TYPES as TYPES_FORMULES, ARRETS as ARRETS_FORMULES } from '../content/formules.mjs';
 
 const SORTIE = 'docs';
 rmSync(SORTIE, { recursive: true, force: true });
@@ -25,6 +26,7 @@ writeFileSync(join(SORTIE, 'oblig1.json'), JSON.stringify({ ...lireObligations1(
 writeFileSync(join(SORTIE, 'intro.json'), JSON.stringify({ ...(await lireIntro()), version: date }));
 writeFileSync(join(SORTIE, 'intro2.json'), JSON.stringify({ ...(await lireIntro('intro2.mjs')), version: date }));
 writeFileSync(join(SORTIE, 'constit.json'), JSON.stringify({ ...(await lireConstit()), version: date }));
+writeFileSync(join(SORTIE, 'formules.json'), JSON.stringify({ types: TYPES_FORMULES, arrets: ARRETS_FORMULES }));
 
 const fichiers = [];
 (function parcourir(d) {

@@ -22,8 +22,9 @@ import { SUPABASE_URL } from './config.js';
 import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifier, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour, adminEntonnoir, adminParcours } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 import { noter as suivre, contexte } from './suivi.js';
+import { jouerFormule } from './formule.js';
 
-const TOUS_JEUX = { ...JEUX, atelier: jouerAtelier, pouvoirs: jouerPouvoirs, nuancier: jouerNuancier, plume: jouerPlume, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu,
+const TOUS_JEUX = { ...JEUX, formule: jouerFormule, atelier: jouerAtelier, pouvoirs: jouerPouvoirs, nuancier: jouerNuancier, plume: jouerPlume, cas: jouerCas, remede: jouerRemede, frise: jouerFrise, appel: jouerAppel, flash: jouerFlash, plaide: jouerPlaide, trous: jouerTrous, express: jouerExpress, syllogisme: jouerSyllogisme, casnu: jouerCasNu,
   tri: jouerTri, mot: jouerMot, rangement: jouerRangement, quiadit: jouerQuiADit, scanner: jouerScanner, memory: jouerMemory };
 
 // FAIRE APPEL : chaque fiche ratée revient sous une autre forme, une question rapide.
@@ -54,11 +55,12 @@ function faireAppel(ids) {
   lancer({ type: 'appel', titre: 'Faire appel', rounds });
 }
 let ix = null; // Le contenu de la matière ouverte.
+let FORMULES = null;
 const CONTENUS = {};
 const PAR_EQUIPE = {};
 const ADMIN_PAR_EQUIPE = {};
 const INTRO_PAR_EQUIPE = {};
-const indexerIntro = () => { CONTENUS.intro = INTRO_PAR_EQUIPE[etat.equipeL1] ||= indexer(INTRO_PAR_EQUIPE.brut[etat.equipeL1] || INTRO_PAR_EQUIPE.brut[3]); };
+const indexerIntro = () => { CONTENUS.intro = INTRO_PAR_EQUIPE[etat.equipeL1] ||= indexer(INTRO_PAR_EQUIPE.brut[etat.equipeL1] || INTRO_PAR_EQUIPE.brut[3], etat.equipeL1, FORMULES); };
 const racine = document.getElementById('app');
 // Les termes juridiques soulignés : chaque nouvel écran est relu, avec le lexique de la matière ouverte.
 let lexiquePret = null; let relecture = 0;
@@ -160,8 +162,8 @@ function ouvrirMatiere(id) {
 
 // Le groupe se choisit une fois. Il décide du cours et des exercices de droit des obligations.
 // Le choix vaut pour toute la L2 : droit des obligations et droit administratif.
-const indexerObligations = () => { CONTENUS.oblig = indexer(PAR_EQUIPE[etat.equipe], etat.equipe); CONTENUS.oblig.vus = () => (etat.oblig.exos ||= {}); };
-const indexerAdmin = () => { CONTENUS.admin = ADMIN_PAR_EQUIPE[etat.equipe] ||= indexer(ADMIN_PAR_EQUIPE.brut[etat.equipe]); };
+const indexerObligations = () => { CONTENUS.oblig = indexer(PAR_EQUIPE[etat.equipe], etat.equipe, FORMULES); CONTENUS.oblig.vus = () => (etat.oblig.exos ||= {}); };
+const indexerAdmin = () => { CONTENUS.admin = ADMIN_PAR_EQUIPE[etat.equipe] ||= indexer(ADMIN_PAR_EQUIPE.brut[etat.equipe], etat.equipe, FORMULES); };
 function rejoindreEquipe(n) {
   changerEquipe(n); indexerObligations(); indexerAdmin(); filtre = { texte: '', zone: 0, type: 'arrets' };
   if (etat.matiere === 'oblig' || etat.matiere === 'admin') ix = CONTENUS[etat.matiere];
@@ -365,14 +367,15 @@ function accueil() {
   );
 }
 
-const ICONE_MODE = { atelier: 'note', pouvoirs: 'reseau', nuancier: 'nuancier', plume: 'sceau', tri: 'ecarter', mot: 'crayon', rangement: 'colonne', quiadit: 'plume', scanner: 'loupe', memory: 'paires' };
+const ICONE_MODE = { formule: 'plume', atelier: 'note', pouvoirs: 'reseau', nuancier: 'nuancier', plume: 'sceau', tri: 'ecarter', mot: 'crayon', rangement: 'colonne', quiadit: 'plume', scanner: 'loupe', memory: 'paires' };
 const ligneEntree = (mode, ic, nom, txt, action, d) => h('button', { class: 'role-ligne', 'data-mode': mode, style: `--d:${d}s`, onClick: action },
   h('span', { class: 'role-icone' }, icone(ic, 28)), h('span', { class: 'role-txt' }, h('b', {}, nom), h('small', {}, txt)));
 const retourPalais = () => h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); aller('palais'); } }, icone('retour', 18), 'Retour au Palais');
 
 // Le rôle : la liste des exercices, à part du Palais.
 function ecranRole() {
-  const lignes = Object.entries(nomsModes()).map(([m, [nom, txt]], i) => ligneEntree(m, ICONE_MODE[m] || m, nom, txt, () => (m === 'plan' || m === 'architecte' ? choixGenre(m) : m === 'atelier' ? choixNiveauAtelier() : lancerMode(m)), i * 2.2));
+  const formuleDispo = (ix.formules || []).some((f) => f.zones.some((z) => (estOblig() ? zonesCours() : zonesOuvertes(ix)).includes(z)));
+  const lignes = Object.entries(nomsModes()).filter(([m]) => m !== 'formule' || formuleDispo).map(([m, [nom, txt]], i) => ligneEntree(m, ICONE_MODE[m] || m, nom, txt, () => (m === 'plan' || m === 'architecte' ? choixGenre(m) : m === 'atelier' ? choixNiveauAtelier() : lancerMode(m)), i * 2.2));
   // En L1, le cas pratique attend la suite du cours (sources du droit, jurisprudence).
   const casL1 = estIntro() ? h('div', { class: 'role-ligne en-travaux', 'data-mode': 'cas-l1', 'aria-disabled': 'true' }, h('span', { class: 'role-icone' }, icone('cas', 28)),
     h('span', { class: 'role-txt' }, h('b', {}, 'Cas pratique'), h('small', {}, 'Bientôt, avec la suite du cours'))) : null;
@@ -385,10 +388,10 @@ function ecranRole() {
 // Vers l'examen : un enchaînement facultatif, sans rappel ni compte à rebours.
 const NIVEAUX_EXAMEN = [
   { nom: 'Première instance', txt: 'Trois épreuves pour se mettre en route', oblig: ['qualif', 'remede', 'frise'], admin: ['paires', 'puzzle', 'frise'], intro: ['tri', 'memory', 'frise'], constit: ['nuancier', 'memory', 'frise'] },
-  { nom: 'Appel', txt: 'Cinq épreuves : cas, plans, et des réponses à écrire soi-même', oblig: ['cas', 'flash', 'trous', 'atelier', 'plaide'], admin: ['puzzle', 'juge', 'flash', 'atelier', 'plaide'], intro: ['mot', 'flash', 'quiadit', 'plan', 'scanner'], constit: ['pouvoirs', 'flash', 'quiadit', 'plan', 'plume'], txtIntro: 'Cinq épreuves : une définition à écrire, un plan à choisir' },
-  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['atelier', 'express', 'cas', 'frise', 'plaide', 'plan'], admin: ['atelier', 'juge', 'architecte', 'express', 'frise', 'plaide'], intro: ['rangement', 'flash', 'plan', 'quiadit', 'mot', 'flash'], constit: ['pouvoirs', 'flash', 'plan', 'plume', 'nuancier', 'flash'], txtIntro: 'Six épreuves, dont deux définitions à écrire' },
+  { nom: 'Appel', txt: 'Cinq épreuves : cas, plans, et des réponses à écrire soi-même', oblig: ['cas', 'flash', 'formule', 'atelier', 'plaide'], admin: ['puzzle', 'juge', 'formule', 'atelier', 'plaide'], intro: ['mot', 'flash', 'quiadit', 'plan', 'scanner'], constit: ['pouvoirs', 'flash', 'quiadit', 'plan', 'plume'], txtIntro: 'Cinq épreuves : une définition à écrire, un plan à choisir' },
+  { nom: 'Cassation', txt: 'Six épreuves pour te la mettre vraiment', oblig: ['atelier', 'express', 'cas', 'formule', 'plaide', 'plan'], admin: ['atelier', 'juge', 'formule', 'express', 'frise', 'plaide'], intro: ['rangement', 'flash', 'plan', 'quiadit', 'mot', 'flash'], constit: ['pouvoirs', 'flash', 'plan', 'plume', 'nuancier', 'flash'], txtIntro: 'Six épreuves, dont deux définitions à écrire' },
   { nom: 'Partiel blanc', txt: '20 minutes, une dizaine d’épreuves, puis ton bilan par chambre. Un repère, pas une note', partiel: true,
-    oblig: ['qualif', 'cas', 'flash', 'atelier', 'trous', 'remede', 'express', 'plaide', 'frise'], admin: ['paires', 'juge', 'flash', 'atelier', 'puzzle', 'express', 'plan', 'plaide', 'frise', 'architecte'],
+    oblig: ['qualif', 'cas', 'flash', 'atelier', 'formule', 'remede', 'express', 'plaide', 'frise'], admin: ['paires', 'juge', 'flash', 'atelier', 'formule', 'express', 'plan', 'plaide', 'frise', 'architecte'],
     intro: ['tri', 'mot', 'flash', 'quiadit', 'memory', 'scanner', 'plan', 'rangement', 'flash', 'frise'],
     constit: ['pouvoirs', 'mot', 'flash', 'quiadit', 'memory', 'plume', 'plan', 'nuancier', 'flash', 'frise'] },
 ];
@@ -398,7 +401,7 @@ function lancerExamen(i) {
   const dus = aRevoir(ix, zones); const deja = new Set();
   const types = estConstit() ? n.constit : estIntro() ? n.intro : estOblig() ? n.oblig : n.admin;
   // Les épreuves à réponse libre viennent du module d'examen ; à défaut de contenu, une épreuve classique les remplace.
-  const tirerBase = (t) => (estL1() && t === 'plan' ? { type: 'plan', ...roundPlan(ix, melange(ix.sujets, Math.random)[0]) } : tirerRound(ix, t, zones, dus, Math.random, deja));
+  const tirerBase = (t) => (estL1() && t === 'plan' ? { type: 'plan', ...roundPlan(ix, melange(ix.sujets, Math.random)[0]) } : tirerRound(ix, t, zones, dus, Math.random, deja, true));
   const tirer = (t) => (['flash', 'plaide', 'trous', 'express', 'syllogisme', 'casnu'].includes(t) ? roundExamen(ix, t, zones, dus, deja) || tirerRound(ix, estL1() ? 'memory' : estOblig() ? 'cas' : 'puzzle', zones, dus, Math.random, deja) : tirerBase(t));
   lancer({ type: n.partiel ? 'partiel' : 'examen', long: i >= 2, titre: `Vers l’examen : ${n.nom.toLowerCase()}`, rounds: types.map(tirer) });
 }
@@ -476,7 +479,8 @@ function choixGenre(m) {
 }
 function lancerMode(m, genre = null) {
   // En obligations, un exercice choisi puise dans tout le cours : les chambres rythment le défi et les audiences.
-  let zones = zonesCours();
+  // La formule puise dans toutes les chambres ouvertes : peu d'arrêts s'y prêtent.
+  let zones = m === 'formule' && !estOblig() ? zonesOuvertes(ix) : zonesCours();
   let source = ix;
   if (genre) {
     // Un type choisi puise dans toutes les chambres ouvertes, pour toujours trouver un sujet.
@@ -485,10 +489,11 @@ function lancerMode(m, genre = null) {
     if (sujets.length) { source = { ...ix, sujets }; zones = ouvertes; }
   }
   const dus = aRevoir(ix, zones);
-  const n = m === 'paires' || m === 'qualif' ? 3 : estL1() ? (['quiadit', 'scanner', 'pouvoirs', 'nuancier'].includes(m) ? 1 : 2) : m === 'memory' || m === 'rangement' ? 1 : 2;
+  const n = m === 'paires' || m === 'qualif' ? 3 : estL1() ? (['quiadit', 'scanner', 'pouvoirs', 'nuancier'].includes(m) ? 1 : 2) : m === 'memory' || m === 'rangement' || m === 'formule' ? 1 : 2;
   const deja = new Set();
   const titre = nomsModes()[m][0] + (genre && source !== ix ? (genre === 'C' ? ', commentaire' : ', dissertation') : '');
-  lancer({ type: 'mode', mode: m, titre, rounds: Array.from({ length: n }, () => tirerRound(source, m, zones, dus, Math.random, deja)) });
+  const entiere = m === 'formule';
+  lancer({ type: 'mode', mode: m, titre, rounds: Array.from({ length: n }, () => tirerRound(source, m, zones, dus, Math.random, deja, entiere)) });
 }
 
 // SÉANCE ------------------------------------------------------------------------
@@ -866,7 +871,9 @@ function reviserZone(z) {
     return;
   }
   const base = estOblig() ? 'qualif' : 'paires';
-  const types = melange(estOblig() ? ['cas', 'remede', 'frise'] : ['puzzle', 'juge', 'plan'], Math.random);
+  const pool = estOblig() ? ['cas', 'remede', 'frise'] : ['puzzle', 'juge', 'plan'];
+  if ((ix.formules || []).some((f) => f.zones.includes(z))) pool.push('formule');
+  const types = melange(pool, Math.random);
   lancer({ type: 'zone', titre: 'Révision', zone: z, rounds: [base, types[0], base].map((t) => tirerRound(ix, t, [z], dus, Math.random, deja)) });
 }
 
@@ -2045,7 +2052,8 @@ async function demarrer() {
   // Une ouverture lente : la chouette patiente, montre en main.
   const attente = setTimeout(() => racine.replaceChildren(h('div', { class: 'attente' }, chouette('pause', { taille: 210, tenue: false }), h('p', {}, 'Le Palais ouvre ses portes'))), 700);
   if (params.has('decalage')) fixerDecalage(+params.get('decalage'));
-  const [admin, admin2, oblig2, oblig1, intro, intro2, constit] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('admin2.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), fetch('intro.json').then((r) => r.json()), fetch('intro2.json').then((r) => r.json()), fetch('constit.json').then((r) => r.json()), charger().then(chargerImages)]);
+  const [admin, admin2, oblig2, oblig1, intro, intro2, constit, formulesData] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('admin2.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), fetch('intro.json').then((r) => r.json()), fetch('intro2.json').then((r) => r.json()), fetch('constit.json').then((r) => r.json()), fetch('formules.json').then((r) => r.json()), charger().then(chargerImages)]);
+  FORMULES = formulesData;
   clearTimeout(attente);
   if (!(await ouvrirCompte(params))) { enregistrerServiceWorker(); return; }
   // Une ancienne sauvegarde connaît déjà le jour de la dernière séance.
@@ -2056,7 +2064,7 @@ async function demarrer() {
   // Les tests gardent l'administratif de l'équipe 1, sauf s'ils demandent une équipe.
   ADMIN_PAR_EQUIPE.brut = { 1: admin, 2: params.has('test') && !params.has('equipe') ? admin : admin2 };
   INTRO_PAR_EQUIPE.brut = { 2: intro2, 3: intro };
-  indexerAdmin(); indexerObligations(); indexerIntro(); CONTENUS.constit = indexer(constit);
+  indexerAdmin(); indexerObligations(); indexerIntro(); CONTENUS.constit = indexer(constit, 2, FORMULES);
   if (params.has('test') && !params.has('choix')) etat.matiere = ['oblig', 'intro', 'constit'].includes(params.get('matiere')) ? params.get('matiere') : etat.matiere;
   if (params.has('test') && ['intro', 'constit'].includes(params.get('matiere'))) { etat.annee = 'L1'; etat.equipeL1 = +params.get('l1') || 3; indexerIntro(); }
   // Une matière qui n'est pas de l'année revient à la première de l'année.
@@ -2076,7 +2084,7 @@ async function demarrer() {
   else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
-  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation };
+  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation, lancer, tirerRound };
   setTimeout(surveillerFluidite, 1200);
   precharger();
 

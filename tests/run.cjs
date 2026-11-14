@@ -718,6 +718,92 @@ async function execGroupe1(b, PORT, erreurs) {
     }
     log('rappel installation connecté ok');
   }
+
+  // 14c. Exercice La formule (Tâche K)
+  if (matchSeul('formule')) {
+    // 1. Obligations (équipe 1) : version courte avec mauvaise réponse à l'étape 1, puis version entière
+    const c1 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+    const p1 = await c1.newPage(); p1.on('pageerror', (x) => erreurs.push(x.message));
+    p1.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
+    await p1.goto(URLB + '?test&matiere=oblig&equipe=1'); await p1.waitForSelector('.tribune');
+
+    // Version courte avec mauvaise réponse volontaire à l'étape 1
+    await p1.evaluate(() => window.__app.lancer({
+      type: 'mode', mode: 'formule', titre: 'La formule (courte)',
+      rounds: [window.__app.tirerRound(window.__app.ix, 'formule', window.__app.ix.zones.map((z) => z.id), [], Math.random, new Set(), false)],
+    }));
+    await p1.waitForSelector('.ecran.formule');
+    await debordement(p1, 'formule courte oblig');
+
+    // Étape 1 : Lire (mauvaise réponse)
+    const btnFaux = p1.locator('.formule .option[data-ok="false"]').first();
+    await btnFaux.click();
+    await p1.waitForSelector('.formule-signe');
+    const signeTxt = await p1.locator('.formule-signe').innerText();
+    assert(signeTxt.length > 5, 'le signe s’affiche après une mauvaise réponse');
+    await p1.screenshot({ path: CAP + 'formule-lire.png' });
+    await p1.locator('.scene .pied button').click();
+
+    // Étape 2 : Choisir
+    await p1.waitForSelector('.formule-carte');
+    await p1.locator('.formule-carte[data-ok="true"]').click();
+    await p1.waitForSelector('.formule-type-nom:not([hidden])');
+    await p1.locator('.scene .pied button').click();
+
+    // Fin d'épreuve puis résultats
+    await p1.waitForSelector('.ecran.fin-epreuve');
+    await p1.locator('.scene .pied button').click();
+    await p1.waitForSelector('.resultats');
+    await p1.tap('text=Retour au Palais'); await p1.waitForSelector('.tribune');
+
+    // Version entière (via Le rôle)
+    await p1.evaluate(() => window.__app.aller('role'));
+    await p1.locator('.role-ligne[data-mode="formule"]').click();
+    await p1.waitForSelector('.ecran.formule');
+    // Étape 1
+    await p1.locator('.formule .option[data-ok="true"]').click();
+    await p1.locator('.scene .pied button').click();
+    // Étape 2
+    await p1.locator('.formule-carte[data-ok="true"]').click();
+    await p1.locator('.scene .pied button').click();
+    // Étape 3 : Remplir (avec banc)
+    await p1.waitForSelector('.banc-composant');
+    await p1.screenshot({ path: CAP + 'formule-remplir.png' });
+    await debordement(p1, 'formule remplir oblig');
+    await jouerParfait(p1);
+    await p1.waitForSelector('.resultats');
+    await p1.tap('text=Retour au Palais'); await p1.waitForSelector('.tribune');
+    await c1.close();
+
+    // 2. Administratif (équipe 2) : version courte et version entière
+    const c2 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+    const p2 = await c2.newPage(); p2.on('pageerror', (x) => erreurs.push(x.message));
+    p2.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
+    await p2.goto(URLB + '?test&matiere=admin&equipe=2'); await p2.waitForSelector('.tribune');
+
+    // Version courte
+    await p2.evaluate(() => window.__app.lancer({
+      type: 'mode', mode: 'formule', titre: 'La formule (courte)',
+      rounds: [window.__app.tirerRound(window.__app.ix, 'formule', window.__app.ix.zones.map((z) => z.id), [], Math.random, new Set(), false)],
+    }));
+    await p2.waitForSelector('.ecran.formule');
+    await debordement(p2, 'formule courte admin');
+    await jouerParfait(p2);
+    await p2.waitForSelector('.resultats');
+    await p2.tap('text=Retour au Palais'); await p2.waitForSelector('.tribune');
+
+    // Version entière : la formule puise dans les chambres ouvertes
+    await p2.evaluate(() => { const e = window.__app.etat(); e.zones.ouvertes = window.__app.ix.zones.map((z) => z.id); window.__app.sauver(); window.__app.aller('role'); });
+    await p2.locator('.role-ligne[data-mode="formule"]').click();
+    await p2.waitForSelector('.ecran.formule');
+    await debordement(p2, 'formule entiere admin');
+    await jouerParfait(p2);
+    await p2.waitForSelector('.resultats');
+    await p2.tap('text=Retour au Palais'); await p2.waitForSelector('.tribune');
+    await c2.close();
+
+    log('formule ok');
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -2049,6 +2135,6 @@ async function execGroupe3(b, PORT, erreurs) {
     log('\nTests terminés.');
   }
 })().catch((e) => {
-  console.error('ÉCHEC :', e.message);
+  console.error('ÉCHEC :', e.message); if (process.env.PILE) console.error(e.stack);
   process.exit(1);
 });

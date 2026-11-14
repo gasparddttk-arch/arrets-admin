@@ -1,5 +1,6 @@
 // Contrôle du contenu : références, champs obligatoires et règles anti-devinette.
 import { lireContenu, lireObligations, lireObligations1, lireAdmin2, lireAteliers } from './parse.mjs';
+import { TYPES as TYPES_FORMULES, ARRETS as ARRETS_FORMULES } from '../content/formules.mjs';
 import { indexer, creerRng, optionsProbleme, blocsPuzzle, casJuge, roundPlan, planOf, roundArchitecte, grillePaires, composerDefi, composerBoss, questionsDunk, tirerDunk } from '../app/js/engine.js';
 
 const erreurs = [];
@@ -225,6 +226,30 @@ for (const [fichier, nom, sources] of [['ateliers.mjs', 'obligations', [[1, lire
         for (const [, f, v] of s.conditions) { if (f && !a.faits[f]) e(`${p.id} : fait ${f} inconnu`); if (!['oui', 'non', 'hypo'].includes(v)) e(`${p.id} : valeur ${v}`); }
       }
     }
+  }
+}
+
+// La formule : types valides, pièges distincts, 3 parties d'extrait, morceaux I, II et leurre, fiches existantes par équipe.
+const datasetsFormules = {
+  oblig: { 1: lireObligations1(), 2: lireObligations() },
+  admin: { 1: lireContenu(), 2: lireAdmin2() },
+};
+for (const f of ARRETS_FORMULES) {
+  const e = (m) => erreurs.push(`formule ${f.id} : ${m}`);
+  if (!TYPES_FORMULES[f.type]) e(`type inconnu ${f.type}`);
+  for (const p of f.pieges || []) {
+    if (!TYPES_FORMULES[p]) e(`piège inconnu ${p}`);
+    if (p === f.type) e(`piège identique au type ${p}`);
+  }
+  if (!Array.isArray(f.extrait) || f.extrait.length !== 3) e('extrait doit avoir 3 parties');
+  const hasI = (f.morceaux || []).some((m) => m.case === 'I');
+  const hasII = (f.morceaux || []).some((m) => m.case === 'II');
+  const hasLeurre = (f.morceaux || []).some((m) => m.case === null);
+  if (!hasI || !hasII || !hasLeurre) e('doit avoir au moins un morceau I, un II et un leurre');
+  for (const eq of f.equipes || []) {
+    const ds = datasetsFormules[f.matiere]?.[eq];
+    if (!ds) e(`matière ${f.matiere} ou équipe ${eq} inconnue`);
+    else if (!ds.arrets.some((a) => a.id === f.arret)) e(`fiche ${f.arret} absente de ${f.matiere} équipe ${eq}`);
   }
 }
 
