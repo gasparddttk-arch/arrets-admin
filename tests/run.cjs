@@ -876,6 +876,83 @@ async function execGroupe1(b, PORT, erreurs) {
     }
     log('production ok');
   }
+
+  // 14c. Révision du jour (Tâche M)
+  if (matchSeul('révision du jour') || matchSeul('revision')) {
+    const { indexer, composerRevision, PRODUCTION } = await import('../app/js/engine.js');
+    const { aRattraper } = await import('../app/js/state.js');
+    const read = (f) => JSON.parse(fs.readFileSync('docs/' + f));
+    const matieres = [
+      { mat: 'admin', eq: 1, f: 'content.json', attendu: ['paires', 'juge', 'paires'] },
+      { mat: 'admin', eq: 2, f: 'admin2.json', attendu: ['paires', 'juge', 'paires'] },
+      { mat: 'oblig', eq: 1, f: 'oblig1.json', attendu: ['qualif', 'remede', 'qualif'] },
+      { mat: 'oblig', eq: 2, f: 'oblig.json', attendu: ['qualif', 'remede', 'qualif'] },
+      { mat: 'intro', eq: 2, f: 'intro.json', attendu: ['memory', 'mot', 'memory'] },
+      { mat: 'constit', eq: 2, f: 'constit.json', attendu: ['mot', 'memory', 'mot'] },
+    ];
+    const formes = read('formules.json');
+
+    for (const m of matieres) {
+      const ix = indexer(read(m.f), m.eq, formes);
+      const zones = ix.zones.filter((z) => !z.travaux).map((z) => z.id);
+      const rounds = composerRevision(ix, zones, []);
+      assert.equal(rounds.length, 3, `Révision ${m.mat} taille != 3`);
+      assert.deepEqual(rounds.map((r) => r.type), m.attendu, `Types révision ${m.mat}`);
+      for (const r of rounds) {
+        assert(!PRODUCTION.includes(r.type), `Révision ${m.mat} ne doit pas contenir de production (${r.type})`);
+      }
+    }
+
+    await pageG1();
+    // 1. Jouer une séance avec deux erreurs volontaires
+    await p.evaluate(() => {
+      const ix = window.__app.ix;
+      const c1 = ix.cartes[0].id;
+      const c2 = ix.cartes[1].id;
+      const rounds = [
+        { type: 'appel', carte: c1, nom: 'Fiche 1', q: 'Question test 1', options: [{ t: 'Faux', ok: false }, { t: 'Vrai', ok: true }] },
+        { type: 'appel', carte: c2, nom: 'Fiche 2', q: 'Question test 2', options: [{ t: 'Faux', ok: false }, { t: 'Vrai', ok: true }] },
+      ];
+      window.__app.lancer({ type: 'express', titre: 'Séance erreurs test', rounds });
+    });
+    // Premier round (c1) : erreur volontaire
+    await p.waitForSelector('.qcm.appel');
+    await p.locator('.option[data-ok="false"]').click();
+    await p.locator('.pied button:not([disabled])').click();
+    // Deuxième round (c2) : erreur volontaire
+    await p.waitForSelector('.qcm.appel');
+    await p.locator('.option[data-ok="false"]').click();
+    await p.locator('.pied button:not([disabled])').click();
+    // Écran de fin
+    await p.waitForSelector('.resultats');
+    await p.tap('text=Retour au Palais');
+    await p.waitForSelector('.tribune');
+
+    // 2. Le lendemain (?test&decalage=1) : l'entrée « À revoir aujourd'hui » affiche 2 fiches
+    await p.goto(URLB + '?test&decalage=1');
+    await p.waitForSelector('.tribune');
+    const btnRevision = await p.waitForSelector('[data-revision]');
+    const txtRevision = await btnRevision.innerText();
+    assert.match(txtRevision, /À revoir aujourd’hui/);
+    assert.match(txtRevision, /2 fiches que tu as ratées reviennent/);
+    await p.screenshot({ path: CAP + 'palais-revision.png' }); await debordement(p, 'palais revision');
+
+    // 3. La séance les propose
+    await p.tap('[data-revision]');
+    await jouer(p);
+    await p.waitForSelector('.resultats');
+    const resRevision = await p.waitForSelector('.res-revision');
+    const txtRes = await resRevision.innerText();
+    assert.match(txtRes, /Fiches revues/);
+    assert.match(txtRes, /Revue, elle reviendra plus tard/);
+    await p.screenshot({ path: CAP + 'revision-resultats.png' }); await debordement(p, 'revision resultats');
+
+    // 4. Après réussite, retour au Palais -> l'entrée disparaît
+    await p.tap('text=Retour au Palais');
+    await p.waitForSelector('.tribune');
+    assert.equal(await p.$('[data-revision]'), null, 'l’entrée disparaît après la révision');
+    log('révision du jour ok');
+  }
 }
 
 // -----------------------------------------------------------------------------

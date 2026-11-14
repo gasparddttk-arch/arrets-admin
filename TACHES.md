@@ -211,7 +211,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : un test qui compose 200 défis du jour, Trois minutes et révisions par matière (rng fixe) et vérifie qu'aucun ne contient de type de `PRODUCTION` ; 200 audiences par matière contiennent exactement une production, jamais en premier. Suite complète verte.
 
 ### [TÂCHE M] La révision du jour, fondée sur les erreurs, visible sur le Palais (Antigravity)
-- **Statut** : À faire
+- **Statut** : Fait le 14/11 (commencé par Antigravity, terminé par Claude). Jeux complétés pour noter les fiches : `jouerTri`, `jouerMot` (fiche du round), `jouerQuiADit`, `jouerScanner`, `jouerMemory` (L1), `jouerFrise`, `construire`/`reconnaitre` (pouvoirs), `jouerNuancier`, `jouerPlume`. Seules les fiches du cours sont suivies (`ctx.noter` ignore les autres identifiants).
 - **Décisions de Gaspard (13/11)** : 8 fiches au maximum par jour ; la finir pose le sceau du jour.
 - **Constat** : la répétition espacée existe (`noter`, `aRevoir` dans `state.js`), mais elle est cachée, et `aRevoir` mélange les fiches ratées, les fiches simplement dues et les fiches neuves.
 - **Fichiers concernés** : `app/js/state.js`, `app/js/engine.js`, `app/js/main.js` (`accueil`, `resultats`), les fichiers de jeux, `app/css/app.css`, `tests/run.cjs`

@@ -775,6 +775,17 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .res-revoir h2 { font-weight: 700; font-size: 22px; margin-bottom: 4px; }
 .res-revoir li button { min-height: 40px; color: var(--titre-or); text-decoration: underline; text-underline-offset: 2px; }
 .res-revoir b { font-weight: 700; }
+.res-revision { width: 100%; text-align: left; margin-top: 16px; }
+.res-revision h2 { font-weight: 700; font-size: 22px; margin-bottom: 8px; }
+.fiches-revues-liste { display: grid; gap: 8px; list-style: none; padding: 0; margin: 0; }
+.fiche-revue { display: flex; flex-direction: column; gap: 3px; padding: 10px 14px; border-radius: 12px; background: var(--carte-bas); box-shadow: inset 0 0 0 1px var(--carte-bord); }
+.fiche-revue button { text-align: left; color: var(--titre-or); font: inherit; }
+.fiche-revue button b { text-decoration: underline; text-underline-offset: 3px; }
+.fiche-revue b { font-weight: 700; }
+.fiche-revue .annee { color: var(--texte-2); font-size: 15px; }
+.statut-bulle { font-size: 14px; line-height: 1.2; font-weight: 600; }
+.statut-ok { color: var(--juste); }
+.statut-ko { color: var(--faux); }
 .resultats .pied { width: calc(100% + 32px); }
 
 /* Fenêtres, messages */
@@ -1307,6 +1318,12 @@ html[data-effets='non']::after { animation: none; }
 .cta-txt b { font-size: 27px; font-weight: 700; }
 .cta .cta-sous { margin: 0; text-align: left; font-family: var(--ui); font-size: 14px; color: var(--or-texte); opacity: .75; }
 .cta-jouer { flex: none; width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; background: var(--encre); color: var(--or); }
+/* La révision du jour : avant le défi, mais plus discrète que lui. */
+.cta.cta-revision { min-height: 0; padding: 14px 12px 14px 20px; background: var(--banc); box-shadow: inset 0 0 0 1.5px var(--or); color: var(--texte); }
+.cta.cta-revision:active { box-shadow: inset 0 0 0 1.5px var(--or); }
+.cta-revision .cta-txt b { font-size: 21px; color: var(--titre-or, var(--or)); }
+.cta-revision .cta-sous { color: var(--texte-2); opacity: 1; }
+.cta-revision .cta-jouer { width: 46px; height: 46px; background: var(--or); color: var(--encre); }
 .role.role-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 10px 14px 12px; }
 .role-duo .role-ligne { margin: 0; min-height: 132px; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 16px; border-radius: 28px; }
 .role-duo .role-ligne[data-mode='vers-examen'] { background: var(--verdict); color: var(--verdict-texte); }

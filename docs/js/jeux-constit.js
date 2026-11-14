@@ -159,6 +159,8 @@ function construire(zone, ctx, round) {
       await attendre(900);
       const score = revele ? (trouvesAvant / total) * 0.6 : Math.max(0.4, 1 - erreurs * 0.12);
       const parfait = !revele && erreurs === 0;
+      const ficheId = round.carte || r.carte || r.id;
+      if (ficheId) ctx.noter(ficheId, parfait);
       ctx.gain(Math.round(32 * score) + (parfait ? 8 : 0));
       fini();
       finEpreuve(zone, ctx, { score, parfait },
@@ -186,6 +188,8 @@ function reconnaitre(zone, ctx, round) {
       if (fait) return; fait = true;
       const ok = o.id === r.id;
       ctx.combo(ok); son(ok ? 'ok' : 'ko'); vibrer(ok ? 10 : [20, 40, 20]);
+      const ficheId = round.carte || r.carte || r.id;
+      if (ficheId) ctx.noter(ficheId, ok);
       options.forEach((b, j) => { b.disabled = true; if (round.options[j].id === r.id) b.classList.add('juste'); else if (round.options[j] === o) b.classList.add('faux'); });
       await attendre(800);
       ctx.gain(ok ? 26 : 4);
@@ -250,6 +254,8 @@ export function jouerNuancier(zone, ctx, round) {
       points += ecart === 0 ? 1 : ecart === 1 ? 0.5 : 0;
       if (ecart === 0) exacts++;
       ctx.combo(ecart === 0);
+      const ficheId = j.carte || j.id;
+      if (ficheId) ctx.noter(ficheId, ecart === 0);
       son(ecart === 0 ? 'ok' : 'ko'); vibrer(ecart === 0 ? 12 : [20, 40, 20]);
       // Le jeton fond dans la bande ; une épingle marque l'endroit, à la bonne place.
       const zb = zones[k].getBoundingClientRect(); const jb = jeton.getBoundingClientRect();
@@ -343,6 +349,8 @@ export function jouerPlume(zone, ctx, round) {
       await attendre(1100);
       const score = (bons / trous.length) * 0.7 + (ok ? 0.3 : 0);
       const parfait = bons === trous.length && ok;
+      const ficheId = t.carte || t.id || round.carte || round.id;
+      if (ficheId) ctx.noter(ficheId, parfait);
       ctx.gain(Math.round(30 * score) + (parfait ? 6 : 0));
       fini();
       finEpreuve(zone, ctx, { score, parfait },

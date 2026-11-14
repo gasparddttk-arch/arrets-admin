@@ -420,6 +420,16 @@ export function aRevoir(ix, zones) {
   return [...dus, ...neufs].map((a) => a.id);
 }
 
+// Fiches dues aujourd'hui et déjà ratées au moins une fois, les plus anciennes d'abord, au plus 8.
+export function aRattraper(ix, zones) {
+  const j = jour(); const fiches = M().arrets;
+  const dansZones = (a) => a.zones.some((z) => zones.includes(z));
+  const cibles = ix.cartes.filter((a) => dansZones(a) && fiches[a.id] && fiches[a.id].d <= j && fiches[a.id].ko > 0)
+    .sort((a, b) => (fiches[a.id].d - fiches[b.id].d) || (fiches[b.id].ko - fiches[a.id].ko))
+    .slice(0, 8);
+  return cibles.map((a) => a.id);
+}
+
 // Chapitres en travaux : ouverts dès le début, hors du défi du jour, le temps que le cours y arrive.
 // En administratif (équipe 1), le bonus TD rejoint le parcours dès que la troisième chambre est ouverte.
 export const zonesOuvertes = (ix) => {

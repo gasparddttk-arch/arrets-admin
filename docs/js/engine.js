@@ -481,6 +481,16 @@ export function composerDefi(ix, zones, dus, rng = Math.random) {
   return ['paires', ...ordre, choix(['paires', 'paires', 'rangement', 'memory'], rng)].map((t) => tirerRound(ix, t, zones, dus, rng, deja));
 }
 
+// La révision du jour : 3 épreuves sans production, tirées en priorité dans les fiches à rattraper.
+export function composerRevision(ix, zones, dus, rng = Math.random) {
+  const deja = new Set();
+  const types = ix.matiere === 'constit' ? ['mot', 'memory', 'mot']
+    : ix.matiere === 'intro' ? ['memory', 'mot', 'memory']
+    : ix.matiere === 'oblig' ? ['qualif', 'remede', 'qualif']
+    : ['paires', 'juge', 'paires'];
+  return types.map((t) => tirerRound(ix, t, zones, dus, rng, deja));
+}
+
 // Audience solennelle : les cinq modes, plus une épreuve au hasard.
 export function composerBoss(ix, zone, rng = Math.random) {
   if (estL1(ix)) return composerBossIntro(ix, zone, rng);
@@ -581,13 +591,13 @@ const sansAccent = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase
 export function tirerIntro(ix, type, zones, dus, rng = Math.random, deja = new Set()) {
   const dans = dansZones(zones);
   const dispo = typesIntro(ix, zones);
-  if (!dispo.includes(type)) type = choix(dispo.filter((t) => t !== 'frise'), rng);
+  if (!dispo.includes(type)) type = choix(dispo.filter((t) => t !== 'frise' && !estProduction(t, ix.matiere)), rng);
   const notions = ix.articles.filter(dans);
   const prendre = (liste) => {
     const frais = liste.filter((x) => !deja.has(x.id));
     const base = frais.length ? frais : liste;
-    const du = dus.find((id) => base.some((x) => x.id === id));
-    const pris = du ? base.find((x) => x.id === du) : choix(base, rng);
+    const du = dus.find((id) => base.some((x) => x.id === id || x.carte === id));
+    const pris = du ? base.find((x) => x.id === du || x.carte === du) : choix(base, rng);
     deja.add(pris.id);
     return pris;
   };

@@ -147,7 +147,8 @@ export async function jouerFrise(zone, ctx, round) {
   const r = await qcm(zone, ctx, { surtitre: round.titre, question: round.q, options: round.options.map((o) => ({ ...o })), pourquoiBon: round.pourquoiBon, classe: 'frise-q' });
   const ok = tout && r.ok;
   const score = (justes / aPlacer) * 0.7 + (r.ok ? 0.3 : 0);
-  for (const e of etapes) if (e.carte) ctx.noter(e.carte, ok || place[e.rang]?.rang === e.rang);
+  for (const e of etapes) { const fid = e.carte || e.id; if (fid) ctx.noter(fid, ok || place[e.rang]?.rang === e.rang); }
+  if (round.carte || round.id) ctx.noter(round.carte || round.id, ok);
   if (ok) etat.stats.frise++;
   ctx.gain(Math.round(30 * score) + (ok ? 8 : 0));
   ctx.fin({ score, parfait: ok });

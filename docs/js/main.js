@@ -4,11 +4,11 @@ import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import { remplacerEtat, choisirAnnee, ajouterSemaine, gagnerAppel, erreursOuvertes, carnetVisible, changerEquipe,
-  SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, lundi, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir,
+  SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, lundi, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir, aRattraper,
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, fixerDecalage, rembourse,
   MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
 } from './state.js';
-import { indexer, questionsDunk, composerDefi, composerBoss, tirerRound, jumeaux, melange, typesIntro, roundPlan, tirerAtelier } from './engine.js';
+import { indexer, questionsDunk, composerDefi, composerBoss, composerRevision, tirerRound, jumeaux, melange, typesIntro, roundPlan, tirerAtelier } from './engine.js';
 import { JEUX, NOMS_MODES, NOMS_MODES_OBLIG, NOMS_MODES_INTRO, NOMS_MODES_CONSTIT, continuer, qcm } from './games.js';
 import { jouerPouvoirs, jouerNuancier, jouerPlume } from './jeux-constit.js';
 import { jouerAtelier } from './atelier.js';
@@ -328,6 +328,15 @@ function accueil() {
   const fait = s.dernier === j;
   const zones = zonesOuvertes(ix);
   const dus = aRevoir(ix, zones).filter((id) => M().arrets[id]).length;
+  const zonesJour = zonesDuJour(ix);
+  const rattraper = aRattraper(ix, zonesJour);
+  const revisionFaite = M().revision === j;
+  const montrerRevision = rattraper.length > 0 && !revisionFaite;
+  const nRattraper = rattraper.length;
+  const sousRevision = `${nRattraper} ${nRattraper > 1 ? 'fiches que tu as ratées reviennent' : 'fiche que tu as ratée revient'}. Environ 3 minutes.`;
+  const blocRevision = montrerRevision ? h('button', { class: 'cta cta-revision', 'data-revision': '', onClick: lancerRevisionJour },
+    h('span', { class: 'cta-txt' }, h('b', {}, 'À revoir aujourd’hui'), h('small', { class: 'cta-sous' }, sousRevision)),
+    h('span', { class: 'cta-jouer', 'aria-hidden': 'true' }, svg('<svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>'))) : null;
   const rompue = etat.rompue;
   const blocRupture = rompue ? h('div', { class: 'rupture' },
     h('p', {}, `Ta série de ${pluriel(rompue.n, 'jour')} est tombée. Un relevé de forclusion peut la rétablir jusqu’à demain soir.`),
@@ -354,6 +363,7 @@ function accueil() {
         h('button', { class: 'bouton-lien', onClick: () => { M().enCours = null; sauver(); accueil(); } }, 'Abandonner cette séance')) : null,
       defisEnAttente.length ? h('div', { class: 'defis-attente' }, defisEnAttente.slice(0, 2).map((d) => h('button', { class: 'bouton-or defi-attente', onClick: () => releverDefi(d.id) },
         `${d.pseudo || 'Un ami'} te défie : bats ses ${pct(d.score_auteur)}`))) : null,
+      blocRevision,
       decouverteDue() ? h('button', { class: 'cta brille', 'data-decouverte': '', onClick: () => lancerDecouverte(0) },
         h('span', { class: 'cta-txt' }, h('b', {}, 'Ta première séance'), h('small', { class: 'cta-sous' }, 'Un seul exercice, une minute')),
         h('span', { class: 'cta-jouer', 'aria-hidden': 'true' }, svg('<svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>'))) :
@@ -446,6 +456,12 @@ function lancerDecouverte(rang = 0) {
   const mode = modes[rang % modes.length];
   const zones = etat.matiere === 'constit' && mode === 'nuancier' ? [...new Set([...zonesDuJour(ix), 2])] : zonesDuJour(ix);
   lancer({ type: 'decouverte', mode, titre: rang ? 'Encore une minute' : 'Ta première séance', rounds: [tirerRound(ix, mode, zones, [], Math.random, new Set())] });
+}
+function lancerRevisionJour() {
+  const zones = zonesDuJour(ix);
+  const dus = aRattraper(ix, zones);
+  const rounds = composerRevision(ix, zones, dus);
+  lancer({ type: 'revision', titre: 'À revoir aujourd’hui', rounds });
 }
 function lancerDefi() {
   const zones = zonesDuJour(ix);
@@ -571,6 +587,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
     aide() { S.aide = true; },
     get long() { return S.long; },
     noter(id, ok, conf) {
+      if (!ix.parId.has(id)) return; // seules les fiches du cours sont suivies
       const monte = noter(id, ok, conf, S.aide);
       if (monte) S.montees = (S.montees || 0) + 1;
       if (monte === 'prime') (S.primes ||= []).push(id);
@@ -696,6 +713,7 @@ function resultats(S, reussi) {
   M().xp += S.xp; ajouterSemaine(S.xp);
   const pieces = crediter(S.jetons);
   const ligneAmi = suiteDefiAmi(S, moyenne);
+  if (S.type === 'revision') M().revision = jour();
   if (S.type === 'defi') annoncerDefiJour();
 
   let textBoss = null;
@@ -712,7 +730,7 @@ function resultats(S, reussi) {
       textBoss = premier ? `Audience gagnée. La chambre suivante s’ouvre, et ${monnaie(BONUS_AUDIENCE)} te reviennent.` : 'Audience gagnée une nouvelle fois.';
     } else textBoss = 'Audience perdue. Révise cette chambre, puis réessaie.';
   }
-  const merite = S.type === 'boss' ? reussi : moyenne >= SCEAU_REUSSITE || (S.montees || 0) >= SCEAU_FICHES;
+  const merite = S.type === 'boss' ? reussi : (S.type === 'revision' || moyenne >= SCEAU_REUSSITE || (S.montees || 0) >= SCEAU_FICHES);
   const sceauManque = !merite && S.type !== 'boss' && etat.serie.dernier !== jour();
   const v = merite ? validerJour() : { nouveau: false, n: etat.serie.n };
   sauver();
@@ -721,6 +739,18 @@ function resultats(S, reussi) {
   sauver();
 
   const aRevoirListe = [...S.touches.entries()].filter(([, t]) => t.ko > 0).map(([id]) => ix.parId.get(id));
+  const fichesRevues = S.type === 'revision' ? [...S.touches.entries()].map(([id, t]) => {
+    const a = ix.parId.get(id);
+    if (!a) return null;
+    const rate = t.ko > 0;
+    const nom = a.article ? a.nom : a.court || a.nom;
+    const anneeOuRef = a.an ? ` (${a.an})` : a.titre ? ` — ${a.titre}` : '';
+    const txtStatut = rate ? 'Encore ratée, elle revient demain' : 'Revue, elle reviendra plus tard';
+    return h('li', { class: `fiche-revue ${rate ? 'ko' : 'ok'}` },
+      h('button', { onClick: () => { afficherOnglets(true); ongletCourant = 'arrets'; fiche(a.id); } },
+        h('b', {}, nom), anneeOuRef ? h('span', { class: 'annee' }, anneeOuRef) : null),
+      h('span', { class: `statut-bulle ${rate ? 'statut-ko' : 'statut-ok'}` }, txtStatut));
+  }).filter(Boolean) : null;
   const zoneSceau = h('div', { class: 'tampon' });
   const pourcent = Math.round(moyenne * 100);
   const nouveauGrade = apres.i > avant.i || apresGeneral.i > avantGeneral.i;
@@ -765,6 +795,9 @@ function resultats(S, reussi) {
       : S.type === 'decouverte' ? h('section', { class: 'decouverte-suite' },
         h('p', {}, M().decouverte > 1 ? 'Le Défi du jour enchaîne cinq exercices comme ceux-là, choisis selon ce que tu dois revoir : environ cinq minutes par jour.'
           : 'C’est tout pour ta première séance. Chaque jour, le Défi du jour en enchaîne cinq comme celle-ci, choisis selon ce que tu dois revoir.')) : null,
+    S.type === 'revision' && fichesRevues?.length ? h('section', { class: 'res-revision' },
+      h('h2', {}, 'Fiches revues'),
+      h('ul', { class: 'fiches-revues-liste' }, fichesRevues)) :
     aRevoirListe.length && !vis ? h('section', { class: 'res-revoir' }, h('h2', {}, 'À revoir'),
       h('ul', {}, aRevoirListe.slice(0, 6).map((a) => h('li', {}, h('button', { onClick: () => { afficherOnglets(true); ongletCourant = 'arrets'; fiche(a.id); } }, h('b', {}, a.court), a.an ? ` ${a.an}` : ` ${a.titre}`))))) : null,
     vis ? null : S.type === 'decouverte' ? h('div', { class: 'pied' },
@@ -772,7 +805,7 @@ function resultats(S, reussi) {
       h('button', { class: 'bouton-fantome', onClick: () => { suivre('decouverte_suite', { choix: 'defi', rang: M().decouverte }); lancerDefi(); } }, 'Faire le Défi du jour'),
       h('button', { class: 'bouton-lien', onClick: () => { suivre('decouverte_suite', { choix: 'palais', rang: M().decouverte }); aller('palais'); } }, 'Retour au Palais')) :
     h('div', { class: 'pied' },
-      S.type !== 'appel' && aRevoirListe.length ? h('button', { class: 'bouton-or', 'data-appel': '', onClick: () => faireAppel(aRevoirListe.map((a) => a.id)) }, 'Faire appel') : null,
+      S.type !== 'appel' && S.type !== 'revision' && aRevoirListe.length ? h('button', { class: 'bouton-or', 'data-appel': '', onClick: () => faireAppel(aRevoirListe.map((a) => a.id)) }, 'Faire appel') : null,
       continuer('Retour au Palais', () => aller('palais')),
       S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null,
       connecte() ? h('button', { class: 'bouton-lien', onClick: () => faireRetour(`Résultats : ${S.titre}`) }, 'Faire un retour') : null),
@@ -2084,7 +2117,7 @@ async function demarrer() {
   else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
-  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation, lancer, tirerRound };
+  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation, lancer, tirerRound, aRattraper, lancerRevisionJour, composerRevision };
   setTimeout(surveillerFluidite, 1200);
   precharger();
 

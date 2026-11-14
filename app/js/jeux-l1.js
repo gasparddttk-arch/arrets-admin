@@ -65,8 +65,9 @@ export function jouerTri(zone, ctx, round) {
       const c = round.cartes[i];
       occupe = true;
       const tampon = carte.querySelector('.tri-tampon');
+      const ficheId = c.carte || c.id;
       if (String(k) === String(c.k)) {
-        if (!rate) bons++;
+        if (!rate) { bons++; if (ficheId) ctx.noter(ficheId, true); }
         ctx.combo(!rate);
         tampon.textContent = BORDS[k][0];
         carte.classList.add('tamponnee');
@@ -77,7 +78,7 @@ export function jouerTri(zone, ctx, round) {
         await attendre(enTest ? 20 : 380);
         i++; occupe = false; suivante();
       } else {
-        if (!rate) ctx.combo(false);
+        if (!rate) { ctx.combo(false); if (ficheId) ctx.noter(ficheId, false); }
         rate = true;
         son('ko'); vibrer([20, 40, 20]);
         carte.style.transform = '';
@@ -167,7 +168,8 @@ export function jouerMot(zone, ctx, round) {
       fin = true;
       document.removeEventListener('keydown', physique);
       ctx.combo(gagne);
-      if (round.id) ctx.noter(round.id, gagne && ligne <= 4);
+      const ficheId = round.carte || round.id;
+      if (ficheId) ctx.noter(ficheId, gagne && ligne <= 4);
       const score = gagne ? Math.max(0.4, 1 - (ligne - 1) * 0.12) : 0;
       ctx.gain(gagne ? Math.round(30 * score) + (ligne <= 2 ? 8 : 0) : 0);
       if (gagne) { son('valide'); grille.children[ligne - 1].classList.add('danse'); }
@@ -302,6 +304,8 @@ export function jouerQuiADit(zone, ctx, round) {
         const ok = x.a === c.a;
         if (ok) bons++;
         ctx.combo(ok); son(ok ? 'ok' : 'ko'); vibrer(ok ? 10 : [20, 40, 20]);
+        const ficheId = c.carte || c.id;
+        if (ficheId) ctx.noter(ficheId, ok);
         medaillons.forEach((m, j) => { const bon = c.choix[j].a === c.a; m.disabled = true; m.classList.add(bon ? 'hoche' : 'retourne'); if (m === medaillons[c.choix.indexOf(x)] && !ok) m.classList.add('choisi-faux'); });
         await attendre(700);
         ecran.append(h('p', { class: `qad-verdict ${ok ? 'juste' : 'faux'}` }, ok ? `Oui, ${c.nom}.` : `Non : c’est ${c.nom}.`),
@@ -354,6 +358,8 @@ export function jouerScanner(zone, ctx, round) {
         const score = manqueJuste ? 1 : verdictJuste ? 0.5 : 0;
         points += score;
         ctx.combo(manqueJuste);
+        const ficheId = x.carte || x.id;
+        if (ficheId) ctx.noter(ficheId, manqueJuste);
         choix.remove();
         question.textContent = 'Le scanner';
         feuille.classList.add('balaye');
@@ -453,7 +459,8 @@ export function jouerMemory(zone, ctx, round) {
         for (const z of [x, y]) z.el.classList.add('trouvee');
         dossier.querySelector('b').textContent = String(trouvees);
         dossier.classList.remove('recoit'); void dossier.offsetWidth; dossier.classList.add('recoit');
-        if (x.p.carte) ctx.noter(x.p.carte, (erreurs.get(x.p) || 0) < 2);
+        const ficheId = x.p.carte || x.p.id;
+        if (ficheId && !ficheId.startsWith('idee-')) ctx.noter(ficheId, (erreurs.get(x.p) || 0) < 2);
         if (trouvees === round.paires.length) setTimeout(conclure, duree(500));
       } else {
         bloque = true; son('ecart');
