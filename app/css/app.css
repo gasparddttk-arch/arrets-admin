@@ -1605,7 +1605,12 @@ body:has(.decor-seance) .colonnes-buren,
 .mem-tete { display: flex; align-items: center; justify-content: space-between; }
 .mem-dossier { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--banc); color: var(--or); font: 800 15px var(--ui); }
 .mem-dossier.recoit { animation: mot-pop .35s ease; }
-.mem-consigne { margin: 4px 0 10px; font: 14px var(--ui); color: var(--texte-2); }
+.mem-consigne { margin: 4px 0 10px; font: 14px var(--ui); color: var(--texte-2); min-height: 28px; }
+.mem-consigne:has(.mem-pret) { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.mem-consigne-txt { flex: 1 1 auto; }
+.mem-rebours { font-weight: 700; color: var(--or); white-space: nowrap; }
+.mem-pret { font: 600 13px var(--ui); min-height: 34px; padding: 4px 12px; border-radius: 999px; border: 0; background: var(--banc); color: var(--texte); cursor: pointer; white-space: nowrap; flex: none; }
+.mem-pret:active { background: var(--banc-fort); }
 .mem-grille { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .mem-carte { position: relative; min-height: 104px; padding: 0; border: 0; border-radius: 16px; background: transparent; color: var(--texte); font: inherit; perspective: 600px; }
 .mem-dos, .mem-face { position: absolute; inset: 0; display: grid; place-items: center; padding: 8px; border-radius: 16px; backface-visibility: hidden; transition: transform .4s ease; box-sizing: border-box; }

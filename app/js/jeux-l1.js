@@ -393,22 +393,55 @@ export function jouerMemory(zone, ctx, round) {
   return new Promise((fini) => {
     const cartes = round.paires.flatMap((p) => [{ p, t: p.a, cote: 'a' }, { p, t: p.b, cote: 'b' }]).sort(() => Math.random() - 0.5);
     let ouvertes = []; let trouvees = 0; let coups = 0; let bloque = false;
+    let enMemorisation = true;
+    let reste = 20;
     const erreurs = new Map();
     const dossier = h('span', { class: 'mem-dossier', 'aria-label': 'Paires trouvées' }, icone('note', 22), h('b', {}, '0'));
     const els = cartes.map((c, i) => {
       const repereLettre = String.fromCharCode(65 + i);
-      const el = h('button', { class: `mem-carte cote-${c.cote}`, 'data-paire': repere(c.p.id), 'aria-label': `Carte ${repereLettre}`, onClick: () => retourner(c, el) },
+      c.repereLettre = repereLettre;
+      const el = h('button', { class: `mem-carte cote-${c.cote} ouverte`, 'data-paire': repere(c.p.id), 'aria-label': c.t, onClick: () => retourner(c, el) },
         h('span', { class: 'mem-dos', 'aria-hidden': 'true' }, h('span', { class: 'mem-repere' }, repereLettre)), h('span', { class: 'mem-face' }, c.t));
       c.el = el; return el;
     });
-    const consigne = h('p', { class: 'mem-consigne' }, round.consigne || 'Retrouve chaque notion et sa définition.');
+    const reboursEl = h('span', { class: 'mem-rebours' }, `${reste} s`);
+    const pretBtn = h('button', { type: 'button', class: 'mem-pret', onClick: finMemorisation }, 'C’est mémorisé');
+    const consigne = h('p', { class: 'mem-consigne' },
+      h('span', { class: 'mem-consigne-txt' }, 'Mémorise les cartes : elles se retournent dans ', reboursEl, '.'),
+      pretBtn);
     const ecran = h('div', { class: 'ecran memory' }, h('div', { class: 'ecran-corps' },
       h('div', { class: 'mem-tete' }, h('p', { class: 'surtitre' }, 'Memory'), dossier),
       consigne,
       h('div', { class: 'mem-grille' }, els)));
     zone.replaceChildren(ecran);
+
+    const interval = setInterval(() => {
+      if (!ecran.isConnected) {
+        clearInterval(interval);
+        return;
+      }
+      reste--;
+      if (reste <= 0) {
+        finMemorisation();
+      } else {
+        reboursEl.textContent = `${reste} s`;
+      }
+    }, 1000);
+
+    function finMemorisation() {
+      clearInterval(interval);
+      if (!enMemorisation) return;
+      enMemorisation = false;
+      if (!ecran.isConnected) return;
+      for (const c of cartes) {
+        c.el.classList.remove('ouverte');
+        c.el.setAttribute('aria-label', `Carte ${c.repereLettre}`);
+      }
+      consigne.textContent = round.consigne || 'Retrouve chaque notion et sa définition.';
+    }
+
     async function retourner(c, el) {
-      if (bloque || el.classList.contains('ouverte') || el.classList.contains('trouvee')) return;
+      if (bloque || enMemorisation || el.classList.contains('ouverte') || el.classList.contains('trouvee')) return;
       el.classList.add('ouverte'); el.setAttribute('aria-label', c.t); son('carte');
       ouvertes.push(c);
       if (ouvertes.length < 2) return;
@@ -434,12 +467,13 @@ export function jouerMemory(zone, ctx, round) {
           setTimeout(() => ecran.addEventListener('pointerdown', tap), 450);
         });
         consigne.textContent = round.consigne || 'Retrouve chaque notion et sa définition.';
-        for (const z of [x, y]) { z.el.classList.remove('ouverte'); z.el.setAttribute('aria-label', 'Carte retournée'); }
+        for (const z of [x, y]) { z.el.classList.remove('ouverte'); z.el.setAttribute('aria-label', `Carte ${z.repereLettre}`); }
         await attendre(250);
         bloque = false;
       }
     }
     function conclure() {
+      clearInterval(interval);
       const n = round.paires.length;
       const score = Math.max(0.3, Math.min(1, 1 - Math.max(0, coups - n * 1.5) / (n * 2)));
       ctx.gain(Math.round(30 * score) + (coups <= n + 2 ? 8 : 0));

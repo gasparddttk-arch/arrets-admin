@@ -128,6 +128,7 @@ const pasL1 = (p) => p.evaluate(() => {
   const jeton = q('.nu-jeton[data-bon]'); if (jeton && !jeton.style.opacity) return clic(q(`.nu-zone[data-k="${jeton.dataset.bon}"]`));
   const trou = q('.pl-trou.cible'); if (trou) return clic(q(`.pl-tuile[data-mot="${trou.dataset.m}"]:not([disabled])`));
   const sceau = q('.pl-sceau[data-ok="true"]:not([disabled])'); if (sceau) return clic(sceau);
+  const memPret = q('.mem-pret'); if (memPret) return clic(memPret);
   const cartes = [...document.querySelectorAll('.mem-carte:not(.trouvee):not(.ouverte)')];
   if (cartes.length && !document.querySelector('.mem-carte.ouverte:not(.trouvee)')) { const a = cartes[0]; const b2 = cartes.find((c) => c !== a && c.dataset.paire === a.dataset.paire); a.click(); b2.click(); return true; }
   return false;
@@ -181,6 +182,7 @@ async function jouerParfait(p) {
       const clic = (e) => { e.click(); return true; };
       const rail = document.querySelector('.plans-rail'); const bon = document.querySelector('.plan-carte[data-ok="true"]');
       if (rail && bon && !document.querySelector('.plan-carte.juste') && !bon.classList.contains('centree')) { rail.scrollLeft = bon.offsetLeft - rail.firstChild.offsetLeft; return false; }
+      const memPret = document.querySelector('.mem-pret'); if (memPret) return clic(memPret);
       const pied = document.querySelector('.scene .pied button:not([disabled])'); if (pied) return clic(pied);
       const chip = document.querySelector('.chip:not([disabled]):not(.reussi)');
       if (chip) {
@@ -1517,6 +1519,11 @@ async function execGroupe3(b, PORT, erreurs) {
     await mp.goto(URLB + '?test&matiere=intro'); await mp.waitForSelector('.tribune');
     await mp.evaluate(() => window.__app.aller('role')); await mp.locator('.role-ligne[data-mode="memory"]').click();
     await mp.waitForSelector('.mem-carte');
+    assert.equal(await mp.locator('.mem-carte.ouverte').count(), 12, '12 cartes ouvertes au départ');
+    assert.match(await mp.locator('.mem-consigne').innerText(), /Mémorise/, 'consigne de mémorisation');
+    await mp.screenshot({ path: CAP + 'memory-memorise.png' }); await debordement(mp, 'memory phase mémorise');
+    await mp.locator('.mem-pret').click();
+    assert.equal(await mp.locator('.mem-carte.ouverte').count(), 0, 'aucune carte ouverte après C’est mémorisé');
     const lettres = await mp.evaluate(() => [...document.querySelectorAll('.mem-carte .mem-repere')].map((el) => el.innerText.trim()));
     assert.deepEqual(lettres, ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'], 'repères distincts A à L sur le dos des cartes Memory');
     await mp.evaluate(() => { const c = [...document.querySelectorAll('.mem-carte')]; const a = c[0]; const z = c.find((x) => x.dataset.paire !== a.dataset.paire); a.click(); z.click(); });
