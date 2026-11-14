@@ -27,7 +27,7 @@ function feuilles(rayon = 54, ep = 2.5, long = 6.8) {
 export function sceau(n, { taille = 150, lauriers = true, eteint = false, legende = '' } = {}) {
   const chiffres = String(n).length;
   const fs = chiffres >= 3 ? 33 : chiffres === 2 ? 42 : 50;
-  return svg(`<svg class="sceau" viewBox="0 0 120 120" width="${taille}" height="${taille}" role="img" aria-label="${legende || `Série de ${n} jours`}">
+  const el = svg(`<svg class="sceau" viewBox="0 0 120 120" width="${taille}" height="${taille}" role="img">
     ${lauriers ? `<g fill="url(#gOr)">${feuilles()}</g>` : ''}
     <g transform="translate(14 14) scale(.92)">
       <path d="${CIRE}" fill="#000" opacity=".28" transform="translate(0 2.500)"/>
@@ -35,6 +35,9 @@ export function sceau(n, { taille = 150, lauriers = true, eteint = false, legend
       <path d="${CIRE}" fill="none" stroke="#fff" stroke-opacity=".34" stroke-width="1.100" transform="translate(50 50) scale(.84) translate(-50 -50)"/>
       <text x="50" y="${50 + fs * 0.34}" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-weight="700" font-size="${fs}" fill="#fff">${n}</text>
     </g></svg>`);
+  // La légende peut un jour venir d'un pseudo : posée comme attribut, jamais dans le balisage.
+  el.setAttribute('aria-label', legende || `Série de ${n} jours`);
+  return el;
 }
 
 export const petitSceau = (etatJour, lettre) => h('span', { class: `jour-sceau ${etatJour || ''}`, 'aria-label': lettre }, lettre);

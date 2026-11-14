@@ -15,6 +15,8 @@ cpSync('app', SORTIE, { recursive: true });
 // Clé publique des notifications (la clé privée reste un secret du dépôt).
 const cle = existsSync('rappel/cle-publique.txt') ? readFileSync('rappel/cle-publique.txt', 'utf8').trim() : '';
 const supa = existsSync('rappel/supabase.json') ? JSON.parse(readFileSync('rappel/supabase.json', 'utf8')) : { url: '', cle: '' };
+// Sans adresse Supabase, l'appli publiée s'ouvrirait sans compte : on s'arrête (GDROIT_SANS_COMPTE=1 pour un essai local).
+if ((!supa.url || !supa.cle) && !process.env.GDROIT_SANS_COMPTE) { console.error('rappel/supabase.json manquant ou incomplet : build arrêté.'); process.exit(1); }
 writeFileSync(join(SORTIE, 'js/config.js'), `export const CLE_PUBLIQUE_VAPID = ${JSON.stringify(cle)};\nexport const SUPABASE_URL = ${JSON.stringify(supa.url)};\nexport const SUPABASE_CLE = ${JSON.stringify(supa.cle)};\n`);
 
 const contenu = lireContenu();
