@@ -223,6 +223,36 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
   5. **Chaque jeu note ses erreurs** : vérifier que tout jeu dont le round porte une fiche (`carte`, `c.carte`, `p.carte`, `id` de fiche) appelle `ctx.noter(fiche, juste)`. À vérifier en particulier : `jouerTri`, `jouerMot`, `jouerQuiADit`, `jouerScanner`, `jouerFrise`, `jouerPouvoirs`, `jouerNuancier`, `jouerPlume`. Lister dans la tâche ceux qui ont été complétés.
 - **Validation attendue** : test : une séance avec deux erreurs volontaires → le lendemain (`?decalage=1`), l'entrée « À revoir aujourd'hui » affiche 2 fiches → la séance les propose → après réussite, l'entrée disparaît. Suite complète verte.
 
+### [TÂCHE P] Animations : passages d'écran et ouverture du Palais (Antigravity)
+- **Statut** : À faire
+- **Demande de Gaspard (14/11)** : le style graphique est bon mais manque de mouvement. Priorités : passages d'écran et Palais à l'ouverture. Intensité : très expressive (rebonds, effet ressort), sans gêner quand on enchaîne. **Rien n'est mis en ligne avant que Gaspard ait vu une vidéo de chaque animation.** Ne pas merger : livrer sur `antigravity/lot` avec les vidéos.
+- **Fichiers concernés** : `app/js/main.js` (`montrer`, `aller`, `lancer`, `accueil`, `resultats`, barre d'onglets), `app/css/app.css` (keyframes regroupées dans un bloc « Mouvement »), `tests/run.cjs`
+- **Courbes et durées (tokens à ajouter dans `:root`)** : `--ressort: cubic-bezier(.34, 1.56, .64, 1)` (dépassement), `--sortie: cubic-bezier(.4, 0, 1, 1)`, `--t-court: 180ms`, `--t-moyen: 340ms`, `--t-long: 520ms`. Aucune animation ne dépasse 700 ms au total ; l'écran reste cliquable dès le premier instant (jamais de `pointer-events: none` sur le nouvel écran).
+- **Détails de modification** :
+  1. **Passage d'écran dans `montrer()`**, en gardant le remplacement du DOM **synchrone** (pas de `document.startViewTransition`, dont la mise à jour est asynchrone et casserait le code qui lit le DOM juste après `montrer`) :
+     - avant le remplacement, cloner l'écran sortant (`racine.firstElementChild?.cloneNode(true)`), le poser en `position: fixed` à sa place exacte (`getBoundingClientRect`), `aria-hidden`, `inert`, `pointer-events: none`, `z-index` sous la barre d'onglets ; l'animer avec la Web Animations API puis le retirer à `finish` (et au plus tard après 600 ms) ;
+     - animer l'écran entrant avec la Web Animations API ;
+     - trois sens, donnés par une variable `sens` fixée par l'appelant puis remise à `'neutre'` :
+       - `'avant'` (on entre plus loin : Palais → exercice, liste → fiche, rôle → mode) : entrant `translateX(48px) scale(.96)`, opacité 0 → `none`, `--t-moyen`, `--ressort` ; sortant `translateX(-24px) scale(.98)`, opacité → 0, `--t-court`, `--sortie` ;
+       - `'arriere'` (retour, « Retour au Palais », fermeture d'une fiche) : l'inverse ;
+       - `'onglet'` : selon l'ordre des onglets, glissement de 32px vers la gauche ou la droite, entrant `--t-moyen` `--ressort`, sortant en fondu `--t-court` ;
+       - `'neutre'` : simple fondu montant de 8px (comportement actuel `arrive`).
+     - `aller(id)` fixe `'onglet'` quand on change d'onglet (comparer l'index de l'onglet courant et du nouveau), `'avant'` sinon ; les boutons retour fixent `'arriere'`.
+  2. **Entre deux épreuves d'une séance** (`scene.replaceChildren` dans `lancer`) : l'épreuve suivante entre comme une carte posée sur la table : `translateY(28px) rotate(-1.5deg) scale(.95)` → `none`, `--t-moyen`, `--ressort`, et la barre de progression (`pips`) fait un petit saut sur la pastille qui se remplit (`scale(1.35)` → 1, 260 ms).
+  3. **Écran de résultats** : le titre (« Sans faute », etc.) tombe et rebondit (`translateY(-24px) scale(1.2)` → `none`, `--ressort`, 420 ms) ; les trois cases Réussite / Expérience / Jetons entrent en cascade (80 ms d'écart, `scale(.8)` → 1, `--ressort`) et leurs nombres **défilent de 0 jusqu'à la valeur** en 600 ms (`requestAnimationFrame`, arrondi entier, le texte final exact reste dans le DOM dès le départ pour les lecteurs d'écran via `aria-label`).
+  4. **Palais à l'ouverture** — seulement à la première ouverture de la session et au retour d'une séance, **pas** quand `accueil()` est redessiné pour une autre raison (drapeau `animerPalais`) :
+     - le bandeau du haut (grade, jetons) descend de 12px en fondu (`--t-court`) ;
+     - la carte « Ta série » monte avec rebond (`translateY(30px) scale(.94)` → `none`, `--t-long`, `--ressort`) ; le chiffre de la série défile de 0 à sa valeur ; les sept petits sceaux de la semaine apparaissent un par un (50 ms d'écart, `scale(0)` → 1, `--ressort`), et celui d'aujourd'hui, s'il est tamponné, reprend l'animation existante `cachet` ;
+     - la chouette fait l'animation existante `saute` une fois, 150 ms après la carte ;
+     - les entrées suivantes (« À revoir aujourd'hui », « Défi du jour », puis la grille des tuiles) arrivent en cascade de bas en haut, 70 ms d'écart, `translateY(24px) scale(.97)` → `none`, `--ressort` ;
+     - le compteur de jetons fait un petit pop (`scale(1.25)` → 1) si des jetons ont été gagnés depuis le dernier affichage.
+  5. **Barre d'onglets** : la pastille de l'onglet actif **glisse** d'un onglet à l'autre (un seul élément `.onglet-pastille` positionné en `transform: translateX()` et `width`, `--t-moyen`, `--ressort`) au lieu de sauter ; l'icône de l'onglet touché fait un petit rebond (`scale(.85)` → 1).
+  6. **Réglages et accessibilité** : `[data-effets='non']` et `prefers-reduced-motion: reduce` → aucune de ces animations (remplacement direct). `[data-effets='leger']` → seulement les fondus, sans déplacement ni rebond ni cascade ni défilement des nombres.
+  7. **Tests** : en `?test`, ces animations sont **coupées** (durée 0, pas de clone) pour ne pas fragiliser la suite, **sauf** si l'adresse contient aussi `&anim`. Ajouter un bloc `if (matchSeul('animations'))` : avec `?test&anim`, vérifier qu'après une navigation le clone sortant a disparu au bout de 700 ms, que le nouvel écran est cliquable tout de suite, et `debordement` pendant et après l'animation.
+  8. **Vidéos pour Gaspard** (obligatoires) : un petit script `scripts/antigravity/videos-p.cjs` (Playwright, `devices['iPhone 13']`, `recordVideo`, `?test&anim`, thème par défaut) qui enregistre une vidéo par point : `P1-passages.webm` (Palais → Défi du jour → retour, puis Palais → onglet Fiches → Boutique → Profil), `P2-epreuves.webm` (deux épreuves enchaînées), `P3-resultats.webm`, `P4-palais.webm` (ouverture de l'appli), `P5-onglets.webm`. Les écrire dans `.antigravity/videos/` (hors Git, ne pas les committer).
+- **Contraintes** : DOM avec `h()` uniquement ; une seule feuille `app/css/app.css` ; pas de bibliothèque ; animer seulement `transform` et `opacity` ; ne pas toucher aux animations existantes des jeux.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte, les 5 vidéos présentes. Statut : `Prêt pour Claude (vidéos dans .antigravity/videos)`. **Ne pas considérer la tâche comme publiable** : Claude montre les vidéos à Gaspard avant tout merge.
+
 ## Tâches en attente (Roadmap)
 
 ### 1. Nom du professeur de l'équipe 3 en L1
