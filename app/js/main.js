@@ -2,7 +2,7 @@
 import { h, svg, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
-import { lexouAnime } from './lexou.js';
+import { lexouAnime, prechargerLexou } from './lexou.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import { remplacerEtat, choisirAnnee, ajouterSemaine, gagnerAppel, erreursOuvertes, carnetVisible, changerEquipe,
   SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, lundi, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir, aRattraper,
@@ -501,6 +501,34 @@ function figureSerie(s, fait) {
     h('span', { class: 'mini-sceau' }, sceau(s.n, { taille: 62, lauriers: false, eteint: !fait && s.n === 0 })), etincelles);
 }
 
+// Série perdue : une fois par rupture, Lexou vient taper à la vitre. Un toucher ou Échap l'interrompt.
+// Rien sans les effets complets, ni en test (sauf ?colere), ni si les planches ne sont pas là en 3 secondes.
+function colereLexou(rompue) {
+  rompue.vu = true; sauver();
+  const p = new URLSearchParams(location.search);
+  if (!lexouVideoPossible() || (p.has('test') && !p.has('colere'))) return;
+  const delai = new Promise((ok, ko) => { setTimeout(ko, 3000); });
+  Promise.race([prechargerLexou('colere'), delai]).then(() => {
+    if (!document.querySelector('.tribune') || document.querySelector('.voile, .colere-voile')) return;
+    const taille = Math.min(innerWidth, 520);
+    let fini = false;
+    const fermer = () => {
+      if (fini) return; fini = true;
+      document.removeEventListener('keydown', touche);
+      voile.classList.add('sort');
+      setTimeout(() => voile.remove(), 260);
+    };
+    const touche = (e) => { if (e.key === 'Escape') fermer(); };
+    const voile = h('div', { class: 'colere-voile', role: 'dialog', 'aria-modal': 'true', 'aria-label': `Ta série de ${pluriel(rompue.n, 'jour')} est tombée`, tabindex: '-1', onClick: fermer },
+      h('p', { class: 'colere-txt' }, h('b', {}, 'Lexou t’attendait hier.'), h('span', {}, `Ta série de ${pluriel(rompue.n, 'jour')} est tombée.`)),
+      lexouAnime('colere', { taille, classe: 'colere-film', fin: () => setTimeout(fermer, 700) }));
+    document.addEventListener('keydown', touche);
+    document.body.append(voile);
+    voile.focus();
+    setTimeout(() => vibrer([30, 60, 30]), 5300);
+  }).catch(() => {});
+}
+
 function accueil() {
   const s = etat.serie; const j = jour();
   const fait = s.dernier === j;
@@ -520,6 +548,8 @@ function accueil() {
     h('p', {}, `Ta série de ${pluriel(rompue.n, 'jour')} est tombée. Un relevé de forclusion peut la rétablir jusqu’à demain soir.`),
     h('button', { class: 'bouton-or', disabled: etat.jetons < prixForclusion(), onClick: () => { if (relever()) { son('sceau'); vibrer(20); toast('Série rétablie.'); accueil(); } } },
       `Rétablir pour ${monnaie(prixForclusion())}`)) : null;
+
+  if (rompue && !rompue.vu) colereLexou(rompue);
 
   const encours = M().enCours;
   montrer(
