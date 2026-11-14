@@ -23,7 +23,7 @@ h: M. Cadot dirige la voirie et les eaux de Marseille quand la ville supprime so
 f: Le directeur de la voirie et des eaux de Marseille perd son emploi, supprimé par la ville. Il réclame des dommages-intérêts et se heurte à un refus.
 pr: Les juges judiciaires puis le conseil de préfecture se déclarent incompétents. Le ministre de l'Intérieur rejette sa réclamation le 17 octobre 1885. Il attaque cette décision devant le Conseil d'État.
 q: Le Conseil d'État peut-il être saisi directement d'un recours contre une décision administrative, sans texte et sans que le ministre soit juge de premier ressort ?
-s: Le Conseil d'État se déclare compétent : sauf texte contraire, il connaît des recours en annulation contre les décisions administratives. Au fond, la requête est rejetée.
+s: Le Conseil d'État se déclare compétent : saisi directement, sans passer par le ministre, il connaît des recours contre les décisions administratives, ici une réclamation indemnitaire. Au fond, la requête est rejetée.
 po: Fin de la théorie du ministre-juge. Le Conseil d'État devient juge de droit commun et le lien organique entre l'administration et son juge est rompu.
 x: Le Conseil d'État statue-t-il encore au nom du chef de l'État, ou rend-il désormais la justice au nom du peuple français ? || C'est la justice déléguée, posée par la loi du 24 mai 1872, pas par Cadot.
 x: Une ville peut-elle supprimer l'emploi d'un de ses agents sans lui verser la moindre indemnité de licenciement ? || C'est le fond du dossier. L'arrêt est célèbre pour la compétence du juge.
@@ -67,7 +67,7 @@ pr: Le conseil de préfecture de Lyon annule la concession de 1944. Le ministre 
 q: Une loi qui exclut « tout recours » contre une décision administrative supprime-t-elle le recours pour excès de pouvoir ?
 s: Non. Le recours pour excès de pouvoir existe même sans texte contre tout acte administratif ; il faudrait une exclusion expresse. Le préfet est censuré pour détournement de pouvoir : il voulait faire échec aux décisions du Conseil.
 po: Le juge vide la loi de son venin sans la contrôler. Le droit au recours devient un principe général du droit.
-x: Le préfet peut-il concéder de nouveau des terres malgré trois annulations déjà prononcées par le Conseil d'État ? || C'est l'histoire de l'affaire. La vraie question porte sur le sens des mots « tout recours ».
+x: Le préfet peut-il concéder de nouveau des terres malgré deux annulations déjà prononcées par le Conseil d'État ? || C'est l'histoire de l'affaire. La vraie question porte sur le sens des mots « tout recours ».
 x: Le juge administratif peut-il refuser d'appliquer une loi de Vichy contraire aux lois de la République ? || Le juge n'écarte pas la loi : il l'interprète. C'est toute l'astuce de l'arrêt.
 
 @annamites | Amicale des Annamites de Paris | CE, Ass., 11 juill. 1956 | CE | 1956 | 2 | 2

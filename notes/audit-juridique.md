@@ -1,4 +1,5 @@
 # Audit juridique du contenu (14/11/2026)
+Corrigé et publié le 14/11 : dates de @sgic et @passe-sanitaire, solution de @cadot, « deux annulations » (@lamotte), article 34 (lexique), article 1182 (atelier), article 1221, question Paris-Marseille. Le reste attend l'avis de Gaspard au regard de son cours.
 Relecture sans modification des fichiers de content/. Non relus ligne à ligne : constit.mjs, les plans de commentaire et de dissertation (sujets, commentaires), la fin de oblig1/cas.txt, le corps des ateliers (seules leurs règles citées ont été contrôlées).
 Vérifié en ligne : @sgic (décret du 25 juin 1947, site du Conseil d'État) ; @passe-sanitaire (décision du 26 juillet 2021, n° 454754, site du Conseil d'État) ; AOMSL (CE, Sect., 3 déc. 1999 : refus ministériels de 1998, et non l'arrêté du 27 juin 1996 décrit par la fiche).
 ## content/arrets-1.txt

@@ -312,7 +312,7 @@ export const ateliers = [
       p2: {
         regle: ['Art. 1144 et 2224', 'Le délai de l’action en nullité ne court, en cas de violence, que du jour où elle a cessé. Il est de cinq ans.', 'a1143'],
         leurres: [['Art. 2224 seul', 'L’action se prescrit par cinq ans à compter du jour où le titulaire a connu les faits.', 'Pour la violence, la loi retarde le point de départ au jour où elle cesse.'],
-          ['Art. 1182', 'L’exécution volontaire du contrat vaut confirmation.', 'On ne confirme pas un contrat tant que dure la violence.']],
+          ['Art. 1182', 'L’exécution volontaire du contrat, en connaissance de la cause de nullité, vaut confirmation.', 'On ne confirme pas un contrat tant que dure la violence.']],
         conditions: [
           ['Un délai de cinq ans', null, 'oui', 'L’action en nullité relative se prescrit par cinq ans.'],
           ['Un délai qui court du jour où la violence a cessé', 'f4', 'oui', 'La dépendance dure encore : le délai n’a pas commencé.'],

@@ -88,7 +88,7 @@ s: Non. Refuser un permis pour atteinte à la sécurité publique implique une a
 po: La compétence liée suppose que l'administration n'ait rien à apprécier. Dès qu'il faut peser les faits, elle a un pouvoir d'appréciation, et doit respecter la procédure.
 x: Un permis de construire illégal peut-il être retiré à tout moment, sans délai ? || L'avis ne porte pas sur le délai de retrait mais sur la compétence liée et sur le droit de reconstruire.
 
-@passe-sanitaire | Passe sanitaire (M. B. et autres) | CE, réf., 25 juill. 2021 | CE | 2021 | 2 | 2
+@passe-sanitaire | Passe sanitaire (M. B. et autres) | CE, réf., 26 juill. 2021 | CE | 2021 | 2 | 2
 h: Juillet 2021, le variant Delta progresse. La loi permet d'exiger le passe sanitaire pour les « grands rassemblements ». Un décret fixe le seuil à 50 personnes. Des requérants y voient une lecture bien trop large de la loi et demandent la suspension.
 ap: Les circonstances exceptionnelles permettent au Premier ministre d'aller au-delà d'un régime législatif prévu pour la crise
 f: En juillet 2021, avec le variant Delta, un décret abaisse à 50 personnes le seuil à partir duquel le passe sanitaire est exigé pour entrer dans certains lieux. La loi visait les « grands rassemblements ». Des requérants en demandent la suspension.
@@ -303,7 +303,7 @@ po: Le dialogue des juges en acte : renvoi préjudiciel, puis application par le
 @sgic | Syndicat général des ingénieurs-conseils | CE, Sect., 26 juin 1959 | CE | 1959 | 3 | 3,5
 h: Le gouvernement peut, dans certains territoires d'outre-mer, régler par décret des matières qui relèvent en métropole de la loi. Il réserve aux architectes des missions que pouvaient aussi remplir les ingénieurs-conseils. Leur syndicat attaque.
 ap: Les principes généraux du droit s'imposent à toute autorité réglementaire, même en l'absence de loi
-f: Un décret de 1949 réserve aux architectes certaines missions dans les territoires d'outre-mer. Le Syndicat général des ingénieurs-conseils l'attaque : il méconnaîtrait des principes généraux du droit.
+f: Un décret du 25 juin 1947 réserve aux architectes certaines missions dans les territoires d'outre-mer. Le Syndicat général des ingénieurs-conseils l'attaque : il méconnaîtrait des principes généraux du droit.
 pr: Le Conseil d'État, en section, est saisi d'un recours pour excès de pouvoir.
 q: Un décret pris dans une matière où le gouvernement légifère par décret doit-il respecter les principes généraux du droit ?
 s: Oui. Les principes généraux du droit s'imposent à toute autorité réglementaire, même en l'absence de dispositions législatives. En l'espèce, le décret ne les méconnaît pas : la requête est rejetée.

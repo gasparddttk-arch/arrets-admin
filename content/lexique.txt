@@ -19,7 +19,7 @@ transposition | admin | Adoption par l'État des règles nationales qui donnent 
 question préjudicielle | admin | Question posée par un juge national à la Cour de justice sur l'interprétation ou la validité du droit de l'Union. |
 théorie de l'acte clair | admin | Pratique par laquelle un juge national interprète seul une norme qu'il estime claire, sans interroger la Cour de justice. | acte clair
 identité constitutionnelle | admin | Ensemble des principes propres à la France que le droit de l'Union ne peut pas faire écarter. |
-pouvoir réglementaire autonome | admin | Pouvoir du Premier ministre de prendre des règlements dans les matières que l'article 37 ne réserve pas à la loi. |
+pouvoir réglementaire autonome | admin | Pouvoir du Premier ministre de prendre des règlements dans les matières autres que celles que l'article 34 réserve à la loi (article 37). |
 ordonnance | admin | Acte du Gouvernement pris, sur habilitation du Parlement, dans le domaine de la loi (article 38). | ordonnances
 ratification | admin | Acte qui donne valeur législative à une ordonnance, ou qui engage l'État dans un traité. |
 lignes directrices | admin | Orientations générales qu'une autorité se donne pour exercer son pouvoir d'appréciation, sans renoncer à examiner chaque cas. | directive Crédit foncier

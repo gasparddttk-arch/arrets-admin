@@ -77,7 +77,7 @@
 1218 | 8 | 3 | Force majeure | Il y a force majeure quand un événement échappant au contrôle du débiteur, imprévisible et irrésistible, empêche l'exécution.
 1219 | 8 | 3 | Exception d'inexécution | Une partie peut refuser d'exécuter son obligation si l'autre n'exécute pas la sienne et si cette inexécution est suffisamment grave.
 1220 | 8 | 2 | Exception pour risque | Une partie peut suspendre son exécution s'il est manifeste que l'autre n'exécutera pas à l'échéance, avec des conséquences suffisamment graves. Elle le notifie dans les meilleurs délais.
-1221 | 8 | 3 | Exécution forcée en nature | Le créancier peut, après mise en demeure, poursuivre l'exécution en nature, sauf impossibilité ou disproportion manifeste entre son coût pour le débiteur de bonne foi et son intérêt pour lui.
+1221 | 8 | 3 | Exécution forcée en nature | Le créancier peut, après mise en demeure, poursuivre l'exécution en nature, sauf impossibilité ou disproportion manifeste entre son coût pour le débiteur de bonne foi et son intérêt pour le créancier.
 1222 | 8 | 2 | Remplacement | Après mise en demeure, le créancier peut faire exécuter lui-même l'obligation, dans un délai et à un coût raisonnables, et en demander le remboursement.
 1223 | 8 | 2 | Réduction du prix | En cas d'exécution imparfaite, le créancier qui n'a pas encore payé peut, après mise en demeure, notifier sa décision de réduire proportionnellement le prix. S'il a déjà payé, il demande la réduction au juge, à défaut d'accord.
 1224 | 8 | 3 | Résolution | La résolution résulte d'une clause résolutoire, d'une notification du créancier en cas d'inexécution suffisamment grave, ou d'une décision de justice.

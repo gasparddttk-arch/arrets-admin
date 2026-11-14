@@ -97,7 +97,7 @@
 8 | 2 | L'acceptation peut résulter... || d'un comportement non équivoque || du seul silence gardé par le destinataire || d'un simple doute
 8 | 2 | Les conditions générales doivent avoir été... || connues et acceptées || imprimées || enregistrées
 8 | 3 | Conditions particulières et générales discordantes : priment... || les particulières || les générales || les dernières reçues
-8 | 3 | Le Parisien, le Marseillais : le contrat est conclu à... || Paris || Marseille || mi-chemin
+8 | 3 | Un Parisien offre, un Marseillais accepte par courrier : le contrat est conclu à... || Paris || Marseille || mi-chemin
 8 | 3 | Sweethome : la vente est parfaite malgré... || un mandat différent || un prix non fixé || une réserve de l'acceptant
 8 | 3 | Akol : pas de consentement réel car... || les pourparlers continuaient || l'acte n'était pas signé || le prix manquait
 
