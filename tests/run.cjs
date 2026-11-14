@@ -954,6 +954,96 @@ async function execGroupe1(b, PORT, erreurs) {
     log('révision du jour ok');
     await ctx.close(); p = null; ctx = null;
   }
+
+  // 14d. Le grand rangement L2 (Tâche E)
+  if (matchSeul('rangement L2')) {
+    const rc = await b.newContext({ ...devices['iPhone 13'] });
+    const rp = await rc.newPage();
+    rp.on('pageerror', (x) => erreurs.push(x.message));
+    rp.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text())) erreurs.push(m.text()); });
+
+    const matieres = [
+      { id: 'oblig', equipe: 1, nom: 'obligations' },
+      { id: 'admin', equipe: 1, nom: 'administratif' },
+    ];
+
+    for (const m of matieres) {
+      await rp.goto(`${URLB}?test&matiere=${m.id}&equipe=${m.equipe}`);
+      await rp.waitForSelector('.tribune');
+      await rp.evaluate((mat) => window.__app.ouvrirMatiere(mat), m.id);
+      await rp.waitForSelector('.tribune');
+
+      await rp.evaluate(() => window.__app.aller('role'));
+      await rp.waitForSelector('.role-ligne[data-mode="rangement"]');
+      await rp.locator('.role-ligne[data-mode="rangement"]').click();
+      await rp.waitForSelector('.palais-portes', { state: 'detached' });
+      await rp.waitForSelector('.rg-colonne');
+
+      const colonnes = await rp.$$('.rg-colonne');
+      assert(colonnes.length >= 2, `${m.nom} : au moins 2 colonnes (trouvé ${colonnes.length})`);
+
+      const noms = await rp.$$eval('.rg-colonne .rg-nom', (els) => els.map((el) => el.textContent.trim()));
+      assert.equal(noms.length, colonnes.length);
+      for (const nom of noms) {
+        assert(nom.length > 0, `${m.nom} : nom de colonne non vide`);
+        assert(!/\?\s*$/.test(nom), `${m.nom} : nom de colonne sans '?' final ("${nom}")`);
+      }
+
+      let premierePiece = true;
+      while (!(await rp.$('.fin-epreuve'))) {
+        await rp.waitForSelector('.rg-piece', { timeout: 10000 });
+        const piece = rp.locator('.rg-piece');
+
+        const texte = (await piece.innerText()).trim();
+        assert(texte.length > 0, `${m.nom} : chaque pièce qui tombe porte un texte`);
+
+        const bonId = await piece.getAttribute('data-bon');
+        assert(bonId, `${m.nom} : repère de la bonne colonne présent`);
+
+        if (premierePiece) {
+          const mauvaiseCol = rp.locator(`.rg-colonne:not([data-col="${bonId}"])`).first();
+          await mauvaiseCol.click();
+
+          assert.equal(await rp.locator('.rg-piece').count(), 1, `${m.nom} : la pièce ne disparaît pas sur mauvaise colonne`);
+
+          const noteMauvaise = (await rp.locator('.rg-note').innerText()).trim();
+          assert(noteMauvaise.length > 0, `${m.nom} : note non vide après mauvaise colonne`);
+          assert(noteMauvaise.includes('Pas dans cette colonne'), `${m.nom} : mauvaise colonne affiche "Pas dans cette colonne."`);
+
+          premierePiece = false;
+        }
+
+        const bonneCol = rp.locator(`.rg-colonne[data-col="${bonId}"]`);
+        await bonneCol.click();
+
+        await rp.waitForSelector('.rg-note.explique', { timeout: 3000 });
+        const explication = (await rp.locator('.rg-note').innerText()).trim();
+        assert(explication.length > 0, `${m.nom} : explication de la pièce affichée`);
+
+        await rp.waitForSelector('.rg-piece', { state: 'detached', timeout: 3000 });
+        await rp.waitForSelector('.rg-piece, .fin-epreuve', { timeout: 6000 });
+      }
+
+      await rp.waitForSelector('.fin-epreuve .revelation');
+      const titreRecap = await rp.$eval('.revelation h3', (el) => el.textContent.trim());
+      assert.equal(titreRecap, 'Le rangement', `${m.nom} : titre récapitulatif "Le rangement"`);
+
+      const recapItems = await rp.$$('.mem-recap li');
+      assert(recapItems.length >= 5, `${m.nom} : au moins 5 pièces dans le récapitulatif (${recapItems.length})`);
+
+      await debordement(rp, `récapitulatif grand rangement ${m.nom}`);
+
+      await rp.locator('.fin-epreuve .pied button:not([disabled])').click();
+      await rp.waitForSelector('.resultats');
+      await debordement(rp, `résultats grand rangement ${m.nom}`);
+
+      await rp.tap('text=Retour au Palais');
+      await rp.waitForSelector('.tribune');
+    }
+
+    await rc.close();
+    log('rangement L2 ok');
+  }
 }
 
 // -----------------------------------------------------------------------------
