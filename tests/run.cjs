@@ -700,8 +700,9 @@ async function execGroupe1(b, PORT, erreurs) {
     // Connecté dans le navigateur sur téléphone : rappel d'installation après chaque séance
     {
       const tc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
-      const tp = await tc.newPage(); tp.on('pageerror', (x) => erreurs.push(x.message));
-      await tp.goto(URLB + '?test&compte#access_token=jeton_test&refresh_token=refresh_test&expires_in=3600&token_type=bearer');
+      await tc.route('https://jhpgxisxayceixmppxuu.supabase.co/auth/v1/token**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ access_token: 'jeton_test', refresh_token: 'refresh_test', expires_in: 3600, user: { id: 'u-test', email: 'test@exemple.fr', user_metadata: {} } }) }));
+      const tp = await tc.newPage(); tp.on('pageerror', (x) => erreurs.push(x.message)); await tp.addInitScript(() => { if (location.search.includes('code=')) localStorage.setItem('gdroit-pkce', JSON.stringify({ v: 'verificateur-test', t: Date.now() })); });
+      await tp.goto(URLB + '?test&compte&code=code-test');
       await tp.waitForSelector('.tribune');
       await tp.evaluate(() => window.__app.resultats({ scores: [1], rounds: [{}], parfaites: 1, xp: 50, jetons: 5, comboMax: 3, touches: new Map() }, true));
       await tp.waitForSelector('.resultats');
@@ -2349,8 +2350,10 @@ async function execGroupe3(b, PORT, erreurs) {
 
     const t2 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' }); await simuler(t2);
     const k2 = await t2.newPage(); k2.on('pageerror', (x) => erreurs.push(x.message));
-    await k2.goto(URLB + '?test&compte#access_token=jeton&refresh_token=renouveau&expires_in=3600&token_type=bearer'); await k2.waitForSelector('.tribune');
-    assert.equal(new URL(k2.url()).hash, '', 'jetons retirés de l’adresse');
+    await k2.addInitScript(() => { if (location.search.includes('code=')) localStorage.setItem('gdroit-pkce', JSON.stringify({ v: 'verificateur-test', t: Date.now() })); });
+    await k2.goto(URLB + '?test&compte&code=code-test'); await k2.waitForSelector('.tribune');
+    assert(!new URL(k2.url()).searchParams.has('code'), 'code retiré de l’adresse');
+    assert.equal(await k2.evaluate(() => localStorage.getItem('gdroit-pkce')), null, 'vérificateur effacé');
     ec = await etat(k2); assert(ec.xp >= xp1 && ec.xp === faux.progression.donnees.xp, 'progression retrouvée sur le second téléphone'); assert.equal(ec.compte.id, 'u-1');
 
     await k2.evaluate(() => window.__app.aller('profil')); await k2.waitForSelector('.compte');
@@ -2359,10 +2362,18 @@ async function execGroupe3(b, PORT, erreurs) {
     const apres = await k2.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')));
     assert.equal(apres.xp, 0, 'téléphone effacé après déconnexion');
 
+    {
+      const tp = await t2.newPage(); tp.on('pageerror', (x) => erreurs.push(x.message));
+      await tp.evaluate(() => 0).catch(() => {});
+      await tp.goto(URLB + '?test&compte#access_token=piege&refresh_token=piege&expires_in=3600');
+      await tp.waitForSelector('.connexion'); assert.match(await tp.locator('.connexion').innerText(), /n’est plus valable/, 'lien à session refusé');
+      await tp.close();
+    }
     faux.acces = 'aucun';
     const t3 = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' }); await simuler(t3);
     const k3 = await t3.newPage(); k3.on('pageerror', (x) => erreurs.push(x.message));
-    await k3.goto(URLB + '?test&compte#access_token=jeton&refresh_token=renouveau&expires_in=3600&token_type=bearer');
+    await k3.addInitScript(() => { if (location.search.includes('code=')) localStorage.setItem('gdroit-pkce', JSON.stringify({ v: 'verificateur-test', t: Date.now() })); });
+    await k3.goto(URLB + '?test&compte&code=code-test');
     await k3.waitForSelector('text=Les places de test sont prises'); assert.equal(await k3.$('.tribune'), null, 'appli fermée sans accès');
     await k3.screenshot({ path: CAP + 'places-prises.png' });
 
