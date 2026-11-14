@@ -92,9 +92,105 @@ const motFiche = () => (estL1() ? 'notion' : estOblig() ? 'fiche' : 'arrêt');
 const zonesCours = () => (estOblig() || estL1() ? ix.zones.filter((z) => !z.travaux).map((z) => z.id) : zonesDuJour(ix));
 const matieresAnnee = () => MATIERES.filter((m) => (m.annee || 'L2') === (etat.annee === 'L1' ? 'L1' : 'L2') && (m.id !== 'intro' || introOuverte()));
 
+let sens = 'neutre';
+let sensOngletDirection = 1;
+let animerPalais = true;
+let derniersJetonsVus = null;
+
+function modeAnimation() {
+  const p = new URLSearchParams(location.search);
+  if (p.has('test') && !p.has('anim')) return 'non';
+  if (document.documentElement.dataset.effets === 'non' || !effets()) return 'non';
+  if (document.documentElement.dataset.effets === 'leger') return 'leger';
+  return 'complet';
+}
+
+function fixerSens(s, dir = 1) {
+  sens = s;
+  if (dir) sensOngletDirection = dir;
+}
+
 function montrer(...enfants) {
+  const sensCourant = sens;
+  sens = 'neutre';
+  const mode = modeAnimation();
+
+  if (mode === 'non' || !racine.hasChildNodes()) {
+    racine.replaceChildren(...enfants.filter(Boolean));
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  document.querySelectorAll('.clone-sortant').forEach((el) => el.remove());
+
+  const rect = racine.getBoundingClientRect();
+  const clone = document.createElement('div');
+  clone.className = 'clone-sortant';
+  for (const c of racine.children) {
+    clone.appendChild(c.cloneNode(true));
+  }
+  clone.style.position = 'fixed';
+  clone.style.left = `${rect.left}px`;
+  clone.style.top = `${rect.top}px`;
+  clone.style.width = `${rect.width}px`;
+  clone.style.height = `${rect.height}px`;
+  clone.style.pointerEvents = 'none';
+  clone.style.zIndex = '15';
+  clone.style.overflow = 'hidden';
+  clone.setAttribute('aria-hidden', 'true');
+  clone.setAttribute('inert', '');
+  document.body.appendChild(clone);
+
   racine.replaceChildren(...enfants.filter(Boolean));
   window.scrollTo(0, 0);
+
+  const ressort = 'cubic-bezier(.34, 1.56, .64, 1)';
+  const sortie = 'cubic-bezier(.4, 0, 1, 1)';
+
+  let kfEntrant, optEntrant, kfSortant, optSortant;
+
+  if (mode === 'leger') {
+    kfEntrant = [{ opacity: 0 }, { opacity: 1 }];
+    optEntrant = { duration: 180, easing: 'ease-out' };
+    kfSortant = [{ opacity: 1 }, { opacity: 0 }];
+    optSortant = { duration: 180, easing: 'ease-out' };
+  } else if (sensCourant === 'avant') {
+    kfEntrant = [{ transform: 'translateX(48px) scale(.96)', opacity: 0 }, { transform: 'none', opacity: 1 }];
+    optEntrant = { duration: 340, easing: ressort };
+    kfSortant = [{ transform: 'none', opacity: 1 }, { transform: 'translateX(-24px) scale(.98)', opacity: 0 }];
+    optSortant = { duration: 180, easing: sortie };
+  } else if (sensCourant === 'arriere') {
+    kfEntrant = [{ transform: 'translateX(-48px) scale(.96)', opacity: 0 }, { transform: 'none', opacity: 1 }];
+    optEntrant = { duration: 340, easing: ressort };
+    kfSortant = [{ transform: 'none', opacity: 1 }, { transform: 'translateX(24px) scale(.98)', opacity: 0 }];
+    optSortant = { duration: 180, easing: sortie };
+  } else if (sensCourant === 'onglet') {
+    const dx = sensOngletDirection * 32;
+    kfEntrant = [{ transform: `translateX(${dx}px)`, opacity: 0 }, { transform: 'none', opacity: 1 }];
+    optEntrant = { duration: 340, easing: ressort };
+    kfSortant = [{ opacity: 1 }, { opacity: 0 }];
+    optSortant = { duration: 180, easing: sortie };
+  } else {
+    kfEntrant = [{ transform: 'translateY(8px)', opacity: 0 }, { transform: 'none', opacity: 1 }];
+    optEntrant = { duration: 180, easing: 'ease-out' };
+    kfSortant = [{ opacity: 1 }, { opacity: 0 }];
+    optSortant = { duration: 180, easing: 'ease-out' };
+  }
+
+  let fini = false;
+  const retirer = () => {
+    if (!fini) {
+      fini = true;
+      clone.remove();
+    }
+  };
+  const anim = clone.animate(kfSortant, optSortant);
+  anim.onfinish = retirer;
+  setTimeout(retirer, 600);
+
+  if (racine.animate) {
+    racine.animate(kfEntrant, optEntrant);
+  }
 }
 
 function appliquerTheme() {
@@ -258,22 +354,96 @@ function matieres() {
       h('div', { class: 'portes' }, matieresAnnee().map(porte))));
 }
 
+let pastilleOnglet = null;
+let dernierPastilleX = null;
+let dernierPastilleW = null;
+
 function afficherOnglets(vis) {
   onglets.hidden = !vis;
   if (!vis) return;
   const defs = [['palais', 'Palais'], ['carte', 'Chambres'], ['arrets', estL1() ? 'Notions' : 'Arrêts'], ['boutique', 'Boutique'], ['profil', 'Profil']];
-  onglets.replaceChildren(...defs.map(([id, l]) => h('button', {
-    class: `onglet ${ongletCourant === id ? 'actif' : ''}`, 'aria-current': ongletCourant === id ? 'page' : null,
-    onClick: () => { son('tap'); aller(id); },
-  }, icone(id, 23), h('span', {}, l))));
+
+  if (!pastilleOnglet || !onglets.contains(pastilleOnglet)) {
+    pastilleOnglet = h('span', { class: 'onglet-pastille', 'aria-hidden': 'true' });
+  }
+
+  let boutons = [...onglets.querySelectorAll('.onglet')];
+  if (boutons.length !== defs.length) {
+    onglets.replaceChildren(pastilleOnglet);
+    boutons = defs.map(([id, l]) => {
+      const btn = h('button', {
+        class: `onglet ${ongletCourant === id ? 'actif' : ''}`,
+        'data-onglet': id,
+        'aria-current': ongletCourant === id ? 'page' : null,
+        onClick: () => {
+          son('tap');
+          if (modeAnimation() === 'complet') {
+            const ic = btn.querySelector('svg');
+            ic?.animate([{ transform: 'scale(.85)' }, { transform: 'scale(1)' }], { duration: 260, easing: 'cubic-bezier(.34, 1.56, .64, 1)' });
+          }
+          aller(id);
+        },
+      }, icone(id, 23), h('span', {}, l));
+      onglets.appendChild(btn);
+      return btn;
+    });
+  } else {
+    defs.forEach(([id, l], i) => {
+      const btn = boutons[i];
+      const actif = ongletCourant === id;
+      btn.className = `onglet ${actif ? 'actif' : ''}`;
+      if (actif) btn.setAttribute('aria-current', 'page');
+      else btn.removeAttribute('aria-current');
+      const span = btn.querySelector('span');
+      if (span && span.textContent !== l) span.textContent = l;
+    });
+  }
+
+  const btnActif = onglets.querySelector('.onglet.actif');
+  if (btnActif) {
+    const majPastille = () => {
+      const x = btnActif.offsetLeft;
+      const w = btnActif.offsetWidth;
+      if (w === 0) return;
+      const mode = modeAnimation();
+      if (mode === 'complet' && dernierPastilleX !== null && dernierPastilleW !== null && (dernierPastilleX !== x || dernierPastilleW !== w)) {
+        pastilleOnglet.animate(
+          [
+            { transform: `translateX(${dernierPastilleX}px)`, width: `${dernierPastilleW}px` },
+            { transform: `translateX(${x}px)`, width: `${w}px` },
+          ],
+          { duration: 340, easing: 'cubic-bezier(.34, 1.56, .64, 1)' }
+        );
+      }
+      pastilleOnglet.style.transform = `translateX(${x}px)`;
+      pastilleOnglet.style.width = `${w}px`;
+      dernierPastilleX = x;
+      dernierPastilleW = w;
+    };
+    if (btnActif.offsetWidth > 0) majPastille();
+    else requestAnimationFrame(majPastille);
+  }
 }
 
+const ONGLETS_ORDRE = ['palais', 'carte', 'arrets', 'boutique', 'profil'];
+
 function aller(id, p) {
-  ongletCourant = id === 'role' || id === 'examen' ? 'palais' : id;
+  const nouvelOnglet = id === 'role' || id === 'examen' || id === 'amis' ? 'palais'
+    : id === 'admin' || id === 'progression' ? 'profil'
+    : id === 'carnet' || id === 'lexique' ? 'arrets'
+    : id;
+  const idxAncien = ONGLETS_ORDRE.indexOf(ongletCourant);
+  const idxNouveau = ONGLETS_ORDRE.indexOf(nouvelOnglet);
+  if (sens === 'neutre') {
+    if (idxAncien !== -1 && idxNouveau !== -1 && idxAncien !== idxNouveau) {
+      sens = 'onglet';
+      sensOngletDirection = idxNouveau > idxAncien ? 1 : -1;
+    } else {
+      sens = 'avant';
+    }
+  }
+  ongletCourant = nouvelOnglet;
   afficherOnglets(true);
-  if (id === 'admin' || id === 'progression') ongletCourant = 'profil';
-  if (id === 'carnet' || id === 'lexique') ongletCourant = 'arrets';
-  if (id === 'amis') ongletCourant = 'palais';
   ({ palais: accueil, carte, arrets: collection, boutique, profil, role: ecranRole, examen: ecranExamen, admin: ecranAdmin, amis: ecranAmis, progression: ecranProgression, carnet: ecranCarnet, lexique: ecranLexique }[id])(p);
 }
 
@@ -346,7 +516,7 @@ function accueil() {
   const encours = M().enCours;
   montrer(
     barreHaut(),
-    h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); matieres(); } }, icone('matieres', 18), matiereDe(etat.matiere).nom, estConstit() ? '' : estIntro() ? `, équipe ${etat.equipeL1}` : `, équipe ${etat.equipe}`),
+    h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); fixerSens('arriere'); matieres(); } }, icone('matieres', 18), matiereDe(etat.matiere).nom, estConstit() ? '' : estIntro() ? `, équipe ${etat.equipeL1}` : `, équipe ${etat.equipe}`),
     h('section', { class: 'tribune', 'data-decor': etat.decor },
       h('div', { class: 'serie-bloc' },
         h('span', { class: 'serie-etiquette' }, 'Ta série'),
@@ -375,12 +545,88 @@ function accueil() {
       ligneEntree('vers-examen', 'balance', 'Vers l’examen', 'Trois degrés et un partiel blanc', () => aller('examen'), 0),
       ligneEntree('vers-role', 'plan', 'Le rôle', 'Choisis ton exercice', () => aller('role'), 2.2)),
   );
+
+  const doitAnimerPalais = animerPalais;
+  animerPalais = false;
+  const mode = modeAnimation();
+
+  if (doitAnimerPalais && mode === 'complet') {
+    const ressort = 'cubic-bezier(.34, 1.56, .64, 1)';
+    const bandeau = racine.querySelector('.haut');
+    bandeau?.animate(
+      [{ transform: 'translateY(-12px)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+      { duration: 180, easing: 'ease-out' }
+    );
+
+    const carteSerie = racine.querySelector('.serie-bloc');
+    carteSerie?.animate(
+      [{ transform: 'translateY(30px) scale(.94)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+      { duration: 520, easing: ressort }
+    );
+
+    const elNombre = racine.querySelector('.serie-nombre');
+    if (elNombre && s.n > 0) {
+      const nFinal = s.n;
+      const t0 = performance.now();
+      requestAnimationFrame(function compterSerie(t) {
+        const p = Math.min(1, (t - t0) / 520);
+        elNombre.textContent = String(Math.round(nFinal * p));
+        if (p < 1) requestAnimationFrame(compterSerie);
+        else elNombre.textContent = String(nFinal);
+      });
+    }
+
+    const petitsSceaux = racine.querySelectorAll('.semaine .petit-sceau');
+    petitsSceaux.forEach((sc, i) => {
+      if (sc.classList.contains('aujourdhui') && sc.classList.contains('tamponne')) {
+        sc.animate(
+          [{ opacity: 0, transform: 'rotate(-12deg) scale(2.6)' }, { opacity: 1, transform: 'none' }],
+          { duration: 340, delay: i * 50, easing: 'cubic-bezier(.3, 0, .2, 1)', fill: 'backwards' }
+        );
+      } else {
+        sc.animate(
+          [{ transform: 'scale(0)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }],
+          { duration: 340, delay: i * 50, easing: ressort, fill: 'backwards' }
+        );
+      }
+    });
+
+    setTimeout(() => {
+      const bete = racine.querySelector('.figure-chouette .sur-accueil');
+      if (bete) {
+        bete.classList.add('saute');
+        setTimeout(() => bete.classList.remove('saute'), 800);
+      }
+    }, 150);
+
+    const entrees = [...racine.querySelectorAll('.actions > *, .role-duo > .role-ligne')];
+    entrees.forEach((el, i) => {
+      el.animate(
+        [{ transform: 'translateY(24px) scale(.97)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+        { duration: 340, delay: i * 70, easing: ressort, fill: 'backwards' }
+      );
+    });
+
+    if (derniersJetonsVus !== null && etat.jetons > derniersJetonsVus) {
+      const cj = racine.querySelector('.haut-jetons');
+      cj?.animate(
+        [{ transform: 'scale(1.25)' }, { transform: 'scale(1)' }],
+        { duration: 260, easing: ressort }
+      );
+    }
+  } else if (doitAnimerPalais && mode === 'leger') {
+    const bandeau = racine.querySelector('.haut');
+    bandeau?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: 'ease-out' });
+    const carteSerie = racine.querySelector('.serie-bloc');
+    carteSerie?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: 'ease-out' });
+  }
+  derniersJetonsVus = etat.jetons;
 }
 
 const ICONE_MODE = { formule: 'plume', atelier: 'note', pouvoirs: 'reseau', nuancier: 'nuancier', plume: 'sceau', tri: 'ecarter', mot: 'crayon', rangement: 'colonne', quiadit: 'plume', scanner: 'loupe', memory: 'paires' };
 const ligneEntree = (mode, ic, nom, txt, action, d) => h('button', { class: 'role-ligne', 'data-mode': mode, style: `--d:${d}s`, onClick: action },
   h('span', { class: 'role-icone' }, icone(ic, 28)), h('span', { class: 'role-txt' }, h('b', {}, nom), h('small', {}, txt)));
-const retourPalais = () => h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); aller('palais'); } }, icone('retour', 18), 'Retour au Palais');
+const retourPalais = () => h('button', { class: 'bouton-matiere', onClick: () => { son('retour'); fixerSens('arriere'); aller('palais'); } }, icone('retour', 18), 'Retour au Palais');
 
 // Le rôle : la liste des exercices, à part du Palais.
 function ecranRole() {
@@ -556,7 +802,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
       h('p', {}, 'Quitter maintenant ? Cette séance ne comptera pas pour ta série.'),
       h('div', { class: 'boite-actions' },
         h('button', { class: 'bouton-lien sombre', onClick: () => voile.remove() }, 'Continuer la séance'),
-        h('button', { class: 'bouton-or', onClick: () => { voile.remove(); suivre('seance_quitte', { seance: S.type, i: S.i + 1, epreuve: S.rounds[S.i]?.type, matiere: etat.matiere, duree: S.debut ? Math.round((Date.now() - S.debut) / 1000) : null }); S.nettoyer.forEach((f) => f()); M().enCours = null; sauver(); if (estVisiteur()) matieres(); else aller('palais'); } }, 'Quitter'))));
+        h('button', { class: 'bouton-or', onClick: () => { voile.remove(); suivre('seance_quitte', { seance: S.type, i: S.i + 1, epreuve: S.rounds[S.i]?.type, matiere: etat.matiere, duree: S.debut ? Math.round((Date.now() - S.debut) / 1000) : null }); S.nettoyer.forEach((f) => f()); M().enCours = null; sauver(); animerPalais = true; fixerSens('arriere'); if (estVisiteur()) matieres(); else aller('palais'); } }, 'Quitter'))));
     document.body.append(voile);
   }
 
@@ -634,8 +880,25 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
     retardEpreuve = 0; finEnCours = false; S.aide = false;
     scene.className = 'scene'; scene.replaceChildren(); decor.replaceChildren();
     window.scrollTo(0, 0);
-    // Entre deux épreuves, un simple glissement, sans chouette ni baisse d'opacité du texte.
-    if (S.i > 0 && effets() && scene.animate) scene.animate([{ transform: 'translateX(26px)' }, { transform: 'none' }], { duration: 300, easing: 'cubic-bezier(.2,.7,.2,1)' });
+    // Entre deux épreuves d'une séance : l'épreuve suivante entre comme une carte posée sur la table
+    if (S.i > 0) {
+      const mode = modeAnimation();
+      if (mode === 'complet' && scene.animate) {
+        scene.animate(
+          [{ transform: 'translateY(28px) rotate(-1.5deg) scale(.95)', opacity: 0.8 }, { transform: 'none', opacity: 1 }],
+          { duration: 340, easing: 'cubic-bezier(.34, 1.56, .64, 1)' }
+        );
+        const pip = pips.children[S.i];
+        if (pip?.animate) {
+          pip.animate(
+            [{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }],
+            { duration: 260, easing: 'cubic-bezier(.34, 1.56, .64, 1)' }
+          );
+        }
+      } else if (mode === 'leger' && scene.animate) {
+        scene.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: 'ease-out' });
+      }
+    }
     Promise.resolve(TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
       console.error(e);
       scene.replaceChildren(h('div', { class: 'erreur' }, h('p', {}, 'Cette épreuve n’a pas pu s’afficher. Passe à la suivante.'), continuer('Continuer', () => ctx.fin({ score: 0, parfait: false }))));
@@ -761,7 +1024,15 @@ function resultats(S, reussi) {
   const poseFin = nouveauGrade ? 'serment' : grandeVictoire ? 'tribune' : palier ? 'debout' : S.type === 'defi' && reussi ? 'tribune'
     : !reussi || moyenne < 0.4 ? 'pause' : moyenne < 0.8 ? 'piles' : 'clin';
   const figureFin = chouette(poseFin, { taille: 188, classe: `res-chouette ${nouveauGrade || grandeVictoire ? 'grande' : ''}`, vivante: true });
-  const nombrePieces = h('dd', {}, `+${fmt(pieces)}`);
+
+  const titreTxt = S.type === 'boss' ? (reussi ? 'Audience gagnée' : 'Audience perdue') : pourcent === 100 ? 'Sans faute' : pourcent >= 70 ? 'Bien jugé' : 'À réviser';
+  const titreEl = h('h1', {}, titreTxt);
+  const ddReussite = h('dd', { 'aria-label': `${pourcent} %` }, `${pourcent} %`);
+  const ddXp = h('dd', { 'aria-label': `+${fmt(S.xp)}` }, `+${fmt(S.xp)}`);
+  const nombrePieces = h('dd', { 'aria-label': `+${fmt(pieces)}` }, `+${fmt(pieces)}`);
+  const caseReussite = h('div', { class: 'res-case' }, h('dt', {}, 'Réussite'), ddReussite);
+  const caseXp = h('div', { class: 'res-case' }, h('dt', {}, 'Expérience'), ddXp);
+  const caseJetons = h('div', { class: 'res-case' }, h('dt', {}, estRose() ? 'Canettes' : 'Jetons'), nombrePieces);
 
   const contenu = h('main', { class: 'resultats' },
     h('div', { class: 'res-scene' },
@@ -769,13 +1040,10 @@ function resultats(S, reussi) {
       zoneSceau,
       etat.decor === 'jardin' ? [1, 2, 3].map((i) => h('i', { class: `feuille f${i}`, 'aria-hidden': 'true' })) : null,
       etat.decor === 'buren' ? h('span', { class: 'colonnes-buren', 'aria-hidden': 'true' }, [70, 40, 100, 55, 85].map((v, i) => h('i', { style: `height:${v}%;--i:${i}` }))) : null),
-    h('h1', {}, S.type === 'boss' ? (reussi ? 'Audience gagnée' : 'Audience perdue') : pourcent === 100 ? 'Sans faute' : pourcent >= 70 ? 'Bien jugé' : 'À réviser'),
+    titreEl,
     textBoss ? h('p', { class: 'res-texte' }, textBoss) : null,
     ligneAmi,
-    h('dl', { class: 'res-chiffres' },
-      h('div', {}, h('dt', {}, 'Réussite'), h('dd', {}, `${pourcent} %`)),
-      h('div', {}, h('dt', {}, 'Expérience'), h('dd', {}, `+${fmt(S.xp)}`)),
-      h('div', {}, h('dt', {}, estRose() ? 'Canettes' : 'Jetons'), nombrePieces)),
+    h('dl', { class: 'res-chiffres' }, caseReussite, caseXp, caseJetons),
     S.primes?.length ? h('p', { class: 'res-coffre' }, `Dossier clos : ${S.primes.map((id) => { const a = ix.parId.get(id); return a.article ? a.nom : a.court; }).join(', ')}. Prime de maîtrise : ${monnaie(S.primes.length * PRIME_MAITRISE)}.`) : null,
     sceauManque ? h('p', { class: 'res-texte' }, `Sceau du jour non obtenu : il faut ${Math.round(SCEAU_REUSSITE * 100)} % de réussite ou ${SCEAU_FICHES} fiches reprises.`) : null,
     pieces < S.jetons ? h('p', { class: 'res-texte' }, `Plafond du jour atteint dans cette matière : ${monnaie(PLAFOND_JOUR)}.`) : null,
@@ -803,10 +1071,10 @@ function resultats(S, reussi) {
     vis ? null : S.type === 'decouverte' ? h('div', { class: 'pied' },
       continuer('Encore une minute', () => { suivre('decouverte_suite', { choix: 'encore', rang: M().decouverte }); lancerDecouverte(M().decouverte); }, { 'data-encore': '' }),
       h('button', { class: 'bouton-fantome', onClick: () => { suivre('decouverte_suite', { choix: 'defi', rang: M().decouverte }); lancerDefi(); } }, 'Faire le Défi du jour'),
-      h('button', { class: 'bouton-lien', onClick: () => { suivre('decouverte_suite', { choix: 'palais', rang: M().decouverte }); aller('palais'); } }, 'Retour au Palais')) :
+      h('button', { class: 'bouton-lien', onClick: () => { suivre('decouverte_suite', { choix: 'palais', rang: M().decouverte }); animerPalais = true; fixerSens('arriere'); aller('palais'); } }, 'Retour au Palais')) :
     h('div', { class: 'pied' },
       S.type !== 'appel' && S.type !== 'revision' && aRevoirListe.length ? h('button', { class: 'bouton-or', 'data-appel': '', onClick: () => faireAppel(aRevoirListe.map((a) => a.id)) }, 'Faire appel') : null,
-      continuer('Retour au Palais', () => aller('palais')),
+      continuer('Retour au Palais', () => { animerPalais = true; fixerSens('arriere'); aller('palais'); }),
       S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null,
       connecte() ? h('button', { class: 'bouton-lien', onClick: () => faireRetour(`Résultats : ${S.titre}`) }, 'Faire un retour') : null),
     rappelInstallationResultats(),
@@ -816,12 +1084,31 @@ function resultats(S, reussi) {
   if (effets()) {
     if (palier && !nouveauGrade && !grandeVictoire) figureFin.append(h('span', { class: 'chiffre-livre' }, String(v.n)));
     if (poseFin === 'tribune' && !images.mascotte) figureFin.append(codeEnvole());
-    if (pieces > 0) {
+    const mode = modeAnimation();
+    if (mode === 'complet') {
+      const ressort = 'cubic-bezier(.34, 1.56, .64, 1)';
+      titreEl.animate(
+        [{ transform: 'translateY(-24px) scale(1.2)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+        { duration: 420, easing: ressort }
+      );
+      [caseReussite, caseXp, caseJetons].forEach((el, i) => {
+        el.animate(
+          [{ transform: 'scale(.8)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+          { duration: 340, delay: i * 80, easing: ressort, fill: 'backwards' }
+        );
+      });
       const t0 = performance.now();
-      requestAnimationFrame(function compter(t) {
-        const p = Math.min(1, (t - t0) / 800);
+      requestAnimationFrame(function compterChiffres(t) {
+        const p = Math.min(1, (t - t0) / 600);
+        ddReussite.textContent = `${Math.round(pourcent * p)} %`;
+        ddXp.textContent = `+${fmt(Math.round(S.xp * p))}`;
         nombrePieces.textContent = `+${fmt(Math.round(pieces * p))}`;
-        if (p < 1) requestAnimationFrame(compter);
+        if (p < 1) requestAnimationFrame(compterChiffres);
+        else {
+          ddReussite.textContent = `${pourcent} %`;
+          ddXp.textContent = `+${fmt(S.xp)}`;
+          nombrePieces.textContent = `+${fmt(pieces)}`;
+        }
       });
     }
   }
@@ -927,7 +1214,7 @@ function chambre(zid) {
   const p = progressionZone(zid);
   const liste = ix.cartes.filter((a) => a.zones.includes(zid)).sort(ordreFiches);
   montrer(
-    h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller('carte') }, icone('retour', 22)), h('span', {}, `${p.acquis} acquis sur ${p.total}`)),
+    h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => { fixerSens('arriere'); aller('carte'); } }, icone('retour', 22)), h('span', {}, `${p.acquis} acquis sur ${p.total}`)),
     h('section', { class: 'page' }, h('h1', {}, z.titre), h('p', { class: 'page-sous' }, z.lieu),
       z.travaux ? h('p', { class: 'avis-travaux' }, icone('travaux', 20), liste.length ? 'En travaux : ce chapitre n’est pas encore arrivé au cours. Les exercices restent généraux, tirés du Code civil et des grands arrêts.' : 'En travaux : ce chapitre n’est pas encore arrivé au cours. Ses fiches et ses exercices arriveront avec lui.') : null,
       h('div', { class: 'actions gauche' },
@@ -991,7 +1278,7 @@ function ecranLexique() {
   const norm = (x) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const rendre = () => { const q = norm(champ.value); liste.replaceChildren(...termes.filter((t) => !q || norm(`${t.t} ${t.d}`).includes(q)).map((t) => h('div', {}, h('dt', {}, t.t), h('dd', {}, t.d)))); };
   champ.addEventListener('input', rendre);
-  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => aller('arrets') }, icone('retour', 18), 'Les arrêts'), h('section', { class: 'page' },
+  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => { fixerSens('arriere'); aller('arrets'); } }, icone('retour', 18), 'Les arrêts'), h('section', { class: 'page' },
     h('h1', {}, 'Lexique'),
     h('p', { class: 'page-sous' }, 'Dans les exercices, ces termes sont soulignés en pointillé : touche-les pour leur définition.'),
     h('label', { class: 'cherche' }, icone('loupe', 22), champ), liste,
@@ -1020,7 +1307,7 @@ function ecranCarnet() {
       h('p', {}, apport),
       h('small', {}, e.corrige ? 'Corrigée' : `${e.n > 1 ? `Ratée ${e.n} fois` : 'Ratée une fois'}, la dernière ${quandTxt}${avec ? `. Confondue avec ${avec.article ? avec.nom : avec.court}` : ''}.`))));
   };
-  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => aller('arrets') }, icone('retour', 18), 'Les arrêts'), h('section', { class: 'page carnet' },
+  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => { fixerSens('arriere'); aller('arrets'); } }, icone('retour', 18), 'Les arrêts'), h('section', { class: 'page carnet' },
     h('h1', {}, 'Carnet d’erreurs'),
     h('p', { class: 'page-sous' }, ouvertes.length ? `${pluriel(ouvertes.length, 'erreur ouverte', 'erreurs ouvertes')}. Une erreur sort du carnet après deux réussites sur deux jours différents, ou un appel gagné.` : 'Aucune erreur ouverte. Celles que tu commettras s’afficheront ici jusqu’à leur correction.'),
     zonesTxt.length ? h('p', { class: 'aide-claire' }, `${zonesTxt.join(', ')}.`) : null,
@@ -1035,7 +1322,7 @@ function fiche(id) {
   const champs = (a.nf ? [['Ce qu’il faut retenir', a.s], ['Portée', a.po]] : [['Faits', a.f], ['Procédure', a.pr], ['Problème de droit', a.q], ['Solution', a.s], ['Portée', a.po]]).filter(([, t]) => t);
   const jum = jumeaux(ix, id);
   montrer(
-    h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller(ongletCourant) }, icone('retour', 22)), niveauTag(niveau(id))),
+    h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => { fixerSens('arriere'); aller(ongletCourant); } }, icone('retour', 22)), niveauTag(niveau(id))),
     h('article', { class: 'fiche' },
       h('div', { class: 'revelation-tete' }, h('span', { class: 'annee' }, a.an), h('div', {}, h('h1', {}, a.court), h('p', { class: 'ref' }, a.ref))),
       Object.entries(a.ap).map(([, t]) => h('p', { class: 'apport' }, t)).filter((_, i, l) => l.findIndex((x) => x.textContent === _.textContent) === i),
@@ -1053,7 +1340,7 @@ function ficheArticle(a) {
   const z = ix.zones.find((x) => x.id === a.zones[0]);
   if (a.notion) {
     montrer(
-      h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller(ongletCourant) }, icone('retour', 22)), niveauTag(niveau(a.id))),
+      h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => { fixerSens('arriere'); aller(ongletCourant); } }, icone('retour', 22)), niveauTag(niveau(a.id))),
       h('article', { class: 'fiche fiche-notion' },
         h('div', { class: 'revelation-tete' }, h('div', {}, h('h1', {}, a.nom), h('p', { class: 'ref' }, `${a.etiquette}, ${z.titre}`))),
         h('p', { class: 'apport' }, a.regle),
@@ -1064,7 +1351,7 @@ function ficheArticle(a) {
     return;
   }
   montrer(
-    h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => aller(ongletCourant) }, icone('retour', 22)), niveauTag(niveau(a.id))),
+    h('header', { class: 'haut-simple' }, h('button', { class: 'quitter', 'aria-label': 'Retour', onClick: () => { fixerSens('arriere'); aller(ongletCourant); } }, icone('retour', 22)), niveauTag(niveau(a.id))),
     h('article', { class: 'fiche' },
       h('div', { class: 'revelation-tete' }, h('div', {}, h('h1', {}, a.nom), h('p', { class: 'ref' }, a.titre))),
       h('p', { class: 'apport' }, a.regle),
@@ -1277,7 +1564,7 @@ function ecranProgression() {
   const vals = Object.values(M().arrets);
   const parPalier = [0, 1, 2, 3, 4, 5].map((b) => vals.filter((a) => (a.b || 0) === b).length);
   const echelle = (rangs, actuel) => h('ol', { class: 'carriere' }, rangs.map((x, i) => h('li', { class: `${i <= actuel.i ? 'atteint' : ''} ${i === actuel.i ? 'actuel' : ''}`, style: `--i:${i}` }, x.nom, h('small', {}, `${fmt(x.xp)} points`))));
-  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => aller('profil') }, icone('retour', 18), 'Profil'), h('section', { class: 'page progression' },
+  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => { fixerSens('arriere'); aller('profil'); } }, icone('retour', 18), 'Profil'), h('section', { class: 'page progression' },
     h('h1', {}, 'Ta progression'),
     h('p', { class: 'page-sous' }, 'Trois mesures, chacune avec son rôle.'),
     h('h2', {}, `Ta carrière : ${m.institution}`),
@@ -1622,7 +1909,7 @@ const NOMS_STATUT = { admin: 'Admin', testeur: 'Testeur', paye: 'Payé', aucun: 
 const quand = (d) => (d ? 'le ' + new Date(d).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'jamais');
 async function ecranAdmin() {
   const corps = h('div', { class: 'admin-corps' }, h('p', { class: 'aide-claire' }, 'Chargement…'));
-  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => aller('profil') }, icone('retour', 18), 'Retour au profil'),
+  montrer(barreHaut(), h('button', { class: 'bouton-matiere', onClick: () => { fixerSens('arriere'); aller('profil'); } }, icone('retour', 18), 'Retour au profil'),
     h('section', { class: 'page admin' }, h('h1', {}, 'Administration'), h('p', { class: 'page-sous' }, 'Visible par toi seul.'), corps));
   let comptes; let signalements; let reglage; let quota; let retours;
   try { [comptes, signalements, reglage, quota, retours] = await Promise.all([adminComptes(), adminSignalements(), adminReglage(), adminQuota(), adminRetours()]); } catch {
