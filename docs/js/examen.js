@@ -1,7 +1,7 @@
 // Les exercices de Vers l'examen sans choix proposés : on produit sa réponse, puis on se compare au corrigé.
 import { h } from './ui.js';
 import { son } from './sons.js';
-import { melange, roundPlan } from './engine.js';
+import { melange, roundPlan, roundPlaide, roundTrous } from './engine.js';
 import { qcm, barrePied, continuer, bandeauArret, repere } from './games.js';
 
 const prendre = (liste, dus, deja) => {
@@ -27,25 +27,8 @@ export function roundExamen(ix, type, zones, dus, deja) {
     const a = prendre(arrets, dus, deja); if (!a) return null;
     return { type, id: a.id, nom: a.court || a.nom, an: a.an, ref: a.ref, attendu: apportDe(a, zones), complement: a.po };
   }
-  if (type === 'plaide') {
-    const avecQ = arrets.filter((a) => a.q && a.s);
-    const questions = (ix.questions || []).filter(dans(zones)).map((q, i) => ({ ...q, id: `q-${i}-${q.q.length}` }));
-    const deQuestion = ix.matiere === 'oblig' && questions.length && (!avecQ.length || Math.random() < 0.5);
-    if (deQuestion) { const q = prendre(questions, [], deja); return { type, carte: null, contexte: 'Question de cours', question: q.q, attendu: q.bonne }; }
-    const a = prendre(avecQ, dus, deja); if (!a) return null;
-    return { type, carte: a.id, contexte: `${a.court || a.nom}, ${a.an}`, question: a.q, attendu: a.s };
-  }
-  if (type === 'trous') {
-    const articles = (ix.articles || []).filter((a) => dans(zones)(a) && a.regle && a.regle.split(' ').length >= 10);
-    const a = prendre(articles, dus, deja); if (!a) return null;
-    const mots = a.regle.split(' ');
-    const candidats = mots.map((m, i) => ({ m: m.replace(/[,.;:]$/, ''), i })).filter(({ m, i }) => i > 1 && m.length >= 6 && /^[a-zà-ÿ'’-]+$/i.test(m));
-    const trous = melange(candidats, Math.random).slice(0, Math.min(3, candidats.length)).sort((x, y) => x.i - y.i);
-    if (trous.length < 2) return null;
-    const autres = (ix.articles || []).filter((b) => b !== a && b.regle).flatMap((b) => b.regle.split(' ').map((m) => m.replace(/[,.;:]$/, '')).filter((m) => m.length >= 6 && /^[a-zà-ÿ'’-]+$/i.test(m)));
-    const leurres = melange([...new Set(autres)].filter((m) => !trous.some((t) => t.m === m)), Math.random).slice(0, 2);
-    return { type, id: a.id, nom: a.nom, titre: a.titre, mots, trous: trous.map((t) => ({ i: t.i, m: t.m })), etiquettes: melange([...trous.map((t) => t.m), ...leurres], Math.random) };
-  }
+  if (type === 'plaide') return roundPlaide(ix, zones, dus, deja, Math.random);
+  if (type === 'trous') return roundTrous(ix, zones, dus, deja, Math.random);
   if (type === 'express') {
     const sujets = (ix.sujets || []).filter((s) => s.type === 'C' && s.arret && Object.keys(s.arret.just || {}).length && dans(zones)(s));
     const s = prendre(sujets.length ? sujets : (ix.sujets || []).filter((x) => x.type === 'C' && x.arret), [], deja); if (!s) return null;

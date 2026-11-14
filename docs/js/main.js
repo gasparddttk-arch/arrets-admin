@@ -454,7 +454,7 @@ function lancerDefi() {
 function lancerExpress() {
   const zones = zonesDuJour(ix); const dus = aRevoir(ix, zones);
   const deja = new Set();
-  const types = estConstit() ? ['pouvoirs', 'mot', 'plume'] : estIntro() ? ['tri', 'mot', 'memory'] : estOblig() ? ['qualif', 'remede', 'qualif'] : ['paires', 'puzzle', 'paires'];
+  const types = estConstit() ? ['pouvoirs', 'mot', 'nuancier'] : estIntro() ? ['tri', 'mot', 'memory'] : estOblig() ? ['qualif', 'remede', 'qualif'] : ['paires', 'puzzle', 'paires'];
   lancer({ type: 'express', titre: 'Trois minutes', rounds: types.map((t) => tirerRound(ix, t, zones, dus, Math.random, deja)) });
 }
 // L'atelier : trois niveaux, comme les juridictions.
@@ -866,7 +866,7 @@ function reviserZone(z) {
   const dus = aRevoir(ix, [z]);
   const deja = new Set();
   if (estL1()) {
-    const dispo = melange(typesIntro(ix, [z]).filter((t) => t !== 'memory'), Math.random);
+    const dispo = melange(typesIntro(ix, [z]).filter((t) => t !== 'memory' && t !== 'plume'), Math.random);
     lancer({ type: 'zone', titre: 'Révision', zone: z, rounds: ['memory', dispo[0], dispo[1] || 'mot'].map((t) => tirerRound(ix, t, [z], dus, Math.random, deja)) });
     return;
   }

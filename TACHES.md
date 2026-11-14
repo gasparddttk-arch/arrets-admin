@@ -181,7 +181,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : test qui joue une version courte et une version entière en obligations (équipe 1) et en administratif (équipe 2), avec une mauvaise réponse à l'étape 1 (le `signe` s'affiche) ; captures `formule-lire.png`, `formule-remplir.png` ; suite complète verte.
 
 ### [TÂCHE O] Memory : voir les cartes avant de jouer (Antigravity)
-- **Statut** : Prêt pour Claude (suite verte le 14/11 à 01h58 sur 05cad20)
+- **Statut** : Fait le 14/11 (Antigravity), publié par Claude
 - **Demande (retour d'un testeur, transmis par Gaspard le 14/11)** : au début du Memory, toutes les cartes sont visibles un moment pour qu'on les mémorise, puis elles se retournent et le jeu habituel commence. Ainsi le début n'est plus du hasard.
 - **Fichiers concernés** : `app/js/jeux-l1.js` (`jouerMemory`, qui sert aussi au Memory de L2), `app/css/app.css`, `tests/run.cjs`
 - **Détails de modification** :
@@ -199,7 +199,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : `npm test` vert ; capture `memory-memorise.png` en 390 px, sans débordement.
 
 ### [TÂCHE L] La production réservée aux modes d'examen et aux audiences (Antigravity)
-- **Statut** : Prêt pour Claude (suite verte le 14/11 à 02h21 sur ab06d71)
+- **Statut** : Fait le 14/11 (Antigravity), publié par Claude
 - **Décisions de Gaspard (13/11)** : l'audience garde ses 3 vies, avec au moins un exercice de production qui compte comme les autres (le rater coûte une vie). « Première instance » reste un échauffement sans production ; la production commence à « Appel ».
 - **Définition** : exercices de **production** = `atelier`, `architecte`, `plaide`, `trous`, `syllogisme`, `casnu`, et plus tard `formule` en version entière. Tous les autres sont de reconnaissance.
 - **Fichiers concernés** : `app/js/engine.js` (`composerDefi`, `composerBoss`, `composerBossIntro`), `app/js/main.js` (`NIVEAUX_EXAMEN`, `lancerExpress`, `reviserZone`, `DECOUVERTE`), `tests/run.cjs`
