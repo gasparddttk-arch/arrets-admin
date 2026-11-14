@@ -2,6 +2,7 @@
 // Tout passe par l'API de Supabase, sans bibliothèque : la session est gardée sur le téléphone.
 import { SUPABASE_URL, SUPABASE_CLE } from './config.js';
 import { etat, sauver, remplacerEtat, jour, lundi, rangGeneral, M } from './state.js';
+import { fusionner3 } from './fusion.js';
 
 const CLE_SESSION = 'gdroit-session';
 const ici = () => location.origin + location.pathname;
@@ -121,16 +122,59 @@ export function resume() {
 }
 const poids = (e) => (e?.xp || 0) + (e?.oblig?.xp || 0) + (e?.intro?.xp || 0) + (e?.constit?.xp || 0) + (e?.stats?.seances || 0);
 
+// La dernière version commune avec la copie en ligne : elle permet de fusionner deux téléphones
+// qui ont avancé chacun de leur côté au lieu d'en écraser un.
+const CLE_BASE = 'gdroit-base';
+function lireBase() { try { return JSON.parse(localStorage.getItem(CLE_BASE)); } catch { return null; } }
+function garderBase(donnees, maj) {
+  etat.compte = { ...etat.compte, sync: Date.parse(maj), majDistante: maj };
+  try { localStorage.setItem(CLE_BASE, JSON.stringify(donnees)); } catch { localStorage.removeItem?.(CLE_BASE); }
+  sauver();
+}
+// La version en ligne a changé ailleurs : on fusionne, en gardant la séance en cours de ce téléphone.
+function fusionnerAvec(distant) {
+  const base = lireBase();
+  if (!base) return false;
+  const encours = { admin: etat.enCours, oblig: etat.oblig?.enCours, intro: etat.intro?.enCours, constit: etat.constit?.enCours };
+  const compte = etat.compte;
+  const f = fusionner3(base, aEnvoyer(), distant);
+  remplacerEtat({ ...f, compte, enCours: encours.admin });
+  for (const m of ['oblig', 'intro', 'constit']) if (etat[m]) etat[m].enCours = encours[m] || null;
+  sauver();
+  return true;
+}
+
 let envoi = null;
 export async function envoyerProgression() {
   if (!connecte() || !session.user || navigator.onLine === false) return false;
   if (envoi) return envoi;
   envoi = (async () => {
     try {
-      const maj = new Date().toISOString();
-      await api('progressions?on_conflict=id', { method: 'POST', corps: { id: session.user.id, donnees: aEnvoyer(), resume: resume(), maj }, prefer: 'resolution=merge-duplicates,return=minimal' });
-      etat.compte = { ...etat.compte, sync: Date.parse(maj) }; sauver();
-      return true;
+      const id = session.user.id;
+      for (let essai = 0; essai < 2; essai++) {
+        const donnees = aEnvoyer();
+        const corps = { donnees, resume: resume(), maj: new Date().toISOString() };
+        const connue = etat.compte?.majDistante;
+        if (!connue) {
+          // Premier envoi depuis ce téléphone (ou version d'avant la fusion) : on écrit et on retient la date en ligne.
+          const r = await api('progressions?on_conflict=id&select=maj', { method: 'POST', corps: { id, ...corps }, prefer: 'resolution=merge-duplicates,return=representation' });
+          garderBase(donnees, r?.[0]?.maj || corps.maj);
+          return true;
+        }
+        // Écriture seulement si la copie en ligne est celle qu'on connaît.
+        const r = await api(`progressions?id=eq.${id}&maj=eq.${encodeURIComponent(connue)}&select=maj`, { method: 'PATCH', corps, prefer: 'return=representation' });
+        if (r?.length) { garderBase(donnees, r[0].maj); return true; }
+        // Elle a changé ailleurs (autre téléphone) : on la relit, on fusionne, puis on réessaie une fois.
+        const l = await api(`progressions?id=eq.${id}&select=donnees,maj`);
+        const distant = l?.[0];
+        if (!distant) { etat.compte = { ...etat.compte, majDistante: null }; continue; }
+        if (!fusionnerAvec(distant.donnees)) {
+          // Sans version commune, on garde la plus avancée des deux, comme avant.
+          if (poids(distant.donnees) > poids(etat)) { remplacerEtat({ ...distant.donnees, compte: etat.compte, enCours: null }); garderBase(distant.donnees, distant.maj); return true; }
+        }
+        etat.compte = { ...etat.compte, majDistante: distant.maj };
+      }
+      return false;
     } catch { return false; } finally { envoi = null; }
   })();
   return envoi;
@@ -147,17 +191,34 @@ export async function synchroniser(delai = {}) {
   let choix = 'local';
   if (distant) {
     const majDistante = Date.parse(distant.maj);
+    const modifieIci = (etat.modifie || 0) > (etat.compte?.sync || 0);
     if (!local) choix = 'distant';
-    else if (memeCompte && majDistante > (etat.compte.sync || 0)) choix = (etat.modifie || 0) > (etat.compte.sync || 0) ? (poids(distant.donnees) > poids(etat) ? 'distant' : 'local') : 'distant';
+    else if (memeCompte && majDistante > (etat.compte.sync || 0)) choix = !modifieIci ? 'distant' : lireBase() ? 'fusion' : (poids(distant.donnees) > poids(etat) ? 'distant' : 'local');
     else if (!memeCompte) choix = poids(distant.donnees) > poids(etat) ? 'distant' : 'local';
   }
   if (delai.depasse) return 'trop-tard';
   const pseudo = etat.compte?.pseudo;
-  if (choix === 'distant') remplacerEtat({ ...distant.donnees, enCours: null });
-  etat.compte = { id, email: session.user.email, pseudo, acces: etat.compte?.acces || null, sync: choix === 'distant' ? Date.parse(distant.maj) : etat.compte?.sync || 0 };
+  const garde = { id, email: session.user.email, pseudo, acces: etat.compte?.acces || null };
+  if (choix === 'fusion') {
+    etat.compte = { ...etat.compte, ...garde };
+    fusionnerAvec(distant.donnees);
+    etat.compte = { ...etat.compte, majDistante: distant.maj };
+    sauver();
+    await envoyerProgression();
+    return 'fusion';
+  }
+  if (choix === 'distant') {
+    remplacerEtat({ ...distant.donnees, enCours: null });
+    etat.compte = { ...garde, sync: Date.parse(distant.maj), majDistante: distant.maj };
+    garderBase(distant.donnees, distant.maj);
+    return 'en-ligne';
+  }
+  // On garde ce téléphone : s'il s'agit d'un autre compte, la date connue en ligne ne vaut plus.
+  etat.compte = { ...garde, sync: memeCompte ? etat.compte?.sync || 0 : 0, majDistante: memeCompte ? etat.compte?.majDistante || null : distant?.maj || null };
+  if (!memeCompte) { try { localStorage.removeItem(CLE_BASE); } catch { /* stockage bloqué */ } }
   sauver();
-  if (choix === 'local') await envoyerProgression();
-  return choix === 'distant' ? 'en-ligne' : 'telephone';
+  await envoyerProgression();
+  return 'telephone';
 }
 
 // SIGNALEMENTS ET CADEAUX -------------------------------------------------------------

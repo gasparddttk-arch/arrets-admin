@@ -878,6 +878,21 @@ async function execGroupe1(b, PORT, erreurs) {
   }
 
   // 14c. Révision du jour (Tâche M)
+  if (matchSeul('fusion progression')) {
+    const { fusionner3 } = await import('../app/js/fusion.js');
+    const base = { xp: 100, jetons: 50, modifie: 1, serie: { n: 3, dernier: 10, record: 5 }, themes: ['palais'], arrets: { a: { b: 1, d: 10 }, c: { b: 2, d: 12 } }, oblig: { xp: 10, zones: { gagnees: [1] } }, inv: { sursis: 1 } };
+    const local = { ...structuredClone(base), xp: 140, jetons: 35, modifie: 5, themes: ['palais', 'nuit'], arrets: { a: { b: 2, d: 12 }, c: { b: 2, d: 12 } }, inv: { sursis: 0 } };
+    const distant = { ...structuredClone(base), jetons: 56, modifie: 4, serie: { n: 4, dernier: 11, record: 5 }, themes: ['palais', 'rose'], arrets: { a: { b: 1, d: 10 }, c: { b: 3, d: 16 } }, oblig: { xp: 40, zones: { gagnees: [1, 2] } } };
+    const f = fusionner3(base, local, distant);
+    assert.equal(f.xp, 140); assert.equal(f.jetons, 41, 'jetons : gains et dépenses des deux côtés'); assert.equal(f.oblig.xp, 40);
+    assert.deepEqual(f.oblig.zones.gagnees, [1, 2]); assert.deepEqual(f.themes, ['palais', 'nuit', 'rose']);
+    assert.deepEqual(f.arrets.a, { b: 2, d: 12 }); assert.deepEqual(f.arrets.c, { b: 3, d: 16 });
+    assert.deepEqual(f.serie, { n: 4, dernier: 11, record: 5 }); assert.equal(f.inv.sursis, 0); assert.equal(f.modifie, 5);
+    assert.deepEqual(fusionner3({ arrets: { a: { b: 1 } } }, { modifie: 9, arrets: { a: { b: 0 } } }, { modifie: 3, arrets: { a: { b: 2 } } }).arrets.a, { b: 0 }, 'le plus récent gagne');
+    assert.equal(fusionner3({ jetons: 10 }, { jetons: 0 }, { jetons: 0 }).jetons, 0, 'jamais sous zéro');
+    log('fusion progression ok');
+  }
+
   if (matchSeul('révision du jour') || matchSeul('revision')) {
     const { indexer, composerRevision, PRODUCTION } = await import('../app/js/engine.js');
     const { aRattraper } = await import('../app/js/state.js');
@@ -2111,7 +2126,13 @@ async function execGroupe3(b, PORT, erreurs) {
       if (u.pathname === '/auth/v1/logout') return route.fulfill({ status: 204 });
       assert.equal(r.headers().authorization, 'Bearer jeton', 'appel authentifié');
       if (u.pathname === '/rest/v1/progressions' && r.method() === 'GET') return json(faux.progression ? [faux.progression] : []);
-      if (u.pathname === '/rest/v1/progressions') { faux.progression = { donnees: corps.donnees, maj: corps.maj }; faux.envois.push(corps); return route.fulfill({ status: 201 }); }
+      if (u.pathname === '/rest/v1/progressions' && r.method() === 'PATCH') {
+        // Écriture conditionnelle : seulement si la date connue est celle en ligne.
+        const attendue = (u.searchParams.get('maj') || '').replace(/^eq\./, '');
+        if (!faux.progression || faux.progression.maj !== attendue) return json([]);
+        faux.progression = { donnees: corps.donnees, maj: corps.maj }; faux.envois.push(corps); return json([{ maj: corps.maj }]);
+      }
+      if (u.pathname === '/rest/v1/progressions') { faux.progression = { donnees: corps.donnees, maj: corps.maj }; faux.envois.push(corps); return json([{ maj: corps.maj }], 201); }
       if (u.pathname === '/functions/v1/pousser') { faux.pousse++; return json({ envoyees: 0 }); }
       if (u.pathname === '/rest/v1/profils' && r.method() === 'GET') return json([{ pseudo: 'Testeur', equipe: null, acces: faux.acces, code_ami: 'TEST-2345', masquer: false, notifs: { demandes: true, defis: true, revisions: false } }]);
       if (u.pathname.startsWith('/rest/v1/rpc/')) {
@@ -2162,6 +2183,18 @@ async function execGroupe3(b, PORT, erreurs) {
     await k1.evaluate(() => { window.__app.etat().signalements.push({ id: 'blanco', nom: 'Blanco', txt: 'Date fausse', le: '2026-11-06', equipe: 1 }); window.dispatchEvent(new Event('online')); });
     await k1.waitForFunction(() => window.__app.etat().signalements.every((x) => x.envoye), null, { timeout: 5000 });
     assert.equal(faux.signalements[0].carte, 'blanco', 'signalement reçu en ligne');
+    // Un autre appareil a écrit entre-temps : l'envoi suivant fusionne au lieu d'écraser.
+    {
+      const avant = await etat(k1);
+      const ailleurs = structuredClone(faux.progression.donnees); ailleurs.jetons += 100; ailleurs.themes = [...new Set([...(ailleurs.themes || []), 'rose'])]; ailleurs.modifie = 1;
+      faux.progression = { donnees: ailleurs, maj: '2030-01-01T00:00:00.000Z' };
+      await k1.evaluate(() => { window.__app.etat().jetons -= 3; window.__app.etat().modifie = Date.now(); Object.defineProperty(document, 'hidden', { value: true, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
+      for (let i = 0; i < 50 && faux.progression.maj === '2030-01-01T00:00:00.000Z'; i++) await k1.waitForTimeout(100);
+      await k1.evaluate(() => { delete document.hidden; });
+      assert.notEqual(faux.progression.maj, '2030-01-01T00:00:00.000Z', 'réécrit après fusion');
+      assert.equal(faux.progression.donnees.jetons, avant.jetons - 3 + 100, 'jetons des deux appareils');
+      assert((await etat(k1)).themes.includes('rose'), 'tenue achetée ailleurs récupérée');
+    }
     const xp1 = (await etat(k1)).xp;
     await k1.evaluate(() => window.__app.aller('profil')); await k1.waitForSelector('.compte');
     await k1.screenshot({ path: CAP + 'compte-profil.png' });
