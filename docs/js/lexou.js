@@ -1,4 +1,4 @@
-// Lexou animé, image par image : chaque animation tient en quatre planches WebP détourées de 30 images (10 par ligne).
+// Lexou animé, image par image : chaque animation tient en trois ou quatre planches WebP détourées de 30 images (10 par ligne).
 // Une simple image, donc rien que Safari puisse bloquer (pas de lecture automatique, pas de mode économie d'énergie).
 // Tant que la planche n'est pas chargée, ou si elle ne peut pas l'être (hors ligne), la chouette fixe reste affichée.
 import { h } from './ui.js';
@@ -11,30 +11,38 @@ export const ANIMATIONS = {
   lecture: { l: 260, h: 415, images: 120, boucle: true },
   plume: { l: 396, h: 401, images: 120, boucle: true },
   victoire: { l: 469, h: 420, images: 120, boucle: false },
+  // Série perdue : Lexou regarde sa montre, s'énerve, puis colle son bec contre l'écran (cadre fixe, gros plan compris).
+  colere: { l: 533, h: 480, images: 90, boucle: false, cadre: true },
 };
 
+// Charge et décode les planches d'une animation ; rejette si l'une manque (hors ligne).
+export function prechargerLexou(nom) {
+  const def = ANIMATIONS[nom];
+  return Promise.all(Array.from({ length: Math.ceil(def.images / PAR_PLANCHE) }, (_, k) => new Promise((ok, ko) => {
+    const img = new Image();
+    img.onload = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(ok);
+    img.onerror = ko;
+    img.src = `${DOSSIER}${nom}-${k}.webp`;
+  })));
+}
+
 // taille : le côté du carré occupé par la chouette fixe, que l'animation reprend exactement.
-// repli : la chouette fixe, affichée jusqu'au chargement.
-export function lexouAnime(nom, { taille = 210, repli, classe = '' } = {}) {
+// repli : la chouette fixe, affichée jusqu'au chargement. fin : appelée quand une animation sans boucle s'achève.
+// Une animation à cadre fixe (colere) occupe toute la largeur donnée par taille.
+export function lexouAnime(nom, { taille = 210, repli, classe = '', fin } = {}) {
   const def = ANIMATIONS[nom];
   // Même place que la chouette fixe : sa silhouette va de 12 % à 89 % de la hauteur du carré (planches recadrées au plus juste).
   let hauteur = Math.round(taille * 0.78);
   let largeur = Math.round(hauteur * def.l / def.h);
-  if (largeur > taille) { largeur = taille; hauteur = Math.round(taille * def.h / def.l); }
+  if (largeur > taille || def.cadre) { largeur = taille; hauteur = Math.round(taille * def.h / def.l); }
   const lignes = PAR_PLANCHE / COLONNES;
-  const planches = Math.ceil(def.images / PAR_PLANCHE);
   const url = (k) => `url(${DOSSIER}${nom}-${k}.webp)`;
   const film = h('div', { class: 'lexou-film', 'aria-hidden': 'true',
     style: `width:${largeur}px;height:${hauteur}px;background-size:${largeur * COLONNES}px ${hauteur * lignes}px` });
   const boite = h('div', { class: `lexou-anime ${classe}`, style: `--taille:${taille}px`, role: 'img', 'aria-label': 'Lexou' }, repli || null, film);
 
-  // On attend les quatre planches avant de lancer : pas de trou au passage de l'une à l'autre.
-  Promise.all(Array.from({ length: planches }, (_, k) => new Promise((ok, ko) => {
-    const img = new Image();
-    img.onload = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(ok);
-    img.onerror = ko;
-    img.src = `${DOSSIER}${nom}-${k}.webp`;
-  }))).then(() => {
+  // On attend toutes les planches avant de lancer : pas de trou au passage de l'une à l'autre.
+  prechargerLexou(nom).then(() => {
     boite.classList.add('pret');
     let t0 = null;
     let absent = null;
@@ -54,6 +62,7 @@ export function lexouAnime(nom, { taille = 210, repli, classe = '' } = {}) {
       if (k !== planche) { film.style.backgroundImage = url(k); planche = k; }
       film.style.backgroundPosition = `${-(j % COLONNES) * largeur}px ${-Math.floor(j / COLONNES) * hauteur}px`;
       if (def.boucle || n < def.images - 1) requestAnimationFrame(tic);
+      else fin?.();
     };
     requestAnimationFrame(tic);
   }).catch(() => {}); // hors ligne : la chouette fixe reste
