@@ -903,7 +903,7 @@ async function execGroupe1(b, PORT, erreurs) {
       }
     }
 
-    await pageG1();
+    p = null; await pageG1(); // page neuve : celle du groupe a pu être fermée plus haut
     // 1. Jouer une séance avec deux erreurs volontaires
     await p.evaluate(() => {
       const ix = window.__app.ix;
@@ -952,6 +952,7 @@ async function execGroupe1(b, PORT, erreurs) {
     await p.waitForSelector('.tribune');
     assert.equal(await p.$('[data-revision]'), null, 'l’entrée disparaît après la révision');
     log('révision du jour ok');
+    await ctx.close(); p = null; ctx = null;
   }
 }
 
