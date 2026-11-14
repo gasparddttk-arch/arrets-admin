@@ -1420,7 +1420,7 @@ async function ecranAmis() {
       : d.statut === 'refuse' ? 'Refusé' : d.statut === 'expire' ? 'Expiré' : d.recu ? `À toi de battre ${pct(d.score_auteur)}` : `En attente, tu as fait ${pct(d.score_auteur)}`;
     return h('li', { class: 'article' }, h('div', {},
       h('b', {}, `${d.recu ? 'De' : 'Pour'} ${d.pseudo || 'un ami'}`), h('p', {}, etatTxt),
-      h('small', {}, `${d.matiere === 'oblig' ? 'Droit des obligations' : 'Droit administratif'}, ${quandCourt(d.cree_le)}`),
+      h('small', {}, `${matiereDe(d.matiere)?.nom || 'Droit administratif'}, ${quandCourt(d.cree_le)}`),
       d.recu && d.statut === 'ouvert' ? h('div', { class: 'admin-duo' },
         h('button', { class: 'bouton-or', onClick: () => releverDefi(d.id) }, 'Relever'),
         h('button', { class: 'bouton-fantome', onClick: async () => { await refuserDefi(d.id).catch(() => {}); recharger(); } }, 'Refuser')) : null));
@@ -1447,7 +1447,7 @@ async function ecranAmis() {
     envoyees.length ? h('ul', { class: 'articles' }, envoyees.map((a) => demande(a, false))) : null,
     amis.length ? h('h2', {}, `Mes amis (${amis.length})`) : null,
     amis.length ? h('ul', { class: 'articles' }, amis.map((a) => h('li', {}, h('button', { class: 'article ami-ligne', onClick: () => ficheAmi(a) }, h('div', {},
-      h('b', {}, a.pseudo || 'Sans pseudo'), h('small', {}, a.masque ? 'Progression masquée' : a.resume ? `${a.resume.grade}, ${fmt(a.resume.xp)} points` : 'Pas encore de séance')))))) : null,
+      h('b', {}, a.pseudo || 'Sans pseudo'), h('small', {}, a.masque ? 'Progression masquée' : a.resume ? `${a.resume.grade || 'Étudiant'}, ${fmt(a.resume.xp)} points` : 'Pas encore de séance')))))) : null,
     autresDefis.length ? h('h2', {}, 'Derniers défis') : null, autresDefis.length ? h('ul', { class: 'articles' }, autresDefis.map(ligneDefi)) : null,
     h('h2', {}, 'Réglages'), reglagesAmis(moi),
     bloques.length ? h('h2', {}, 'Comptes bloqués') : null,
@@ -1492,7 +1492,31 @@ function ficheAmi(a) {
   if (!a) return;
   const r = a.resume; const moi = monResume();
   const ligne = (nom, x, y) => h('tr', {}, h('th', {}, nom), h('td', {}, x), h('td', {}, y));
-  const memeEquipe = r?.equipe && r.equipe === etat.equipe;
+  const anneeMoi = etat.annee || 'L2';
+  const anneeAmi = r?.annee || (r?.xpConstit || r?.xpIntro ? 'L1' : 'L2');
+  const memeAnnee = Boolean(r && anneeMoi === anneeAmi);
+  const memeEquipeL2 = Boolean(r?.equipe && r.equipe === etat.equipe);
+  const memeEquipeL1 = Boolean(r?.equipe && r.equipe === etat.equipeL1);
+
+  let blocDefis = null;
+  if (memeAnnee && anneeMoi === 'L1') {
+    blocDefis = [
+      h('div', { class: 'admin-duo' },
+        h('button', { class: 'bouton-or', onClick: () => { voile.remove(); lancerDefiAmi(a, 'constit'); } }, 'Droit constitutionnel'),
+        h('button', { class: 'bouton-or', disabled: !memeEquipeL1, onClick: () => { voile.remove(); lancerDefiAmi(a, 'intro'); } }, 'Introduction au droit')),
+      memeEquipeL1 ? null : h('p', { class: 'aide-claire' }, 'L’introduction au droit se défie entre membres de la même équipe.'),
+    ];
+  } else if (memeAnnee && anneeMoi === 'L2') {
+    blocDefis = [
+      h('div', { class: 'admin-duo' },
+        h('button', { class: 'bouton-or', onClick: () => { voile.remove(); lancerDefiAmi(a, 'admin'); } }, 'Administratif'),
+        h('button', { class: 'bouton-or', disabled: !memeEquipeL2, onClick: () => { voile.remove(); lancerDefiAmi(a, 'oblig'); } }, 'Obligations')),
+      memeEquipeL2 ? null : h('p', { class: 'aide-claire' }, 'Les obligations se défient entre membres de la même équipe.'),
+    ];
+  } else {
+    blocDefis = h('p', { class: 'aide-claire' }, 'Vous n’avez pas de matière en commun pour l’instant.');
+  }
+
   const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite admin-fiche', role: 'dialog', 'aria-label': `Fiche de ${a.pseudo}` },
     h('h2', {}, a.pseudo || 'Sans pseudo'),
     r ? h('table', { class: 'comparer' }, h('thead', {}, h('tr', {}, h('th', {}), h('th', {}, 'Toi'), h('th', {}, a.pseudo || 'Ami'))), h('tbody', {},
@@ -1500,17 +1524,19 @@ function ficheAmi(a) {
       ligne('Cette semaine', fmt(semaineDe(moi)), fmt(semaineDe(r))),
       ligne('Série', pluriel(moi.serie, 'jour'), pluriel(r.serie, 'jour')),
       ligne('Points', fmt(moi.xp), fmt(r.xp)),
-      ligne('Administratif', fmt(moi.xpAdmin), fmt(r.xpAdmin)),
-      ligne('Obligations', fmt(moi.xpOblig), fmt(r.xpOblig)),
+      anneeMoi === 'L1' ? [
+        ligne('Introduction', fmt(moi.xpIntro || 0), fmt(r.xpIntro || 0)),
+        ligne('Constitutionnel', fmt(moi.xpConstit || 0), fmt(r.xpConstit || 0)),
+      ] : [
+        ligne('Administratif', fmt(moi.xpAdmin || 0), fmt(r.xpAdmin || 0)),
+        ligne('Obligations', fmt(moi.xpOblig || 0), fmt(r.xpOblig || 0)),
+      ],
       ligne('Fiches maîtrisées', fmt(moi.maitrises), fmt(r.maitrises)),
       ligne('Séances', fmt(moi.seances), fmt(r.seances))))
       : h('p', { class: 'aide-claire' }, a.masque ? 'Cet ami garde sa progression pour lui.' : 'Pas encore de progression à comparer.'),
     h('h3', {}, 'Lancer un défi'),
     h('p', { class: 'aide-claire' }, `Tu joues d’abord cinq épreuves. À la fin, ${a.pseudo || 'ton ami'} reçoit les mêmes questions et doit battre ton score. Si tu quittes avant la fin, rien n’est envoyé.`),
-    h('div', { class: 'admin-duo' },
-      h('button', { class: 'bouton-or', onClick: () => { voile.remove(); lancerDefiAmi(a, 'admin'); } }, 'Administratif'),
-      h('button', { class: 'bouton-or', disabled: !memeEquipe, onClick: () => { voile.remove(); lancerDefiAmi(a, 'oblig'); } }, 'Obligations')),
-    memeEquipe ? null : h('p', { class: 'aide-claire' }, 'Les obligations se défient entre membres de la même équipe.'),
+    blocDefis,
     h('div', { class: 'boite-actions' },
       h('button', { class: 'bouton-lien', onClick: async () => { voile.remove(); await retirerAmi(a.id).catch(() => {}); toast(`${a.pseudo} n’est plus dans tes amis.`); ecranAmis(); } }, 'Retirer de mes amis'),
       h('button', { class: 'bouton-lien', onClick: async () => { voile.remove(); await bloquer(a.id).catch(() => {}); toast(`${a.pseudo} est bloqué.`); ecranAmis(); } }, 'Bloquer'),
@@ -1530,7 +1556,8 @@ async function releverDefi(id) {
   let d;
   try { d = await lireDefi(id); } catch { return toast('Pas de connexion.'); }
   if (!d || d.statut !== 'ouvert') return toast('Ce défi n’est plus ouvert.');
-  if (!['intro', 'constit'].includes(d.matiere) && d.equipe && d.equipe !== etat.equipe) return toast('Ce défi porte sur le cours de l’autre équipe.');
+  if (d.matiere === 'intro' && d.equipe && d.equipe !== etat.equipeL1) return toast('Ce défi porte sur le cours de l’autre équipe.');
+  if (d.matiere === 'oblig' && d.equipe && d.equipe !== etat.equipe) return toast('Ce défi porte sur le cours de l’autre équipe.');
   changerMatiereSilencieux(d.matiere);
   lancer({ type: 'defi-ami', titre: `Défi de ${d.pseudo_auteur || 'ton ami'}`, rounds: d.rounds, defiAmi: { id: d.id, pseudo: d.pseudo_auteur, score: d.score_auteur } });
 }
@@ -1538,7 +1565,8 @@ async function releverDefi(id) {
 function suiteDefiAmi(S, moyenne) {
   const d = S.defiAmi; if (!d) return null;
   if (d.cible) {
-    creerDefi(d.cible, d.matiere, ['intro', 'constit'].includes(d.matiere) ? null : etat.equipe, d.rounds, Math.round(moyenne * 1000) / 1000)
+    const eq = d.matiere === 'intro' ? etat.equipeL1 : d.matiere === 'oblig' ? etat.equipe : null;
+    creerDefi(d.cible, d.matiere, eq, d.rounds, Math.round(moyenne * 1000) / 1000)
       .then(() => toast(`Défi envoyé à ${d.pseudo}.`)).catch(() => toast('Le défi n’a pas pu partir. Vérifie ta connexion.'));
     return h('p', { class: 'res-texte' }, `${d.pseudo} va recevoir les mêmes questions. À lui de battre tes ${pct(moyenne)}.`);
   }
@@ -2048,7 +2076,7 @@ async function demarrer() {
   else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
-  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation };
+  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation };
   setTimeout(surveillerFluidite, 1200);
   precharger();
 
