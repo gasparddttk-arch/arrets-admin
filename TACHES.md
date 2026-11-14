@@ -224,7 +224,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : test : une séance avec deux erreurs volontaires → le lendemain (`?decalage=1`), l'entrée « À revoir aujourd'hui » affiche 2 fiches → la séance les propose → après réussite, l'entrée disparaît. Suite complète verte.
 
 ### [TÂCHE P] Animations : passages d'écran et ouverture du Palais (Antigravity)
-- **Statut** : Prêt pour Claude (vidéos dans .antigravity/videos)
+- **Statut** : Fait le 14/11 (Antigravity), vidéos validées par Gaspard, publié par Claude
 - **Demande de Gaspard (14/11)** : le style graphique est bon mais manque de mouvement. Priorités : passages d'écran et Palais à l'ouverture. Intensité : très expressive (rebonds, effet ressort), sans gêner quand on enchaîne. **Rien n'est mis en ligne avant que Gaspard ait vu une vidéo de chaque animation.** Ne pas merger : livrer sur `antigravity/lot` avec les vidéos.
 - **Fichiers concernés** : `app/js/main.js` (`montrer`, `aller`, `lancer`, `accueil`, `resultats`, barre d'onglets), `app/css/app.css` (keyframes regroupées dans un bloc « Mouvement »), `tests/run.cjs`
 - **Courbes et durées (tokens à ajouter dans `:root`)** : `--ressort: cubic-bezier(.34, 1.56, .64, 1)` (dépassement), `--sortie: cubic-bezier(.4, 0, 1, 1)`, `--t-court: 180ms`, `--t-moyen: 340ms`, `--t-long: 520ms`. Aucune animation ne dépasse 700 ms au total ; l'écran reste cliquable dès le premier instant (jamais de `pointer-events: none` sur le nouvel écran).
