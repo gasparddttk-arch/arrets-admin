@@ -36,7 +36,7 @@ Antigravity : voir `AGENTS.md` pour la marche à suivre. À faire dans l'ordre. 
 - **Validation attendue** : captures avant/après dans `tests/captures/`, suite complète verte.
 
 ### [TÂCHE E] Test automatique du grand rangement L2
-- **Statut** : À faire, après la tâche A
+- **Statut** : À faire
 - **Fichiers concernés** : `tests/run.cjs`
 - **Objectif** : vérifier que le grand rangement L2 prend ses colonnes dans le cours, en obligations comme en administratif.
 - **Détails de modification** :
