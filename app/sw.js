@@ -21,8 +21,8 @@ self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
   if (url.origin !== location.origin) return;
-  // Les vidéos passent au réseau : Safari les lit par morceaux (requêtes Range), qu'un cache entier ne sait pas servir.
-  if (/\.(mp4|webm)$/.test(url.pathname)) return;
+  // Les planches animées de Lexou passent au réseau (cache du navigateur) : trop lourdes pour l'installation.
+  if (url.pathname.includes('/img/lexou/')) return;
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     const cible = e.request.mode === 'navigate' ? './' : e.request;

@@ -479,7 +479,7 @@ function figureSerie(s, fait) {
   const skin = skinPorte();
   const anime = SKINS.find((x) => x.id === skin)?.anime;
   const bete = skin ? hibouSkin(skin, { classe: 'sur-accueil', danse: true })
-    : lexouVideoPossible() ? lexouAnime(Math.random() < 0.5 ? 'lecture' : 'plume', { hauteur: 196, classe: 'sur-accueil', repli: chouette('debout', { taille: 236 }) })
+    : lexouVideoPossible() ? lexouAnime(Math.random() < 0.5 ? 'lecture' : 'plume', { taille: 210, classe: 'sur-accueil', repli: chouette('debout', { taille: 210 }) })
     : chouette(retour ? 'serment' : 'debout', { taille: 236, vivante: true, classe: `sur-accueil ${reveil ? 'reveil' : ''}` });
   let enScene = bete;
   const reagirTape = () => {
@@ -1034,7 +1034,7 @@ function resultats(S, reussi) {
   const figureStatique = chouette(poseFin, { taille: 188, classe: `res-chouette ${nouveauGrade || grandeVictoire ? 'grande' : ''}`, vivante: true });
   // Une séance réussie : Lexou fête ça en vidéo, quand c'est possible.
   const figureFin = reussi && pourcent >= 70 && lexouVideoPossible()
-    ? lexouAnime('victoire', { hauteur: 200, classe: 'res-chouette res-lexou', repli: figureStatique })
+    ? lexouAnime('victoire', { taille: 188, classe: `res-chouette ${nouveauGrade || grandeVictoire ? 'grande' : ''}`, repli: chouette(poseFin, { taille: 188 }) })
     : figureStatique;
 
   const titreTxt = S.type === 'boss' ? (reussi ? 'Audience gagnée' : 'Audience perdue') : pourcent === 100 ? 'Sans faute' : pourcent >= 70 ? 'Bien jugé' : 'À réviser';
