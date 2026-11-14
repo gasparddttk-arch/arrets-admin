@@ -181,7 +181,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Validation attendue** : test qui joue une version courte et une version entière en obligations (équipe 1) et en administratif (équipe 2), avec une mauvaise réponse à l'étape 1 (le `signe` s'affiche) ; captures `formule-lire.png`, `formule-remplir.png` ; suite complète verte.
 
 ### [TÂCHE O] Memory : voir les cartes avant de jouer (Antigravity)
-- **Statut** : À faire
+- **Statut** : Prêt pour Claude (suite verte le 14/11 à 01h58 sur 05cad20)
 - **Demande (retour d'un testeur, transmis par Gaspard le 14/11)** : au début du Memory, toutes les cartes sont visibles un moment pour qu'on les mémorise, puis elles se retournent et le jeu habituel commence. Ainsi le début n'est plus du hasard.
 - **Fichiers concernés** : `app/js/jeux-l1.js` (`jouerMemory`, qui sert aussi au Memory de L2), `app/css/app.css`, `tests/run.cjs`
 - **Détails de modification** :
@@ -305,6 +305,12 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 ---
 
 ## Dernières actions exécutées par Antigravity
+- **14/11/2026 (Tâche O)** :
+  - `app/js/jeux-l1.js` : phase de mémorisation initiale au lancement du Memory : 12 cartes visibles (`ouverte`), non cliquables, consigne avec compte à rebours dynamique de 20s (`.mem-rebours`) et bouton discret « C’est mémorisé » (`.mem-pret`) qui referme les cartes immédiatement.
+  - Nettoyage du chronomètre si le joueur quitte l'écran ou au terme des 20s.
+  - `app/css/app.css` : styles de `.mem-consigne:has(.mem-pret)`, `.mem-rebours` et `.mem-pret`.
+  - `tests/run.cjs` : adaptation de `jouerParfait` et `pasL1` pour cliquer `.mem-pret`, vérification des 12 cartes ouvertes et du clic sur `.mem-pret` dans le bloc « memory lisible », capture `memory-memorise.png` sans débordement.
+  - Suite de tests validée : `npm run check`, `npm run build`, `npm test` vert (521.2s).
 - **12/11/2026** :
   - Installation locale de Node.js v22 LTS et configuration du PATH.
   - Initialisation du dépôt Git local synchronisé avec `origin/main` (`gasparddttk-arch/arrets-admin`).
