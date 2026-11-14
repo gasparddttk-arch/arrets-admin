@@ -1,4 +1,5 @@
--- Corrections de l'audit du 14/11 : lots 1c, 3a, 5b et 9. Proposé le 15/11/2026, à valider par Gaspard.
+-- Corrections de l'audit du 14/11 : lots 1c, 3a, 5b et 9. Validé par Gaspard le 15/11/2026 à 0 h 13 et appliqué (migration audit_lots_1_3_5_9).
+-- À l'application, lire_defi a été supprimée puis recréée (passage de sql stable à plpgsql), avec EXECUTE pour authenticated seulement.
 
 -- 1c. L'accès à l'appli vérifié côté serveur.
 -- Correction de l'audit : autorise(preuve) est l'ancien mot de passe d'entrée, pas le contrôle d'accès.
