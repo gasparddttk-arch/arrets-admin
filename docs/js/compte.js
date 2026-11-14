@@ -245,3 +245,31 @@ export async function envoyerEvenements(appareil, lot) {
   if (!r.ok) throw new Error(`Suivi indisponible (${r.status})`);
 }
 export const adminTraiterRetour = (retour, fait) => rpc('admin_traiter_retour', { retour, fait });
+
+// COURS PARTAGÉS (page partager.html) ------------------------------------------------------
+// Les fichiers vont dans un dossier privé au nom du compte ; seul l'administrateur peut les lire.
+const TYPES_DEPOT = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', heic: 'image/heic', heif: 'image/heif', webp: 'image/webp', pdf: 'application/pdf', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+export const typeDepot = (f) => (Object.values(TYPES_DEPOT).includes(f.type) ? f.type : TYPES_DEPOT[(f.name.split('.').pop() || '').toLowerCase()] || null);
+const nomPropre = (n) => n.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w.-]+/g, '-').slice(-60) || 'fichier';
+
+export async function deposerCours({ annee, matiere, equipe, fichiers, rappel }, progres = () => {}) {
+  const t = await jeton(); const uid = session.user.id; const chemins = [];
+  for (const [i, f] of fichiers.entries()) {
+    progres(i);
+    const nom = `${uid}/${Date.now().toString(36)}-${i}-${nomPropre(f.name)}`;
+    const r = await fetch(`${SUPABASE_URL}/storage/v1/object/depots/${nom}`, { method: 'POST', headers: { apikey: SUPABASE_CLE, Authorization: `Bearer ${t}`, 'Content-Type': typeDepot(f), 'x-upsert': 'false' }, body: f });
+    if (!r.ok) throw new Error(r.status === 413 ? `${f.name} : 20 Mo au plus par fichier.` : `${f.name} n’a pas pu partir. Réessaie.`);
+    chemins.push(nom);
+  }
+  try { await api('depots', { method: 'POST', corps: { annee, matiere, equipe: equipe || null, fichiers: chemins, accord: true }, prefer: 'return=minimal' }); } catch (e) {
+    throw new Error(/54000|400/.test(e.message) ? 'Tu as déjà fait 10 dépôts aujourd’hui. Reviens demain.' : 'Le dépôt n’a pas pu être enregistré. Réessaie.');
+  }
+  const corps = { rappel, annee, matiere, equipe: equipe || null };
+  const maj = await api(`contributeurs?id=eq.${uid}`, { method: 'PATCH', corps: { ...corps, maj: new Date().toISOString() }, prefer: 'return=representation' }).catch(() => null);
+  if (!maj?.length) await api('contributeurs', { method: 'POST', corps, prefer: 'return=minimal' }).catch(() => {});
+}
+// Lien « ne plus recevoir » des e-mails du vendredi : sans connexion.
+export async function arreterRappelCours(jetonRappel) {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/arreter_rappel_cours`, { method: 'POST', headers: { apikey: SUPABASE_CLE, Authorization: `Bearer ${SUPABASE_CLE}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ jeton: jetonRappel }) });
+  if (!r.ok) throw new Error('Lien invalide.');
+}

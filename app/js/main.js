@@ -1714,6 +1714,7 @@ function blocCompte() {
     h('p', { class: 'aide-claire' }, `Connecté : ${c.email || 'compte Gdroit'}.`),
     estAdmin() ? h('button', { class: 'bouton-or', 'data-admin': '', onClick: () => aller('admin') }, 'Administration') : null,
     h('button', { class: 'bouton-fantome', 'data-retour': '', onClick: () => faireRetour('Profil') }, 'Faire un retour'),
+    h('a', { class: 'bouton-fantome partager-lien', href: 'partager.html' }, 'Partager mes cours'),
     h('p', { class: 'aide-claire' }, dateSync ? `Progression copiée sur ton compte le ${dateSync}.` : 'Ta progression se copie sur ton compte après chaque séance.'),
     champ,
     h('button', { class: 'bouton-fantome', onClick: async () => { const v = champ.value.trim(); if (!v) return toast('Choisis un pseudo.'); try { await changerPseudo(v); etat.compte.pseudo = v; sauver(); toast('Pseudo enregistré.'); } catch { toast('Pas de connexion. Réessaie plus tard.'); } } }, 'Changer de pseudo'),

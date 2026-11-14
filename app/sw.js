@@ -25,7 +25,8 @@ self.addEventListener('fetch', (e) => {
   if (url.pathname.includes('/img/lexou/')) return;
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
-    const cible = e.request.mode === 'navigate' ? './' : e.request;
+    // Une navigation vers l'appli sert la page d'accueil en cache ; les autres pages (partager, mentions…) gardent la leur.
+    const cible = e.request.mode === 'navigate' && !url.pathname.endsWith('.html') ? './' : e.request;
     const trouve = await cache.match(cible, { ignoreSearch: true });
     if (trouve) return trouve;
     try { return await fetch(e.request); } catch { return (await cache.match('./')) || Response.error(); }

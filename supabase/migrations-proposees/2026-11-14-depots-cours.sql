@@ -1,4 +1,4 @@
--- Dépôts de cours (page gdroit.eu/partager.html) et rappel du vendredi. Proposé le 14/11/2026, non appliqué.
+-- Dépôts de cours (page gdroit.eu/partager.html) et rappel du vendredi. Validé par Gaspard le 14/11/2026.
 
 -- 1. Les fichiers : un dossier par compte, privé. Seul l'administrateur peut les lire.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
@@ -51,10 +51,34 @@ create table public.contributeurs (
   annee text check (annee in ('L1','L2','L3','autre')),
   matiere text check (char_length(matiere) <= 80),
   equipe text check (char_length(equipe) <= 30),
+  jeton uuid not null default gen_random_uuid() unique,
   maj timestamptz not null default now()
 );
 alter table public.contributeurs enable row level security;
 create policy "son rappel" on public.contributeurs for all to authenticated
   using (id = (select auth.uid())) with check (id = (select auth.uid()));
 revoke all on public.contributeurs from anon, authenticated;
-grant select, insert, update on public.contributeurs to authenticated;
+grant select on public.contributeurs to authenticated;
+grant insert (rappel, annee, matiere, equipe), update (rappel, annee, matiere, equipe, maj) on public.contributeurs to authenticated;
+
+-- Lien « ne plus recevoir ce rappel » des e-mails : il marche sans être connecté, avec le jeton propre au destinataire.
+create function public.arreter_rappel_cours(jeton uuid) returns boolean language sql security definer set search_path = '' as $$
+  update public.contributeurs set rappel = false, maj = now() where contributeurs.jeton = arreter_rappel_cours.jeton returning true;
+$$;
+revoke all on function public.arreter_rappel_cours(uuid) from public;
+grant execute on function public.arreter_rappel_cours(uuid) to anon, authenticated;
+
+-- 4. Les deux envois automatiques (heure de Paris en hiver) : rappel le vendredi 17 h 30, récapitulatif le samedi 1 h 30.
+select cron.schedule('cours-rappel', '30 16 * * 5', $c$
+  select net.http_post(url := 'https://jhpgxisxayceixmppxuu.supabase.co/functions/v1/cours',
+    headers := jsonb_build_object('Content-Type', 'application/json', 'x-rappel', (select valeur from public.reglage where cle = 'jeton_rappel')),
+    body := '{"mode":"rappel"}'::jsonb, timeout_milliseconds := 60000);
+$c$);
+select cron.schedule('cours-recap', '30 0 * * 6', $c$
+  select net.http_post(url := 'https://jhpgxisxayceixmppxuu.supabase.co/functions/v1/cours',
+    headers := jsonb_build_object('Content-Type', 'application/json', 'x-rappel', (select valeur from public.reglage where cle = 'jeton_rappel')),
+    body := '{"mode":"recap"}'::jsonb, timeout_milliseconds := 120000);
+$c$);
+
+-- 5. Appliqué ensuite : la fonction du déclencheur n'est pas appelable par l'API.
+revoke all on function public.borner_depot() from public, anon, authenticated;
