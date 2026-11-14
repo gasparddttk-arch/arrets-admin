@@ -3,6 +3,7 @@
 // - le samedi (mode recap) : un e-mail à l'administrateur avec les nouveaux fichiers en pièces jointes.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 import { encodeBase64 } from 'jsr:@std/encoding@1.0.5/base64';
+import { timingSafeEqual } from 'jsr:@std/crypto@1.0.3/timing-safe-equal';
 
 const EXPEDITEUR = 'Gdroit <lexou@gdroit.eu>';
 const PAGE = 'https://gdroit.eu/partager.html';
@@ -18,12 +19,19 @@ async function envoyer(cle: string, corps: Record<string, unknown>) {
   if (!r.ok) throw new Error(`Resend ${r.status} ${(await r.text()).slice(0, 200)}`);
 }
 
+const memeSecret = async (a: string | null, b: string) => {
+  if (!a) return false;
+  const e = new TextEncoder();
+  const [x, y] = await Promise.all([crypto.subtle.digest('SHA-256', e.encode(a)), crypto.subtle.digest('SHA-256', e.encode(b))]);
+  return timingSafeEqual(new Uint8Array(x), new Uint8Array(y));
+};
+
 const cadre = (contenu: string) => `<div style="font:16px/1.5 Georgia,serif;color:#1d2440;max-width:520px;margin:0 auto;padding:16px">${contenu}</div>`;
 
 Deno.serve(async (req) => {
   const base = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
   const { data: jeton } = await base.from('reglage').select('valeur').eq('cle', 'jeton_rappel').single();
-  if (!jeton?.valeur || req.headers.get('x-rappel') !== jeton.valeur) return new Response('refusé', { status: 401 });
+  if (!jeton?.valeur || !(await memeSecret(req.headers.get('x-rappel'), jeton.valeur))) return new Response('refusé', { status: 401 });
   const cle = Deno.env.get('RESEND_API_KEY');
   if (!cle) return json({ envoyes: 0, raison: 'cle absente' });
   const { mode } = await req.json().catch(() => ({}));

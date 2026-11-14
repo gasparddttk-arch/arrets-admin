@@ -2,6 +2,7 @@
 // Drôle et un peu vexé, jamais le jour où le sceau est posé, et il se calme après 10 jours d'absence.
 import webpush from 'npm:web-push@3.6.7';
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
+import { timingSafeEqual } from 'jsr:@std/crypto@1.0.3/timing-safe-equal';
 
 const PUBLIQUE = 'BLsoEkbLXGZbRgEpqtBy4wC6et54RaMPURc8HDK1G3EfrZz0l8xiV7YkOy7sR9EJdsnckBqV6fxrdOlP4gNklQM';
 
@@ -38,6 +39,14 @@ const MESSAGES: Record<string, string[]> = {
   ],
 };
 
+// Comparaison du secret en temps constant : la durée de la réponse ne renseigne pas sur le secret.
+const enc = new TextEncoder();
+const memeSecret = async (a: string | null, b: string) => {
+  if (!a) return false;
+  const [x, y] = await Promise.all([crypto.subtle.digest('SHA-256', enc.encode(a)), crypto.subtle.digest('SHA-256', enc.encode(b))]);
+  return timingSafeEqual(new Uint8Array(x), new Uint8Array(y));
+};
+
 const tirer = (liste: string[], graine: number) => liste[graine % liste.length];
 const remplir = (t: string, v: Record<string, string | number>) => t.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
 
@@ -47,9 +56,9 @@ Deno.serve(async (req) => {
   const prive = Deno.env.get('VAPID_PRIVATE_KEY');
   const base = createClient(url, service);
   const { data: jeton } = await base.from('reglage').select('valeur').eq('cle', 'jeton_rappel').single();
-  if (!jeton?.valeur || req.headers.get('x-rappel') !== jeton.valeur) return new Response('refusé', { status: 401 });
+  if (!jeton?.valeur || !(await memeSecret(req.headers.get('x-rappel'), jeton.valeur))) return new Response('refusé', { status: 401 });
   if (!prive) return new Response(JSON.stringify({ envoyes: 0, raison: 'cle absente' }), { headers: { 'Content-Type': 'application/json' } });
-  webpush.setVapidDetails('https://github.com/gasparddttk-arch/arrets-admin', PUBLIQUE, prive);
+  webpush.setVapidDetails('https://gdroit.eu', PUBLIQUE, prive);
 
   const maintenant = new Date();
   const paris = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hour12: false }).formatToParts(maintenant);
@@ -58,12 +67,23 @@ Deno.serve(async (req) => {
   const aujourdhui = `${part('year')}-${part('month')}-${part('day')}`;
   const jourIdx = Math.floor(Date.UTC(+part('year'), +part('month') - 1, +part('day')) / 864e5);
 
+  // Ceux dont c'est l'heure, puis leurs résumés et leurs appareils en deux requêtes (au lieu de deux par personne).
   const { data: profils } = await base.from('profils').select('id, pseudo, rappel, rappel_le, vu_le, acces').neq('acces', 'aucun');
+  const dus = (profils || []).filter((p) => p.rappel?.actif && Number(p.rappel.heure ?? 9) === heure && p.rappel_le !== aujourdhui);
+  const ids = dus.map((p) => p.id);
+  const resumes = new Map<string, Record<string, unknown>>();
+  const appareils = new Map<string, { point: string; abonnement: unknown }[]>();
+  if (ids.length) {
+    const [{ data: gs }, { data: as }] = await Promise.all([
+      base.from('progressions').select('id, resume').in('id', ids),
+      base.from('appareils').select('proprietaire, point, abonnement').in('proprietaire', ids),
+    ]);
+    for (const g of gs || []) resumes.set(g.id, g.resume || {});
+    for (const a of as || []) appareils.set(a.proprietaire, [...(appareils.get(a.proprietaire) || []), a]);
+  }
   let envoyes = 0;
-  for (const p of profils || []) {
-    if (!p.rappel?.actif || Number(p.rappel.heure ?? 9) !== heure || p.rappel_le === aujourdhui) continue;
-    const { data: g } = await base.from('progressions').select('resume').eq('id', p.id).maybeSingle();
-    const r = g?.resume || {};
+  for (const p of dus) {
+    const r = (resumes.get(p.id) || {}) as { sceau?: boolean; jour?: number; serie?: number; revoir?: string };
     if (r.sceau && r.jour === jourIdx) continue;
     const vu = p.vu_le ? Math.floor(Date.parse(p.vu_le) / 864e5) : jourIdx;
     const absent = Math.max(0, jourIdx - vu);
@@ -72,9 +92,8 @@ Deno.serve(async (req) => {
     const serie = r.serie || 0;
     const famille = absent >= 7 ? 'absent7' : absent >= 3 ? 'absent3' : absent >= 1 ? 'absent1' : serie >= 3 ? 'serie' : r.revoir ? (jourIdx % 2 ? 'fiche' : 'normal') : 'normal';
     const body = remplir(tirer(MESSAGES[famille], jourIdx + p.id.charCodeAt(0)), { serie, fiche: r.revoir || 'un arrêt', pseudo: p.pseudo || '' });
-    const { data: apps } = await base.from('appareils').select('point, abonnement').eq('proprietaire', p.id);
-    for (const a of apps || []) {
-      try { await webpush.sendNotification(a.abonnement, JSON.stringify({ title: 'Lexou', body, ami: true, url: './', tag: 'rappel' }), { TTL: 6 * 3600 }); envoyes++; } catch (e) {
+    for (const a of appareils.get(p.id) || []) {
+      try { await webpush.sendNotification(a.abonnement as Parameters<typeof webpush.sendNotification>[0], JSON.stringify({ title: 'Lexou', body, ami: true, url: './', tag: 'rappel' }), { TTL: 6 * 3600 }); envoyes++; } catch (e) {
         const code = (e as { statusCode?: number }).statusCode;
         if (code === 404 || code === 410) await base.from('appareils').delete().eq('point', a.point);
       }
