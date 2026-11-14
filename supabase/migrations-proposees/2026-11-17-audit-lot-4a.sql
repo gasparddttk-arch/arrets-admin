@@ -18,3 +18,5 @@ begin
   return new;
 end $$;
 create trigger controler_progression before insert or update on public.progressions for each row execute function public.controler_progression();
+
+-- Appliqué le 15/11/2026 à 0 h 25 (migration audit_lot_4a), avec en plus : revoke all on function public.controler_progression() from public, anon, authenticated;
