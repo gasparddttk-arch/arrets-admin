@@ -180,6 +180,24 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Contraintes** : DOM avec `h()`, tokens de `:root`, 390 px sans débordement. Dépend de la tâche F (banc de pièces).
 - **Validation attendue** : test qui joue une version courte et une version entière en obligations (équipe 1) et en administratif (équipe 2), avec une mauvaise réponse à l'étape 1 (le `signe` s'affiche) ; captures `formule-lire.png`, `formule-remplir.png` ; suite complète verte.
 
+### [TÂCHE O] Memory : voir les cartes avant de jouer (Antigravity)
+- **Statut** : À faire
+- **Demande (retour d'un testeur, transmis par Gaspard le 14/11)** : au début du Memory, toutes les cartes sont visibles un moment pour qu'on les mémorise, puis elles se retournent et le jeu habituel commence. Ainsi le début n'est plus du hasard.
+- **Fichiers concernés** : `app/js/jeux-l1.js` (`jouerMemory`, qui sert aussi au Memory de L2), `app/css/app.css`, `tests/run.cjs`
+- **Détails de modification** :
+  1. **Phase « Mémorise »** au lancement : toutes les cartes sont face visible (classe `ouverte`), non cliquables.
+     - Consigne à la place de la consigne habituelle : « Mémorise les cartes : elles se retournent dans 20 secondes. »
+     - Un compte à rebours visible, en secondes (« 20 s », « 19 s »…), dans la ligne de la consigne.
+     - Un bouton discret « C'est mémorisé » qui termine la phase tout de suite.
+  2. **Fin de la phase** (au bout de 20 s ou au bouton) : toutes les cartes se retournent en même temps (la même animation que d'habitude), la consigne habituelle revient (`round.consigne` ou « Retrouve chaque notion et sa définition. »), puis le jeu se joue exactement comme aujourd'hui (coups, erreurs visibles 3200 ms, récapitulatif).
+  3. Le chronomètre de la phase ne compte pas dans le score ni dans les coups.
+  4. Sans effets visuels (`effets()` faux) ou avec « réduire les animations » : même phase, sans animation de retournement.
+  5. Si on quitte la séance pendant la phase, le compte à rebours s'arrête (pas de `setTimeout` qui retourne des cartes d'un écran disparu).
+- **Tests** :
+  - `jouerParfait` : si un bouton `.mem-pret` est présent, le toucher d'abord.
+  - Bloc « memory lisible » : vérifier qu'au lancement les 12 cartes sont `ouverte` et que la consigne contient « Mémorise » ; toucher « C'est mémorisé » (`.mem-pret`) ; vérifier qu'aucune carte n'est plus `ouverte` ; puis la suite du test comme aujourd'hui.
+- **Validation attendue** : `npm test` vert ; capture `memory-memorise.png` en 390 px, sans débordement.
+
 ### [TÂCHE L] La production réservée aux modes d'examen et aux audiences (Antigravity)
 - **Statut** : À faire
 - **Décisions de Gaspard (13/11)** : l'audience garde ses 3 vies, avec au moins un exercice de production qui compte comme les autres (le rater coûte une vie). « Première instance » reste un échauffement sans production ; la production commence à « Appel ».
