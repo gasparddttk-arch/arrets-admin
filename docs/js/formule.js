@@ -2,7 +2,8 @@
 // Tâche K de TACHES.md.
 import { h, banc } from './ui.js';
 import { continuer, barrePied, finEpreuve, repere } from './games.js';
-import { son, vibrer } from './sons.js';
+import { vibrer } from './sons.js';
+import { icone } from './visuels.js';
 import { melange } from './engine.js';
 
 export async function jouerFormule(zone, ctx, round, ix) {
@@ -24,7 +25,20 @@ export async function jouerFormule(zone, ctx, round, ix) {
     window.scrollTo(0, 0);
   };
 
-  let juste1 = false;
+  let juste1 = false; let choix1 = ''; let choix2 = null;
+
+  // Revoir une étape déjà faite : repliée par défaut, elle se déplie d'un toucher.
+  const repli = (titre, ...contenu) => h('details', { class: 'formule-rappel' }, h('summary', {}, titre, icone('chevron', 16)), ...contenu);
+  const rappelLire = () => repli('Revoir l’étape Lire',
+    h('p', { class: 'formule-ref' }, f.ref),
+    h('blockquote', { class: 'formule-extrait' }, f.extrait[0], h('mark', { class: 'formule-mise' }, f.extrait[1]), f.extrait[2]),
+    h('p', { class: 'formule-rappel-rep' }, h('b', {}, 'Ta réponse : '), choix1, juste1 ? ' (juste)' : ''),
+    juste1 ? null : h('p', { class: 'formule-rappel-rep' }, h('b', {}, 'La bonne : '), types[f.type]?.nom || ''),
+    h('p', { class: 'formule-signe' }, types[f.type]?.signe || ''));
+  const rappelChoisir = () => repli('Revoir l’étape Choisir',
+    h('p', { class: 'formule-rappel-rep' }, h('b', {}, juste2 ? 'Ton squelette (juste) :' : 'Le bon squelette :')),
+    h('div', { class: 'formule-squelette-ligne' }, h('b', {}, 'I. '), types[f.type]?.squelette?.I || ''),
+    h('div', { class: 'formule-squelette-ligne' }, h('b', {}, 'II. '), types[f.type]?.squelette?.II || ''));
   let juste2 = false;
 
   // -------------------------------------------------------------
@@ -58,7 +72,7 @@ export async function jouerFormule(zone, ctx, round, ix) {
         'data-ok': repere(opt.ok),
         onClick: () => {
           if (zoneReponse.querySelector('button[disabled]')) return;
-          juste1 = opt.ok;
+          juste1 = opt.ok; choix1 = opt.nom;
           zoneReponse.querySelectorAll('.option').forEach((b) => {
             b.disabled = true;
             if (b === bonBouton) b.classList.add('juste');
@@ -66,9 +80,9 @@ export async function jouerFormule(zone, ctx, round, ix) {
           });
 
           if (juste1) {
-            son('ok'); vibrer(10); ctx.combo(true);
+            vibrer(10); ctx.combo(true);
           } else {
-            son('ko'); vibrer([20, 40, 20]); ctx.combo(false);
+            vibrer([20, 40, 20]); ctx.combo(false);
           }
           ctx.noter(f.arret, juste1);
 
@@ -80,7 +94,7 @@ export async function jouerFormule(zone, ctx, round, ix) {
 
           ecran.append(barrePied(continuer('Continuer', suite)));
         },
-      }, opt.nom);
+      }, h('span', { class: 'option-marque', 'aria-hidden': 'true' }), h('span', { class: 'option-t' }, opt.nom));
       if (opt.ok) bonBouton = btn;
       zoneReponse.append(btn);
     });
@@ -114,7 +128,7 @@ export async function jouerFormule(zone, ctx, round, ix) {
         'data-ok': repere(c.ok),
         onClick: () => {
           if (zoneCartes.querySelector('button[disabled]')) return;
-          juste2 = c.ok;
+          juste2 = c.ok; choix2 = c;
           zoneCartes.querySelectorAll('.formule-carte').forEach((b) => {
             b.disabled = true;
             if (b === bonBouton) b.classList.add('juste');
@@ -124,9 +138,9 @@ export async function jouerFormule(zone, ctx, round, ix) {
           zoneCartes.querySelectorAll('.formule-type-nom').forEach((el) => { el.hidden = false; });
 
           if (juste2) {
-            son('ok'); vibrer(10); ctx.combo(true);
+            vibrer(10); ctx.combo(true);
           } else {
-            son('ko'); vibrer([20, 40, 20]); ctx.combo(false);
+            vibrer([20, 40, 20]); ctx.combo(false);
           }
 
           ecran.append(barrePied(continuer('Continuer', suite)));
@@ -139,7 +153,7 @@ export async function jouerFormule(zone, ctx, round, ix) {
       zoneCartes.append(h('div', { class: 'formule-carte-wrap' }, btn, nomEl));
     });
 
-    corps.append(zoneCartes);
+    corps.append(rappelLire(), zoneCartes);
   });
 
   document.querySelector('.scene .pied')?.remove();
@@ -201,7 +215,7 @@ export async function jouerFormule(zone, ctx, round, ix) {
         ecran.append(barrePied(continuer('Continuer', suite)));
       }, { disabled: true });
 
-      corps.append(composant.el);
+      corps.append(rappelLire(), rappelChoisir(), composant.el);
       ecran.append(barrePied(valider));
     });
 

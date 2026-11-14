@@ -1320,6 +1320,9 @@ html[data-effets='non']::after { animation: none; }
 .role-ligne { background: var(--m1, var(--banc)); box-shadow: none; border-radius: 26px; }
 .bouton-or { border-radius: 999px; background: var(--or); box-shadow: inset 0 -4px 0 var(--or-ombre); min-height: 52px; }
 .bouton-fantome { border-radius: 999px; border: 0; background: var(--banc); }
+/* Sur la feuille claire d'installation, le bouton reste clair : texte sombre lisible. */
+.installer .bouton-fantome { background: rgba(0, 0, 0, .07); color: var(--papier-texte); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .14); }
+.installer .bouton-fantome:active { background: rgba(0, 0, 0, .13); }
 .bouton-matiere { border-radius: 999px; background: var(--banc); }
 
 /* Chambres : le chemin épuré */
@@ -1927,6 +1930,13 @@ body:has(#onglets[hidden]) .maj { display: none; }
 .formule-squelette-ligne { font: 15px/1.35 var(--ui); color: var(--texte); }
 .formule-squelette-ligne b { color: var(--titre-or); }
 .formule-type-nom { font: 600 12px/1.2 var(--ui); color: var(--texte-2); padding-left: 8px; margin: 0; }
+.formule-rappel { margin: 4px 0 10px; padding: 0 14px; border-radius: 12px; background: var(--carte-bas); box-shadow: inset 0 0 0 1px var(--carte-bord); }
+.formule-rappel summary { display: flex; align-items: center; gap: 8px; min-height: 44px; font: 700 14px/1.2 var(--ui); color: var(--texte-2); }
+.formule-rappel summary > .ic { margin-left: auto; transition: transform .15s; }
+.formule-rappel[open] summary > .ic { transform: rotate(180deg); }
+.formule-rappel[open] { padding-bottom: 12px; }
+.formule-rappel .formule-extrait { font-size: 15px; }
+.formule-rappel-rep { font: 14px/1.35 var(--ui); color: var(--texte); margin: 6px 0; }
 .formule-modele, .formule-modele-fin { margin: 12px 0; padding: 12px 14px; border-radius: 12px; background: var(--banc); box-shadow: inset 0 0 0 1px var(--carte-bord); }
 .formule-modele h3, .formule-modele-fin h4 { font: 700 15px/1.3 var(--ui); color: var(--titre-or); margin: 0 0 8px; }
 .formule-modele p, .formule-modele-fin p { font: 15px/1.35 var(--corps); color: var(--texte); margin: 4px 0; }
