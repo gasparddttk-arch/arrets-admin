@@ -2,7 +2,7 @@
 // Tâche K de TACHES.md.
 import { h, banc } from './ui.js';
 import { continuer, barrePied, finEpreuve, repere } from './games.js';
-import { son, vibrer } from './sons.js';
+import { vibrer } from './sons.js';
 import { melange } from './engine.js';
 
 export async function jouerFormule(zone, ctx, round, ix) {
@@ -66,9 +66,9 @@ export async function jouerFormule(zone, ctx, round, ix) {
           });
 
           if (juste1) {
-            son('ok'); vibrer(10); ctx.combo(true);
+            vibrer(10); ctx.combo(true);
           } else {
-            son('ko'); vibrer([20, 40, 20]); ctx.combo(false);
+            vibrer([20, 40, 20]); ctx.combo(false);
           }
           ctx.noter(f.arret, juste1);
 
@@ -124,9 +124,9 @@ export async function jouerFormule(zone, ctx, round, ix) {
           zoneCartes.querySelectorAll('.formule-type-nom').forEach((el) => { el.hidden = false; });
 
           if (juste2) {
-            son('ok'); vibrer(10); ctx.combo(true);
+            vibrer(10); ctx.combo(true);
           } else {
-            son('ko'); vibrer([20, 40, 20]); ctx.combo(false);
+            vibrer([20, 40, 20]); ctx.combo(false);
           }
 
           ecran.append(barrePied(continuer('Continuer', suite)));
