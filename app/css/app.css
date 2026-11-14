@@ -1991,3 +1991,12 @@ body:has(#onglets[hidden]) .clone-sortant {
   display: none !important;
 }
 
+
+/* Lexou en vidéo (img/lexou) : la chouette fixe reste dessous jusqu'à la première image. */
+.lexou-anime { position: relative; width: var(--l); height: var(--h); }
+.lexou-anime > .lexou-source { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.lexou-anime > canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lexou-anime > .chouette { position: absolute; left: 50%; bottom: 0; margin: 0; transform: translateX(-50%); animation: none; }
+.lexou-anime.pret > .chouette { visibility: hidden; }
+.tribune .figure-chouette .lexou-anime.sur-accueil { left: 6px; }
+.res-lexou { margin: -10px auto -18px; }

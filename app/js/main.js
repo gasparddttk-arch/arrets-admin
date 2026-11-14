@@ -2,6 +2,7 @@
 import { h, svg, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
+import { lexouAnime } from './lexou.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import { remplacerEtat, choisirAnnee, ajouterSemaine, gagnerAppel, erreursOuvertes, carnetVisible, changerEquipe,
   SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, lundi, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir, aRattraper,
@@ -103,6 +104,12 @@ function modeAnimation() {
   if (document.documentElement.dataset.effets === 'non' || !effets()) return 'non';
   if (document.documentElement.dataset.effets === 'leger') return 'leger';
   return 'complet';
+}
+
+// Lexou en vidéo : seulement la chouette d'origine, sans tenue, skin, mascotte ni thème rose, et avec les effets complets.
+function lexouVideoPossible() {
+  return modeAnimation() === 'complet' && !images.mascotte && !skinPorte() && !estRose()
+    && !Object.values(etat.chouette.porte || {}).some(Boolean);
 }
 
 function fixerSens(s, dir = 1) {
@@ -472,6 +479,7 @@ function figureSerie(s, fait) {
   const skin = skinPorte();
   const anime = SKINS.find((x) => x.id === skin)?.anime;
   const bete = skin ? hibouSkin(skin, { classe: 'sur-accueil', danse: true })
+    : lexouVideoPossible() ? lexouAnime(Math.random() < 0.5 ? 'lecture' : 'plume', { hauteur: 196, classe: 'sur-accueil', repli: chouette('debout', { taille: 236 }) })
     : chouette(retour ? 'serment' : 'debout', { taille: 236, vivante: true, classe: `sur-accueil ${reveil ? 'reveil' : ''}` });
   let enScene = bete;
   const reagirTape = () => {
@@ -1023,7 +1031,11 @@ function resultats(S, reussi) {
   // Une seule chouette, celle du moment le plus fort de la séance.
   const poseFin = nouveauGrade ? 'serment' : grandeVictoire ? 'tribune' : palier ? 'debout' : S.type === 'defi' && reussi ? 'tribune'
     : !reussi || moyenne < 0.4 ? 'pause' : moyenne < 0.8 ? 'piles' : 'clin';
-  const figureFin = chouette(poseFin, { taille: 188, classe: `res-chouette ${nouveauGrade || grandeVictoire ? 'grande' : ''}`, vivante: true });
+  const figureStatique = chouette(poseFin, { taille: 188, classe: `res-chouette ${nouveauGrade || grandeVictoire ? 'grande' : ''}`, vivante: true });
+  // Une séance réussie : Lexou fête ça en vidéo, quand c'est possible.
+  const figureFin = reussi && pourcent >= 70 && lexouVideoPossible()
+    ? lexouAnime('victoire', { hauteur: 200, classe: 'res-chouette res-lexou', repli: figureStatique })
+    : figureStatique;
 
   const titreTxt = S.type === 'boss' ? (reussi ? 'Audience gagnée' : 'Audience perdue') : pourcent === 100 ? 'Sans faute' : pourcent >= 70 ? 'Bien jugé' : 'À réviser';
   const titreEl = h('h1', {}, titreTxt);
