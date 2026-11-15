@@ -1185,6 +1185,26 @@ async function execGroupe1(b, PORT, erreurs) {
     log('tour ok');
   }
 
+  if (matchSeul('fiche parcours')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
+    const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
+    await p.addInitScript(() => localStorage.setItem('gdroit-session', JSON.stringify({ access_token: 'faux', refresh_token: 'faux', expire: Date.now() + 36e5, user: { id: '00000000-0000-0000-0000-0000000000aa', email: 'admin@exemple.fr' } })));
+    await p.route('**/rest/v1/**', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '[]' }));
+    await p.route('**/auth/v1/**', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{}' }));
+    const fiche = { cree_le: '2026-10-01T10:00:00Z', vu_le: new Date().toISOString(), serie: { n: 2, record: 4 }, porte: {}, jours: [{ j: new Date().toLocaleDateString('sv-SE'), n: 2 }], etapes: { connexion: '2026-10-02T10:00:00Z', premiere: '2026-10-03T10:00:00Z', cinquieme: null, serie3: null }, seances: { debut: 5, fin: 4, duree: 200, score: 70 }, abandons: [{ epreuve: 'memory', i: 1, n: 1, duree: 20 }], jeux: [{ jeu: 'memory', n: 3, score: 60 }], heures: Array.from({ length: 24 }, (_, k) => (k === 21 ? 3 : 0)), matieres: [{ cle: 'admin', nom: 'Droit administratif', xp: 400, gagnees: 1, ouvertes: 2, parfaites: 0, acquis: 3, vues: 10 }], appareil: { os: 'iOS', installee: true }, notifications: 0, social: { amis: 1 }, suivi_depuis: '2026-11-08T10:00:00Z' };
+    await p.route('**/rest/v1/rpc/admin_fiche_parcours', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fiche) }));
+    await p.goto(URLB + '?test'); await p.waitForSelector('.tribune');
+    await p.evaluate(() => window.__app.ficheCompte({ id: '00000000-0000-0000-0000-000000000001', pseudo: 'Exemple', email: 'exemple@exemple.fr', acces: 'testeur', jetons: 0, cree_le: '2026-10-01T10:00:00Z', vu_le: new Date().toISOString() }));
+    await p.waitForSelector('.pf');
+    assert.equal(await p.locator('.pf-cal .cal-case').count(), 56, 'huit semaines');
+    assert.equal(await p.locator('.pf-etapes li.fait').count(), 3, 'trois étapes franchies');
+    assert.equal(await p.locator('.pf-heures i').count(), 24);
+    assert.match(await p.locator('.pf-pastille').innerText(), /Occasionnel|Régulier/);
+    await debordement(p, 'fiche parcours');
+    await c.close();
+    log('fiche parcours ok');
+  }
+
   if (matchSeul('fenetres clavier')) {
     const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
     const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));

@@ -1,5 +1,5 @@
 -- Fiche « parcours » du panneau admin (le fil des événements reste dans admin_parcours) : tout ce que l'appli sait déjà d'un compte, en un seul objet.
--- Réservé à l'administrateur (est_admin), comme admin_comptes. Proposé le 15/11/2026, à valider par Gaspard.
+-- Réservé à l'administrateur (est_admin), comme admin_comptes. Validé par Gaspard et appliqué le 16/11/2026 (migration admin_fiche_parcours).
 create or replace function public.admin_fiche_parcours(cible uuid) returns jsonb
 language plpgsql stable security definer set search_path = '' as $$
 declare r jsonb;
