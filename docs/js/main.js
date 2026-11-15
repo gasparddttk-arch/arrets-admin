@@ -2150,7 +2150,7 @@ async function ouvrirCompte(params) {
   const requis = Boolean(SUPABASE_URL) && !(modeTest() && !params.has('compte'));
   if (!requis) return true;
   let erreur = null;
-  try { if (retourConnexion()) suivre('connexion', { via: 'google' }); } catch (e) { erreur = e.message; }
+  try { if (await retourConnexion()) suivre('connexion', { via: 'google' }); } catch (e) { erreur = e.message; }
   if (!connecte()) {
     if (estVisiteur()) return true;
     ecranConnexion(erreur);

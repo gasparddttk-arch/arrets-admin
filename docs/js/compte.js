@@ -53,16 +53,30 @@ async function api(chemin, { method = 'GET', corps, prefer } = {}) {
   return txt ? JSON.parse(txt) : null;
 }
 
-// Google : on part sur la page de Google, qui revient ici avec la session dans l'adresse.
-export function connexionGoogle() {
-  location.assign(`${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(ici())}`);
+// Google, en flux PKCE : on part sur la page de Google avec un défi tiré au hasard ; au retour, Supabase
+// donne un code qui ne s'échange contre une session qu'avec le secret gardé sur ce téléphone.
+// Un lien fabriqué par un tiers (avec sa propre session) ne peut donc plus connecter quelqu'un à son compte.
+const CLE_PKCE = 'gdroit-pkce';
+const b64url = (octets) => btoa(String.fromCharCode(...new Uint8Array(octets))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+export async function connexionGoogle() {
+  const verificateur = b64url(crypto.getRandomValues(new Uint8Array(48)));
+  const defi = b64url(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verificateur)));
+  try { localStorage.setItem(CLE_PKCE, JSON.stringify({ v: verificateur, t: Date.now() })); } catch { /* stockage bloqué */ }
+  location.assign(`${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(ici())}&code_challenge=${defi}&code_challenge_method=s256`);
 }
-export function retourConnexion() {
-  const p = new URLSearchParams(location.hash.slice(1));
-  if (p.get('error_description')) { history.replaceState(null, '', ici() + location.search); throw new Error('Connexion annulée ou refusée.'); }
-  if (!p.get('access_token')) return false;
-  history.replaceState(null, '', ici() + location.search);
-  garder({ access_token: p.get('access_token'), refresh_token: p.get('refresh_token'), expire: Date.now() + (+p.get('expires_in') || 3600) * 1000, user: null });
+export async function retourConnexion() {
+  const q = new URLSearchParams(location.search); const diese = new URLSearchParams(location.hash.slice(1));
+  const nettoyer = () => { for (const k of ['code', 'error', 'error_code', 'error_description']) q.delete(k); const r = q.toString(); history.replaceState(null, '', ici() + (r ? `?${r}` : '')); };
+  if (q.get('error_description') || diese.get('error_description')) { nettoyer(); throw new Error('Connexion annulée ou refusée.'); }
+  // Ancien retour (session dans l'adresse) : refusé, il pourrait venir d'un lien piégé.
+  if (diese.get('access_token')) { history.replaceState(null, '', ici() + location.search); throw new Error('Ce lien de connexion n’est plus valable. Reconnecte-toi.'); }
+  const code = q.get('code');
+  if (!code) return false;
+  let pkce = null;
+  try { pkce = JSON.parse(localStorage.getItem(CLE_PKCE)); localStorage.removeItem(CLE_PKCE); } catch { pkce = null; }
+  nettoyer();
+  if (!pkce?.v || Date.now() - pkce.t > 15 * 60000) throw new Error('Connexion commencée ailleurs. Touche à nouveau « Continuer avec Google » ici, ou passe par le code par email.');
+  try { garder(depuisReponse(await auth('token?grant_type=pkce', { auth_code: code, code_verifier: pkce.v }))); } catch { throw new Error('La connexion Google n’a pas abouti. Réessaie.'); }
   return true;
 }
 export async function completerUtilisateur() {
