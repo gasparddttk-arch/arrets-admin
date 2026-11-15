@@ -1934,6 +1934,7 @@ async function releverDefi(id) {
   if (!d || d.statut !== 'ouvert') return toast('Ce défi n’est plus ouvert.');
   if (d.matiere === 'intro' && d.equipe && d.equipe !== etat.equipeL1) return toast('Ce défi porte sur le cours de l’autre équipe.');
   if (d.matiere === 'oblig' && d.equipe && d.equipe !== etat.equipe) return toast('Ce défi porte sur le cours de l’autre équipe.');
+  if (!Array.isArray(d.rounds) || !d.rounds.length || d.rounds.length > 8 || d.rounds.some((r) => !r || !TOUS_JEUX[r.type])) return toast('Ce défi est illisible.');
   changerMatiereSilencieux(d.matiere);
   lancer({ type: 'defi-ami', titre: `Défi de ${d.pseudo_auteur || 'ton ami'}`, rounds: d.rounds, defiAmi: { id: d.id, pseudo: d.pseudo_auteur, score: d.score_auteur } });
 }

@@ -282,7 +282,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 7b] Minuteurs et écouteurs arrêtés quand on quitte une épreuve
-- **Statut** : Prêt pour Claude (suite verte le 15/11 à 13h10 sur fdc8b4b)
+- **Statut** : Fait (publié le 15/11)
 - **Fichiers concernés** : `app/js/jeux-l1.js`, `app/js/dunk.js`, `app/js/main.js`, `tests/run.cjs`
 - **Objectif** : après « Quitter », certaines boucles continuent sur un écran détaché.
 - **Détails de modification** (le contexte de jeu offre `ctx.nettoyage(fonction)`, appelée à la sortie de séance) :
@@ -294,7 +294,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 5a] Défi d'ami illisible refusé proprement
-- **Statut** : À faire
+- **Statut** : Fait par Claude le 15/11 (publié)
 - **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
 - **Détails de modification** : dans `releverDefi` (~ligne 1925), juste après le test `d.statut !== 'ouvert'`, ajouter :
   `if (!Array.isArray(d.rounds) || !d.rounds.length || d.rounds.length > 8 || d.rounds.some((r) => !r || !TOUS_JEUX[r.type])) return toast('Ce défi est illisible.');`
@@ -302,7 +302,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 3b] Appareils : inscription par la fonction serveur, désinscription à la déconnexion
-- **Statut** : À faire
+- **Statut** : Fait par Claude le 15/11 (publié)
 - **Fichiers concernés** : `app/js/compte.js`, `app/js/notif.js`, `tests/run.cjs`
 - **Détails de modification** :
   - `compte.js` ligne ~226 : `inscrireAppareil` devient `(abonnement) => rpc('inscrire_appareil', { point: abonnement.endpoint, abonnement })`.
@@ -312,7 +312,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 4c] Envoi après un achat ; confirmation avant une déconnexion qui perdrait des données
-- **Statut** : Pris par Claude le 15/11 (ne pas faire)
+- **Statut** : Fait par Claude le 15/11 (publié)
 - **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
 - **Détails de modification** :
   - Dans `acheter(item)` (~ligne 1433), après la sauvegarde de l'achat réussi : `setTimeout(envoyerProgression, 1000);` (la fin de séance envoie déjà, ligne ~1002).
@@ -325,7 +325,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 11a] Politique de sécurité du contenu (CSP)
-- **Statut** : Pris par Claude le 15/11 (ne pas faire)
+- **Statut** : Fait par Claude le 15/11 (publié)
 - **Fichiers concernés** : `app/index.html`, `app/partager.html`, `scripts/build.mjs`, `tests/run.cjs`
 - **Détails de modification** :
   - Dans les deux pages, ajouter dans `<head>` : `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; media-src 'self' blob:; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">`.
@@ -334,7 +334,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte (aucune violation CSP dans toute la suite : ajouter si possible la vérification console aux pages existantes).
 
 ### [TÂCHE 8b] Sauvegarde groupée
-- **Statut** : Pris par Claude le 15/11 (ne pas faire)
+- **Statut** : Fait par Claude le 15/11 (publié)
 - **Fichiers concernés** : `app/js/state.js`, `tests/run.cjs`
 - **Détails de modification** :
   - `sauver()` (ligne ~274) met `etat.modifie = Date.now()` tout de suite, mais l'écriture (`JSON.stringify`, `localStorage.setItem`, `ecrireSecours`) passe dans une fonction `ecrire()` appelée par un `setTimeout(ecrire, 300)` (un seul minuteur à la fois : `clearTimeout` avant).
@@ -343,7 +343,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 7c] Fenêtres accessibles au clavier
-- **Statut** : Pris par Claude le 15/11 (ne pas faire)
+- **Statut** : Fait par Claude le 15/11 (publié)
 - **Fichiers concernés** : `app/js/ui.js`, `app/js/main.js`, `app/js/atelier.js`, `app/js/lexique.js`, `tests/run.cjs`
 - **Détails de modification** :
   - Dans `ui.js`, exporter `ouvrirVoile(boite, { fermer } = {})` : crée `h('div', { class: 'voile' }, boite)`, pose sur `boite` `role="dialog"` (si absent) et `aria-modal="true"`, l'ajoute au `body`, mémorise `document.activeElement`, place le focus sur le premier élément focalisable de la boîte (sinon sur la boîte avec `tabindex="-1"`), ferme sur Échap et sur un clic dans le voile hors de la boîte, garde Tab dans la boîte, et à la fermeture retire l'écouteur clavier et rend le focus à l'élément mémorisé. Renvoie une fonction `fermer()`.
@@ -354,7 +354,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 8a] Lexou : une planche décodée à la fois
-- **Statut** : Pris par Claude le 15/11 (ne pas faire)
+- **Statut** : Fait par Claude le 15/11 (publié)
 - **Fichiers concernés** : `app/js/lexou.js`
 - **Objectif** : aujourd'hui toutes les planches d'une animation sont décodées avant le départ (près de 100 Mo de mémoire sur iPhone).
 - **Détails de modification** :
