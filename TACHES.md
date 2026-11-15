@@ -272,7 +272,7 @@ Plan : https://claude.ai/artifact/MUQk51XZ9Y4uv5v47EGUK3. Mêmes règles que le 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte, captures `CAP + 'install-guide-ios.png'` et `CAP + 'install-guide-android.png'`.
 
 ### [TÂCHE C3] Après un jeu lancé seul : « Encore une » et « Passer au Défi du jour »
-- **Statut** : Prévu le mardi 17/11
+- **Statut** : Pris par Claude le 15/11
 - **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
 - **Objectif** : 21 abandons sur 63 ont lieu dans un jeu lancé seul depuis la liste des jeux. Donner une suite évidente en fin de jeu.
 - **Détails de modification** :
@@ -282,7 +282,7 @@ Plan : https://claude.ai/artifact/MUQk51XZ9Y4uv5v47EGUK3. Mêmes règles que le 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE E] Carte du podium de la semaine sur le Palais
-- **Statut** : Prévu le mercredi 18/11 (après mise en base par Claude de `mon_classement`)
+- **Statut** : À faire (`mon_classement` est en base depuis le 15/11)
 - **Fichiers concernés** : `app/js/compte.js`, `app/js/main.js`, `app/css/app.css`, `tests/run.cjs`
 - **Objectif** : le classement des amis se remet à zéro chaque lundi sans que personne le voie. Le lundi (et jusqu'à ce qu'on la ferme), une carte montre le podium de la semaine écoulée.
 - **Détails de modification** :
