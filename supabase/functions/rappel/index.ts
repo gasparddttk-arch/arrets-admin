@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
         if (veut.get(l.compte)) {
           const premier = (l.podium || [])[0];
           const body = l.rang === 1
-            ? `Tu finis premier de ta bande cette semaine, avec ${l.xp} points. Lexou te tend la coupe.`
+            ? `Tu finis en tête de ta bande cette semaine, avec ${l.xp} points. Lexou te tend la coupe.`
             : `Tu finis ${l.rang}e sur ${l.sur} cette semaine. ${premier?.pseudo || 'Un ami'} est devant avec ${premier?.xp ?? 0} points : la revanche commence aujourd’hui.`;
           for (const a of (apps || []).filter((x) => x.proprietaire === l.compte)) {
             try { await webpush.sendNotification(a.abonnement as Parameters<typeof webpush.sendNotification>[0], JSON.stringify({ title: 'Lexou', body, ami: true, url: './?amis', tag: 'classement' }), { TTL: 12 * 3600 }); classements++; } catch (e) {
