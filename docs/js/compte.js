@@ -95,6 +95,12 @@ export async function verifierCode(email, code) {
 
 export async function deconnexion() {
   try { await envoyerProgression(); } catch { /* hors ligne : tant pis */ }
+  // Ce téléphone ne doit plus recevoir les notifications de ce compte.
+  try {
+    const reg = await navigator.serviceWorker?.getRegistration?.();
+    const ab = await reg?.pushManager?.getSubscription?.();
+    if (ab) { try { await retirerAppareil(ab.endpoint); } catch { /* hors ligne */ } try { await ab.unsubscribe(); } catch { /* rien */ } }
+  } catch { /* pas de service worker */ }
   try { const t = session?.access_token; if (t) await fetch(`${SUPABASE_URL}/auth/v1/logout`, { method: 'POST', headers: { apikey: SUPABASE_CLE, Authorization: `Bearer ${t}` } }); } catch { /* sans réseau */ }
   garder(null);
 }
@@ -298,7 +304,9 @@ export async function annoncerDefiJour() {
 export async function pousser() {
   try { const t = await jeton(); await fetch(`${SUPABASE_URL}/functions/v1/pousser`, { method: 'POST', headers: { apikey: SUPABASE_CLE, Authorization: `Bearer ${t}` } }); } catch { /* l'appli les montrera à l'ouverture */ }
 }
-export const inscrireAppareil = (abonnement) => api('appareils?on_conflict=point', { method: 'POST', corps: { point: abonnement.endpoint, abonnement }, prefer: 'resolution=merge-duplicates,return=minimal' });
+// Le téléphone est rattaché au compte connecté, même s'il l'était à un autre compte avant (fonction serveur).
+export const inscrireAppareil = (abonnement) => rpc('inscrire_appareil', { point: abonnement.endpoint, abonnement: abonnement.toJSON ? abonnement.toJSON() : abonnement });
+export const retirerAppareil = (point) => api(`appareils?point=eq.${encodeURIComponent(point)}`, { method: 'DELETE', prefer: 'return=minimal' });
 
 // TESTEURS -----------------------------------------------------------------------------
 export const envoyerRetour = (genre, texte, ecran) => api('retours', { method: 'POST', corps: { genre, texte: texte.slice(0, 3000), ecran: (ecran || '').slice(0, 200), version: (window.__version || '').slice(0, 40) }, prefer: 'return=minimal' });
