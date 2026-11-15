@@ -21,7 +21,7 @@ import { jouerCas, jouerRemede, jouerFrise } from './jeux-oblig.js';
 import { lancerDunk } from './dunk.js';
 import { activerRappel, etatRappel, estInstallee, abonnementActuel } from './notif.js';
 import { SUPABASE_URL } from './config.js';
-import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifier, monProfil, reglerProfil, mesAmis, monClassement, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour, adminEntonnoir, adminParcours } from './compte.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifier, monProfil, reglerProfil, mesAmis, monClassement, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour, adminEntonnoir, adminParcours, adminFicheParcours } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 import { noter as suivre, contexte } from './suivi.js';
 import { jouerFormule } from './formule.js';
@@ -2247,6 +2247,73 @@ function ligneParcours(e) {
   return h('li', {}, h('b', {}, NOMS_EVENEMENT[e.t] || e.t), precis ? ` : ${precis}` : '', h('small', {}, ` ${quand(e.q)}`));
 }
 
+// FICHE PARCOURS (admin) : ce que l'appli sait déjà d'un compte, mis en images.
+const NOMS_JEUX_HORS = { appel: 'L’appel', tri: 'Le tri', decouverte: 'Découverte', paires: 'Paires', defi: 'Défi' };
+const nomJeu = (k) => (NOMS_MODES[k] || NOMS_MODES_OBLIG[k] || NOMS_MODES_CONSTIT[k] || NOMS_MODES_INTRO[k])?.[0] || NOMS_JEUX_HORS[k] || k || '?';
+const JOUR_MS = 864e5;
+const dateCourte = (d) => (d ? new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : null);
+function diagnostic(f, c) {
+  const depuis = (d) => (d ? (Date.now() - Date.parse(d)) / JOUR_MS : Infinity);
+  const actifs14 = f.jours.filter((x) => depuis(x.j) <= 14).length;
+  const abandons = f.abandons.reduce((s, x) => s + x.n, 0);
+  if (depuis(c.cree_le) < 3) return ['nouveau', 'Nouveau', 'Inscrit il y a moins de trois jours.'];
+  if ((f.serie?.record || 0) >= 2 && depuis(c.vu_le) >= 4) return ['decroche', 'Décroche', `Avait une série de ${f.serie.record} jours, pas revu depuis ${Math.floor(depuis(c.vu_le))} jours.`];
+  if (abandons >= 3 && f.seances.fin < f.seances.debut / 2) return ['bloque', 'Bloque', `${abandons} séances abandonnées pour ${f.seances.fin} finies.`];
+  if (actifs14 >= 5) return ['regulier', 'Régulier', `${actifs14} jours de révision sur les deux dernières semaines.`];
+  return ['occasionnel', 'Occasionnel', `${actifs14} jour${actifs14 > 1 ? 's' : ''} de révision sur les deux dernières semaines.`];
+}
+function blocParcours(f, c) {
+  const [cle, mot, raison] = diagnostic(f, c);
+  // Le calendrier : huit semaines, lundi en haut, une case par jour.
+  const parJour = Object.fromEntries(f.jours.map((x) => [x.j, x.n]));
+  const auj = new Date(); auj.setHours(12, 0, 0, 0);
+  const lundiCourant = new Date(auj - ((auj.getDay() + 6) % 7) * JOUR_MS);
+  const cases = [];
+  for (let k = 0; k < 56; k++) {
+    const d = new Date(lundiCourant.getTime() - 49 * JOUR_MS + Math.floor(k / 7) * 7 * JOUR_MS + (k % 7) * JOUR_MS);
+    const cleJ = d.toLocaleDateString('sv-SE');
+    const n = parJour[cleJ] || 0;
+    cases.push(h('i', { class: `cal-case n${Math.min(n, 3)}${d > auj ? ' futur' : ''}${cleJ === auj.toLocaleDateString('sv-SE') ? ' auj' : ''}`, title: `${d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} : ${pluriel(n, 'séance')}` }));
+  }
+  const etapes = [
+    ['Inscription', c.cree_le], ['Connexion', f.etapes.connexion], ['1re séance', f.etapes.premiere], ['5e séance', f.etapes.cinquieme], ['Série de 3 jours', f.etapes.serie3],
+  ];
+  const maxH = Math.max(1, ...f.heures);
+  const tuile = (val, leg) => h('div', { class: 'pf-tuile' }, h('b', {}, val), h('small', {}, leg));
+  const app = f.appareil || {};
+  const s = f.social || {};
+  return h('div', { class: 'pf' },
+    h('div', { class: `pf-tete pf-${cle}` },
+      h('div', { class: 'pf-lexou' }, chouette(cle === 'decroche' ? 'reflexion' : cle === 'regulier' ? 'clin' : 'debout', { taille: 64, porte: f.porte || {} })),
+      h('div', {}, h('span', { class: 'pf-pastille' }, mot), h('p', {}, raison),
+        h('small', {}, f.serie?.n ? `Série en cours : ${pluriel(f.serie.n, 'jour')} (record ${f.serie.record}).` : `Pas de série en cours${f.serie?.record ? ` (record ${pluriel(f.serie.record, 'jour')})` : ''}.`))),
+    h('h3', {}, 'Ses huit dernières semaines'),
+    h('div', { class: 'pf-cal', role: 'img', 'aria-label': `${f.jours.length} jours de révision` }, cases),
+    h('div', { class: 'pf-cal-legende' }, h('span', {}, 'Moins'), [0, 1, 2, 3].map((n) => h('i', { class: `cal-case n${n}` })), h('span', {}, 'Plus')),
+    h('h3', {}, 'Son entrée dans l’appli'),
+    h('ol', { class: 'pf-etapes' }, etapes.map(([nom, d]) => h('li', { class: d ? 'fait' : '' }, h('i'), h('b', {}, nom), h('small', {}, d ? dateCourte(d) : 'pas encore')))),
+    h('h3', {}, 'Ses séances'),
+    h('div', { class: 'pf-tuiles' },
+      tuile(fmt(f.seances.debut), 'commencées'), tuile(fmt(f.seances.fin), 'finies'),
+      tuile(f.seances.duree ? `${Math.round(f.seances.duree / 60)} min` : '–', 'en moyenne'), tuile(f.seances.score != null ? `${f.seances.score} %` : '–', 'de réussite')),
+    f.abandons.length ? h('ul', { class: 'pf-abandons' }, f.abandons.slice(0, 4).map((x) => h('li', {}, h('b', {}, nomJeu(x.epreuve)), ` : abandon à l’épreuve ${x.i}, ${pluriel(x.n, 'fois', 'fois')}, après ${x.duree ?? '?'} s`))) : h('p', { class: 'aide-claire' }, 'Aucun abandon.'),
+    f.jeux.length ? h('h3', {}, 'Ses jeux') : null,
+    h('ul', { class: 'pf-jeux' }, f.jeux.slice(0, 8).map((x) => h('li', {}, h('span', {}, nomJeu(x.jeu)), h('span', { class: 'pf-barre' }, h('i', { class: x.score >= 75 ? 'bon' : x.score < 50 ? 'faible' : '', style: `width:${x.score}%` })), h('small', {}, `${x.score} %`)))),
+    h('h3', {}, 'Ses heures de révision'),
+    h('div', { class: 'pf-heures', role: 'img', 'aria-label': 'Séances par heure' }, f.heures.map((n, k) => h('i', { style: `height:${Math.max(4, (n / maxH) * 100)}%`, class: n ? 'plein' : '', title: `${k} h : ${n}` }))),
+    h('div', { class: 'pf-heures-axe' }, ['0 h', '6 h', '12 h', '18 h', '23 h'].map((x) => h('span', {}, x))),
+    f.matieres.length ? h('h3', {}, 'Ses matières') : null,
+    h('ul', { class: 'pf-matieres' }, f.matieres.map((m) => h('li', {},
+      h('div', {}, h('b', {}, m.nom), h('small', {}, `${fmt(m.xp)} points, ${m.acquis} acquis sur ${m.vues} fiches vues`)),
+      h('span', { class: 'pf-mini-tour', 'aria-label': `${m.gagnees} chambres gagnées sur ${m.ouvertes} ouvertes` },
+        Array.from({ length: Math.max(m.ouvertes, m.gagnees) }, (_, k) => h('i', { class: k < m.parfaites ? 'parfaite' : k < m.gagnees ? 'gagnee' : 'ouverte' })))))),
+    h('h3', {}, 'Son appareil'),
+    h('p', { class: 'pf-puces' }, [app.os === 'iOS' ? 'iPhone' : app.os || 'Appareil inconnu', app.installee ? 'appli installée' : 'dans le navigateur', f.notifications ? 'notifications activées' : 'sans notifications'].map((x) => h('span', {}, x))),
+    h('h3', {}, 'Avec les autres'),
+    h('p', { class: 'pf-puces' }, [pluriel(s.amis || 0, 'ami'), `${pluriel(s.defis_envoyes || 0, 'défi')} envoyé${(s.defis_envoyes || 0) > 1 ? 's' : ''}`, `${pluriel(s.defis_recus || 0, 'défi')} reçu${(s.defis_recus || 0) > 1 ? 's' : ''}`, `${s.defis_gagnes || 0} gagné${(s.defis_gagnes || 0) > 1 ? 's' : ''}`, pluriel(s.cadeaux_recus || 0, 'cadeau', 'cadeaux')].map((x) => h('span', {}, x))),
+    f.suivi_depuis ? h('p', { class: 'aide-claire pf-note' }, `Le détail des séances est suivi depuis le ${new Date(f.suivi_depuis).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} ; le total de séances du compte peut être plus élevé.`) : null);
+}
+
 function ficheCompte(c) {
   const moi = c.id === etat.compte?.id;
   const montant = h('input', { class: 'code', type: 'number', inputmode: 'numeric', min: 1, max: 100000, placeholder: 'Nombre de jetons', 'aria-label': 'Nombre de jetons' });
@@ -2266,20 +2333,23 @@ function ficheCompte(c) {
       ecranAdmin();
     } catch { toast('Changement refusé.'); }
   } }, NOMS_STATUT[v])));
+  const zoneFiche = h('div', { class: 'pf-zone' }, h('p', { class: 'aide-claire' }, 'Chargement du parcours…'));
+  adminFicheParcours(c.id).then((f) => zoneFiche.replaceChildren(blocParcours(f, c))).catch(() => zoneFiche.replaceChildren(h('p', { class: 'aide-claire' }, 'Parcours indisponible.')));
   const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite admin-fiche', role: 'dialog', 'aria-label': `Compte de ${c.pseudo || c.email}` },
     h('h2', {}, c.pseudo || c.email), h('p', { class: 'aide-claire' }, c.email),
     h('p', { class: 'aide-claire' }, `Inscrit ${quand(c.cree_le)}. Dernière copie de progression : ${quand(c.maj)}.${c.equipe ? ` Équipe ${c.equipe}.` : ''}`),
+    zoneFiche,
     h('h3', {}, 'Jetons'),
     h('p', { class: 'aide-claire' }, `${fmt(c.jetons ?? 0)} à la dernière copie. Le changement s’applique à sa prochaine ouverture de l’appli, sans descendre sous zéro.`),
     montant, motif,
     h('div', { class: 'admin-duo' }, h('button', { class: 'bouton-or', onClick: jetons(1) }, 'Ajouter'), h('button', { class: 'bouton-fantome', onClick: jetons(-1) }, 'Retirer')),
     h('h3', {}, 'Statut'),
     moi ? h('p', { class: 'aide-claire' }, 'Ton compte reste administrateur.') : statut,
-    h('h3', {}, 'Parcours'),
+    h('h3', {}, 'Ses derniers gestes'),
     (() => { const zoneP = h('div', { class: 'parcours' }, h('button', { class: 'bouton-fantome', onClick: async () => {
       zoneP.replaceChildren(h('p', { class: 'aide-claire' }, 'Chargement…'));
       try { const ev = await adminParcours(c.id); zoneP.replaceChildren(ev.length ? h('ol', { class: 'parcours-liste' }, ev.slice(0, 60).map(ligneParcours)) : h('p', { class: 'aide-claire' }, 'Rien depuis la mise en place du suivi.')); } catch { zoneP.replaceChildren(h('p', { class: 'aide-claire' }, 'Parcours indisponible.')); }
-    } }, 'Voir son parcours')); return zoneP; })(),
+    } }, 'Voir le fil')); return zoneP; })(),
     h('div', { class: 'boite-actions' }, h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Fermer'))));
   document.body.append(voile);
 }
@@ -2662,7 +2732,7 @@ async function demarrer() {
   else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
-  if (modeTest()) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation, lancer, tirerRound, aRattraper, lancerRevisionJour, composerRevision, monClassement, cartePodium, lundi, jour, accueil };
+  if (modeTest()) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation, lancer, tirerRound, aRattraper, lancerRevisionJour, composerRevision, monClassement, cartePodium, lundi, jour, accueil, ficheCompte };
   setTimeout(surveillerFluidite, 1200);
   precharger();
 

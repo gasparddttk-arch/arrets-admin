@@ -316,6 +316,7 @@ export const adminChangerQuota = (n) => rpc('admin_changer_quota', { n });
 export const adminRetours = () => rpc('admin_retours');
 export const adminEntonnoir = (jours) => rpc('admin_entonnoir', { jours });
 export const adminParcours = (cible) => rpc('admin_parcours', { cible });
+export const adminFicheParcours = (cible) => rpc('admin_fiche_parcours', { cible });
 
 // Le suivi d'usage : un lot d'étapes, envoyé connecté ou non (l'ouverture précède le compte).
 export async function envoyerEvenements(appareil, lot) {

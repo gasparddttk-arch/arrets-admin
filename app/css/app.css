@@ -2120,3 +2120,53 @@ body:has(#onglets[hidden]) .clone-sortant {
 .tour-bulle { position: absolute; left: 96px; right: 14px; top: -66px; margin: 0; width: fit-content; max-width: calc(100% - 110px); padding: 9px 12px; border-radius: 16px 16px 16px 4px; background: #fff; color: #1B1F3B; font: 600 14px/1.25 var(--ui); box-shadow: 0 6px 18px rgba(0, 0, 0, .35); transition: opacity .25s, transform .25s; }
 .tour-bulle.change { opacity: 0; transform: translateY(6px); }
 .vers-tour { margin: -6px 0 6px; }
+
+/* FICHE PARCOURS (admin) ----------------------------------------------------------- */
+.pf { display: grid; gap: 10px; margin: 6px 0 4px; }
+.pf h3 { margin: 10px 0 0; font: 600 15px var(--ui); color: var(--texte-2); }
+.pf-tete { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 18px; background: var(--banc-fort); }
+.pf-tete p { margin: 6px 0 2px; font: 600 15px/1.3 var(--ui); }
+.pf-tete small { font: 13px var(--ui); color: var(--texte-2); }
+.pf-pastille { display: inline-block; padding: 4px 10px; border-radius: 999px; font: 700 13px var(--ui); background: var(--texte-2); color: var(--fond-plat); }
+.pf-regulier .pf-pastille { background: #3DBE8B; color: #06261A; }
+.pf-decroche .pf-pastille { background: #F07A52; color: #2B0E04; }
+.pf-bloque .pf-pastille { background: #E0475B; color: #fff; }
+.pf-nouveau .pf-pastille { background: var(--or); color: var(--or-texte); }
+.pf-cal { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; gap: 4px; justify-content: start; }
+.cal-case { display: block; width: 18px; height: 18px; border-radius: 5px; background: var(--banc-fort); }
+.cal-case.n1 { background: rgba(242, 197, 92, .35); } .cal-case.n2 { background: rgba(242, 197, 92, .65); } .cal-case.n3 { background: var(--or); }
+.cal-case.futur { opacity: .25; } .cal-case.auj { outline: 2px solid var(--texte); outline-offset: 1px; }
+.pf-cal-legende { display: flex; align-items: center; gap: 4px; font: 12px var(--ui); color: var(--texte-2); }
+.pf-cal-legende .cal-case { width: 12px; height: 12px; border-radius: 3px; }
+.pf-etapes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; position: relative; }
+.pf-etapes::before { content: ''; position: absolute; top: 8px; left: 10%; right: 10%; height: 2px; background: var(--banc-fort); }
+.pf-etapes li { position: relative; display: grid; justify-items: center; text-align: center; gap: 3px; }
+.pf-etapes i { width: 18px; height: 18px; border-radius: 50%; background: var(--banc-fort); border: 2px solid var(--fond-plat); }
+.pf-etapes li.fait i { background: var(--or); }
+.pf-etapes b { font: 600 12px/1.15 var(--ui); }
+.pf-etapes small { font: 11px var(--ui); color: var(--texte-2); }
+.pf-tuiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.pf-tuile { padding: 10px 6px; border-radius: 14px; background: var(--banc-fort); text-align: center; }
+.pf-tuile b { display: block; font: 700 18px var(--ui); }
+.pf-tuile small { font: 12px var(--ui); color: var(--texte-2); }
+.pf-abandons { margin: 0; padding-left: 18px; font: 14px/1.4 var(--ui); }
+.pf-jeux { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.pf-jeux li { display: grid; grid-template-columns: 9.5em 1fr 3em; gap: 8px; align-items: center; font: 14px var(--ui); }
+.pf-jeux small { text-align: right; color: var(--texte-2); }
+.pf-barre { height: 8px; border-radius: 4px; background: var(--banc-fort); overflow: hidden; }
+.pf-barre i { display: block; height: 100%; border-radius: 4px; background: var(--or); }
+.pf-barre i.bon { background: #3DBE8B; } .pf-barre i.faible { background: #E0475B; }
+.pf-heures { display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px; align-items: end; height: 54px; }
+.pf-heures i { display: block; border-radius: 3px 3px 0 0; background: var(--banc-fort); }
+.pf-heures i.plein { background: var(--bleu, #3352E0); }
+.pf-heures-axe { display: flex; justify-content: space-between; font: 11px var(--ui); color: var(--texte-2); }
+.pf-matieres { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.pf-matieres li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: var(--banc-fort); }
+.pf-matieres b { display: block; font: 600 15px var(--ui); }
+.pf-matieres small { font: 12px var(--ui); color: var(--texte-2); }
+.pf-mini-tour { display: flex; flex-direction: column-reverse; gap: 2px; flex: none; }
+.pf-mini-tour i { width: 22px; height: 7px; border-radius: 2px; background: transparent; border: 1.5px dashed var(--texte-2); }
+.pf-mini-tour i.gagnee { background: var(--or); border: 0; } .pf-mini-tour i.parfaite { background: var(--or-1, #FFE08A); border: 0; box-shadow: 0 0 6px var(--or); }
+.pf-puces { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+.pf-puces span { padding: 6px 10px; border-radius: 999px; background: var(--banc-fort); font: 13px var(--ui); }
+.pf-note { font-size: 12px; }
