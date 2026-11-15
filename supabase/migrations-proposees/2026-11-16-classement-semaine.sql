@@ -69,3 +69,5 @@ grant execute on function public.mon_classement() to authenticated;
 
 select cron.schedule('classement-semaine', '5 23 * * 0', $c$ select public.figer_classement(); $c$);
 -- 23 h 05 UTC le dimanche = 0 h 05 le lundi à Paris en hiver (1 h 05 en été : sans conséquence).
+
+-- Appliqué le 15/11/2026 à 16 h 35 (migration classement_semaine) ; fonction rappel redéployée (version 4).
