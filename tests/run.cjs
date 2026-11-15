@@ -1477,6 +1477,7 @@ async function execGroupe2(b, PORT, erreurs) {
     await a2.addInitScript(() => { if (!sessionStorage.getItem('pose')) { sessionStorage.setItem('pose', '1'); localStorage.setItem('arrets-admin.v1', JSON.stringify({ v: 1, m: 2, xp: 500, jetons: 777, matiere: 'oblig', equipe: 2, oblig: { xp: 900, arrets: { manoukian: { b: 4, d: 0, ok: 4, ko: 0, c: {} } }, zones: { ouvertes: [1, 2, 3], gagnees: [1, 2], parfaites: [] } }, serie: { n: 12, dernier: null, record: 12 } })); } });
     await a2.goto(URLB + '?test&choix&groupe'); await a2.waitForSelector('.porte-equipe');
     await a2.locator('.porte-equipe[data-equipe="1"]').click(); await a2.waitForSelector('.porte-oblig');
+    await a2.waitForTimeout(400); // la sauvegarde est groupée : écrite 300 ms après le dernier changement
     const ancien = await a2.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')));
     assert.equal(ancien.jetons, 777); assert.equal(ancien.oblig.xp, 900); assert.equal(ancien.oblig.arrets.manoukian.b, 4);
     assert.deepEqual(ancien.oblig.parEquipe['2'].zones.gagnees, [1, 2], 'la progression de l’équipe 2 est gardée');
