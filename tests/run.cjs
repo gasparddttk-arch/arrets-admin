@@ -903,7 +903,7 @@ async function execGroupe1(b, PORT, erreurs) {
       { mat: 'admin', eq: 2, f: 'admin2.json', attendu: ['paires', 'juge', 'paires'] },
       { mat: 'oblig', eq: 1, f: 'oblig1.json', attendu: ['qualif', 'remede', 'qualif'] },
       { mat: 'oblig', eq: 2, f: 'oblig.json', attendu: ['qualif', 'remede', 'qualif'] },
-      { mat: 'intro', eq: 2, f: 'intro.json', attendu: ['memory', 'mot', 'memory'] },
+      { mat: 'intro', eq: 2, f: 'intro.json', attendu: ['mot', 'memory', 'mot'] },
       { mat: 'constit', eq: 2, f: 'constit.json', attendu: ['mot', 'memory', 'mot'] },
     ];
     const formes = read('formules.json');
