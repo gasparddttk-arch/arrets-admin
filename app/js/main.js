@@ -793,18 +793,18 @@ function lancerMode(m, genre = null) {
   const deja = new Set();
   const titre = nomsModes()[m][0] + (genre && source !== ix ? (genre === 'C' ? ', commentaire' : ', dissertation') : '');
   const entiere = m === 'formule';
-  lancer({ type: 'mode', mode: m, titre, rounds: Array.from({ length: n }, () => tirerRound(source, m, zones, dus, Math.random, deja, entiere)) });
+  lancer({ type: 'mode', mode: m, genre, titre, rounds: Array.from({ length: n }, () => tirerRound(source, m, zones, dus, Math.random, deja, entiere)) });
 }
 
 // SÉANCE ------------------------------------------------------------------------
 const DUREE_PARTIEL = 20 * 60000;
-function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAmi = null }) {
+function lancer({ rounds, titre, type, zone, reprise, mode, genre = null, long = false, defiAmi = null }) {
   if (document.querySelector('.palais-portes')) return;
   rappelMasque = false;
   const vis = estVisiteur();
   const S = reprise
     ? { ...reprise, rounds: JSON.parse(JSON.stringify(reprise.rounds)), touches: new Map(reprise.touches), nettoyer: [], visiteur: reprise.visiteur ?? vis }
-    : { rounds, titre, type, zone, long, defiAmi, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0, visiteur: vis };
+    : { rounds, titre, type, zone, mode, genre, long, defiAmi, i: 0, xp: 0, jetons: 0, combo: 0, comboMax: 0, vies: type === 'boss' ? 3 : null, scores: [], touches: new Map(), nettoyer: [], parfaites: 0, visiteur: vis };
   ({ type, titre, zone } = S);
   if (!reprise) { S.debut = Date.now(); suivre('seance_debut', { seance: type, mode: mode || null, n: S.rounds.length, matiere: etat.matiere, premiere: !etat.stats.seances, ...(vis ? { visiteur: true } : {}) }); }
   // Copie intacte des épreuves : c'est elle qui sert à reprendre après une coupure.
@@ -1020,7 +1020,7 @@ function resultats(S, reussi) {
   const pieces = crediter(S.jetons);
   const ligneAmi = suiteDefiAmi(S, moyenne);
   if (S.type === 'revision') M().revision = jour();
-  if (S.type === 'defi') annoncerDefiJour();
+  if (S.type === 'defi') { M().defiLe = jour(); annoncerDefiJour(); }
 
   let textBoss = null;
   if (S.type === 'boss') {
@@ -1120,8 +1120,13 @@ function resultats(S, reussi) {
       h('button', { class: 'bouton-fantome', onClick: () => { suivre('decouverte_suite', { choix: 'defi', rang: M().decouverte }); lancerDefi(); } }, 'Faire le Défi du jour'),
       h('button', { class: 'bouton-lien', onClick: () => { suivre('decouverte_suite', { choix: 'palais', rang: M().decouverte }); animerPalais = true; fixerSens('arriere'); aller('palais'); } }, 'Retour au Palais')) :
     h('div', { class: 'pied' },
+      // Après un jeu lancé seul : le rejouer, ou passer au Défi du jour s'il n'est pas fait.
+      S.type === 'mode' && S.mode && S.mode !== 'atelier' ? h('button', { class: 'bouton-or', 'data-encore-mode': '', onClick: () => { lancerMode(S.mode, S.genre || null); } }, 'Encore une') : null,
+      S.type === 'mode' && S.mode && S.mode !== 'atelier' && M().defiLe !== jour() ? h('button', { class: 'bouton-fantome', 'data-vers-defi': '', onClick: () => { lancerDefi(); } }, 'Passer au Défi du jour') : null,
       S.type !== 'appel' && S.type !== 'revision' && aRevoirListe.length ? h('button', { class: 'bouton-or', 'data-appel': '', onClick: () => faireAppel(aRevoirListe.map((a) => a.id)) }, 'Faire appel') : null,
-      continuer('Retour au Palais', () => { animerPalais = true; fixerSens('arriere'); aller('palais'); }),
+      S.type === 'mode' && S.mode && S.mode !== 'atelier'
+        ? h('button', { class: 'bouton-lien', onClick: () => { animerPalais = true; fixerSens('arriere'); aller('palais'); } }, 'Retour au Palais')
+        : continuer('Retour au Palais', () => { animerPalais = true; fixerSens('arriere'); aller('palais'); }),
       S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null,
       connecte() ? h('button', { class: 'bouton-lien', onClick: () => faireRetour(`Résultats : ${S.titre}`) }, 'Faire un retour') : null),
     rappelInstallationResultats(),

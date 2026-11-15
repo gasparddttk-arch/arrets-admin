@@ -272,7 +272,7 @@ Plan : https://claude.ai/artifact/MUQk51XZ9Y4uv5v47EGUK3. Mêmes règles que le 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte, captures `CAP + 'install-guide-ios.png'` et `CAP + 'install-guide-android.png'`.
 
 ### [TÂCHE C3] Après un jeu lancé seul : « Encore une » et « Passer au Défi du jour »
-- **Statut** : Pris par Claude le 15/11
+- **Statut** : Fait par Claude le 15/11, en attente de l'avis de Gaspard (capture encore-une.png)
 - **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
 - **Objectif** : 21 abandons sur 63 ont lieu dans un jeu lancé seul depuis la liste des jeux. Donner une suite évidente en fin de jeu.
 - **Détails de modification** :

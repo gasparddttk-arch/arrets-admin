@@ -1130,6 +1130,30 @@ async function execGroupe1(b, PORT, erreurs) {
     log('defi illisible ok');
   }
 
+  if (matchSeul('encore une')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
+    const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
+    await p.goto(URLB + '?test'); await p.waitForSelector('.tribune');
+    await p.evaluate(() => window.__app.aller('role')); await p.tap('.role-ligne[data-mode="paires"]'); await jouer(p);
+    await p.waitForSelector('[data-encore-mode]');
+    assert.equal(await p.locator('[data-vers-defi]').count(), 1, 'Défi du jour proposé tant qu’il n’est pas fait');
+    await p.waitForTimeout(2500); await p.locator('[data-encore-mode]').scrollIntoViewIfNeeded(); await p.screenshot({ path: CAP + 'encore-une.png' });
+    const boutons = await p.locator('.resultats .pied button').allInnerTexts();
+    assert.ok(boutons[0].includes('Encore une') && boutons.indexOf('Retour au Palais') > 1, `ordre des boutons : ${boutons}`);
+    await p.tap('[data-encore-mode]');
+    await p.waitForSelector('.entete-seance'); await p.waitForSelector('.paires');
+    assert.equal(await p.locator('.resultats').count(), 0, 'la nouvelle séance remplace les résultats');
+    await jouer(p);
+    // Le défi fait aujourd'hui, le second bouton disparaît.
+    await p.evaluate(() => window.__app.lancerDefi()); await p.waitForSelector('.entete-seance'); await jouer(p);
+    await p.tap('text=Retour au Palais'); await p.waitForSelector('.tribune');
+    await p.evaluate(() => window.__app.aller('role')); await p.tap('.role-ligne[data-mode="paires"]'); await jouer(p);
+    await p.waitForSelector('[data-encore-mode]');
+    assert.equal(await p.locator('[data-vers-defi]').count(), 0, 'plus de renvoi au défi une fois fait');
+    await c.close();
+    log('encore une ok');
+  }
+
   if (matchSeul('fenetres clavier')) {
     const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
     const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
