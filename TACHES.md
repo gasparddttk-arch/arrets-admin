@@ -282,7 +282,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 7b] Minuteurs et écouteurs arrêtés quand on quitte une épreuve
-- **Statut** : Prévu le lundi 16/11
+- **Statut** : À faire
 - **Fichiers concernés** : `app/js/jeux-l1.js`, `app/js/dunk.js`, `app/js/main.js`, `tests/run.cjs`
 - **Objectif** : après « Quitter », certaines boucles continuent sur un écran détaché.
 - **Détails de modification** (le contexte de jeu offre `ctx.nettoyage(fonction)`, appelée à la sortie de séance) :
@@ -294,7 +294,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 5a] Défi d'ami illisible refusé proprement
-- **Statut** : Prévu le lundi 16/11
+- **Statut** : À faire
 - **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
 - **Détails de modification** : dans `releverDefi` (~ligne 1925), juste après le test `d.statut !== 'ouvert'`, ajouter :
   `if (!Array.isArray(d.rounds) || !d.rounds.length || d.rounds.length > 8 || d.rounds.some((r) => !r || !TOUS_JEUX[r.type])) return toast('Ce défi est illisible.');`
@@ -302,7 +302,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 3b] Appareils : inscription par la fonction serveur, désinscription à la déconnexion
-- **Statut** : Prévu le mardi 17/11 (après la mise en base de `inscrire_appareil` par Claude)
+- **Statut** : À faire
 - **Fichiers concernés** : `app/js/compte.js`, `app/js/notif.js`, `tests/run.cjs`
 - **Détails de modification** :
   - `compte.js` ligne ~226 : `inscrireAppareil` devient `(abonnement) => rpc('inscrire_appareil', { point: abonnement.endpoint, abonnement })`.
