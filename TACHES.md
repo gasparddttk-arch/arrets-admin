@@ -281,6 +281,22 @@ Plan : https://claude.ai/artifact/MUQk51XZ9Y4uv5v47EGUK3. Mêmes règles que le 
 - **Test à ajouter** (`matchSeul('encore une')`) : lancer un mode (`paires`) en mode test, finir, vérifier les deux boutons, cliquer « Encore une » et vérifier qu'une nouvelle séance du même type démarre.
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
+### [TÂCHE E] Carte du podium de la semaine sur le Palais
+- **Statut** : Prévu le mercredi 18/11 (après mise en base par Claude de `mon_classement`)
+- **Fichiers concernés** : `app/js/compte.js`, `app/js/main.js`, `app/css/app.css`, `tests/run.cjs`
+- **Objectif** : le classement des amis se remet à zéro chaque lundi sans que personne le voie. Le lundi (et jusqu'à ce qu'on la ferme), une carte montre le podium de la semaine écoulée.
+- **Détails de modification** :
+  - `compte.js` : `export const monClassement = () => rpc('mon_classement');` Réponse : `null` ou `{ semaine, rang, sur, xp, podium: [{ pseudo, xp, moi }] }` (`semaine` = lundi de la semaine classée, même unité que `lundi()` de state.js).
+  - `main.js`, à l'affichage de l'accueil (`accueil()`), si `connecte()` : appeler `monClassement()` sans bloquer l'affichage ; si la réponse existe, que `r.semaine === lundi() - 7` et que `etat.reglages.podiumVu !== r.semaine`, insérer en haut de la tribune une carte `section.carte-podium` :
+    - titre `h2` : « La semaine dernière » ;
+    - phrase : rang 1 → « Tu finis en tête, avec {xp} points. » ; sinon → « Tu finis {rang}e sur {sur}, avec {xp} points. » (`fmt()` pour les nombres) ;
+    - liste `ol` des trois premiers : `medaille('or'|'argent'|'bronze', true)` de visuels.js, pseudo, points ; la ligne `moi` en gras ;
+    - deux boutons : `bouton-fantome` « Voir mes amis » (`aller('amis')`) et `bouton-lien` « Fermer » (pose `etat.reglages.podiumVu = r.semaine`, `sauver()`, retire la carte).
+  - CSS dans `app.css` avec les tokens existants, sans nouvelle couleur ; même gabarit que les autres cartes de la tribune.
+- **Contraintes** : aucun texte en dehors de ceux ci-dessus ; rien si hors ligne ou si l'appel échoue.
+- **Test à ajouter** (`matchSeul('podium')`) : en mode test avec session simulée, `page.route` sur `rpc/mon_classement` renvoie un classement de la semaine dernière (rang 2 sur 4) ; la carte s'affiche avec 3 lignes et le texte « Tu finis 2e sur 4 » ; « Fermer » la retire et elle ne revient pas au rechargement ; une réponse `null` n'affiche rien.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte, capture `CAP + 'podium.png'`.
+
 ## Cahier des charges n° 3 : corrections de l'audit du 14/11 (15–20/11/2026)
 
 Plan complet : https://claude.ai/artifact/4uVgRbEGp8ExbrvpTpbAfL (rapport : `notes/audit-securite-code.md`).
