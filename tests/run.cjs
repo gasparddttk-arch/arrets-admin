@@ -2481,6 +2481,15 @@ async function execGroupe3(b, PORT, erreurs) {
     ec = await etat(k2); assert(ec.xp >= xp1 && ec.xp === faux.progression.donnees.xp, 'progression retrouvée sur le second téléphone'); assert.equal(ec.compte.id, 'u-1');
 
     await k2.evaluate(() => window.__app.aller('profil')); await k2.waitForSelector('.compte');
+    // Hors ligne avec une séance non envoyée : on prévient avant d'effacer le téléphone.
+    await t2.setOffline(true);
+    await k2.evaluate(() => { window.__app.etat().xp += 5; window.__app.sauver(); });
+    await k2.locator('text=Se déconnecter').click(); await k2.locator('.boite .bouton-or').click();
+    await k2.waitForSelector('text=Ta dernière séance n’est pas encore sauvegardée');
+    await k2.locator('.boite button', { hasText: 'Rester connecté' }).click();
+    await k2.waitForSelector('.voile', { state: 'detached' });
+    assert.equal(await k2.locator('.connexion').count(), 0, 'toujours connecté');
+    await t2.setOffline(false);
     await k2.locator('text=Se déconnecter').click(); await k2.locator('.boite .bouton-or').click();
     await k2.waitForSelector('.connexion');
     const apres = await k2.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')));
