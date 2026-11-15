@@ -937,7 +937,8 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
         scene.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: 'ease-out' });
       }
     }
-    Promise.resolve(TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
+    Promise.resolve().then(() => TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
+      suivre('erreur', { type: String(r.type).slice(0, 30), m: String(e?.message || e).slice(0, 120) });
       console.error(e);
       scene.replaceChildren(h('div', { class: 'erreur' }, h('p', {}, 'Cette épreuve n’a pas pu s’afficher. Passe à la suivante.'), continuer('Continuer', () => ctx.fin({ score: 0, parfait: false }))));
     });
@@ -2463,6 +2464,7 @@ async function demarrer() {
     else if (params.has('amis')) aller('amis');
     window.addEventListener('online', () => { envoyerProgression(); envoyerSignalements(); });
     document.addEventListener('visibilitychange', () => { if (document.hidden) envoyerProgression(); else compterNouvelles(); });
+    window.addEventListener('unhandledrejection', (e) => suivre('erreur', { m: String(e.reason?.message || e.reason).slice(0, 120) }));
     recevoirCadeauxCompte().then((n) => {
       if (!n) return;
       if (document.querySelector('.tribune')) accueil();

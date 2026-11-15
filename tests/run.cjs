@@ -1120,6 +1120,34 @@ async function execGroupe1(b, PORT, erreurs) {
     await c2.close();
     log('mode test ok');
   }
+
+  // 14d. Épreuve en erreur (Tâche 7a)
+  if (matchSeul('epreuve en erreur')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR' });
+    const p = await c.newPage();
+    p.on('pageerror', (e) => erreurs.push(e.message));
+    p.on('console', (m) => {
+      if (m.type() === 'error' && !/favicon/.test(m.text()) && !/is not a function/.test(m.text())) {
+        erreurs.push(m.text());
+      }
+    });
+    await p.goto(`${URLB}?test`);
+    await p.waitForSelector('.tribune');
+    await p.evaluate(() => {
+      window.__app.lancer({
+        type: 'express',
+        titre: 'Test erreur',
+        rounds: [{ type: 'inexistant' }],
+      });
+    });
+    await p.waitForSelector('.erreur');
+    const txtErreur = await p.locator('.erreur p').innerText();
+    assert(txtErreur.includes('Cette épreuve n’a pas pu s’afficher'), 'Message d’erreur présent');
+    await p.locator('.erreur button:has-text("Continuer")').click();
+    await p.waitForSelector('.resultats');
+    await c.close();
+    log('epreuve en erreur ok');
+  }
 }
 
 // -----------------------------------------------------------------------------
