@@ -1163,6 +1163,53 @@ async function execGroupe1(b, PORT, erreurs) {
     await c.close();
     log('epreuve en erreur ok');
   }
+
+  if (matchSeul('quitter en cours')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR' });
+    const p = await c.newPage();
+    p.on('pageerror', (e) => erreurs.push(e.message));
+    p.on('console', (m) => {
+      if (m.type() === 'error' && !/favicon/.test(m.text())) {
+        erreurs.push(m.text());
+      }
+    });
+    await p.goto(`${URLB}?test&matiere=oblig`);
+    await p.waitForSelector('.tribune');
+
+    // 1. Quitter au milieu de dunk
+    await p.evaluate(() => window.__app.aller('role'));
+    await p.locator('.dunk-choix button').first().click();
+    await p.waitForSelector('.dunk-question');
+    await p.locator('.quitter').click();
+    await p.waitForSelector('.tribune');
+
+    // 2. Quitter au milieu d'une épreuve pièces (rangement)
+    await p.evaluate(() => {
+      window.__app.lancer({
+        type: 'express',
+        titre: 'Test pièces',
+        rounds: [{
+          type: 'rangement',
+          titre: 'Le grand rangement',
+          colonnes: [{ k: 'pub', nom: 'Droit public' }, { k: 'priv', nom: 'Droit privé' }],
+          pieces: [{ k: 'pub', t: 'Une loi', w: 'Explication' }, { k: 'priv', t: 'Un contrat', w: 'Explication 2' }],
+        }],
+      });
+    });
+    await p.waitForSelector('.rg-piece');
+    await p.locator('.quitter').click();
+    await p.waitForSelector('.boite .bouton-or');
+    await p.locator('.boite .bouton-or').click();
+    await p.waitForSelector('.tribune');
+
+    // 3. Attendre 3 s : aucune erreur et aucun élément persistant
+    await p.waitForTimeout(3000);
+    const count = await p.evaluate(() => document.querySelectorAll('.dunk, .rg-piece').length);
+    assert.equal(count, 0, 'aucun élément .dunk ni .rg-piece persistant');
+
+    await c.close();
+    log('quitter en cours ok');
+  }
 }
 
 // -----------------------------------------------------------------------------

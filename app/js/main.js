@@ -823,6 +823,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
   const chrono = h('div', { class: 'chrono-partiel', 'aria-live': 'off' });
   const entete = h('header', { class: 'entete-seance' }, quitter, pips, S.vies !== null ? vies : type === 'partiel' ? chrono : compteur);
   // Partiel blanc : 20 minutes au total, la séance s'arrête net à la fin du temps.
+  let arreterTic;
   if (type === 'partiel') {
     S.debut ||= Date.now();
     const tic = setInterval(() => {
@@ -833,6 +834,8 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
       chrono.classList.toggle('presse', reste < 120000);
       if (reste === 0) { clearInterval(tic); S.nettoyer.forEach((f) => f()); S.nettoyer = []; S.tempsEcoule = true; finir(true); }
     }, 1000);
+    arreterTic = () => clearInterval(tic);
+    S.nettoyer.push(arreterTic);
   }
 
   function demanderQuitter() {
@@ -888,7 +891,8 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
       // Un double appui sur Continuer ne doit pas sauter une épreuve.
       if (finEnCours) return;
       finEnCours = true;
-      S.nettoyer.forEach((f) => f()); S.nettoyer = [];
+      S.nettoyer.filter((f) => f !== arreterTic).forEach((f) => f());
+      S.nettoyer = arreterTic ? [arreterTic] : [];
       S.scores.push(res.score); if (res.parfait) S.parfaites++;
       suivre('epreuve', { seance: S.type, i: S.i + 1, epreuve: S.rounds[S.i]?.type, score: Math.round(res.score * 100) / 100 });
       // Deux pièces pour une épreuve réussie, une pour une épreuve à moitié réussie.
@@ -945,7 +949,7 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
   }
 
   let retardEpreuve = 0; let finEnCours = false;
-  function finir(reussi) { M().enCours = null; resultats(S, reussi); }
+  function finir(reussi) { if (arreterTic) arreterTic(); M().enCours = null; resultats(S, reussi); }
   // Les portes ne jouent qu'en début de séance. Le chrono de la première épreuve part à leur ouverture.
   const juridiction = S.rounds[S.i].type === 'juge' || S.rounds[S.i].type === 'cas';
   const p = portes({ pose: POSE_MODE[reprise ? 'reprise' : mode || type] || 'debout', titre: juridiction ? 'L’audience est ouverte' : titre, sonFerme: () => son('porte') });
