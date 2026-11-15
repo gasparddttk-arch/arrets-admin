@@ -253,6 +253,34 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 - **Contraintes** : DOM avec `h()` uniquement ; une seule feuille `app/css/app.css` ; pas de bibliothèque ; animer seulement `transform` et `opacity` ; ne pas toucher aux animations existantes des jeux.
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte, les 5 vidéos présentes. Statut : `Prêt pour Claude (vidéos dans .antigravity/videos)`. **Ne pas considérer la tâche comme publiable** : Claude montre les vidéos à Gaspard avant tout merge.
 
+## Cahier des charges n° 4 : accueil des nouveaux (16–20/11/2026)
+
+Plan : https://claude.ai/artifact/MUQk51XZ9Y4uv5v47EGUK3. Mêmes règles que le cahier n° 3 (statut exact « À faire », au plus 2 h 45 par session, tests dans un bloc `matchSeul` du groupe 1). Tout ce qui se voit sera montré en vidéo à Gaspard par Claude avant publication : ne rien publier.
+
+### [TÂCHE B] L'installation proposée au bon moment, avec un pas-à-pas illustré
+- **Statut** : À faire
+- **Fichiers concernés** : `app/js/main.js`, `app/js/visuels.js`, `app/js/state.js`, `app/css/app.css`, `tests/run.cjs`
+- **Objectif** : sur 218 personnes venues d'un téléphone, 31 ont ouvert l'appli installée. Proposer l'installation après une réussite, l'expliquer en images, et compter les installations iPhone.
+- **Détails de modification** :
+  1. **Quand proposer.** `rappelInstallationResultats()` (main.js ~ligne 996) ne s'affiche plus que si la moyenne de la séance est ≥ 0,7, en plus des conditions actuelles (connecté, téléphone, pas installée). Mémoriser dans `etat.reglages.install = { vues, derniere, jamais }` : au plus 3 propositions, au moins 2 jours (`jour()`) entre deux, aucune si `jamais`. `resultats()` doit passer la moyenne à la fonction.
+  2. **Boutons** du bloc : « Comment faire » (ouvre `ouvrirGuideInstallModal`, inchangé), « Plus tard » (comportement actuel + compte la vue), « Ne plus proposer » (`jamais = true`). Classes existantes `bouton-fantome` / `bouton-lien`.
+  3. **Images.** Dans `visuels.js`, exporter `illustrationInstall(os, etape)` qui renvoie un SVG (via `svg()` de ui.js, `viewBox="0 0 240 150"`, `role="img"` avec `aria-label`) : un téléphone stylisé, l'élément à toucher entouré d'un cercle doré `var(--titre-or)`, le reste en tons neutres. iPhone : étape 1 la barre d'outils de Safari avec le bouton Partager (carré + flèche vers le haut), étape 2 une liste avec la ligne « Sur l'écran d'accueil » (carré avec un +), étape 3 l'en-tête avec « Ajouter » en haut à droite. Android : étape 1 les trois points verticaux en haut à droite, étape 2 la ligne « Installer l'application ». Aucun logo ni nom de marque dessiné, seulement des formes simples.
+  4. Dans `guideInstallation()` (main.js ~ligne 2375), pour les branches iPhone Safari, iPhone Chrome et Android Chrome/Edge, chaque `<li>` d'étape reçoit son image au-dessus du texte (`h('li', {}, illustrationInstall(os, n), texte)`). Les textes restent identiques. CSS : `.guide li svg { display:block; width:100%; max-width:240px; margin:6px auto; }`.
+  5. **Mesure.** Au démarrage (`demarrer()`), si `estInstallee()` et `!etat.reglages.installeCompte`, appeler `suivre('installer_clic', { fait: true, premiere: true })` et poser `etat.reglages.installeCompte = true` puis `sauver()`.
+- **Contraintes** : Vanilla JS et `h()`/`svg()` ; aucun texte nouveau en dehors de « Ne plus proposer » ; rendu correct en thème clair, rose et nuit.
+- **Test à ajouter** (`matchSeul('installation')`) : en mode test sur `devices['iPhone 13']` avec un état connecté simulé (comme le test « rappel installation »), `resultats` avec une moyenne de 0,5 n'affiche pas `.res-rappel-install`, avec 0,9 l'affiche ; « Ne plus proposer » puis une nouvelle séance réussie ne l'affiche plus ; le guide modal contient 3 `svg` sur iPhone Safari. Adapter le test existant « rappel installation » si besoin (il passe une séance réussie).
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte, captures `CAP + 'install-guide-ios.png'` et `CAP + 'install-guide-android.png'`.
+
+### [TÂCHE C3] Après un jeu lancé seul : « Encore une » et « Passer au Défi du jour »
+- **Statut** : Prévu le mardi 17/11
+- **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
+- **Objectif** : 21 abandons sur 63 ont lieu dans un jeu lancé seul depuis la liste des jeux. Donner une suite évidente en fin de jeu.
+- **Détails de modification** :
+  - Dans `lancerMode(m, genre)` (~ligne 780), mémoriser `genre` dans l'objet de séance (passer `genre` à `lancer`, qui le range dans `S.genre`).
+  - Dans `resultats(S, reussi)`, quand `S.type === 'mode'` et `S.mode !== 'atelier'`, ajouter en tête du `.pied` : un bouton `bouton-or` « Encore une » (`data-encore-mode`) qui appelle `lancerMode(S.mode, S.genre || null)`, et, si le Défi du jour n'est pas fait aujourd'hui (même test que l'accueil pour afficher le défi), un bouton `bouton-fantome` « Passer au Défi du jour » qui appelle `lancerDefi()`. « Retour au Palais » reste en dernier.
+- **Test à ajouter** (`matchSeul('encore une')`) : lancer un mode (`paires`) en mode test, finir, vérifier les deux boutons, cliquer « Encore une » et vérifier qu'une nouvelle séance du même type démarre.
+- **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
+
 ## Cahier des charges n° 3 : corrections de l'audit du 14/11 (15–20/11/2026)
 
 Plan complet : https://claude.ai/artifact/4uVgRbEGp8ExbrvpTpbAfL (rapport : `notes/audit-securite-code.md`).
