@@ -379,6 +379,7 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .code::placeholder { color: var(--texte-2); }
 .guide { list-style: decimal; padding-left: 22px; }
 .guide li + li { margin-top: 6px; }
+.guide li svg { display: block; width: 100%; max-width: 240px; margin: 6px auto; }
 .guide-bloc { display: grid; gap: 10px; }
 .guide-bloc > p { margin: 0; }
 .installer .bouton-fantome { color: var(--papier-texte); border-color: var(--papier-bord); }
@@ -391,7 +392,7 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 .choix-amorce { font-size: 15px; font-weight: 600; color: var(--or); margin-bottom: 4px; }
 .res-rappel-install { margin-top: 16px; padding: 12px 14px; border-radius: var(--rayon); background: linear-gradient(180deg, var(--carte-haut), var(--carte-bas)); box-shadow: inset 0 0 0 1px var(--carte-bord); text-align: center; }
 .res-rappel-install p { font-size: 15px; line-height: 1.25; margin-bottom: 10px; color: var(--texte-2); }
-.res-rappel-actions { display: flex; gap: 10px; justify-content: center; align-items: center; }
+.res-rappel-actions { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; }
 .res-rappel-actions .bouton-fantome { font-size: 14px; min-height: 38px; padding: 6px 12px; }
 .res-rappel-actions .bouton-lien { font-size: 14px; min-height: 38px; padding: 6px 8px; }
 .version { color: var(--texte-2); font-size: 15px; margin-top: 18px; }
@@ -799,7 +800,7 @@ body:has(#onglets[hidden]) #app { padding-bottom: 0; }
 
 /* Fenêtres, messages */
 .voile { position: fixed; inset: 0; z-index: 40; background: rgba(5, 10, 30, .62); display: flex; align-items: flex-end; }
-.boite { width: 100%; max-width: 560px; margin: 0 auto; padding: 20px 16px calc(16px + var(--bas-sur)); border-radius: 20px 20px 0 0; background: linear-gradient(180deg, var(--carte-haut), var(--carte-bas)); box-shadow: inset 0 1px 0 var(--carte-bord); animation: boite .2s ease-out; }
+.boite { width: 100%; max-width: 560px; margin: 0 auto; padding: 20px 16px calc(16px + var(--bas-sur)); border-radius: 20px 20px 0 0; background: linear-gradient(180deg, var(--carte-haut), var(--carte-bas)); box-shadow: inset 0 1px 0 var(--carte-bord); animation: boite .2s ease-out; max-height: calc(100dvh - 24px); overflow-y: auto; }
 @keyframes boite { from { transform: translateY(24px); opacity: .4; } }
 .boite-actions { display: grid; gap: 6px; margin-top: 12px; width: 100%; }
 .toast { position: fixed; left: 16px; right: 16px; top: calc(10px + var(--haut-sur)); z-index: 50; max-width: 528px; margin: 0 auto; padding: 11px 15px; border-radius: 13px; font-size: 17px; line-height: 1.22; background: linear-gradient(180deg, var(--papier-1), var(--papier-2)); color: var(--papier-texte); box-shadow: inset 0 0 0 1px var(--papier-bord), 0 8px 18px var(--ombre); animation: arrive .2s ease-out; }

@@ -1,6 +1,6 @@
 // Point d'entrée : écrans, séances, récompenses.
 import { h, svg, toast, confettis, estRose, bebew, slayDiva, effets, modeTest } from './ui.js';
-import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
+import { icone, sceau, petitSceau, laurier, medaille, illustrationInstall } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { lexouAnime, prechargerLexou } from './lexou.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
@@ -993,13 +993,32 @@ function ouvrirGuideInstallModal() {
   document.body.append(voile);
 }
 
-function rappelInstallationResultats() {
+function rappelInstallationResultats(moyenne) {
+  if (typeof moyenne === 'number' && moyenne < 0.7) return null;
   if (!connecte() || !telephone() || estInstallee() || rappelMasque) return null;
+  const inst = etat.reglages?.install;
+  if (inst?.jamais) return null;
+  if ((inst?.vues || 0) >= 3) return null;
+  if (inst?.derniere != null && (jour() - inst.derniere) < 2) return null;
   const bloc = h('div', { class: 'res-rappel-install' },
     h('p', {}, 'Installe Gdroit : une icône, et tu n’as plus à repasser par le navigateur.'),
     h('div', { class: 'res-rappel-actions' },
       h('button', { class: 'bouton-fantome', onClick: () => ouvrirGuideInstallModal() }, 'Comment faire'),
-      h('button', { class: 'bouton-lien', onClick: () => { rappelMasque = true; bloc.remove(); } }, 'Plus tard')));
+      h('button', { class: 'bouton-lien', onClick: () => {
+        rappelMasque = true;
+        const ins = (etat.reglages.install = etat.reglages.install || { vues: 0, derniere: null, jamais: false });
+        ins.vues = (ins.vues || 0) + 1;
+        ins.derniere = jour();
+        sauver();
+        bloc.remove();
+      } }, 'Plus tard'),
+      h('button', { class: 'bouton-lien', onClick: () => {
+        rappelMasque = true;
+        const ins = (etat.reglages.install = etat.reglages.install || { vues: 0, derniere: null, jamais: false });
+        ins.jamais = true;
+        sauver();
+        bloc.remove();
+      } }, 'Ne plus proposer')));
   return bloc;
 }
 
@@ -1124,7 +1143,7 @@ function resultats(S, reussi) {
       continuer('Retour au Palais', () => { animerPalais = true; fixerSens('arriere'); aller('palais'); }),
       S.type === 'boss' && !reussi ? h('button', { class: 'bouton-lien', onClick: () => lancerBoss(S.zone) }, 'Retenter l’audience') : null,
       connecte() ? h('button', { class: 'bouton-lien', onClick: () => faireRetour(`Résultats : ${S.titre}`) }, 'Faire un retour') : null),
-    rappelInstallationResultats(),
+    rappelInstallationResultats(moyenne),
   );
   montrer(contenu);
   if (S.type === 'decouverte' && !vis) setTimeout(() => { if (document.querySelector('.resultats')) accueilTesteur(); }, 2600);
@@ -2381,25 +2400,26 @@ function copierLien() {
 function guideInstallation() {
   const c = contexte();
   suivre('installer_vu', { os: c.os, nav: c.nav });
-  const etapes = (...l) => h('ol', { class: 'guide', 'data-guide': `${c.os}-${c.nav}` }, l.map((x) => h('li', {}, x)));
+  const etapes = (illustre, ...l) => h('ol', { class: 'guide', 'data-guide': `${c.os}-${c.nav}` },
+    l.map((x, i) => h('li', {}, illustre ? illustrationInstall(c.ios ? 'ios' : 'android', i + 1) : null, x)));
   const icone = 'Ouvre Gdroit depuis sa nouvelle icône, sur l’écran d’accueil.';
   if (c.inapp) {
     return h('div', { class: 'guide-bloc' },
       h('p', {}, c.ios ? 'Tu es dans le navigateur d’une autre appli : l’installation n’y marche pas. Ouvre d’abord Gdroit dans Safari.' : 'Tu es dans le navigateur d’une autre appli : l’installation n’y marche pas. Ouvre d’abord Gdroit dans Chrome.'),
-      etapes(c.ios ? 'Touche les trois points ou l’icône de boussole, puis « Ouvrir dans Safari ». Sinon, copie le lien et colle-le dans Safari.' : 'Touche les trois points, puis « Ouvrir dans Chrome ». Sinon, copie le lien et colle-le dans Chrome.', 'Suis ensuite les étapes qui s’affichent.'),
+      etapes(false, c.ios ? 'Touche les trois points ou l’icône de boussole, puis « Ouvrir dans Safari ». Sinon, copie le lien et colle-le dans Safari.' : 'Touche les trois points, puis « Ouvrir dans Chrome ». Sinon, copie le lien et colle-le dans Chrome.', 'Suis ensuite les étapes qui s’affichent.'),
       h('button', { class: 'bouton-fantome', onClick: copierLien }, 'Copier le lien'));
   }
   if (c.ios && c.nav === 'Chrome') {
-    return etapes('Dans Chrome, touche le bouton Partager, à droite de la barre d’adresse (un carré avec une flèche vers le haut). S’il n’y est pas, touche « ⋯ » en bas, puis Partager.',
+    return etapes(true, 'Dans Chrome, touche le bouton Partager, à droite de la barre d’adresse (un carré avec une flèche vers le haut). S’il n’y est pas, touche « ⋯ » en bas, puis Partager.',
       'Fais défiler et choisis « Sur l’écran d’accueil », puis Ajouter.', icone);
   }
   if (c.ios && c.nav !== 'Safari') {
     return h('div', { class: 'guide-bloc' }, h('p', {}, 'Le plus simple : ouvre ce lien dans Safari, puis suis les étapes.'),
-      etapes('Copie le lien, ouvre Safari et colle-le dans la barre d’adresse.', 'Touche le bouton Partager (un carré avec une flèche), puis « Sur l’écran d’accueil ».', icone),
+      etapes(false, 'Copie le lien, ouvre Safari et colle-le dans la barre d’adresse.', 'Touche le bouton Partager (un carré avec une flèche), puis « Sur l’écran d’accueil ».', icone),
       h('button', { class: 'bouton-fantome', onClick: copierLien }, 'Copier le lien'));
   }
   if (c.ios) {
-    return etapes('Dans Safari, touche le bouton Partager (un carré avec une flèche vers le haut). S’il n’est pas visible, touche d’abord « ⋯ ».',
+    return etapes(true, 'Dans Safari, touche le bouton Partager (un carré avec une flèche vers le haut). S’il n’est pas visible, touche d’abord « ⋯ ».',
       'Fais défiler et choisis « Sur l’écran d’accueil », puis Ajouter.', icone);
   }
   const direct = h('button', { class: 'bouton-or installer-direct', hidden: !invitationAndroid, onClick: async () => {
@@ -2411,10 +2431,10 @@ function guideInstallation() {
     invitationAndroid = null; direct.hidden = true;
   } }, 'Installer Gdroit');
   const manuel = c.nav === 'Samsung'
-    ? etapes('Touche le menu (trois traits) en bas à droite.', 'Choisis « Ajouter la page à », puis « Écran d’accueil ».', icone)
+    ? etapes(false, 'Touche le menu (trois traits) en bas à droite.', 'Choisis « Ajouter la page à », puis « Écran d’accueil ».', icone)
     : c.nav === 'Firefox'
-      ? etapes('Touche les trois points, puis « Installer » ou « Ajouter à l’écran d’accueil ».', icone)
-      : etapes(`Dans ${c.nav === 'Edge' ? 'Edge' : 'Chrome'}, touche les trois points en haut à droite.`, 'Choisis « Ajouter à l’écran d’accueil » ou « Installer l’application », puis Installer.', icone);
+      ? etapes(false, 'Touche les trois points, puis « Installer » ou « Ajouter à l’écran d’accueil ».', icone)
+      : etapes(true, `Dans ${c.nav === 'Edge' ? 'Edge' : 'Chrome'}, touche les trois points en haut à droite.`, 'Choisis « Ajouter à l’écran d’accueil » ou « Installer l’application », puis Installer.', icone);
   return h('div', { class: 'guide-bloc' }, direct, manuel);
 }
 
@@ -2447,6 +2467,12 @@ async function demarrer() {
   const [admin, admin2, oblig2, oblig1, intro, intro2, constit, formulesData] = await Promise.all([fetch('content.json').then((r) => r.json()), fetch('admin2.json').then((r) => r.json()), fetch('oblig.json').then((r) => r.json()), fetch('oblig1.json').then((r) => r.json()), fetch('intro.json').then((r) => r.json()), fetch('intro2.json').then((r) => r.json()), fetch('constit.json').then((r) => r.json()), fetch('formules.json').then((r) => r.json()), charger().then(chargerImages)]);
   FORMULES = formulesData;
   clearTimeout(attente);
+  if (estInstallee() && !etat.reglages?.installeCompte) {
+    suivre('installer_clic', { fait: true, premiere: true });
+    etat.reglages = etat.reglages || {};
+    etat.reglages.installeCompte = true;
+    sauver();
+  }
   if (!(await ouvrirCompte(params))) { enregistrerServiceWorker(); return; }
   // Une ancienne sauvegarde connaît déjà le jour de la dernière séance.
   if (etat.chouette.seance === null) etat.chouette.seance = etat.serie.dernier;
