@@ -282,7 +282,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 7b] Minuteurs et écouteurs arrêtés quand on quitte une épreuve
-- **Statut** : À faire
+- **Statut** : Prêt pour Claude (suite verte le 15/11 à 13h10 sur fdc8b4b)
 - **Fichiers concernés** : `app/js/jeux-l1.js`, `app/js/dunk.js`, `app/js/main.js`, `tests/run.cjs`
 - **Objectif** : après « Quitter », certaines boucles continuent sur un écran détaché.
 - **Détails de modification** (le contexte de jeu offre `ctx.nettoyage(fonction)`, appelée à la sortie de séance) :
@@ -446,6 +446,16 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 ---
 
 ## Dernières actions exécutées par Antigravity
+- **15/11/2026 (Tâche 7b)** :
+  - `app/js/jeux-l1.js` :
+    - Mot mystère : suppression de l'écouteur clavier physique via `ctx.nettoyage` si le joueur quitte la séance.
+    - Grand rangement : annulation de l'animation `anim` et verrouillage `fini_ = true` via `ctx.nettoyage` lors de la sortie, évitant les lancements résiduels.
+  - `app/js/dunk.js` :
+    - Enregistrement du nettoyage de `minuteur` via `ctx.nettoyage` et arrêt automatique du timer si `terrain` est détaché du DOM.
+  - `app/js/main.js` :
+    - Nettoyage du chronomètre de partiel lors de l'abandon ou en fin de séance, tout en le préservant entre les épreuves successives du partiel.
+  - `tests/run.cjs` : ajout du test `quitter en cours` (groupe 1) validant l'abandon en plein Dunk et en plein Rangement, sans erreur résiduelle et avec disparition des éléments sous 3s.
+  - Validation : `npm run check`, `npm run build`, suite complète `NODE_PATH=$(npm root -g) node tests/run.cjs --parallele` 100% verte (512.4s).
 - **15/11/2026 (Tâche 7a)** :
   - `app/js/main.js` :
     - Enrobage de l'appel au jeu dans `Promise.resolve().then(() => TOUS_JEUX[r.type](scene, ctx, r, ix)).catch(...)` pour intercepter les erreurs synchrones lors de l'initialisation d'un round.
