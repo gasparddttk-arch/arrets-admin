@@ -7,7 +7,7 @@ import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreS
 import { remplacerEtat, choisirAnnee, ajouterSemaine, gagnerAppel, erreursOuvertes, carnetVisible, changerEquipe,
   SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, lundi, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir, aRattraper,
   zonesOuvertes, zonesDuJour, ouvrirSuivante, ouvrirApres, evaluerTrophees, BOUTIQUE, THEMES, INSIGNES, DECORS, TROPHEES, TITRES_CARTE, fixerDecalage, rembourse,
-  MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter,
+  MATIERES, matiereDe, RANGS_GENERAL, PLAFOND_JOUR, PIECES_EPREUVE, PRIX_DUNK, gainsDuJour, crediter, sauverMaintenant
 } from './state.js';
 import { indexer, questionsDunk, composerDefi, composerBoss, composerRevision, tirerRound, jumeaux, melange, typesIntro, roundPlan, tirerAtelier } from './engine.js';
 import { JEUX, NOMS_MODES, NOMS_MODES_OBLIG, NOMS_MODES_INTRO, NOMS_MODES_CONSTIT, continuer, qcm } from './games.js';
@@ -1436,6 +1436,7 @@ function acheter(item) {
   if (item.max && etat.inv[item.id] >= item.max) return toast(`${item.max} au maximum.`);
   etat.jetons -= item.prix; etat.inv[item.id] = (etat.inv[item.id] || 0) + 1;
   sauver(); son('jeton'); vibrer(10); adjuge(); boutique();
+  if (connecte()) setTimeout(envoyerProgression, 1000);
 }
 const boutonPrix = (prix, action, label) => h('button', { class: 'prix', disabled: etat.jetons < prix, onClick: action, 'aria-label': label }, h('i', { class: 'jeton' }), prix);
 
@@ -2103,9 +2104,24 @@ function confirmerDeconnexion() {
   const voile = h('div', { class: 'voile', onClick: (e) => { if (e.target === voile) voile.remove(); } }, h('div', { class: 'boite', role: 'dialog', 'aria-label': 'Se déconnecter' },
     h('p', {}, 'Ta progression est copiée sur ton compte puis effacée de ce téléphone. Tu la retrouves en te reconnectant.'),
     h('div', { class: 'boite-actions' },
-      h('button', { class: 'bouton-or', onClick: async () => { voile.remove(); await deconnexion(); remplacerEtat({}); location.reload(); } }, 'Se déconnecter'),
+      h('button', { class: 'bouton-or', onClick: async () => { voile.remove(); await seDeconnecter(); } }, 'Se déconnecter'),
       h('button', { class: 'bouton-lien', onClick: () => voile.remove() }, 'Annuler'))));
   document.body.append(voile);
+}
+// Hors ligne, la dernière séance n'a pas pu partir : on prévient avant d'effacer le téléphone.
+async function seDeconnecter(force = false) {
+  const ok = await envoyerProgression();
+  if (!force && !ok && (etat.modifie || 0) > (etat.compte?.sync || 0)) {
+    const voile = h('div', { class: 'voile' }, h('div', { class: 'boite', role: 'dialog', 'aria-label': 'Séance non sauvegardée' },
+      h('h2', {}, 'Ta dernière séance n’est pas encore sauvegardée'),
+      h('p', {}, 'Te déconnecter maintenant l’effacera de ce téléphone. Reconnecte-toi à internet pour la garder.'),
+      h('div', { class: 'boite-actions' },
+        h('button', { class: 'bouton-or', onClick: () => voile.remove() }, 'Rester connecté'),
+        h('button', { class: 'bouton-lien', onClick: async () => { voile.remove(); await seDeconnecter(true); } }, 'Me déconnecter quand même'))));
+    document.body.append(voile);
+    return;
+  }
+  await deconnexion(); remplacerEtat({}); sauverMaintenant(); location.reload();
 }
 
 // CONNEXION ---------------------------------------------------------------------------
@@ -2205,7 +2221,7 @@ function ecranPlacesPrises() {
     h('p', { class: 'aide-claire' }, `Connecté : ${etat.compte?.email || 'ton compte'}.`),
     conteneurAlerte,
     h('button', { class: 'bouton-fantome', onClick: () => location.reload() }, 'Réessayer'),
-    h('button', { class: 'bouton-lien', onClick: async () => { await deconnexion(); remplacerEtat({}); location.reload(); } }, 'Se déconnecter')));
+    h('button', { class: 'bouton-lien', onClick: async () => { await deconnexion(); remplacerEtat({}); sauverMaintenant(); location.reload(); } }, 'Se déconnecter')));
 }
 
 // Après deux jours sans séance, Lexou boude un instant, puis saute de joie.
