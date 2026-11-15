@@ -258,7 +258,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 Plan : https://claude.ai/artifact/MUQk51XZ9Y4uv5v47EGUK3. Mêmes règles que le cahier n° 3 (statut exact « À faire », au plus 2 h 45 par session, tests dans un bloc `matchSeul` du groupe 1). Tout ce qui se voit sera montré en vidéo à Gaspard par Claude avant publication : ne rien publier.
 
 ### [TÂCHE B] L'installation proposée au bon moment, avec un pas-à-pas illustré
-- **Statut** : Prêt pour Claude (suite verte le 15/11 à 17h51 sur f6b2905)
+- **Statut** : Fait (Antigravity, illustrations reprises par Claude), publié le 15/11
 - **Fichiers concernés** : `app/js/main.js`, `app/js/visuels.js`, `app/js/state.js`, `app/css/app.css`, `tests/run.cjs`
 - **Objectif** : sur 218 personnes venues d'un téléphone, 31 ont ouvert l'appli installée. Proposer l'installation après une réussite, l'expliquer en images, et compter les installations iPhone.
 - **Détails de modification** :
@@ -282,7 +282,7 @@ Plan : https://claude.ai/artifact/MUQk51XZ9Y4uv5v47EGUK3. Mêmes règles que le 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE E] Carte du podium de la semaine sur le Palais
-- **Statut** : Prêt pour Claude (suite verte le 15/11 à 18h10 sur c9c2e7b)
+- **Statut** : Fait (Antigravity), publié le 15/11
 - **Fichiers concernés** : `app/js/compte.js`, `app/js/main.js`, `app/css/app.css`, `tests/run.cjs`
 - **Objectif** : le classement des amis se remet à zéro chaque lundi sans que personne le voie. Le lundi (et jusqu'à ce qu'on la ferme), une carte montre le podium de la semaine écoulée.
 - **Détails de modification** :
