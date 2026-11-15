@@ -258,7 +258,7 @@ Antigravity ne pousse pas : il laisse chaque tâche sur sa branche, et Claude la
 Plan : https://claude.ai/artifact/MUQk51XZ9Y4uv5v47EGUK3. Mêmes règles que le cahier n° 3 (statut exact « À faire », au plus 2 h 45 par session, tests dans un bloc `matchSeul` du groupe 1). Tout ce qui se voit sera montré en vidéo à Gaspard par Claude avant publication : ne rien publier.
 
 ### [TÂCHE B] L'installation proposée au bon moment, avec un pas-à-pas illustré
-- **Statut** : À faire
+- **Statut** : Prêt pour Claude (suite verte le 15/11 à 17h51 sur f6b2905)
 - **Fichiers concernés** : `app/js/main.js`, `app/js/visuels.js`, `app/js/state.js`, `app/css/app.css`, `tests/run.cjs`
 - **Objectif** : sur 218 personnes venues d'un téléphone, 31 ont ouvert l'appli installée. Proposer l'installation après une réussite, l'expliquer en images, et compter les installations iPhone.
 - **Détails de modification** :
@@ -490,6 +490,18 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 ---
 
 ## Dernières actions exécutées par Antigravity
+- **15/11/2026 (Tâche B)** :
+  - `app/js/visuels.js` : export de `illustrationInstall(os, etape)` générant les SVGs pas-à-pas (téléphone stylisé, cercle doré `var(--titre-or)` sur l'élément à toucher, tons neutres) pour iOS Safari (1. Partager, 2. Sur l'écran d'accueil, 3. Ajouter) et Android (1. Trois points, 2. Installer l'application).
+  - `app/js/state.js` : initialisation de `install: null` et `installeCompte: false` dans `reglages`.
+  - `app/js/main.js` :
+    - `rappelInstallationResultats(moyenne)` : affichage conditionné à `moyenne >= 0.7`, au plus 3 propositions (`vues < 3`), au moins 2 jours entre deux (`jour() - derniere >= 2`), et masqué définitivement si `jamais` est vrai.
+    - Ajout du bouton « Ne plus proposer » (`jamais = true`) et comptage de la vue dans « Plus tard ».
+    - `guideInstallation()` : intégration des illustrations SVG au-dessus de chaque étape pour iOS Safari, iOS Chrome et Android Chrome/Edge.
+    - `demarrer()` : mesure unique `suivre('installer_clic', { fait: true, premiere: true })` et enregistrement de `etat.reglages.installeCompte = true` lors de la première ouverture installée.
+  - `app/css/app.css` : styles pour `.guide li svg` (centrage, max-width 240px) et `flex-wrap: wrap;` sur `.res-rappel-actions`.
+  - `tests/run.cjs` : adaptation du test `rappel installation` (vérification du bouton « Ne plus proposer ») et ajout du bloc `installation` dans le groupe 1 (non-affichage à 0.5, affichage à 0.9, 3 SVGs sur iPhone Safari, masquage après « Ne plus proposer », 2 SVGs et capture sur Android Pixel 7).
+  - Captures : `install-guide-ios.png` et `install-guide-android.png`.
+  - Validation : `npm run check`, `npm run build`, suite complète `npm test` 100% verte (512.4s sur f6b2905).
 - **15/11/2026 (Tâche 7b)** :
   - `app/js/jeux-l1.js` :
     - Mot mystère : suppression de l'écouteur clavier physique via `ctx.nettoyage` si le joueur quitte la séance.
