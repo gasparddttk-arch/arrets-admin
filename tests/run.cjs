@@ -1372,6 +1372,79 @@ async function execGroupe1(b, PORT, erreurs) {
 
     log('installation ok');
   }
+
+  if (matchSeul('podium')) {
+    // Tâche E : Carte du podium de la semaine sur le Palais
+    {
+      const tc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+      await tc.route('https://jhpgxisxayceixmppxuu.supabase.co/auth/v1/token**', (route) => route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify({ access_token: 'jeton_test', refresh_token: 'refresh_test', expires_in: 3600, user: { id: 'u-test', email: 'test@exemple.fr', user_metadata: {} } }),
+      }));
+
+      const jourActuel = Math.floor(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) / 864e5);
+      const lundiActuel = jourActuel - ((new Date(jourActuel * 864e5).getUTCDay() + 6) % 7);
+      const semaineDerniere = lundiActuel - 7;
+
+      let reponseClassement = {
+        semaine: semaineDerniere,
+        rang: 2,
+        sur: 4,
+        xp: 150,
+        podium: [
+          { pseudo: 'Alice', xp: 220, moi: false },
+          { pseudo: 'Moi', xp: 150, moi: true },
+          { pseudo: 'Bob', xp: 90, moi: false },
+        ],
+      };
+
+      await tc.route('**/rest/v1/rpc/mon_classement', (route) => route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify(reponseClassement),
+      }));
+
+      const tp = await tc.newPage();
+      tp.on('pageerror', (x) => erreurs.push(x.message));
+      await tp.addInitScript(() => {
+        if (location.search.includes('code=')) localStorage.setItem('gdroit-pkce', JSON.stringify({ v: 'verificateur-test', t: Date.now() }));
+      });
+
+      // 1. La carte s'affiche avec 3 lignes et le texte « Tu finis 2e sur 4 »
+      await tp.goto(URLB + '?test&compte&code=code-test');
+      await tp.waitForSelector('.tribune');
+      await tp.waitForSelector('.carte-podium');
+      assert.equal(await tp.locator('.carte-podium ol li').count(), 3, '3 lignes de podium');
+      assert.match(await tp.locator('.carte-podium p').innerText(), /Tu finis 2e sur 4/);
+      assert.equal(await tp.locator('.carte-podium ol li.moi').count(), 1, 'ligne moi présente');
+      await tp.screenshot({ path: CAP + 'podium.png' });
+      await debordement(tp, 'podium');
+
+      // 2. « Fermer » la retire et elle ne revient pas au rechargement
+      await tp.locator('.carte-podium button', { hasText: 'Fermer' }).click();
+      assert.equal(await tp.locator('.carte-podium').count(), 0, 'carte podium fermée');
+
+      await tp.reload();
+      await tp.waitForSelector('.tribune');
+      await tp.waitForTimeout(300);
+      assert.equal(await tp.locator('.carte-podium').count(), 0, 'ne revient pas au rechargement');
+
+      // 3. Une réponse null n'affiche rien
+      reponseClassement = null;
+      await tp.evaluate(() => {
+        const e = JSON.parse(localStorage.getItem('arrets-admin.v1') || '{}');
+        if (e.reglages) delete e.reglages.podiumVu;
+        localStorage.setItem('arrets-admin.v1', JSON.stringify(e));
+      });
+      await tp.reload();
+      await tp.waitForSelector('.tribune');
+      await tp.waitForTimeout(300);
+      assert.equal(await tp.locator('.carte-podium').count(), 0, 'une réponse null n’affiche rien');
+
+      await tc.close();
+    }
+
+    log('podium ok');
+  }
 }
 
 // -----------------------------------------------------------------------------

@@ -20,7 +20,7 @@ import { jouerCas, jouerRemede, jouerFrise } from './jeux-oblig.js';
 import { lancerDunk } from './dunk.js';
 import { activerRappel, etatRappel, estInstallee, abonnementActuel } from './notif.js';
 import { SUPABASE_URL } from './config.js';
-import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifier, monProfil, reglerProfil, mesAmis, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour, adminEntonnoir, adminParcours } from './compte.js';
+import { connecte, retourConnexion, completerUtilisateur, synchroniser, envoyerProgression, envoyerSignalements, recevoirCadeauxCompte, connexionGoogle, envoyerCode, verifierCode, deconnexion, lireProfil, changerPseudo, estAdmin, adminComptes, adminJetons, adminStatut, adminSignalements, adminTraiter, adminReglage, adminChangerReglage, adminNotifier, monProfil, reglerProfil, mesAmis, monClassement, mesBloques, demanderAmi, repondreAmi, retirerAmi, bloquer, mesDefis, creerDefi, lireDefi, repondreDefi, refuserDefi, mesNotifications, toutLu, annoncerDefiJour, inscrireAppareil, resume as monResume, envoyerRetour, definirNommeur, adminQuota, adminChangerQuota, adminRetours, adminTraiterRetour, adminEntonnoir, adminParcours } from './compte.js';
 import { images, chargerImages, preparerImage, enregistrerImage, retirerImage } from './images.js';
 import { noter as suivre, contexte } from './suivi.js';
 import { jouerFormule } from './formule.js';
@@ -529,6 +529,27 @@ function colereLexou(rompue) {
   }).catch(() => {});
 }
 
+function cartePodium(r) {
+  const metaux = ['or', 'argent', 'bronze'];
+  const carte = h('section', { class: 'carte-podium' },
+    h('h2', {}, 'La semaine dernière'),
+    h('p', {}, r.rang === 1 ? `Tu finis en tête, avec ${fmt(r.xp)} points.` : `Tu finis ${r.rang}e sur ${fmt(r.sur)}, avec ${fmt(r.xp)} points.`),
+    h('ol', {}, (r.podium || []).slice(0, 3).map((p, i) =>
+      h('li', { class: p.moi ? 'moi' : '' },
+        medaille(metaux[i] || 'bronze', true),
+        p.moi ? h('b', { class: 'pseudo' }, p.pseudo) : h('span', { class: 'pseudo' }, p.pseudo),
+        p.moi ? h('b', { class: 'points' }, `${fmt(p.xp)} points`) : h('span', { class: 'points' }, `${fmt(p.xp)} points`)))),
+    h('div', { class: 'podium-actions' },
+      h('button', { class: 'bouton-fantome', onClick: () => { aller('amis'); } }, 'Voir mes amis'),
+      h('button', { class: 'bouton-lien', onClick: () => {
+        etat.reglages = etat.reglages || {};
+        etat.reglages.podiumVu = r.semaine;
+        sauver();
+        carte.remove();
+      } }, 'Fermer')));
+  return carte;
+}
+
 function accueil() {
   const s = etat.serie; const j = jour();
   const fait = s.dernier === j;
@@ -583,6 +604,15 @@ function accueil() {
       ligneEntree('vers-examen', 'balance', 'Vers l’examen', 'Trois degrés et un partiel blanc', () => aller('examen'), 0),
       ligneEntree('vers-role', 'plan', 'Le rôle', 'Choisis ton exercice', () => aller('role'), 2.2)),
   );
+
+  if (connecte()) {
+    monClassement().then((r) => {
+      if (!r || r.semaine !== lundi() - 7 || etat.reglages?.podiumVu === r.semaine) return;
+      const tribune = racine.querySelector('.tribune');
+      if (!tribune || tribune.querySelector('.carte-podium')) return;
+      tribune.prepend(cartePodium(r));
+    }).catch(() => {});
+  }
 
   const doitAnimerPalais = animerPalais;
   animerPalais = false;
@@ -2502,7 +2532,7 @@ async function demarrer() {
   else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
-  if (modeTest()) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation, lancer, tirerRound, aRattraper, lancerRevisionJour, composerRevision };
+  if (modeTest()) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation, lancer, tirerRound, aRattraper, lancerRevisionJour, composerRevision, monClassement, cartePodium, lundi, jour, accueil };
   setTimeout(surveillerFluidite, 1200);
   precharger();
 
