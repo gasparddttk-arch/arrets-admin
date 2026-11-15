@@ -1650,6 +1650,7 @@ async function execGroupe2(b, PORT, erreurs) {
     const v = await av.newPage(); v.on('pageerror', (x) => erreurs.push(x.message));
     await v.goto(URLB + '?test&choix'); await v.waitForSelector('.portes');
     await v.locator('.porte-admin').click(); await v.waitForSelector('.tribune');
+    await v.waitForTimeout(400); // sauvegarde groupée : on laisse partir l'écriture avant de trafiquer le stockage
     await v.evaluate(() => { const c = Object.keys(localStorage).find((x) => { try { return JSON.parse(localStorage.getItem(x)).chouette; } catch { return false; } }); const o = JSON.parse(localStorage.getItem(c)); delete o.chouette.skins; delete o.chouette.skin; localStorage.setItem(c, JSON.stringify(o)); });
     await v.reload(); await v.waitForSelector('.portes'); await v.locator('.porte-admin').click(); await v.waitForSelector('.tribune');
     const eAncien = await etat(v);
