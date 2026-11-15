@@ -272,7 +272,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 7a] Une épreuve qui plante ne bloque plus la séance
-- **Statut** : À faire
+- **Statut** : Prêt pour Claude (suite verte le 15/11 à 01h35 sur d01d814)
 - **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
 - **Objectif** : une erreur levée immédiatement par un jeu échappe aujourd'hui au `.catch` et fige la séance.
 - **Détails de modification** :
@@ -446,6 +446,12 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 ---
 
 ## Dernières actions exécutées par Antigravity
+- **15/11/2026 (Tâche 7a)** :
+  - `app/js/main.js` :
+    - Enrobage de l'appel au jeu dans `Promise.resolve().then(() => TOUS_JEUX[r.type](scene, ctx, r, ix)).catch(...)` pour intercepter les erreurs synchrones lors de l'initialisation d'un round.
+    - Ajout du suivi `suivre('erreur', ...)` dans le bloc catch d'épreuve et sur l'événement `unhandledrejection` de `window` dans `demarrer()`.
+  - `tests/run.cjs` : ajout du bloc de test `epreuve en erreur` dans le groupe 1 vérifiant l'affichage du message d'erreur et la possibilité de continuer vers les résultats sans blocage lors d'un round inexistant.
+  - Validation : `npm run check`, `npm run build`, suite complète `NODE_PATH=$(npm root -g) node tests/run.cjs --parallele` 100% verte (513.1s sur d01d814).
 - **15/11/2026 (Tâche 1a)** :
   - `app/js/ui.js` : export de la fonction `modeTest` vérifiant que l'URL contient le paramètre `test` et que l'hôte fait partie de `['localhost', '127.0.0.1', '[::1]']`. Remplacement des appels directs à `has('test')` par `modeTest()`.
   - `app/js/chouette.js`, `app/js/jeux-l1.js`, `app/js/suivi.js`, `app/js/main.js` : remplacement de toutes les occurrences de `has('test')` par `modeTest()`.
