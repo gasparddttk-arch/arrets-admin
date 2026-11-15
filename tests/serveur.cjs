@@ -7,5 +7,5 @@ module.exports = (racine, port) => new Promise((ok) => {
     const f = path.join(racine, p);
     fs.readFile(f, (e, d) => { if (e) { r.writeHead(404); r.end(); } else { r.writeHead(200, { 'Content-Type': TYPES[path.extname(f)] || 'application/octet-stream' }); r.end(d); } });
   });
-  s.listen(port, () => ok(s));
+  s.listen(port, '0.0.0.0', () => ok(s));
 });

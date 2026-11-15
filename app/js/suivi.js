@@ -2,6 +2,7 @@
 // pour voir où l'on décroche. Rien d'autre : ni ce qui est répondu, ni la navigation fine.
 // Les étapes attendent sur le téléphone et partent par lots ; hors ligne, elles patientent.
 import { envoyerEvenements } from './compte.js';
+import { modeTest } from './ui.js';
 
 const CLE = 'gdroit-suivi';
 const CLE_APPAREIL = 'gdroit-appareil';
@@ -23,7 +24,7 @@ try { file = JSON.parse(lire(CLE)) || []; } catch { file = []; }
 let minuteur = null; let envoi = false;
 
 export function noter(t, d = {}) {
-  if (new URLSearchParams(location.search).has('test')) return;
+  if (modeTest()) return;
   file.push({ t, d, q: new Date().toISOString() });
   if (file.length > 150) file = file.slice(-150);
   ecrire(CLE, JSON.stringify(file));
