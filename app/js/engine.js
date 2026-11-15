@@ -467,7 +467,18 @@ export function tirerRound(ix, type, zones, dus, rng = Math.random, deja = new S
   }
 }
 
-export function composerDefi(ix, zones, dus, rng = Math.random) {
+// debutant : moins de trois séances. La première épreuve est alors la plus simple de la matière, et plus courte.
+export function composerDefi(ix, zones, dus, rng = Math.random, { debutant = false } = {}) {
+  const rounds = composerDefiBrut(ix, zones, dus, rng);
+  if (debutant) alleger(ix, rounds[0], zones, rng);
+  return rounds;
+}
+function alleger(ix, r, zones, rng) {
+  if (!r) return;
+  if (r.type === 'paires') r.grille = grillePaires(ix, zones, rng, 3, 'apport', []);
+  if (r.type === 'tri' && r.cartes?.length > 6) r.cartes = r.cartes.slice(0, 6);
+}
+function composerDefiBrut(ix, zones, dus, rng) {
   if (estL1(ix)) return composerDefiIntro(ix, zones, dus, rng);
   const deja = new Set();
   const aFormule = (ix.formules || []).some((f) => f.zones.some((z) => zones.includes(z)));
@@ -485,7 +496,7 @@ export function composerDefi(ix, zones, dus, rng = Math.random) {
 export function composerRevision(ix, zones, dus, rng = Math.random) {
   const deja = new Set();
   const types = ix.matiere === 'constit' ? ['mot', 'memory', 'mot']
-    : ix.matiere === 'intro' ? ['memory', 'mot', 'memory']
+    : ix.matiere === 'intro' ? ['mot', 'memory', 'mot']
     : ix.matiere === 'oblig' ? ['qualif', 'remede', 'qualif']
     : ['paires', 'juge', 'paires'];
   return types.map((t) => tirerRound(ix, t, zones, dus, rng, deja));
@@ -693,9 +704,11 @@ export function tirerIntro(ix, type, zones, dus, rng = Math.random, deja = new S
 export function composerDefiIntro(ix, zones, dus, rng = Math.random) {
   const deja = new Set();
   const dispo = typesIntro(ix, zones).filter((t) => t !== 'plume');
-  const jeux = melange(dispo.filter((t) => !['memory', 'mot'].includes(t)), rng);
-  const milieu = [jeux[0] || 'mot', 'mot', jeux[1] || 'memory'];
-  return ['memory', ...melange(milieu, rng), jeux[2] || 'memory'].map((t) => tirerIntro(ix, t, zones, dus, rng, deja));
+  // Memory n'ouvre jamais la séance : on commence par le tri (introduction) ou le nuancier (constitutionnel), sinon le mot.
+  const premier = ['tri', 'nuancier'].find((t) => dispo.includes(t)) || 'mot';
+  const jeux = melange(dispo.filter((t) => !['memory', 'mot', premier].includes(t)), rng);
+  const milieu = [jeux[0] || 'memory', 'mot', jeux[1] || 'memory'];
+  return [premier, ...melange(milieu, rng), jeux[2] || 'memory'].map((t) => tirerIntro(ix, t, zones, dus, rng, deja));
 }
 export function composerBossIntro(ix, zone, rng = Math.random) {
   const deja = new Set();

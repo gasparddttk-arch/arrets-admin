@@ -100,5 +100,35 @@ Deno.serve(async (req) => {
     }
     await base.from('profils').update({ rappel_le: aujourdhui }).eq('id', p.id);
   }
-  return new Response(JSON.stringify({ envoyes, heure }), { headers: { 'Content-Type': 'application/json' } });
+  // Le lundi à 9 h : la place de chacun dans le classement de la semaine écoulée (figé à 0 h 05).
+  // Seulement pour ceux qui gardent les notifications de défis, une fois par semaine.
+  let classements = 0;
+  const lundiParis = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Paris', weekday: 'short' }).format(maintenant) === 'Mon';
+  if (lundiParis && heure === 9) {
+    const { data: lignes } = await base.from('classements').select('semaine, compte, rang, sur, xp, podium').is('notifie_le', null).gte('semaine', jourIdx - 7);
+    const comptes = (lignes || []).map((l) => l.compte);
+    if (comptes.length) {
+      const [{ data: prefs }, { data: apps }] = await Promise.all([
+        base.from('profils').select('id, notifs').in('id', comptes),
+        base.from('appareils').select('proprietaire, point, abonnement').in('proprietaire', comptes),
+      ]);
+      const veut = new Map((prefs || []).map((p) => [p.id, p.notifs?.defis !== false]));
+      for (const l of lignes || []) {
+        if (veut.get(l.compte)) {
+          const premier = (l.podium || [])[0];
+          const body = l.rang === 1
+            ? `Tu finis en tête de ta bande cette semaine, avec ${l.xp} points. Lexou te tend la coupe.`
+            : `Tu finis ${l.rang}e sur ${l.sur} cette semaine. ${premier?.pseudo || 'Un ami'} est devant avec ${premier?.xp ?? 0} points : la revanche commence aujourd’hui.`;
+          for (const a of (apps || []).filter((x) => x.proprietaire === l.compte)) {
+            try { await webpush.sendNotification(a.abonnement as Parameters<typeof webpush.sendNotification>[0], JSON.stringify({ title: 'Lexou', body, ami: true, url: './?amis', tag: 'classement' }), { TTL: 12 * 3600 }); classements++; } catch (e) {
+              const code = (e as { statusCode?: number }).statusCode;
+              if (code === 404 || code === 410) await base.from('appareils').delete().eq('point', a.point);
+            }
+          }
+        }
+        await base.from('classements').update({ notifie_le: new Date().toISOString() }).eq('semaine', l.semaine).eq('compte', l.compte);
+      }
+    }
+  }
+  return new Response(JSON.stringify({ envoyes, classements, heure }), { headers: { 'Content-Type': 'application/json' } });
 });
