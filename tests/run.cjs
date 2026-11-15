@@ -1114,6 +1114,23 @@ async function execGroupe1(b, PORT, erreurs) {
 
   // 14c. Mode test réservé à la machine locale (Tâche 1a)
   // Politique de sécurité du contenu : aucune violation sur les écrans principaux ni sur la page de partage.
+  // Sauvegarde groupée : un rechargement aussitôt après une séance ne perd rien.
+  if (matchSeul('sauvegarde groupee')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
+    const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
+    await p.goto(URLB + '?test'); await p.waitForSelector('.tribune');
+    const avant = await p.evaluate(() => window.__app.etat().xp);
+    await p.evaluate(() => { window.__app.etat().xp += 77; window.__app.sauver(); location.reload(); });
+    await p.waitForSelector('.tribune');
+    assert.equal(await p.evaluate(() => window.__app.etat().xp), avant + 77, 'points gardés malgré le rechargement immédiat');
+    await p.evaluate(() => { window.__app.etat().jetons = 4321; window.__app.sauver(); });
+    assert.notEqual(await p.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')).jetons), 4321, 'écriture différée');
+    await p.waitForTimeout(450);
+    assert.equal(await p.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')).jetons), 4321, 'écrite après 300 ms');
+    await c.close();
+    log('sauvegarde groupee ok');
+  }
+
   if (matchSeul('csp')) {
     const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
     const p = await c.newPage(); const violations = [];
