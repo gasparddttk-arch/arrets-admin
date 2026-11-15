@@ -190,8 +190,8 @@ export function illustrationInstall(os, etape) {
         ${cadre}
         <rect x="61" y="20" width="118" height="22" fill="currentColor" fill-opacity=".08" stroke="currentColor" stroke-width=".8" stroke-opacity=".2"/>
         <text x="68" y="34" font-family="-apple-system, system-ui, sans-serif" font-size="7.5" fill="currentColor" fill-opacity=".5">Annuler</text>
-        <text x="170" y="34" text-anchor="end" font-family="-apple-system, system-ui, sans-serif" font-size="8" font-weight="700" fill="var(--titre-or)">Ajouter</text>
-        <circle cx="157" cy="31" r="12" fill="var(--titre-or)" fill-opacity=".18" stroke="var(--titre-or)" stroke-width="2.2"/>
+        <rect x="134" y="22.5" width="40" height="17" rx="8.5" fill="var(--titre-or)" fill-opacity=".18" stroke="var(--titre-or)" stroke-width="2.2"/>
+        <text x="154" y="34" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="8" font-weight="700" fill="currentColor">Ajouter</text>
         <rect x="74" y="54" width="26" height="26" rx="6" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="1" stroke-opacity=".3"/>
         <text x="87" y="71" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="700" fill="currentColor">G</text>
         <rect x="106" y="58" width="64" height="16" rx="3" fill="currentColor" fill-opacity=".06" stroke="currentColor" stroke-width=".8" stroke-opacity=".2"/>
@@ -223,19 +223,18 @@ export function illustrationInstall(os, etape) {
     if (n === 2) {
       return svg(`<svg viewBox="0 0 240 150" role="img" aria-label="Étape 2 : choisir Installer l’application">
         ${cadre}
-        <rect x="86" y="26" width="90" height="102" rx="6" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="1" stroke-opacity=".3"/>
-        <rect x="92" y="33" width="78" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
-        <rect x="96" y="37" width="34" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
-        <rect x="92" y="47" width="78" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
-        <rect x="96" y="51" width="44" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
-        <rect x="90" y="61" width="82" height="22" rx="4" fill="currentColor" fill-opacity=".14"/>
-        <path d="M98 67v7M95.5 71.5L98 74l2.5-2.5M94 77h8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <text x="105" y="74" font-family="-apple-system, system-ui, sans-serif" font-size="6.8" font-weight="600" fill="currentColor">Installer l’application</text>
-        <circle cx="98" cy="72" r="11" fill="var(--titre-or)" fill-opacity=".2" stroke="var(--titre-or)" stroke-width="2.2"/>
-        <rect x="92" y="87" width="78" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
-        <rect x="96" y="91" width="38" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
-        <rect x="92" y="101" width="78" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
-        <rect x="96" y="105" width="30" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
+        <rect x="72" y="26" width="104" height="102" rx="6" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="1" stroke-opacity=".3"/>
+        <rect x="78" y="33" width="92" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
+        <rect x="82" y="37" width="34" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
+        <rect x="78" y="47" width="92" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
+        <rect x="82" y="51" width="44" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
+        <rect x="76" y="61" width="96" height="22" rx="6" fill="var(--titre-or)" fill-opacity=".18" stroke="var(--titre-or)" stroke-width="2.2"/>
+        <path d="M86 66v7M83.5 70.5L86 73l2.5-2.5M82 76h8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="95" y="74.5" font-family="-apple-system, system-ui, sans-serif" font-size="6.6" font-weight="600" fill="currentColor">Installer l’application</text>
+        <rect x="78" y="87" width="92" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
+        <rect x="82" y="91" width="38" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
+        <rect x="78" y="101" width="92" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
+        <rect x="82" y="105" width="30" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
       </svg>`);
     }
   }
