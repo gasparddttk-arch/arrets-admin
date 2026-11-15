@@ -29,10 +29,11 @@ export const estRose = () => document.documentElement.dataset.theme === 'rose';
 // Durée d'une animation, réduite à rien quand les effets sont coupés.
 export const duree = (ms) => (effets() ? ms : 0);
 export const attendre = (ms) => new Promise((ok) => { setTimeout(ok, ms); });
+export const modeTest = () => typeof location !== 'undefined' && new URLSearchParams(location.search).has('test') && ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
 
 // Pluie de lumière pour les grands moments.
 export function confettis() {
-  if (!effets() || (typeof location !== 'undefined' && new URLSearchParams(location.search).has('test'))) return;
+  if (!effets() || modeTest()) return;
   const c = h('canvas', { class: 'confettis', 'aria-hidden': 'true' });
   document.body.append(c);
   const r = devicePixelRatio || 1; c.width = innerWidth * r; c.height = innerHeight * r;
@@ -89,7 +90,7 @@ export function slayDiva(figure = null) {
   const t = h('div', { class: 'slay', role: 'status' }, figure, h('strong', {}, 'Slay Diva'));
   document.body.append(t);
   confettis();
-  const enTest = typeof location !== 'undefined' && new URLSearchParams(location.search).has('test');
+  const enTest = modeTest();
   setTimeout(() => t.remove(), enTest ? 60 : 1250);
   return attendre(enTest ? 60 : duree(900));
 }

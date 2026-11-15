@@ -1095,6 +1095,59 @@ async function execGroupe1(b, PORT, erreurs) {
     await ac.close();
     log('animations ok');
   }
+
+  // 14c. Mode test réservé à la machine locale (Tâche 1a)
+  if (matchSeul('mode test')) {
+    const c1 = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR' });
+    const p1 = await c1.newPage();
+    p1.on('pageerror', (e) => erreurs.push(e.message));
+    await p1.goto(`http://127.0.0.1:${PORT}/?test`);
+    await p1.waitForSelector('.tribune');
+    const aApp1 = await p1.evaluate(() => typeof window.__app !== 'undefined');
+    assert(aApp1, 'window.__app existe sur 127.0.0.1');
+
+    const c2 = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR' });
+    const p2 = await c2.newPage();
+    p2.on('pageerror', (e) => erreurs.push(e.message));
+    await p2.goto(`http://gdroit.localhost:${PORT}/?test`);
+    await p2.waitForSelector('.choix');
+    const aApp2 = await p2.evaluate(() => typeof window.__app);
+    assert.equal(aApp2, 'undefined', 'window.__app est undefined sur gdroit.localhost');
+    const dataOkCount = await p2.locator('[data-ok]').count();
+    assert.equal(dataOkCount, 0, 'aucun élément [data-ok] n\'existe sur gdroit.localhost');
+
+    await c1.close();
+    await c2.close();
+    log('mode test ok');
+  }
+
+  // 14d. Épreuve en erreur (Tâche 7a)
+  if (matchSeul('epreuve en erreur')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR' });
+    const p = await c.newPage();
+    p.on('pageerror', (e) => erreurs.push(e.message));
+    p.on('console', (m) => {
+      if (m.type() === 'error' && !/favicon/.test(m.text()) && !/is not a function/.test(m.text())) {
+        erreurs.push(m.text());
+      }
+    });
+    await p.goto(`${URLB}?test`);
+    await p.waitForSelector('.tribune');
+    await p.evaluate(() => {
+      window.__app.lancer({
+        type: 'express',
+        titre: 'Test erreur',
+        rounds: [{ type: 'inexistant' }],
+      });
+    });
+    await p.waitForSelector('.erreur');
+    const txtErreur = await p.locator('.erreur p').innerText();
+    assert(txtErreur.includes('Cette épreuve n’a pas pu s’afficher'), 'Message d’erreur présent');
+    await p.locator('.erreur button:has-text("Continuer")').click();
+    await p.waitForSelector('.resultats');
+    await c.close();
+    log('epreuve en erreur ok');
+  }
 }
 
 // -----------------------------------------------------------------------------

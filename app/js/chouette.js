@@ -1,6 +1,6 @@
 // La chouette : ses poses, ses tenues, et les moments où elle paraît.
 // Elle arrive avant ou après une question, jamais pendant, et un appui passe toujours l'animation.
-import { h, svg, effets, attendre, estRose } from './ui.js';
+import { h, svg, effets, attendre, estRose, modeTest } from './ui.js';
 import { etat } from './state.js';
 import { images } from './images.js';
 import { REPERES, RAPPORTS } from './chouette-reperes.js';
@@ -140,7 +140,7 @@ export function precharger() {
 // Une seule fois, en début de séance. `pret` se résout portes fermées : c'est le moment de préparer l'écran.
 export function portes({ pose = 'debout', titre = '', sonFerme = null }) {
   if (!effets()) return { pret: Promise.resolve(), ouvrir() {} };
-  const enTest = typeof location !== 'undefined' && new URLSearchParams(location.search).has('test');
+  const enTest = modeTest();
   const v = h('div', { class: 'palais-portes', role: 'status', 'aria-label': titre },
     h('div', { class: 'battant gauche' }), h('div', { class: 'battant droite' }),
     h('div', { class: 'portes-centre' }, chouette(pose, { taille: 260 }), titre ? h('p', {}, titre) : null));
@@ -174,7 +174,7 @@ const auHasard = (l) => l[Math.floor(Math.random() * l.length)];
 // Fin d'une épreuve : le clin d'œil pour une réussite, le livre pour un résultat moyen, la montre pour un échec.
 export function reagir(score) {
   if (!effets()) return Promise.resolve();
-  const enTest = typeof location !== 'undefined' && new URLSearchParams(location.search).has('test');
+  const enTest = modeTest();
   const niveau = score >= 0.8 ? 'bien' : score >= 0.4 ? 'moyen' : 'rate';
   const pose = { bien: 'clin', moyen: 'piles', rate: 'pause' }[niveau];
   const v = h('div', { class: `reaction ${niveau}`, role: 'status' },

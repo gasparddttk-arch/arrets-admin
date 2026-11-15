@@ -1,6 +1,6 @@
 // Les jeux de la L1 (introduction au droit). Chacun emprunte le geste d'un jeu connu :
 // le tri à la Tinder, le mot à la Wordle, le rangement à la Tetris, Qui a dit ?, le scanner, Memory.
-import { h, effets, duree } from './ui.js';
+import { h, effets, duree, modeTest } from './ui.js';
 import { icone } from './visuels.js';
 import { son, vibrer } from './sons.js';
 import { finEpreuve, barrePied, continuer, repere } from './games.js';
@@ -72,7 +72,7 @@ export function jouerTri(zone, ctx, round) {
         tampon.textContent = BORDS[k][0];
         carte.classList.add('tamponnee');
         son('marteau'); vibrer(14);
-        const enTest = typeof location !== 'undefined' && new URLSearchParams(location.search).has('test');
+        const enTest = modeTest();
         await attendre(enTest ? 20 : 420);
         carte.classList.add(`vole-${BORDS[k][1]}`);
         await attendre(enTest ? 20 : 380);
