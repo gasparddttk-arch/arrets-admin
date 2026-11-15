@@ -26,11 +26,12 @@ const tempsPour = (q, tir) => {
   return Math.max(6 + lecture * 0.7, 10 + lecture - tir * 0.3);
 };
 
-export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
+export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom, ctx }) {
   const liste = questionsDunk(ix, zones);
   const deja = new Set(); const dusSet = new Set(dus);
   const objectif = mode === 'cinq' ? 5 : Infinity;
   let tir = 0; let feu = 0; let fin = false; let minuteur = null;
+  ctx?.nettoyage?.(() => clearInterval(minuteur));
 
   const score = h('strong', { class: 'dunk-score' }, '0');
   const sous = h('span', { class: 'dunk-sous' }, mode === 'cinq' ? 'sur 5' : `record ${etat.dunk.record}`);
@@ -133,6 +134,7 @@ export function lancerDunk({ ix, zones, dus, mode, sortir, montrer, nom }) {
     ].filter(Boolean));
     clearInterval(minuteur);
     minuteur = setInterval(() => {
+      if (!terrain.isConnected) { clearInterval(minuteur); return; }
       reste = total - (performance.now() - t0) / 1000;
       barre.firstChild.style.transform = `scaleX(${Math.max(0, reste / total)})`;
       if (reste <= 3) barre.classList.add('urgent');

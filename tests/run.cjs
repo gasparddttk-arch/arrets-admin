@@ -1116,6 +1116,20 @@ async function execGroupe1(b, PORT, erreurs) {
   // Politique de sécurité du contenu : aucune violation sur les écrans principaux ni sur la page de partage.
   // Sauvegarde groupée : un rechargement aussitôt après une séance ne perd rien.
   // Fenêtres au clavier : focus dedans, Échap ferme, focus rendu ; faux boutons activables au clavier.
+  // Défi d'ami illisible (épreuve inconnue) : refusé proprement, sans séance.
+  if (matchSeul('defi illisible')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
+    const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
+    await p.addInitScript(() => localStorage.setItem('gdroit-session', JSON.stringify({ access_token: 'jeton', refresh_token: 'r', expire: Date.now() + 3600000, user: { id: 'u-1' } })));
+    await p.route('**/rest/v1/rpc/lire_defi', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: 'd-1', statut: 'ouvert', matiere: 'admin', pseudo_auteur: 'Ami', score_auteur: 1, rounds: [{ type: 'inexistant' }] }) }));
+    await p.goto(URLB + '?test'); await p.waitForSelector('.tribune');
+    await p.evaluate(() => window.__app.releverDefi('d-1'));
+    await p.waitForSelector('text=Ce défi est illisible.');
+    assert.equal(await p.locator('.entete-seance').count(), 0, 'aucune séance lancée');
+    await c.close();
+    log('defi illisible ok');
+  }
+
   if (matchSeul('fenetres clavier')) {
     const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
     const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
@@ -1234,6 +1248,53 @@ async function execGroupe1(b, PORT, erreurs) {
     await p.waitForSelector('.resultats');
     await c.close();
     log('epreuve en erreur ok');
+  }
+
+  if (matchSeul('quitter en cours')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR' });
+    const p = await c.newPage();
+    p.on('pageerror', (e) => erreurs.push(e.message));
+    p.on('console', (m) => {
+      if (m.type() === 'error' && !/favicon/.test(m.text())) {
+        erreurs.push(m.text());
+      }
+    });
+    await p.goto(`${URLB}?test&matiere=oblig`);
+    await p.waitForSelector('.tribune');
+
+    // 1. Quitter au milieu de dunk
+    await p.evaluate(() => window.__app.aller('role'));
+    await p.locator('.dunk-choix button').first().click();
+    await p.waitForSelector('.dunk-question');
+    await p.locator('.quitter').click();
+    await p.waitForSelector('.tribune');
+
+    // 2. Quitter au milieu d'une épreuve pièces (rangement)
+    await p.evaluate(() => {
+      window.__app.lancer({
+        type: 'express',
+        titre: 'Test pièces',
+        rounds: [{
+          type: 'rangement',
+          titre: 'Le grand rangement',
+          colonnes: [{ k: 'pub', nom: 'Droit public' }, { k: 'priv', nom: 'Droit privé' }],
+          pieces: [{ k: 'pub', t: 'Une loi', w: 'Explication' }, { k: 'priv', t: 'Un contrat', w: 'Explication 2' }],
+        }],
+      });
+    });
+    await p.waitForSelector('.rg-piece');
+    await p.locator('.quitter').click();
+    await p.waitForSelector('.boite .bouton-or');
+    await p.locator('.boite .bouton-or').click();
+    await p.waitForSelector('.tribune');
+
+    // 3. Attendre 3 s : aucune erreur et aucun élément persistant
+    await p.waitForTimeout(3000);
+    const count = await p.evaluate(() => document.querySelectorAll('.dunk, .rg-piece').length);
+    assert.equal(count, 0, 'aucun élément .dunk ni .rg-piece persistant');
+
+    await c.close();
+    log('quitter en cours ok');
   }
 }
 
@@ -2492,8 +2553,13 @@ async function execGroupe3(b, PORT, erreurs) {
     await k2.waitForSelector('.voile', { state: 'detached' });
     assert.equal(await k2.locator('.connexion').count(), 0, 'toujours connecté');
     await t2.setOffline(false);
+    // Ce téléphone était abonné aux notifications : la déconnexion le retire du compte et le désabonne.
+    const suppressions = []; k2.on('request', (r) => { if (r.method() === 'DELETE' && r.url().includes('/rest/v1/appareils?point=eq.')) suppressions.push(r.url()); });
+    await k2.evaluate(() => Object.defineProperty(navigator, 'serviceWorker', { configurable: true, value: { getRegistration: async () => ({ pushManager: { getSubscription: async () => ({ endpoint: 'https://web.push.apple.com/essai', unsubscribe: async () => { localStorage.setItem('desabonne', '1'); return true; } }) } }) } }));
     await k2.locator('text=Se déconnecter').click(); await k2.locator('.boite .bouton-or').click();
     await k2.waitForSelector('.connexion');
+    assert.equal(suppressions.length, 1, 'appareil retiré du compte'); assert(suppressions[0].includes(encodeURIComponent('https://web.push.apple.com/essai')));
+    assert.equal(await k2.evaluate(() => localStorage.getItem('desabonne')), '1', 'téléphone désabonné');
     const apres = await k2.evaluate(() => JSON.parse(localStorage.getItem('arrets-admin.v1')));
     assert.equal(apres.xp, 0, 'téléphone effacé après déconnexion');
 
