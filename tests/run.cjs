@@ -1115,6 +1115,43 @@ async function execGroupe1(b, PORT, erreurs) {
   // 14c. Mode test réservé à la machine locale (Tâche 1a)
   // Politique de sécurité du contenu : aucune violation sur les écrans principaux ni sur la page de partage.
   // Sauvegarde groupée : un rechargement aussitôt après une séance ne perd rien.
+  // Fenêtres au clavier : focus dedans, Échap ferme, focus rendu ; faux boutons activables au clavier.
+  if (matchSeul('fenetres clavier')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
+    const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
+    await p.goto(URLB + '?test'); await p.waitForSelector('.tribune');
+    // Une fenêtre bâtie comme celles de l'appli (fond qui ferme au toucher), ouverte depuis un bouton.
+    await p.evaluate(() => {
+      const b = document.createElement('button'); b.id = 'ouvre'; b.textContent = 'Ouvrir'; document.body.append(b);
+      b.addEventListener('click', () => {
+        const voile = document.createElement('div'); voile.className = 'voile';
+        voile.addEventListener('click', (e) => { if (e.target === voile) voile.remove(); });
+        voile.innerHTML = '<div class="boite"><p>Essai</p><button>Un</button><button>Deux</button></div>';
+        document.body.append(voile);
+      });
+    });
+    await p.focus('#ouvre'); await p.keyboard.press('Enter');
+    await p.waitForSelector('.voile .boite[aria-modal="true"][role="dialog"]');
+    await p.waitForTimeout(100);
+    assert(await p.evaluate(() => document.querySelector('.voile').contains(document.activeElement)), 'focus dans la fenêtre');
+    for (let i = 0; i < 5; i++) await p.keyboard.press('Tab');
+    assert(await p.evaluate(() => document.querySelector('.voile').contains(document.activeElement)), 'Tab reste dans la fenêtre');
+    await p.keyboard.press('Escape');
+    await p.waitForSelector('.voile', { state: 'detached' });
+    assert.equal(await p.evaluate(() => document.activeElement?.id), 'ouvre', 'focus rendu au bouton');
+    // Une fenêtre qui exige un choix ne se ferme pas avec Échap.
+    await p.evaluate(() => { const v = document.createElement('div'); v.className = 'voile'; v.innerHTML = '<div class="boite"><button>Choisir</button></div>'; document.body.append(v); });
+    await p.keyboard.press('Escape'); await p.waitForTimeout(100);
+    assert.equal(await p.locator('.voile').count(), 1, 'fenêtre obligatoire gardée');
+    await p.evaluate(() => document.querySelector('.voile').remove());
+    // Un faux bouton (role="button") s'active au clavier.
+    await p.evaluate(() => { const s = document.createElement('span'); s.id = 'faux'; s.setAttribute('role', 'button'); s.tabIndex = 0; s.addEventListener('click', () => { s.dataset.clic = 'oui'; }); document.body.append(s); });
+    await p.focus('#faux'); await p.keyboard.press(' ');
+    assert.equal(await p.getAttribute('#faux', 'data-clic'), 'oui', 'faux bouton activé par Espace');
+    await c.close();
+    log('fenetres clavier ok');
+  }
+
   if (matchSeul('sauvegarde groupee')) {
     const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
     const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
