@@ -312,7 +312,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 4c] Envoi après un achat ; confirmation avant une déconnexion qui perdrait des données
-- **Statut** : Prévu le mardi 17/11
+- **Statut** : Pris par Claude le 15/11 (ne pas faire)
 - **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
 - **Détails de modification** :
   - Dans `acheter(item)` (~ligne 1433), après la sauvegarde de l'achat réussi : `setTimeout(envoyerProgression, 1000);` (la fin de séance envoie déjà, ligne ~1002).
@@ -325,7 +325,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 11a] Politique de sécurité du contenu (CSP)
-- **Statut** : Prévu le mercredi 18/11
+- **Statut** : Pris par Claude le 15/11 (ne pas faire)
 - **Fichiers concernés** : `app/index.html`, `app/partager.html`, `scripts/build.mjs`, `tests/run.cjs`
 - **Détails de modification** :
   - Dans les deux pages, ajouter dans `<head>` : `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; media-src 'self' blob:; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">`.
@@ -334,7 +334,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte (aucune violation CSP dans toute la suite : ajouter si possible la vérification console aux pages existantes).
 
 ### [TÂCHE 8b] Sauvegarde groupée
-- **Statut** : Prévu le mercredi 18/11
+- **Statut** : Pris par Claude le 15/11 (ne pas faire)
 - **Fichiers concernés** : `app/js/state.js`, `tests/run.cjs`
 - **Détails de modification** :
   - `sauver()` (ligne ~274) met `etat.modifie = Date.now()` tout de suite, mais l'écriture (`JSON.stringify`, `localStorage.setItem`, `ecrireSecours`) passe dans une fonction `ecrire()` appelée par un `setTimeout(ecrire, 300)` (un seul minuteur à la fois : `clearTimeout` avant).
@@ -343,7 +343,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 7c] Fenêtres accessibles au clavier
-- **Statut** : Prévu le jeudi 19/11 (à finir le vendredi 20/11 si besoin)
+- **Statut** : Pris par Claude le 15/11 (ne pas faire)
 - **Fichiers concernés** : `app/js/ui.js`, `app/js/main.js`, `app/js/atelier.js`, `app/js/lexique.js`, `tests/run.cjs`
 - **Détails de modification** :
   - Dans `ui.js`, exporter `ouvrirVoile(boite, { fermer } = {})` : crée `h('div', { class: 'voile' }, boite)`, pose sur `boite` `role="dialog"` (si absent) et `aria-modal="true"`, l'ajoute au `body`, mémorise `document.activeElement`, place le focus sur le premier élément focalisable de la boîte (sinon sur la boîte avec `tabindex="-1"`), ferme sur Échap et sur un clic dans le voile hors de la boîte, garde Tab dans la boîte, et à la fermeture retire l'écouteur clavier et rend le focus à l'élément mémorisé. Renvoie une fonction `fermer()`.
@@ -354,7 +354,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 8a] Lexou : une planche décodée à la fois
-- **Statut** : Prévu le vendredi 20/11
+- **Statut** : Pris par Claude le 15/11 (ne pas faire)
 - **Fichiers concernés** : `app/js/lexou.js`
 - **Objectif** : aujourd'hui toutes les planches d'une animation sont décodées avant le départ (près de 100 Mo de mémoire sur iPhone).
 - **Détails de modification** :
