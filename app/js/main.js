@@ -729,7 +729,7 @@ function blocDunk() {
 
 // La première séance d'une matière : un seul exercice, le plus parlant, une minute.
 // Le but : comprendre en jouant ce que fait Gdroit, puis avoir envie de relancer.
-const DECOUVERTE = { admin: ['juge', 'paires'], oblig: ['qualif', 'remede'], constit: ['nuancier', 'pouvoirs'], intro: ['tri', 'mot'] };
+const DECOUVERTE = { admin: ['paires', 'juge'], oblig: ['qualif', 'remede'], constit: ['nuancier', 'pouvoirs'], intro: ['tri', 'mot'] };
 const decouverteDue = () => {
   const p = new URLSearchParams(location.search);
   if (modeTest() && !p.has('decouverte')) return false;
@@ -749,7 +749,7 @@ function lancerRevisionJour() {
 }
 function lancerDefi() {
   const zones = zonesDuJour(ix);
-  lancer({ type: 'defi', titre: 'Défi du jour', rounds: composerDefi(ix, zones, aRevoir(ix, zones)) });
+  lancer({ type: 'defi', titre: 'Défi du jour', rounds: composerDefi(ix, zones, aRevoir(ix, zones), Math.random, { debutant: (etat.stats?.seances || 0) < 3 }) });
 }
 function lancerExpress() {
   const zones = zonesDuJour(ix); const dus = aRevoir(ix, zones);
@@ -2150,12 +2150,18 @@ function ecranConnexion(erreur) {
   racine.replaceChildren(h('main', { class: 'connexion' },
     chouette('clin', { taille: 170, tenue: false }),
     h('h1', {}, 'Gdroit'),
-    h('p', { class: 'connexion-sous' }, 'Connecte-toi pour retrouver ta progression sur tous tes appareils.'),
+    h('p', { class: 'connexion-sous' }, 'Ton cours de droit en épreuves de cinq minutes, chaque jour.'),
+    h('ul', { class: 'connexion-gains' },
+      h('li', {}, 'Ta progression sur tous tes appareils'),
+      h('li', {}, 'Ta série du jour et tes chambres gagnées'),
+      h('li', {}, 'Tes amis et leurs défis')),
     erreur ? h('p', { class: 'connexion-erreur', role: 'alert' }, erreur) : null,
     h('button', { class: 'bouton-or connexion-google', onClick: () => { if (navigator.onLine === false) return toast('Il faut du réseau pour se connecter.'); connexionGoogle(); } }, logoG(), 'Continuer avec Google'),
     // Le code par email part par Resend, depuis connexion@gdroit.eu.
     EMAIL_ACTIF || new URLSearchParams(location.search).has('email') ? [h('p', { class: 'connexion-ou' }, 'ou'), email, envoyer, etape2] : null,
-    h('p', { class: 'aide-claire connexion-note' }, etat.stats.seances ? 'La progression déjà sur ce téléphone sera rattachée à ton compte.' : 'Un compte se crée à la première connexion.'),
+    // Qui n'a encore rien essayé peut jouer une épreuve avant de créer un compte.
+    !decouverteFaite() ? h('button', { class: 'bouton-lien connexion-essai', onClick: () => { suivre('decouverte_suite', { choix: 'essai_connexion' }); location.assign(`${location.pathname}?visiteur`); } }, 'Essayer une épreuve sans compte') : null,
+    h('p', { class: 'aide-claire connexion-note' }, etat.stats.seances ? 'La progression déjà sur ce téléphone sera rattachée à ton compte.' : 'Gratuit. Le compte se crée à la première connexion.'),
     liensLegaux()));
 }
 function logoG() {
