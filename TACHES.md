@@ -260,7 +260,7 @@ Antigravity ne prend que les tâches au statut exact « À faire ». Les autres 
 Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 1 de `tests/run.cjs`.
 
 ### [TÂCHE 1a] Mode test réservé à la machine locale
-- **Statut** : Prêt pour Claude (suite verte le 15/11 à 01h22 sur 48825d0)
+- **Statut** : Fait (publié le 15/11, version cdebea5e44fb)
 - **Fichiers concernés** : `app/js/ui.js`, `app/js/main.js`, `app/js/suivi.js`, `app/js/chouette.js`, `app/js/jeux-l1.js`, `tests/run.cjs`
 - **Objectif** : aujourd'hui `https://gdroit.eu/?test` ouvre l'appli sans compte et écrit les bonnes réponses dans le DOM. `?test` ne doit plus rien changer hors de la machine de développement.
 - **Détails de modification** :
@@ -272,7 +272,7 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE 7a] Une épreuve qui plante ne bloque plus la séance
-- **Statut** : Prêt pour Claude (suite verte le 15/11 à 01h35 sur d01d814)
+- **Statut** : Fait (publié le 15/11, version cdebea5e44fb)
 - **Fichiers concernés** : `app/js/main.js`, `tests/run.cjs`
 - **Objectif** : une erreur levée immédiatement par un jeu échappe aujourd'hui au `.catch` et fige la séance.
 - **Détails de modification** :
