@@ -271,11 +271,29 @@ export async function charger() {
   return etat;
 }
 
-export function sauver() {
-  etat.modifie = Date.now();
+// La sauvegarde est regroupée : plusieurs changements rapprochés (une épreuve, ses points, ses jetons)
+// font une seule écriture 300 ms plus tard. Elle part tout de suite si la page est cachée ou quittée.
+let enAttente = null;
+function ecrire() {
+  enAttente = null;
   const brut = JSON.stringify(etat);
   try { localStorage.setItem(CLE, brut); } catch { /* stockage plein ou bloqué */ }
   ecrireSecours(brut);
+}
+export function sauver() {
+  etat.modifie = Date.now();
+  clearTimeout(enAttente);
+  enAttente = setTimeout(ecrire, 300);
+}
+export function sauverMaintenant() {
+  if (enAttente === null) return;
+  clearTimeout(enAttente);
+  ecrire();
+}
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => { if (document.hidden) sauverMaintenant(); });
+  addEventListener('pagehide', sauverMaintenant);
+  addEventListener('beforeunload', sauverMaintenant);
 }
 
 // Les images personnelles restent sur le téléphone : elles n'entrent ni dans l'état ni dans les sauvegardes.

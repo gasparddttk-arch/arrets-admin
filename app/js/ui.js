@@ -417,3 +417,56 @@ export function banc({
     rendre,
   };
 }
+
+// ACCESSIBILITÉ CLAVIER ---------------------------------------------------------------------------
+// Toutes les fenêtres (.voile > .boite) suivent les mêmes règles sans que chaque écran ait à y penser :
+// annoncées comme fenêtres modales, focus placé dedans à l'ouverture, Tab qui reste à l'intérieur,
+// Échap qui ferme celles qu'un toucher à côté ferme déjà, et focus rendu à l'élément d'origine à la fermeture.
+const FOCALISABLES = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const ouvertes = []; // pile de { voile, avant }
+function surOuverture(voile) {
+  const boite = voile.querySelector('.boite') || voile.firstElementChild || voile;
+  if (!boite.getAttribute('role')) boite.setAttribute('role', 'dialog');
+  boite.setAttribute('aria-modal', 'true');
+  ouvertes.push({ voile, avant: document.activeElement });
+  requestAnimationFrame(() => {
+    if (!voile.isConnected || voile.contains(document.activeElement)) return;
+    const premier = boite.querySelector(FOCALISABLES);
+    if (premier) premier.focus({ preventScroll: true });
+    else { boite.setAttribute('tabindex', '-1'); boite.focus({ preventScroll: true }); }
+  });
+}
+function surFermeture(voile) {
+  const i = ouvertes.findIndex((o) => o.voile === voile);
+  if (i < 0) return;
+  const [{ avant }] = ouvertes.splice(i, 1);
+  if (avant?.isConnected && !document.querySelector('.voile')) avant.focus?.({ preventScroll: true });
+}
+if (typeof document !== 'undefined' && typeof MutationObserver !== 'undefined') {
+  const observer = () => new MutationObserver((changes) => {
+    for (const c of changes) {
+      for (const n of c.addedNodes) if (n.nodeType === 1 && n.classList.contains('voile')) surOuverture(n);
+      for (const n of c.removedNodes) if (n.nodeType === 1 && n.classList.contains('voile')) surFermeture(n);
+    }
+  }).observe(document.body, { childList: true });
+  if (document.body) observer(); else document.addEventListener('DOMContentLoaded', observer);
+
+  document.addEventListener('keydown', (e) => {
+    const haut = ouvertes.at(-1)?.voile;
+    if (haut?.isConnected) {
+      // Échap : même effet qu'un toucher sur le fond (les fenêtres qui exigent un choix l'ignorent).
+      if (e.key === 'Escape') { e.preventDefault(); haut.dispatchEvent(new MouseEvent('click', { bubbles: true })); return; }
+      if (e.key === 'Tab') {
+        const liste = [...haut.querySelectorAll(FOCALISABLES)].filter((x) => x.offsetParent !== null);
+        if (!liste.length) { e.preventDefault(); return; }
+        const [premier, dernier] = [liste[0], liste.at(-1)];
+        if (e.shiftKey && (document.activeElement === premier || !haut.contains(document.activeElement))) { e.preventDefault(); dernier.focus(); }
+        else if (!e.shiftKey && (document.activeElement === dernier || !haut.contains(document.activeElement))) { e.preventDefault(); premier.focus(); }
+        return;
+      }
+    }
+    // Les éléments qui jouent le rôle de bouton sans en être un réagissent à Entrée et Espace.
+    const t = e.target;
+    if ((e.key === 'Enter' || e.key === ' ') && t?.getAttribute?.('role') === 'button' && t.tagName !== 'BUTTON') { e.preventDefault(); t.click(); }
+  });
+}
