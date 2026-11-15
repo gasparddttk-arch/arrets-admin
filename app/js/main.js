@@ -2163,6 +2163,7 @@ async function ouvrirCompte(params) {
     await completerUtilisateur();
     const r = await Promise.race([synchroniser(delai), new Promise((ok) => setTimeout(() => { delai.depasse = true; ok('delai'); }, 6000))]);
     if (r === 'en-ligne') setTimeout(() => toast('Progression de ton compte récupérée.'), 600);
+    else if (r === 'fusion') setTimeout(() => toast('Progression de tes appareils réunie.'), 600);
     await Promise.race([lireProfil(), new Promise((ok) => setTimeout(ok, 4000))]).catch(() => {});
   } catch (e) {
     if (!connecte()) { ecranConnexion(e.message); return false; }
