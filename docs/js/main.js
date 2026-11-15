@@ -1,5 +1,5 @@
 // Point d'entrée : écrans, séances, récompenses.
-import { h, svg, toast, confettis, estRose, bebew, slayDiva, effets } from './ui.js';
+import { h, svg, toast, confettis, estRose, bebew, slayDiva, effets, modeTest } from './ui.js';
 import { icone, sceau, petitSceau, laurier, medaille } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { lexouAnime, prechargerLexou } from './lexou.js';
@@ -100,7 +100,7 @@ let derniersJetonsVus = null;
 
 function modeAnimation() {
   const p = new URLSearchParams(location.search);
-  if (p.has('test') && !p.has('anim')) return 'non';
+  if (modeTest() && !p.has('anim')) return 'non';
   if (document.documentElement.dataset.effets === 'non' || !effets()) return 'non';
   if (document.documentElement.dataset.effets === 'leger') return 'leger';
   return 'complet';
@@ -205,7 +205,7 @@ function appliquerTheme() {
   r.dataset.theme = etat.theme;
   r.dataset.decor = etat.decor || 'aucun';
   r.dataset.effets = effets() ? 'oui' : 'non';
-  if (new URLSearchParams(location.search).has('test')) r.dataset.test = 'oui';
+  if (modeTest()) r.dataset.test = 'oui';
   if (images.jeton) r.style.setProperty('--jeton-image', `url("${images.jeton}")`);
   else r.style.removeProperty('--jeton-image');
   document.querySelector('meta[name="theme-color"]').setAttribute('content', { rose: '#FFE3EA', pastel: '#F4F1FA', verre: '#060A1C' }[etat.theme] || '#0A0E22');
@@ -284,7 +284,7 @@ const estVisiteur = () => {
   if (connecte() || estInstallee()) return false;
   const p = new URLSearchParams(location.search);
   if (p.has('compte')) return false;
-  if (p.has('test') && !p.has('visiteur')) return false;
+  if (modeTest() && !p.has('visiteur')) return false;
   return p.has('visiteur') || !decouverteFaite();
 };
 
@@ -506,7 +506,7 @@ function figureSerie(s, fait) {
 function colereLexou(rompue) {
   rompue.vu = true; sauver();
   const p = new URLSearchParams(location.search);
-  if (!lexouVideoPossible() || (p.has('test') && !p.has('colere'))) return;
+  if (!lexouVideoPossible() || (modeTest() && !p.has('colere'))) return;
   const delai = new Promise((ok, ko) => { setTimeout(ko, 3000); });
   Promise.race([prechargerLexou('colere'), delai]).then(() => {
     if (!document.querySelector('.tribune') || document.querySelector('.voile, .colere-voile')) return;
@@ -732,7 +732,7 @@ function blocDunk() {
 const DECOUVERTE = { admin: ['juge', 'paires'], oblig: ['qualif', 'remede'], constit: ['nuancier', 'pouvoirs'], intro: ['tri', 'mot'] };
 const decouverteDue = () => {
   const p = new URLSearchParams(location.search);
-  if (p.has('test') && !p.has('decouverte')) return false;
+  if (modeTest() && !p.has('decouverte')) return false;
   return !M().decouverte && !M().xp && !M().enCours;
 };
 function lancerDecouverte(rang = 0) {
@@ -937,7 +937,8 @@ function lancer({ rounds, titre, type, zone, reprise, mode, long = false, defiAm
         scene.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: 'ease-out' });
       }
     }
-    Promise.resolve(TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
+    Promise.resolve().then(() => TOUS_JEUX[r.type](scene, ctx, r, ix)).catch((e) => {
+      suivre('erreur', { type: String(r.type).slice(0, 30), m: String(e?.message || e).slice(0, 120) });
       console.error(e);
       scene.replaceChildren(h('div', { class: 'erreur' }, h('p', {}, 'Cette épreuve n’a pas pu s’afficher. Passe à la suivante.'), continuer('Continuer', () => ctx.fin({ score: 0, parfait: false }))));
     });
@@ -2146,7 +2147,7 @@ function logoG() {
 // Au démarrage, un compte connecté récupère sa progression avant d'ouvrir le Palais.
 definirNommeur((id) => { const a = ix?.parId?.get(id); return a ? (a.article ? a.nom : a.court || a.nom) : null; });
 async function ouvrirCompte(params) {
-  const requis = Boolean(SUPABASE_URL) && !(params.has('test') && !params.has('compte'));
+  const requis = Boolean(SUPABASE_URL) && !(modeTest() && !params.has('compte'));
   if (!requis) return true;
   let erreur = null;
   try { if (retourConnexion()) suivre('connexion', { via: 'google' }); } catch (e) { erreur = e.message; }
@@ -2162,6 +2163,7 @@ async function ouvrirCompte(params) {
     await completerUtilisateur();
     const r = await Promise.race([synchroniser(delai), new Promise((ok) => setTimeout(() => { delai.depasse = true; ok('delai'); }, 6000))]);
     if (r === 'en-ligne') setTimeout(() => toast('Progression de ton compte récupérée.'), 600);
+    else if (r === 'fusion') setTimeout(() => toast('Progression de tes appareils réunie.'), 600);
     await Promise.race([lireProfil(), new Promise((ok) => setTimeout(ok, 4000))]).catch(() => {});
   } catch (e) {
     if (!connecte()) { ecranConnexion(e.message); return false; }
@@ -2220,7 +2222,7 @@ function retourDeLexou() {
 
 // PRISE EN MAIN : quatre écrans courts au premier lancement, puis une bulle à la découverte de chaque exercice.
 // En mode test, les guides restent muets, sauf demande expresse (?guide).
-const guidesMuets = () => { const p = new URLSearchParams(location.search); return p.has('test') && !p.has('guide'); };
+const guidesMuets = () => { const p = new URLSearchParams(location.search); return modeTest() && !p.has('guide'); };
 const PRISE_EN_MAIN = [
   ['clin', 'Bienvenue sur Gdroit', 'Gdroit complète ton cours, sans pression. Un peu chaque jour suffit : cinq minutes, une séance, et c’est gagné.'],
   ['tribune', 'Le Palais', 'Le Défi du jour pose ton sceau et fait grandir ta série. Vers l’examen et Le rôle sont là quand tu veux plus.'],
@@ -2295,7 +2297,7 @@ function accueilTesteur() {
 // Sur iPhone, la demande d'autorisation doit suivre un toucher : d'où la fenêtre et son bouton.
 const DEMANDE_NOTIFS = 1;
 async function demanderNotifs() {
-  if (!connecte() || new URLSearchParams(location.search).has('test')) return;
+  if (!connecte() || modeTest()) return;
   if ((etat.reglages.demandeNotifs || 0) >= DEMANDE_NOTIFS) return;
   if (document.querySelector('.voile')) { setTimeout(demanderNotifs, 1500); return; }
   const r = await etatRappel().catch(() => 'indisponible');
@@ -2408,7 +2410,7 @@ function surveillerFluidite() {
 
 async function demarrer() {
   const params = new URLSearchParams(location.search);
-  if (params.has('test')) document.documentElement.dataset.test = 'oui';
+  if (modeTest()) document.documentElement.dataset.test = 'oui';
   { const c = contexte(); suivre('ouverture', { os: c.os, nav: c.nav, installee: estInstallee(), connecte: connecte(), largeur: innerWidth }); }
   // Un lien d'invitation survit à la connexion : le code attend dans le téléphone.
   if (params.get('ami')) { try { localStorage.setItem('gdroit-ami', params.get('ami')); } catch { /* rien */ } history.replaceState(null, '', location.pathname); }
@@ -2425,11 +2427,11 @@ async function demarrer() {
   if (params.has('equipe')) changerEquipe(+params.get('equipe'));
   PAR_EQUIPE[1] = oblig1; PAR_EQUIPE[2] = oblig2;
   // Les tests gardent l'administratif de l'équipe 1, sauf s'ils demandent une équipe.
-  ADMIN_PAR_EQUIPE.brut = { 1: admin, 2: params.has('test') && !params.has('equipe') ? admin : admin2 };
+  ADMIN_PAR_EQUIPE.brut = { 1: admin, 2: modeTest() && !params.has('equipe') ? admin : admin2 };
   INTRO_PAR_EQUIPE.brut = { 2: intro2, 3: intro };
   indexerAdmin(); indexerObligations(); indexerIntro(); CONTENUS.constit = indexer(constit, 2, FORMULES);
-  if (params.has('test') && !params.has('choix')) etat.matiere = ['oblig', 'intro', 'constit'].includes(params.get('matiere')) ? params.get('matiere') : etat.matiere;
-  if (params.has('test') && ['intro', 'constit'].includes(params.get('matiere'))) { etat.annee = 'L1'; etat.equipeL1 = +params.get('l1') || 3; indexerIntro(); }
+  if (modeTest() && !params.has('choix')) etat.matiere = ['oblig', 'intro', 'constit'].includes(params.get('matiere')) ? params.get('matiere') : etat.matiere;
+  if (modeTest() && ['intro', 'constit'].includes(params.get('matiere'))) { etat.annee = 'L1'; etat.equipeL1 = +params.get('l1') || 3; indexerIntro(); }
   // Une matière qui n'est pas de l'année revient à la première de l'année.
   if (etat.annee && !matieresAnnee().some((m) => m.id === etat.matiere)) etat.matiere = matieresAnnee()[0].id;
   ix = CONTENUS[etat.matiere];
@@ -2439,15 +2441,15 @@ async function demarrer() {
   for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click']) document.addEventListener(ev, reveillerAudio, { passive: true });
   const evenement = verifierSerie();
   // L'appli s'ouvre sur le choix de la matière. Les tests vont droit à la matière demandée.
-  if (params.has('test') && !params.has('visiteur') && !params.has('annee') && !etat.annee) etat.annee = 'L2';
-  if (params.has('test') && !params.has('visiteur') && !params.has('choix') && !params.has('annee')) aller('palais');
+  if (modeTest() && !params.has('visiteur') && !params.has('annee') && !etat.annee) etat.annee = 'L2';
+  if (modeTest() && !params.has('visiteur') && !params.has('choix') && !params.has('annee')) aller('palais');
   else if (!etat.annee) ecranAnnee();
   else if (etat.annee === 'L1') accueilL1();
-  else if (!etat.equipeChoisie && (!params.has('test') || params.has('groupe'))) choisirEquipe();
+  else if (!etat.equipeChoisie && (!modeTest() || params.has('groupe'))) choisirEquipe();
   else matieres();
   if (rembourse) toast(`Anciennes tenues retirées : ${fmt(rembourse)} jetons remboursés.`);
   if (evenement?.type === 'sursis') toast(`${pluriel(evenement.n, 'sursis', 'sursis')} utilisé${evenement.n > 1 ? 's' : ''} : ta série est sauve.`);
-  if (params.has('test')) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation, lancer, tirerRound, aRattraper, lancerRevisionJour, composerRevision };
+  if (modeTest()) window.__app = { etat: () => etat, chouette, TENUES, reagir, resultats, get ix() { return ix; }, aller, ouvrirMatiere, matieres, lancerDefi, releverDefi, sauver, rendreSon, NOMS_SONS, appliquerTheme, guideInstallation, lancer, tirerRound, aRattraper, lancerRevisionJour, composerRevision };
   setTimeout(surveillerFluidite, 1200);
   precharger();
 
@@ -2463,6 +2465,7 @@ async function demarrer() {
     else if (params.has('amis')) aller('amis');
     window.addEventListener('online', () => { envoyerProgression(); envoyerSignalements(); });
     document.addEventListener('visibilitychange', () => { if (document.hidden) envoyerProgression(); else compterNouvelles(); });
+    window.addEventListener('unhandledrejection', (e) => suivre('erreur', { m: String(e.reason?.message || e.reason).slice(0, 120) }));
     recevoirCadeauxCompte().then((n) => {
       if (!n) return;
       if (document.querySelector('.tribune')) accueil();
