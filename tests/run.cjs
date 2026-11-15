@@ -1103,7 +1103,7 @@ async function execGroupe1(b, PORT, erreurs) {
 
     // 4. Test navigation par onglet (Chambres)
     await ap.locator('button.onglet[data-onglet="carte"]').click();
-    await ap.waitForSelector('.page');
+    await ap.waitForSelector('.page, .tour-ecran');
     await debordement(ap, 'Pendant animation onglet');
 
     await ap.waitForTimeout(700);
