@@ -282,7 +282,7 @@ Plan : https://claude.ai/artifact/MUQk51XZ9Y4uv5v47EGUK3. Mêmes règles que le 
 - **Validation attendue** : `npm run check`, `npm run build`, suite complète verte.
 
 ### [TÂCHE E] Carte du podium de la semaine sur le Palais
-- **Statut** : À faire (`mon_classement` est en base depuis le 15/11)
+- **Statut** : Prêt pour Claude (suite verte le 15/11 à 18h10 sur c9c2e7b)
 - **Fichiers concernés** : `app/js/compte.js`, `app/js/main.js`, `app/css/app.css`, `tests/run.cjs`
 - **Objectif** : le classement des amis se remet à zéro chaque lundi sans que personne le voie. Le lundi (et jusqu'à ce qu'on la ferme), une carte montre le podium de la semaine écoulée.
 - **Détails de modification** :
@@ -490,6 +490,16 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 ---
 
 ## Dernières actions exécutées par Antigravity
+- **15/11/2026 (Tâche E)** :
+  - `app/js/compte.js` : export de `monClassement = () => rpc('mon_classement')`.
+  - `app/js/state.js` : initialisation de `podiumVu: null` dans `reglages`.
+  - `app/js/main.js` :
+    - Dans `accueil()`, si connecté : appel asynchrone non-bloquant de `monClassement()`.
+    - Insertion de `section.carte-podium` en tête de `.tribune` si la semaine correspond à la semaine précédente (`r.semaine === lundi() - 7`) et n'a pas encore été vue (`etat.reglages.podiumVu !== r.semaine`).
+    - Affichage du titre « La semaine dernière », de la phrase de classement avec `fmt()` (« Tu finis en tête, avec {xp} points. » ou « Tu finis {rang}e sur {sur}, avec {xp} points. »), du podium des 3 premiers avec médailles or/argent/bronze et ligne `moi` en gras, du bouton fantôme « Voir mes amis » (`aller('amis')`) et du bouton lien « Fermer » (`etat.reglages.podiumVu = r.semaine`, `sauver()`, suppression de la carte).
+  - `app/css/app.css` : ajout du token de médaille `bronze` et styles complets pour `.carte-podium`.
+  - `tests/run.cjs` : ajout du bloc de test `podium` dans le groupe 1 (affichage du rang 2 sur 4 et des 3 lignes avec session simulée, fermeture et non-réapparition au rechargement, réponse `null` sans affichage, capture `podium.png`).
+  - Validation : `npm run check`, `npm run build`, suite complète `npm test` 100% verte (510.7s sur c9c2e7b).
 - **15/11/2026 (Tâche B)** :
   - `app/js/visuels.js` : export de `illustrationInstall(os, etape)` générant les SVGs pas-à-pas (téléphone stylisé, cercle doré `var(--titre-or)` sur l'élément à toucher, tons neutres) pour iOS Safari (1. Partager, 2. Sur l'écran d'accueil, 3. Ajouter) et Android (1. Trois points, 2. Installer l'application).
   - `app/js/state.js` : initialisation de `install: null` et `installeCompte: false` dans `reglages`.
