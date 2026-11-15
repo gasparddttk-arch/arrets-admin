@@ -3,6 +3,7 @@ import { h, svg, toast, confettis, estRose, bebew, slayDiva, effets, modeTest } 
 import { icone, sceau, petitSceau, laurier, medaille, illustrationInstall } from './visuels.js';
 import { chouette, portes, reagir, plumes, codeEnvole, adjuge, precharger, POSE_MODE, TENUES, SKINS, hibouSkin, skinPorte, danser, DUREE_DANSE } from './chouette.js';
 import { lexouAnime, prechargerLexou } from './lexou.js';
+import { LAMPES, EFFETS, pieceDe } from './tour.js';
 import { son, reveillerAudio, surveillerAudio, appliquerSession, vibrer, rendreSon, NOMS_SONS } from './sons.js';
 import { remplacerEtat, choisirAnnee, ajouterSemaine, gagnerAppel, erreursOuvertes, carnetVisible, changerEquipe,
   SCEAU_REUSSITE, SCEAU_FICHES, PRIME_MAITRISE, etat, M, charger, sauver, jour, lundi, rang, rangGeneral, verifierSerie, validerJour, relever, prixForclusion, noter, niveau, aRevoir, aRattraper,
@@ -1239,7 +1240,10 @@ function progressionZone(z) {
 // Le chemin du cours : les chambres alternent de part et d'autre d'un fil de lumière.
 // Les chambres : un chemin épuré. Les sceaux sur le chemin, les noms alignés à droite, la chambre en cours mise en avant.
 const XS = [70, 110]; const H_SALLE = 104; const H_COURANTE = 176;
-function carte() {
+// Les chambres s'ouvrent sur la tour ; l'ancienne liste reste à un geste (réglage mémorisé).
+function carte() { if (etat.reglages.vueChambres === 'liste') carteListe(); else tourPalais(); }
+function changerVueChambres(vue) { etat.reglages.vueChambres = vue; sauver(); son('tap'); carte(); }
+function carteListe() {
   const ouvertes = zonesOuvertes(ix);
   const gagnees = M().zones.gagnees;
   const parcours = ix.zones.filter((z) => !z.bonus && !z.travaux);
@@ -1269,7 +1273,128 @@ function carte() {
   const audiences = gagnees.filter((id) => parcours.some((z) => z.id === id)).length;
   montrer(barreHaut(), h('section', { class: 'page page-chambres' },
     h('div', { class: 'chambres-tete' }, h('h1', {}, 'Chambres'), h('span', {}, `${audiences} audience${audiences > 1 ? 's' : ''} sur ${parcours.length}`)),
+    h('button', { class: 'bouton-lien vers-tour', 'data-vers-tour': '', onClick: () => changerVueChambres('tour') }, 'Voir la tour'),
     h('p', { class: 'page-sous' }, estConstit() ? `${matiereDe(etat.matiere).nom}, ${ETIQUETTE_CONSTIT}` : estIntro() ? matiereDe(etat.matiere).nom : `${matiereDe(etat.matiere).nom}, équipe ${etat.equipe}`), plan));
+}
+
+// LA TOUR : une pièce par chambre, empilées du hall à la Cour de cassation.
+// Fermée : la pièce vide dans la pénombre. En cours : le plan d'architecte, qui prend ses couleurs fiche après fiche.
+// Gagnée : la pièce allumée, lampe par lampe. Parfaite : des poussières dorées en plus.
+const IMG_TOUR = 'img/tour/';
+function etatEtage(z, ouvertes, gagnees, parfaites) {
+  if (z.travaux) return 'travaux';
+  if (!ouvertes.includes(z.id)) return 'fermee';
+  if (parfaites.includes(z.id)) return 'parfaite';
+  if (gagnees.includes(z.id)) return 'gagnee';
+  return 'cours';
+}
+function phraseTour(etatE, z, p) {
+  const reste = p.total - p.acquis;
+  if (etatE === 'travaux') return 'Cette salle attend la suite du cours.';
+  if (etatE === 'fermee') return 'Gagne l’audience de l’étage du dessous pour ouvrir celle-ci.';
+  if (etatE === 'parfaite') return 'Salle parfaite. Rien à redire.';
+  if (etatE === 'gagnee') return 'Salle gagnée. Un sans-faute à l’audience la fait briller.';
+  if (!p.total) return 'Passe l’audience pour gagner cette salle.';
+  if (reste > 0) return `Encore ${pluriel(reste, motFiche())} à acquérir, puis l’audience.`;
+  return 'Tout est acquis. L’audience t’attend.';
+}
+function tourPalais() {
+  const ouvertes = zonesOuvertes(ix);
+  const gagnees = M().zones.gagnees; const parfaites = M().zones.parfaites || [];
+  const zones = ix.zones;
+  const n = zones.length;
+  const parcours = zones.filter((z) => !z.bonus && !z.travaux);
+  const enCours = (etat.reglages.toutOuvert ? parcours.find((z) => !gagnees.includes(z.id)) : [...parcours].reverse().find((z) => ouvertes.includes(z.id) && !gagnees.includes(z.id)))?.id;
+  // Les salles gagnées depuis la dernière visite s'allument sous les yeux.
+  const vues = (etat.reglages.tourVue ||= {})[etat.matiere] || null;
+  const nouvelles = vues ? gagnees.filter((id) => !vues.includes(id)) : [];
+  etat.reglages.tourVue[etat.matiere] = [...gagnees];
+  if (!vues || nouvelles.length) sauver();
+  let courant = Math.max(0, zones.findIndex((z) => z.id === (nouvelles[nouvelles.length - 1] ?? enCours)));
+  if (courant < 0) courant = 0;
+
+  const etages = zones.map((z, i) => {
+    const piece = pieceDe(i, n);
+    const p = progressionZone(z.id);
+    const e = etatEtage(z, ouvertes, gagnees, parfaites);
+    const part = p.total ? p.acquis / p.total : 0;
+    const lampes = (LAMPES[piece] || []).map(([x, y], k) => h('span', { class: 'tour-lampe', style: `left:${x * 100}%;top:${y * 100}%;--d:${(0.15 + k * 0.35).toFixed(2)}s` }, h('i')));
+    const effets = (EFFETS[piece] || []).map(([type, x, y]) => h('span', { class: `tour-${type}`, style: `left:${x}%;top:${y}%` }, type === 'vapeur' ? [h('i'), h('i'), h('i')] : null));
+    const poussieres = e === 'parfaite' ? h('span', { class: 'tour-poussieres' }, Array.from({ length: 8 }, (_, k) => h('i', { style: `left:${10 + k * 11}%;top:${30 + (k * 37) % 45}%;animation-delay:${(k * 0.7).toFixed(1)}s` }))) : null;
+    const img = (cls, src) => h('img', { class: cls, src, alt: '', draggable: 'false', loading: Math.abs(i - courant) <= 1 ? 'eager' : 'lazy', decoding: 'async', onError: (ev) => { ev.target.hidden = true; } });
+    return h('div', { class: `tour-etage${nouvelles.includes(z.id) ? ' allumage' : ''}`, 'data-etat': e, 'data-zone': z.id, style: `z-index:${10 + i};--p:${part.toFixed(3)}` },
+      h('button', { class: 'tour-boite', 'aria-label': `Chambre ${z.id}, ${z.titre}`, onClick: () => { son('tap'); if (e === 'fermee') chambreFermee(z); else if (e !== 'travaux') chambre(z.id); } },
+        img('tour-vide', `${IMG_TOUR}vide.webp`), img('tour-plan', `${IMG_TOUR}${piece}-plan.webp`), img('tour-pleine', `${IMG_TOUR}${piece}.webp`),
+        h('span', { class: 'tour-halo' }), lampes, effets, poussieres, h('span', { class: 'tour-eclat' }),
+        e === 'fermee' || e === 'travaux' ? h('span', { class: 'tour-cadenas' }, icone(e === 'travaux' ? 'travaux' : 'cadenas', 40)) : null));
+  });
+  const pile = h('div', { class: 'tour-pile' }, h('div', { class: 'tour-fut', 'aria-hidden': 'true' }), [...etages].reverse());
+  const defile = h('div', { class: 'tour-defile' }, pile);
+
+  // Le tiroir : la chambre de l'étage regardé.
+  const bulle = h('p', { class: 'tour-bulle', 'aria-live': 'polite' });
+  const lexou = h('div', { class: 'tour-lexou' });
+  const etiquette = h('span', { class: 'tour-etiquette' });
+  const titre = h('h2', {});
+  const barre = h('i');
+  const compte = h('span'); const pct = h('span');
+  const actions = h('div', { class: 'tour-actions' });
+  const liste = h('ul', { class: 'grille-cartes tour-liste' });
+  const tiroir = h('section', { class: 'tour-tiroir', 'aria-label': 'Chambre affichée' },
+    lexou, bulle,
+    h('button', { class: 'tour-poignee', 'aria-label': 'Afficher les fiches de la chambre', onClick: () => basculer() }),
+    h('button', { class: 'tour-entete', onClick: () => basculer() }, etiquette, titre),
+    h('div', { class: 'tour-barre' }, barre), h('div', { class: 'tour-compte' }, compte, pct),
+    actions, liste);
+  const basculer = (ouvrir = !tiroir.classList.contains('ouvert')) => { tiroir.classList.toggle('ouvert', ouvrir); tiroir.querySelector('.tour-poignee').setAttribute('aria-expanded', String(ouvrir)); };
+  let poseLexou = '';
+  function remplir() {
+    const z = zones[courant]; const e = etatEtage(z, ouvertes, gagnees, parfaites); const p = progressionZone(z.id);
+    etiquette.textContent = z.bonus ? 'Chambre bonus' : `Chambre ${z.id}`;
+    titre.textContent = z.titre;
+    barre.style.width = `${e === 'gagnee' || e === 'parfaite' ? 100 : p.total ? (p.acquis / p.total) * 100 : 0}%`;
+    const finie = e === 'gagnee' || e === 'parfaite';
+    compte.textContent = finie ? (e === 'parfaite' ? 'Audience gagnée sans faute' : 'Audience gagnée') : p.total ? `${p.acquis} acquis sur ${p.total}` : '';
+    pct.textContent = !finie && p.total ? `${Math.round((p.acquis / p.total) * 100)} %` : '';
+    const ouvert = e !== 'fermee' && e !== 'travaux';
+    const fiches = ix.cartes.filter((a) => a.zones.includes(z.id)).sort(ordreFiches);
+    actions.replaceChildren(
+      e === 'fermee' ? h('button', { class: 'bouton-or', onClick: () => chambreFermee(z) }, 'Ouvrir cette chambre')
+        : e === 'travaux' ? h('button', { class: 'bouton-or', disabled: true }, 'En travaux')
+          : fiches.length ? h('button', { class: 'bouton-or', 'data-reviser': '', onClick: () => reviserZone(z.id) }, 'Réviser cette chambre') : null,
+      ouvert && !z.bonus ? h('button', { class: 'bouton-fantome', 'data-audience': '', onClick: () => lancerBoss(z.id) }, 'Audience') : null);
+    liste.replaceChildren(...fiches.map(carteArret));
+    const nouvellePose = e === 'gagnee' || e === 'parfaite' ? 'clin' : e === 'cours' ? 'debout' : 'reflexion';
+    if (nouvellePose !== poseLexou) { poseLexou = nouvellePose; lexou.replaceChildren(chouette(nouvellePose, { taille: 84 })); }
+    bulle.classList.add('change');
+    setTimeout(() => { bulle.textContent = phraseTour(e, z, p); bulle.classList.remove('change'); }, 150);
+    etages.forEach((el, i) => el.classList.toggle('courant', i === courant));
+  }
+  let attente;
+  defile.addEventListener('scroll', () => {
+    clearTimeout(attente);
+    attente = setTimeout(() => {
+      const milieu = defile.scrollTop + defile.clientHeight / 2;
+      let meilleur = courant; let d = Infinity;
+      etages.forEach((el, i) => { const m = el.offsetTop + el.offsetHeight / 2; if (Math.abs(m - milieu) < d) { d = Math.abs(m - milieu); meilleur = i; } });
+      if (meilleur !== courant) { courant = meilleur; remplir(); }
+    }, 80);
+  }, { passive: true });
+
+  const sous = estConstit() ? `${matiereDe(etat.matiere).nom}, ${ETIQUETTE_CONSTIT}` : estIntro() ? matiereDe(etat.matiere).nom : `${matiereDe(etat.matiere).nom}, équipe ${etat.equipe}`;
+  const audiences = gagnees.filter((id) => parcours.some((z) => z.id === id)).length;
+  const ecran = h('section', { class: 'tour-ecran' },
+    h('header', { class: 'tour-tete' },
+      h('div', {}, h('h1', {}, 'Chambres'), h('small', {}, sous), h('small', {}, `${audiences} audience${audiences > 1 ? 's' : ''} sur ${parcours.length}`)),
+      h('button', { class: 'tour-vers-liste', 'data-vers-liste': '', onClick: () => changerVueChambres('liste') }, 'Liste')),
+    defile, tiroir);
+  montrer(ecran);
+  remplir();
+  requestAnimationFrame(() => {
+    const el = etages[courant];
+    defile.scrollTop = el.offsetTop + el.offsetHeight / 2 - defile.clientHeight / 2;
+    if (nouvelles.length) { son('deblocage'); setTimeout(() => etages.forEach((x) => x.classList.remove('allumage')), 2600); }
+  });
 }
 
 function chambreFermee(z) {

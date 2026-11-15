@@ -318,6 +318,7 @@ async function execGroupe1(b, PORT, erreurs) {
   if (matchSeul('audience gagnée')) {
     await pageG1();
     if (!p.url().includes(URLB)) { await p.goto(URLB + '?test'); await p.waitForSelector('.tribune'); }
+    await p.evaluate(() => { window.__app.etat().reglages.vueChambres = 'liste'; });
     await p.locator('.onglet', { hasText: 'Chambres' }).click();
     await p.locator('.salle', { hasText: 'Normes constitutionnelles' }).locator('button').click();
     await p.tap('text=Audience solennelle');
@@ -347,7 +348,7 @@ async function execGroupe1(b, PORT, erreurs) {
   // 3. Audience solennelle et ouverture de la chambre suivante
   if (matchSeul('audience jouée') || matchSeul('audience')) {
     await pageG1();
-    await p.evaluate(() => window.__app.aller('carte'));
+    await p.evaluate(() => { window.__app.etat().reglages.vueChambres = 'liste'; window.__app.aller('carte'); });
     await p.screenshot({ path: CAP + 'chambres.png' });
     await debordement(p, 'chambres');
     await p.locator('.salle', { hasText: 'Naissance' }).locator('button').click();
@@ -1155,6 +1156,35 @@ async function execGroupe1(b, PORT, erreurs) {
     log('encore une ok');
   }
 
+  if (matchSeul('tour')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
+    const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
+    await p.goto(URLB + '?test'); await p.waitForSelector('.tribune');
+    await p.evaluate(() => { const e = window.__app.etat(); e.zones.ouvertes = [1, 2, 3, 4, 5]; e.zones.gagnees = [1, 2, 3, 4]; e.zones.parfaites = [2]; window.__app.aller('carte'); });
+    await p.waitForSelector('.tour-ecran');
+    const n = await p.evaluate(() => window.__app.ix.zones.length);
+    assert.equal(await p.locator('.tour-etage').count(), n, 'un étage par chambre');
+    const etats = await p.evaluate(() => Object.fromEntries([...document.querySelectorAll('.tour-etage')].map((e) => [e.dataset.zone, e.dataset.etat])));
+    assert.equal(etats[1], 'gagnee'); assert.equal(etats[2], 'parfaite'); assert.equal(etats[5], 'cours'); assert.equal(etats[6], 'fermee');
+    assert.match(await p.locator('.tour-tiroir h2').innerText(), new RegExp((await p.evaluate(() => window.__app.ix.zones.find((z) => z.id === 5).titre)).slice(0, 8)), 'le tiroir montre la chambre en cours');
+    await p.waitForTimeout(400); await p.screenshot({ path: CAP + 'tour.png' });
+    await debordement(p, 'tour');
+    await p.tap('.tour-poignee'); await p.waitForSelector('.tour-tiroir.ouvert .tour-liste .carte-arret');
+    await p.tap('.tour-poignee');
+    // Descendre d'un étage change le tiroir.
+    await p.evaluate(() => { const d = document.querySelector('.tour-defile'); d.scrollBy({ top: d.querySelector('.tour-etage').offsetHeight }); });
+    await p.waitForFunction(() => document.querySelector('.tour-tiroir .tour-etiquette').textContent === 'Chambre 4');
+    // Une audience gagnée depuis la dernière visite s'allume.
+    await p.evaluate(() => { const e = window.__app.etat(); e.zones.gagnees.push(5); e.zones.ouvertes.push(6); window.__app.aller('palais'); window.__app.aller('carte'); });
+    await p.waitForSelector('.tour-etage.allumage[data-zone="5"]');
+    // La liste reste à un geste, et le choix est retenu.
+    await p.tap('[data-vers-liste]'); await p.waitForSelector('.parcours .salle');
+    assert.equal((await etat(p)).reglages.vueChambres, 'liste');
+    await p.tap('[data-vers-tour]'); await p.waitForSelector('.tour-ecran');
+    await c.close();
+    log('tour ok');
+  }
+
   if (matchSeul('fenetres clavier')) {
     const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
     const p = await c.newPage(); p.on('pageerror', (e) => erreurs.push(e.message));
@@ -1676,7 +1706,7 @@ async function execGroupe2(b, PORT, erreurs) {
     assert.equal(ixe.eq, 1); assert.equal(ixe.zones, 14); assert.deepEqual(ixe.travaux, []);
     assert.ok(!ixe.arrets.includes('mixte2006'), 'pas d’arrêt propre à l’équipe 2');
     assert.ok(!ixe.cas.includes('michel'), 'pas de cas propre à l’équipe 2');
-    await e1.evaluate(() => window.__app.aller('carte')); await e1.waitForSelector('.salle');
+    await e1.evaluate(() => { window.__app.etat().reglages.vueChambres = 'liste'; window.__app.aller('carte'); }); await e1.waitForSelector('.salle');
     assert.equal(await e1.locator('.salle').count(), 14);
     await debordement(e1, 'chambres équipe 1');
     await e1.screenshot({ path: CAP + 'equipe-chambres.png', fullPage: true });
@@ -1735,7 +1765,7 @@ async function execGroupe2(b, PORT, erreurs) {
     assert.ok(ix2.ids.includes('tiktok') && ix2.ids.includes('blanco'), 'arrêts de l’équipe 2 et fiches reprises');
     assert.ok(!ix2.ids.includes('eky'), 'pas d’arrêt propre à l’équipe 1');
     for (let z = 1; z <= 6; z++) assert.ok(await d2.evaluate((id) => window.__app.ix.cartes.filter((a) => a.zones.includes(id)).length, z) >= 3, `chambre ${z} trop maigre`);
-    await d2.evaluate(() => window.__app.aller('carte')); await d2.waitForSelector('.salle');
+    await d2.evaluate(() => { window.__app.etat().reglages.vueChambres = 'liste'; window.__app.aller('carte'); }); await d2.waitForSelector('.salle');
     assert.equal(await d2.locator('.salle').count(), 6, 'six chambres');
     await debordement(d2, 'chambres admin équipe 2');
     await d2.screenshot({ path: CAP + 'admin2-chambres.png', fullPage: true });
@@ -2036,7 +2066,7 @@ async function execGroupe3(b, PORT, erreurs) {
     assert.equal((await etat(co)).matiere, 'constit');
     const ixC = await co.evaluate(() => ({ zones: window.__app.ix.zones.length, travaux: window.__app.ix.zones.filter((z) => z.travaux).length, notions: window.__app.ix.articles.length }));
     assert.equal(ixC.zones, 10); assert.equal(ixC.travaux, 4); assert(ixC.notions >= 80, 'au moins quatre-vingts notions');
-    await co.evaluate(() => window.__app.aller('carte')); await co.waitForSelector('.salle');
+    await co.evaluate(() => { window.__app.etat().reglages.vueChambres = 'liste'; window.__app.aller('carte'); }); await co.waitForSelector('.salle');
     await debordement(co, 'chambres constit'); await co.screenshot({ path: CAP + 'constit-chambres.png', fullPage: true });
     await co.evaluate(() => { window.__app.etat().reglages.toutOuvert = true; window.__app.aller('role'); });
     for (const m of ['pouvoirs', 'nuancier', 'plume']) assert.equal(await co.locator(`.role-ligne[data-mode="${m}"]`).count(), 1, `mode ${m}`);

@@ -44,7 +44,7 @@ const empreinte = createHash('sha256');
 for (const f of [...fichiers, 'sw.js']) empreinte.update(f).update(readFileSync(join(SORTIE, f)));
 const version = empreinte.digest('hex').slice(0, 12);
 // Les planches animées de Lexou ne sont pas mises en cache à l'installation : elles se chargent à la demande.
-const liste = ['./', ...fichiers.filter((f) => f !== 'index.html' && !f.startsWith('img/lexou/'))];
+const liste = ['./', ...fichiers.filter((f) => f !== 'index.html' && !f.startsWith('img/lexou/') && !f.startsWith('img/tour/'))];
 const sw = readFileSync(join(SORTIE, 'sw.js'), 'utf8').replace('__VERSION__', version).replace('__FICHIERS__', JSON.stringify(liste));
 writeFileSync(join(SORTIE, 'sw.js'), sw);
 writeFileSync(join(SORTIE, '.nojekyll'), '');

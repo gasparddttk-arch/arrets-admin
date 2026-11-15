@@ -23,6 +23,8 @@ self.addEventListener('fetch', (e) => {
   if (url.origin !== location.origin) return;
   // Les planches animées de Lexou passent au réseau (cache du navigateur) : trop lourdes pour l'installation.
   if (url.pathname.includes('/img/lexou/')) return;
+  // Les pièces de la tour aussi : chargées à la demande, étage par étage.
+  if (url.pathname.includes('/img/tour/')) return;
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
     // Une navigation vers l'appli sert la page d'accueil en cache ; les autres pages (partager, mentions…) gardent la leur.
