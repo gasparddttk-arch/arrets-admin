@@ -153,7 +153,7 @@ function etatInitial() {
     enCours: null,
     trophees: {},
     stats: { seances: 0, parfaites: 0, comboMax: 0, juge: 0, plan: 0, archi: 0, cas: 0, frise: 0 },
-    reglages: { son: true, toutOuvert: false, effets: true, vibration: true, sonSilencieux: false },
+    reglages: { son: true, toutOuvert: false, effets: true, vibration: true, sonSilencieux: false, install: null, installeCompte: false, podiumVu: null },
     defi: { jour: null, fini: false },
     compte: { id: null, email: null, pseudo: null, acces: null, sync: 0 },
     modifie: 0,
