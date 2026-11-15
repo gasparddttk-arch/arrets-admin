@@ -260,7 +260,7 @@ Antigravity ne prend que les tâches au statut exact « À faire ». Les autres 
 Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 1 de `tests/run.cjs`.
 
 ### [TÂCHE 1a] Mode test réservé à la machine locale
-- **Statut** : À faire
+- **Statut** : Prêt pour Claude (suite verte le 15/11 à 01h22 sur 48825d0)
 - **Fichiers concernés** : `app/js/ui.js`, `app/js/main.js`, `app/js/suivi.js`, `app/js/chouette.js`, `app/js/jeux-l1.js`, `tests/run.cjs`
 - **Objectif** : aujourd'hui `https://gdroit.eu/?test` ouvre l'appli sans compte et écrit les bonnes réponses dans le DOM. `?test` ne doit plus rien changer hors de la machine de développement.
 - **Détails de modification** :
@@ -446,6 +446,12 @@ Chaque tâche ajoute ses tests dans un bloc `if (matchSeul('<nom>'))` du groupe 
 ---
 
 ## Dernières actions exécutées par Antigravity
+- **15/11/2026 (Tâche 1a)** :
+  - `app/js/ui.js` : export de la fonction `modeTest` vérifiant que l'URL contient le paramètre `test` et que l'hôte fait partie de `['localhost', '127.0.0.1', '[::1]']`. Remplacement des appels directs à `has('test')` par `modeTest()`.
+  - `app/js/chouette.js`, `app/js/jeux-l1.js`, `app/js/suivi.js`, `app/js/main.js` : remplacement de toutes les occurrences de `has('test')` par `modeTest()`.
+  - `tests/serveur.cjs` : écoute sur `0.0.0.0` pour répondre indifféremment sur `127.0.0.1`, `localhost` et les sous-domaines `*.localhost`.
+  - `tests/run.cjs` : ajout du bloc de test `mode test` dans le groupe 1 vérifiant la présence de `window.__app` sur `http://127.0.0.1:<port>/?test` et son absence (`undefined`, sans aucun repère `[data-ok]`) sur `http://gdroit.localhost:<port>/?test`.
+  - Validation : `npm run check`, `npm run build`, suite complète `NODE_PATH=$(npm root -g) node tests/run.cjs --parallele` 100% verte (524.5s sur 48825d0).
 - **14/11/2026 (Tâche P)** :
   - `app/css/app.css` : ajout des tokens de mouvement dans `:root` (`--ressort`, `--sortie`, `--t-court`, `--t-moyen`, `--t-long`), règles pour `.clone-sortant`, gestion de la pastille d'onglet unique `.onglet-pastille`, adaptation accessibilité pour `prefers-reduced-motion` et `[data-effets='non']` / `[data-effets='leger']`, ajout de `overflow-x: clip` sur `html, body`.
   - `app/js/main.js` :
