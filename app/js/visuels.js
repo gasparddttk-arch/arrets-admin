@@ -142,3 +142,103 @@ export const salleAudience = () => svg(`<svg class="salle-audience" viewBox="0 0
   <path d="M0 146h390" stroke="url(#gOr)" stroke-width="2.500"/>
   <path d="M0 156h390" stroke="url(#gOr)" stroke-width=".8" stroke-opacity=".5"/>
 </svg>`);
+
+// Pas-à-pas illustré pour l'installation sur téléphone (Tâche B)
+export function illustrationInstall(os, etape) {
+  const o = String(os || '').toLowerCase();
+  const n = Number(etape);
+  const cadre = '<rect x="60" y="8" width="120" height="134" rx="14" fill="currentColor" fill-opacity=".04" stroke="currentColor" stroke-width="1.6" stroke-opacity=".35"/><line x1="110" y1="13" x2="130" y2="13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-opacity=".3"/>';
+
+  if (o === 'ios') {
+    if (n === 1) {
+      return svg(`<svg viewBox="0 0 240 150" role="img" aria-label="Étape 1 : toucher le bouton Partager dans Safari">
+        ${cadre}
+        <rect x="72" y="24" width="96" height="10" rx="3" fill="currentColor" fill-opacity=".08"/>
+        <rect x="72" y="40" width="60" height="6" rx="2" fill="currentColor" fill-opacity=".1"/>
+        <rect x="72" y="52" width="96" height="56" rx="6" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-width=".8" stroke-opacity=".15"/>
+        <rect x="61" y="116" width="118" height="24" fill="currentColor" fill-opacity=".08" stroke="currentColor" stroke-width=".8" stroke-opacity=".2"/>
+        <path d="M72 128l-3-3 3-3" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-opacity=".35"/>
+        <path d="M84 122l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-opacity=".2"/>
+        <rect x="156" y="123" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-opacity=".35"/>
+        <rect x="115" y="124" width="10" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M120 120v6M117.5 122.5L120 120l2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="120" cy="126" r="13" fill="var(--titre-or)" fill-opacity=".18" stroke="var(--titre-or)" stroke-width="2.2"/>
+      </svg>`);
+    }
+    if (n === 2) {
+      return svg(`<svg viewBox="0 0 240 150" role="img" aria-label="Étape 2 : choisir Sur l’écran d’accueil">
+        ${cadre}
+        <rect x="61" y="18" width="118" height="122" fill="currentColor" fill-opacity=".04"/>
+        <rect x="61" y="42" width="118" height="98" rx="10" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1" stroke-opacity=".3"/>
+        <line x1="110" y1="47" x2="130" y2="47" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-opacity=".4"/>
+        <rect x="72" y="54" width="46" height="5" rx="1.5" fill="currentColor" fill-opacity=".2"/>
+        <rect x="68" y="64" width="104" height="16" rx="4" fill="currentColor" fill-opacity=".06"/>
+        <rect x="74" y="68" width="8" height="8" rx="1.5" fill="currentColor" fill-opacity=".2"/>
+        <rect x="88" y="70" width="48" height="4" rx="1" fill="currentColor" fill-opacity=".18"/>
+        <rect x="68" y="84" width="104" height="22" rx="5" fill="currentColor" fill-opacity=".12"/>
+        <rect x="74" y="88" width="14" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M81 91v8M77 95h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        <text x="93" y="98" font-family="-apple-system, system-ui, sans-serif" font-size="7.5" font-weight="600" fill="currentColor">Sur l’écran d’accueil</text>
+        <circle cx="81" cy="95" r="12" fill="var(--titre-or)" fill-opacity=".2" stroke="var(--titre-or)" stroke-width="2.2"/>
+        <rect x="68" y="110" width="104" height="16" rx="4" fill="currentColor" fill-opacity=".06"/>
+        <rect x="74" y="114" width="8" height="8" rx="1.5" fill="currentColor" fill-opacity=".2"/>
+        <rect x="88" y="116" width="40" height="4" rx="1" fill="currentColor" fill-opacity=".18"/>
+      </svg>`);
+    }
+    if (n === 3) {
+      return svg(`<svg viewBox="0 0 240 150" role="img" aria-label="Étape 3 : toucher Ajouter en haut à droite">
+        ${cadre}
+        <rect x="61" y="20" width="118" height="22" fill="currentColor" fill-opacity=".08" stroke="currentColor" stroke-width=".8" stroke-opacity=".2"/>
+        <text x="68" y="34" font-family="-apple-system, system-ui, sans-serif" font-size="7.5" fill="currentColor" fill-opacity=".5">Annuler</text>
+        <text x="170" y="34" text-anchor="end" font-family="-apple-system, system-ui, sans-serif" font-size="8" font-weight="700" fill="var(--titre-or)">Ajouter</text>
+        <circle cx="157" cy="31" r="12" fill="var(--titre-or)" fill-opacity=".18" stroke="var(--titre-or)" stroke-width="2.2"/>
+        <rect x="74" y="54" width="26" height="26" rx="6" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="1" stroke-opacity=".3"/>
+        <text x="87" y="71" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="13" font-weight="700" fill="currentColor">G</text>
+        <rect x="106" y="58" width="64" height="16" rx="3" fill="currentColor" fill-opacity=".06" stroke="currentColor" stroke-width=".8" stroke-opacity=".2"/>
+        <text x="111" y="69" font-family="-apple-system, system-ui, sans-serif" font-size="7.5" font-weight="600" fill="currentColor">Gdroit</text>
+        <rect x="74" y="90" width="94" height="5" rx="1.5" fill="currentColor" fill-opacity=".1"/>
+        <rect x="74" y="100" width="68" height="5" rx="1.5" fill="currentColor" fill-opacity=".1"/>
+      </svg>`);
+    }
+  }
+
+  if (o === 'android') {
+    if (n === 1) {
+      return svg(`<svg viewBox="0 0 240 150" role="img" aria-label="Étape 1 : toucher les trois points en haut à droite">
+        ${cadre}
+        <rect x="61" y="20" width="118" height="24" fill="currentColor" fill-opacity=".08" stroke="currentColor" stroke-width=".8" stroke-opacity=".2"/>
+        <rect x="68" y="25" width="80" height="14" rx="7" fill="currentColor" fill-opacity=".07" stroke="currentColor" stroke-width=".7" stroke-opacity=".15"/>
+        <text x="76" y="35" font-family="-apple-system, system-ui, sans-serif" font-size="7" fill="currentColor" fill-opacity=".5">gdroit.eu</text>
+        <rect x="152" y="27" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1" stroke-opacity=".4"/>
+        <text x="157" y="35" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="6.5" font-weight="600" fill="currentColor" fill-opacity=".6">1</text>
+        <circle cx="169" cy="28" r="1.3" fill="currentColor"/>
+        <circle cx="169" cy="32" r="1.3" fill="currentColor"/>
+        <circle cx="169" cy="36" r="1.3" fill="currentColor"/>
+        <circle cx="169" cy="32" r="11" fill="var(--titre-or)" fill-opacity=".18" stroke="var(--titre-or)" stroke-width="2.2"/>
+        <rect x="72" y="56" width="96" height="10" rx="3" fill="currentColor" fill-opacity=".08"/>
+        <rect x="72" y="72" width="60" height="6" rx="2" fill="currentColor" fill-opacity=".1"/>
+        <rect x="72" y="84" width="96" height="46" rx="6" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-width=".8" stroke-opacity=".15"/>
+      </svg>`);
+    }
+    if (n === 2) {
+      return svg(`<svg viewBox="0 0 240 150" role="img" aria-label="Étape 2 : choisir Installer l’application">
+        ${cadre}
+        <rect x="86" y="26" width="90" height="102" rx="6" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="1" stroke-opacity=".3"/>
+        <rect x="92" y="33" width="78" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
+        <rect x="96" y="37" width="34" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
+        <rect x="92" y="47" width="78" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
+        <rect x="96" y="51" width="44" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
+        <rect x="90" y="61" width="82" height="22" rx="4" fill="currentColor" fill-opacity=".14"/>
+        <path d="M98 67v7M95.5 71.5L98 74l2.5-2.5M94 77h8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="105" y="74" font-family="-apple-system, system-ui, sans-serif" font-size="6.8" font-weight="600" fill="currentColor">Installer l’application</text>
+        <circle cx="98" cy="72" r="11" fill="var(--titre-or)" fill-opacity=".2" stroke="var(--titre-or)" stroke-width="2.2"/>
+        <rect x="92" y="87" width="78" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
+        <rect x="96" y="91" width="38" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
+        <rect x="92" y="101" width="78" height="11" rx="2" fill="currentColor" fill-opacity=".06"/>
+        <rect x="96" y="105" width="30" height="4" rx="1" fill="currentColor" fill-opacity=".2"/>
+      </svg>`);
+    }
+  }
+
+  return null;
+}

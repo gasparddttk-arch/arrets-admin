@@ -710,6 +710,7 @@ async function execGroupe1(b, PORT, erreurs) {
       assert.match(await tp.locator('.res-rappel-install p').innerText(), /Installe Gdroit/);
       assert.equal(await tp.locator('.res-rappel-install button', { hasText: 'Comment faire' }).count(), 1);
       assert.equal(await tp.locator('.res-rappel-install button', { hasText: 'Plus tard' }).count(), 1);
+      assert.equal(await tp.locator('.res-rappel-install button', { hasText: 'Ne plus proposer' }).count(), 1);
       await tp.screenshot({ path: CAP + 'rappel-installation-resultats.png' }); await debordement(tp, 'rappel installation');
       await tp.locator('.res-rappel-install button', { hasText: 'Comment faire' }).click();
       await tp.waitForSelector('.boite .installer');
@@ -1319,6 +1320,154 @@ async function execGroupe1(b, PORT, erreurs) {
 
     await c.close();
     log('quitter en cours ok');
+  }
+
+  if (matchSeul('installation')) {
+    // Tâche B : L'installation proposée au bon moment, avec un pas-à-pas illustré
+    {
+      const tc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+      await tc.route('https://jhpgxisxayceixmppxuu.supabase.co/auth/v1/token**', (route) => route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify({ access_token: 'jeton_test', refresh_token: 'refresh_test', expires_in: 3600, user: { id: 'u-test', email: 'test@exemple.fr', user_metadata: {} } }),
+      }));
+      const tp = await tc.newPage();
+      tp.on('pageerror', (x) => erreurs.push(x.message));
+      await tp.addInitScript(() => {
+        if (location.search.includes('code=')) localStorage.setItem('gdroit-pkce', JSON.stringify({ v: 'verificateur-test', t: Date.now() }));
+      });
+      await tp.goto(URLB + '?test&compte&code=code-test');
+      await tp.waitForSelector('.tribune');
+
+      // 1. resultats avec moyenne 0,5 : n'affiche pas .res-rappel-install
+      await tp.evaluate(() => window.__app.resultats({ scores: [0.5], rounds: [{}], parfaites: 0, xp: 20, jetons: 2, comboMax: 1, touches: new Map() }, true));
+      await tp.waitForSelector('.resultats');
+      assert.equal(await tp.locator('.res-rappel-install').count(), 0, 'moyenne 0,5 : pas de rappel d’installation');
+
+      // 2. resultats avec moyenne 0,9 : l'affiche
+      await tp.evaluate(() => window.__app.resultats({ scores: [0.9], rounds: [{}], parfaites: 1, xp: 50, jetons: 5, comboMax: 3, touches: new Map() }, true));
+      await tp.waitForSelector('.res-rappel-install');
+      assert.equal(await tp.locator('.res-rappel-install').count(), 1, 'moyenne 0,9 : rappel d’installation affiché');
+      assert.equal(await tp.locator('.res-rappel-install button', { hasText: 'Ne plus proposer' }).count(), 1);
+
+      // Guide modal sur iPhone Safari : 3 svg
+      await tp.locator('.res-rappel-install button', { hasText: 'Comment faire' }).click();
+      await tp.waitForSelector('.boite .installer');
+      assert.equal(await tp.locator('.boite .installer .guide svg').count(), 3, 'le guide modal contient 3 svg sur iPhone Safari');
+      await tp.screenshot({ path: CAP + 'install-guide-ios.png' });
+      await debordement(tp, 'install-guide-ios');
+      await tp.locator('.boite button', { hasText: 'Compris' }).click();
+      await tp.waitForSelector('.boite', { state: 'detached' });
+
+      // « Ne plus proposer » puis une nouvelle séance réussie ne l'affiche plus
+      await tp.locator('.res-rappel-install button', { hasText: 'Ne plus proposer' }).click();
+      assert.equal(await tp.locator('.res-rappel-install').count(), 0, 'rappel fermé après ne plus proposer');
+
+      await tp.evaluate(() => window.__app.resultats({ scores: [0.9], rounds: [{}], parfaites: 1, xp: 50, jetons: 5, comboMax: 3, touches: new Map() }, true));
+      await tp.waitForTimeout(200);
+      assert.equal(await tp.locator('.res-rappel-install').count(), 0, 'ne plus proposer : plus de rappel affiché');
+
+      await tc.close();
+    }
+
+    // Capture Android : install-guide-android.png
+    {
+      const ac = await b.newContext({ ...devices['Pixel 7'], serviceWorkers: 'block' });
+      const ap = await ac.newPage();
+      ap.on('pageerror', (x) => erreurs.push(x.message));
+      await ap.goto(URLB + '?test');
+      await ap.waitForSelector('.tribune');
+      await ap.evaluate(() => {
+        const boite = document.createElement('div');
+        boite.className = 'boite';
+        const h2 = document.createElement('h2');
+        h2.textContent = 'Installer Gdroit';
+        const sec = document.createElement('section');
+        sec.className = 'installer';
+        sec.append(window.__app.guideInstallation());
+        boite.append(h2, sec);
+        document.getElementById('app').replaceChildren(boite);
+      });
+      await ap.waitForSelector('.boite .installer .guide');
+      assert.equal(await ap.locator('.boite .installer .guide svg').count(), 2, 'le guide contient 2 svg sur Android Chrome');
+      await ap.screenshot({ path: CAP + 'install-guide-android.png' });
+      await debordement(ap, 'install-guide-android');
+      await ac.close();
+    }
+
+    log('installation ok');
+  }
+
+  if (matchSeul('podium')) {
+    // Tâche E : Carte du podium de la semaine sur le Palais
+    {
+      const tc = await b.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+      await tc.route('https://jhpgxisxayceixmppxuu.supabase.co/auth/v1/token**', (route) => route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify({ access_token: 'jeton_test', refresh_token: 'refresh_test', expires_in: 3600, user: { id: 'u-test', email: 'test@exemple.fr', user_metadata: {} } }),
+      }));
+
+      const jourActuel = Math.floor(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) / 864e5);
+      const lundiActuel = jourActuel - ((new Date(jourActuel * 864e5).getUTCDay() + 6) % 7);
+      const semaineDerniere = lundiActuel - 7;
+
+      let reponseClassement = {
+        semaine: semaineDerniere,
+        rang: 2,
+        sur: 4,
+        xp: 150,
+        podium: [
+          { pseudo: 'Alice', xp: 220, moi: false },
+          { pseudo: 'Moi', xp: 150, moi: true },
+          { pseudo: 'Bob', xp: 90, moi: false },
+        ],
+      };
+
+      await tc.route('**/rest/v1/rpc/mon_classement', (route) => route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify(reponseClassement),
+      }));
+
+      const tp = await tc.newPage();
+      tp.on('pageerror', (x) => erreurs.push(x.message));
+      await tp.addInitScript(() => {
+        if (location.search.includes('code=')) localStorage.setItem('gdroit-pkce', JSON.stringify({ v: 'verificateur-test', t: Date.now() }));
+      });
+
+      // 1. La carte s'affiche avec 3 lignes et le texte « Tu finis 2e sur 4 »
+      await tp.goto(URLB + '?test&compte&code=code-test');
+      await tp.waitForSelector('.tribune');
+      await tp.waitForSelector('.carte-podium');
+      assert.equal(await tp.locator('.carte-podium ol li').count(), 3, '3 lignes de podium');
+      assert.match(await tp.locator('.carte-podium p').innerText(), /Tu finis 2e sur 4/);
+      assert.equal(await tp.locator('.carte-podium ol li.moi').count(), 1, 'ligne moi présente');
+      await tp.screenshot({ path: CAP + 'podium.png' });
+      await debordement(tp, 'podium');
+
+      // 2. « Fermer » la retire et elle ne revient pas au rechargement
+      await tp.locator('.carte-podium button', { hasText: 'Fermer' }).click();
+      assert.equal(await tp.locator('.carte-podium').count(), 0, 'carte podium fermée');
+
+      await tp.reload();
+      await tp.waitForSelector('.tribune');
+      await tp.waitForTimeout(300);
+      assert.equal(await tp.locator('.carte-podium').count(), 0, 'ne revient pas au rechargement');
+
+      // 3. Une réponse null n'affiche rien
+      reponseClassement = null;
+      await tp.evaluate(() => {
+        const e = JSON.parse(localStorage.getItem('arrets-admin.v1') || '{}');
+        if (e.reglages) delete e.reglages.podiumVu;
+        localStorage.setItem('arrets-admin.v1', JSON.stringify(e));
+      });
+      await tp.reload();
+      await tp.waitForSelector('.tribune');
+      await tp.waitForTimeout(300);
+      assert.equal(await tp.locator('.carte-podium').count(), 0, 'une réponse null n’affiche rien');
+
+      await tc.close();
+    }
+
+    log('podium ok');
   }
 }
 

@@ -284,6 +284,7 @@ export const adminNotifier = async (cibles, genre, donnees = {}) => { const n = 
 export const monProfil = async () => (await api(`profils?id=eq.${session.user.id}&select=pseudo,code_ami,masquer,notifs,rappel`))?.[0];
 export const reglerProfil = (champs) => api(`profils?id=eq.${session.user.id}`, { method: 'PATCH', corps: champs });
 export const mesAmis = () => rpc('mes_amis');
+export const monClassement = () => rpc('mon_classement');
 export const mesBloques = () => rpc('mes_bloques');
 export const demanderAmi = (code) => rpc('demander_ami', { code }).then((r) => { pousser(); return r; });
 export const repondreAmi = (autre, accepter) => rpc('repondre_ami', { autre, accepter }).then(() => pousser());
