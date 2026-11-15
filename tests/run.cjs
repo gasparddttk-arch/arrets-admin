@@ -1113,6 +1113,23 @@ async function execGroupe1(b, PORT, erreurs) {
   }
 
   // 14c. Mode test réservé à la machine locale (Tâche 1a)
+  // Politique de sécurité du contenu : aucune violation sur les écrans principaux ni sur la page de partage.
+  if (matchSeul('csp')) {
+    const c = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR', serviceWorkers: 'block' });
+    const p = await c.newPage(); const violations = [];
+    p.on('console', (m) => { if (/Content Security Policy|Content-Security-Policy/i.test(m.text())) violations.push(m.text()); });
+    p.on('pageerror', (e) => erreurs.push(e.message));
+    await p.addInitScript(() => document.addEventListener('securitypolicyviolation', (e) => console.error(`Content Security Policy : ${e.violatedDirective} ${e.blockedURI}`)));
+    await p.goto(URLB + '?test'); await p.waitForSelector('.tribune');
+    for (const ecran of ['boutique', 'profil', 'palais']) { await p.evaluate((e) => window.__app.aller(e), ecran); await p.waitForTimeout(400); }
+    await p.evaluate(() => window.__app.lancerDefi()); await p.waitForSelector('.epreuve, .scene', { timeout: 8000 }).catch(() => {});
+    await p.waitForTimeout(800);
+    await p.goto(URLB + 'partager.html'); await p.waitForSelector('.partager');
+    assert.deepEqual(violations, [], 'aucune violation CSP');
+    await c.close();
+    log('csp ok');
+  }
+
   if (matchSeul('mode test')) {
     const c1 = await b.newContext({ ...devices['iPhone 13'], locale: 'fr-FR' });
     const p1 = await c1.newPage();
