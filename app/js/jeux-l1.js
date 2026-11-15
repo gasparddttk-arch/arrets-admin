@@ -138,6 +138,7 @@ export function jouerMot(zone, ctx, round) {
       else { const l = e.key.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase(); if (/^[A-Z]$/.test(l)) frappe(l); }
     };
     document.addEventListener('keydown', physique);
+    ctx.nettoyage?.(() => document.removeEventListener('keydown', physique));
     const tuiles = () => [...grille.children[ligne].children];
     function afficher() { tuiles().forEach((t, k) => { t.textContent = saisie[k] || ''; t.classList.toggle('pleine', !!saisie[k]); }); }
     async function frappe(l) {
@@ -205,8 +206,10 @@ export function jouerRangement(zone, ctx, round) {
     const puits = h('div', { class: 'rg-puits' }, ciel, h('div', { class: 'rg-colonnes' }, cols));
     const ecran = h('div', { class: `ecran rangement${l2 ? ' rg-l2' : ''}` }, h('div', { class: 'ecran-corps' }, h('p', { class: 'surtitre' }, round.titre || 'Le grand rangement'), note), puits);
     zone.replaceChildren(ecran);
+    ctx.nettoyage?.(() => { cancelAnimationFrame(anim); fini_ = true; });
 
     function lancerPiece() {
+      if (fini_) return;
       if (i >= round.pieces.length) return conclure();
       rate = false;
       const p = round.pieces[i];
